@@ -51,85 +51,105 @@ except ImportError:
 
 # ── Configuration ──────────────────────────────────────────────────────────
 HERE = Path(__file__).parent
-STATE_FILE = HERE / "concert_state.json"
+STATE_FILE  = HERE / "concert_state.json"
+CONFIG_FILE = HERE / "wingman_config.json"
 
-CENTER_CITY = "Des Moines, IA"
-RADIUS_MILES = 200
+def _load_config() -> dict:
+    """Load wingman_config.json; fall back to built-in defaults if missing."""
+    if CONFIG_FILE.exists():
+        try:
+            return json.loads(CONFIG_FILE.read_text())
+        except Exception as e:
+            print(f"Warning: could not parse {CONFIG_FILE} ({e}). Using defaults.")
+    # Inline defaults (mirrors wingman_config.json)
+    return {
+        "center_city": "Des Moines, IA",
+        "radius_miles": 200,
+        "cities_in_range": [
+            "Des Moines", "Ames", "Iowa City", "Cedar Rapids", "Davenport",
+            "Sioux City", "Waterloo", "Dubuque",
+            "Omaha", "Lincoln",
+            "Kansas City", "St. Joseph", "Columbia",
+        ],
+        "states_in_range": ["IA", "NE"],
+        "artists": {
+            "Luke Combs":          {"url": "https://www.lukecombs.com/tour-dates/", "genre": "Country / Americana", "paused": False},
+            "Morgan Wallen":       {"url": "https://morganwallen.com/", "genre": "Country / Americana", "paused": False},
+            "Eric Church":         {"url": "https://www.ericchurch.com/tours", "genre": "Country / Americana", "paused": False},
+            "Zach Bryan":          {"url": "https://www.zachbryan.com/tour", "genre": "Country / Americana", "paused": False},
+            "Zac Brown Band":      {"url": "https://zacbrownband.com/pages/tour", "genre": "Country / Americana", "paused": False},
+            "Jason Isbell":        {"url": "https://www.jasonisbell.com/shows", "genre": "Country / Americana", "paused": False},
+            "Sturgill Simpson":    {"url": "https://sturgillsimpson.com/", "genre": "Country / Americana", "paused": False},
+            "CAAMP":               {"url": "https://www.caamptheband.com/caamp-tour-dates", "genre": "Country / Americana", "paused": False},
+            "Tyler Childers":      {"url": "https://tylerchildersmusic.com/pages/tour-dates", "genre": "Country / Americana", "paused": False},
+            "Chris Stapleton":     {"url": "https://chrisstapleton.com/", "genre": "Country / Americana", "paused": False},
+            "Dierks Bentley":      {"url": "https://dierks.com/", "genre": "Country / Americana", "paused": False},
+            "Lainey Wilson":       {"url": "https://www.laineywilson.com/", "genre": "Country / Americana", "paused": False},
+            "Colter Wall":         {"url": "http://www.ColterWall.com", "genre": "Country / Americana", "paused": False},
+            "The Red Clay Strays": {"url": "https://musicrow.com/2026/02/the-red-clay-strays-add-additional-tour-dates/", "genre": "Country / Americana", "paused": False},
+            "Billy Strings":       {"url": "https://www.billystrings.com/", "genre": "Country / Americana", "paused": False},
+            "Wyatt Flores":        {"url": "https://www.wyattfloresmusic.com/", "genre": "Country / Americana", "paused": False},
+            "Dylan Gossett":       {"url": "https://www.dylangossett.com/", "genre": "Country / Americana", "paused": False},
+            "Johnny Blue Skies":   {"url": "https://liveforlivemusic.com/news/johnny-blue-skies-sturgill-simpson-refutes-dan-auerbach/", "genre": "Country / Americana", "paused": False},
+            "The Lumineers":       {"url": "https://www.thelumineers.com/tour", "genre": "Indie / Alt-Rock", "paused": False},
+            "American Mary":       {"url": "https://www.americanmary.com/#tour", "genre": "Indie / Alt-Rock", "paused": False},
+            "Bon Iver":            {"url": "https://boniver.org/tour/", "genre": "Indie / Alt-Rock", "paused": False},
+            "The War on Drugs":    {"url": "https://www.thewarondrugs.net/tour", "genre": "Indie / Alt-Rock", "paused": False},
+            "Vampire Weekend":     {"url": "https://www.vampireweekend.com/#tour", "genre": "Indie / Alt-Rock", "paused": False},
+            "Phoebe Bridgers":     {"url": "https://phoebefuckingbridgers.com/", "genre": "Indie / Alt-Rock", "paused": False},
+            "Rostam":              {"url": "https://officialrostam.com/#dates", "genre": "Indie / Alt-Rock", "paused": False},
+            "Pearl Jam":           {"url": "https://pearljam.com/tour", "genre": "Indie / Alt-Rock", "paused": False},
+            "The Black Keys":      {"url": "https://www.theblackkeys.com/", "genre": "Indie / Alt-Rock", "paused": False},
+            "Foo Fighters":        {"url": "https://www.foofighters.com/tour-dates", "genre": "Indie / Alt-Rock", "paused": False},
+            "Jack White":          {"url": "https://jackwhiteiii.com/tour-dates/", "genre": "Indie / Alt-Rock", "paused": False},
+            "LCD Soundsystem":     {"url": "https://lcdsoundsystem.com/", "genre": "Indie / Alt-Rock", "paused": False},
+            "The Strokes":         {"url": "https://www.thestrokes.com/", "genre": "Indie / Alt-Rock", "paused": False},
+            "The 1975":            {"url": "https://the1975.com/", "genre": "Indie / Alt-Rock", "paused": False},
+            "The Smile":           {"url": "https://www.thesmiletheband.com/", "genre": "Indie / Alt-Rock", "paused": False},
+            "Noah Kahan":          {"url": "https://noahkahan.com/", "genre": "Indie / Alt-Rock", "paused": False},
+            "Mt. Joy":             {"url": "https://www.mtjoyband.com/", "genre": "Indie / Alt-Rock", "paused": False},
+            "Lord Huron":          {"url": "https://www.lordhuron.com/", "genre": "Indie / Alt-Rock", "paused": False},
+            "Royel Otis":          {"url": "https://www.royelotis.com/", "genre": "Indie / Alt-Rock", "paused": False},
+            "Massive Attack":      {"url": "https://www.massiveattack.co.uk/", "genre": "Electronic / Art-Rock", "paused": False},
+            "Radiohead":           {"url": "https://www.radiohead.com/", "genre": "Electronic / Art-Rock", "paused": False},
+            "The XX":              {"url": "https://thexx.info/", "genre": "Electronic / Art-Rock", "paused": False},
+            "Alabama Shakes":      {"url": "https://www.alabamashakes.com/", "genre": "Electronic / Art-Rock", "paused": False},
+            "Tame Impala":         {"url": "https://interscope.com/products/tame-impala-the-complete-vinyl-collection", "genre": "Electronic / Art-Rock", "paused": False},
+        },
+        "venues": {
+            "Hoyt Sherman Place":   {"url": "https://hoytsherman.org/events/", "city": "Des Moines, IA", "is_local": True, "paused": False},
+            "First Fleet Concerts": {"url": "https://www.firstfleetconcerts.com/events", "city": "Des Moines, IA", "is_local": True, "paused": False},
+            "Iowa Events Center":   {"url": "https://www.iowaeventscenter.com/events", "city": "Des Moines, IA", "is_local": True, "paused": False},
+            "Starlight Theatre":    {"url": "https://www.kcstarlight.com/events", "city": "Kansas City, MO", "is_local": False, "paused": False},
+            "The Waiting Room":     {"url": "https://waitingroomlounge.com/events/", "city": "Omaha, NE", "is_local": False, "paused": False},
+            "Ryman Auditorium":     {"url": "https://www.ryman.com/events", "city": "Nashville, TN", "is_local": False, "paused": False},
+            "ACL Live":             {"url": "https://www.acllive.com/calendar", "city": "Austin, TX", "is_local": False, "paused": False},
+            "The Salt Shed":        {"url": "https://www.saltshedchicago.com/home#shows", "city": "Chicago, IL", "is_local": False, "paused": False},
+        },
+    }
 
-# Cities within ~200 direct-line miles of Des Moines, IA
-CITIES_IN_RANGE = [
-    "Des Moines", "Ames", "Iowa City", "Cedar Rapids", "Davenport",
-    "Sioux City", "Waterloo", "Dubuque",           # Iowa
-    "Omaha", "Lincoln",                             # Nebraska
-    "Kansas City", "St. Joseph", "Columbia",        # Missouri (closer ones)
-]
-STATES_IN_RANGE = ["IA", "NE"]   # whole-state shortlist for quick checks
+_cfg = _load_config()
 
-ARTIST_URLS = {
-    # ── Country / Americana ────────────────────────────────────────────────
-    "Luke Combs":          "https://www.lukecombs.com/tour-dates/",
-    "Morgan Wallen":       "https://morganwallen.com/",
-    "Eric Church":         "https://www.ericchurch.com/tours",
-    "Zach Bryan":          "https://www.zachbryan.com/tour",
-    "Zac Brown Band":      "https://zacbrownband.com/pages/tour",
-    "Jason Isbell":        "https://www.jasonisbell.com/shows",
-    "Sturgill Simpson":    "https://sturgillsimpson.com/",
-    "CAAMP":               "https://www.caamptheband.com/caamp-tour-dates",
-    "Tyler Childers":      "https://tylerchildersmusic.com/pages/tour-dates",
-    "Chris Stapleton":     "https://chrisstapleton.com/",
-    "Dierks Bentley":      "https://dierks.com/",
-    "Lainey Wilson":       "https://www.laineywilson.com/",
-    "Colter Wall":         "http://www.ColterWall.com",
-    "The Red Clay Strays": "https://musicrow.com/2026/02/the-red-clay-strays-add-additional-tour-dates/",
-    "Billy Strings":       "https://www.billystrings.com/",
-    "Wyatt Flores":        "https://www.wyattfloresmusic.com/",
-    "Dylan Gossett":       "https://www.dylangossett.com/",
-    "Johnny Blue Skies":   "https://liveforlivemusic.com/news/johnny-blue-skies-sturgill-simpson-refutes-dan-auerbach/",
-    # ── Indie / Alt-Rock ───────────────────────────────────────────────────
-    "The Lumineers":       "https://www.thelumineers.com/tour",
-    "American Mary":       "https://www.americanmary.com/#tour",
-    "Bon Iver":            "https://boniver.org/tour/",
-    "The War on Drugs":    "https://www.thewarondrugs.net/tour",
-    "Vampire Weekend":     "https://www.vampireweekend.com/#tour",
-    "Phoebe Bridgers":     "https://phoebefuckingbridgers.com/",
-    "Rostam":              "https://officialrostam.com/#dates",
-    "Pearl Jam":           "https://pearljam.com/tour",
-    "The Black Keys":      "https://www.theblackkeys.com/",
-    "Foo Fighters":        "https://www.foofighters.com/tour-dates",
-    "Jack White":          "https://jackwhiteiii.com/tour-dates/",
-    "LCD Soundsystem":     "https://lcdsoundsystem.com/",
-    "The Strokes":         "https://www.thestrokes.com/",
-    "The 1975":            "https://the1975.com/",
-    "The Smile":           "https://www.thesmiletheband.com/",
-    "Noah Kahan":          "https://noahkahan.com/",
-    "Mt. Joy":             "https://www.mtjoyband.com/",
-    "Lord Huron":          "https://www.lordhuron.com/",
-    "Royel Otis":          "https://www.royelotis.com/",
-    # ── Electronic / Art-rock ─────────────────────────────────────────────
-    "Massive Attack":      "https://www.massiveattack.co.uk/",
-    "Radiohead":           "https://www.radiohead.com/",
-    "The XX":              "https://thexx.info/",
-    "Alabama Shakes":      "https://www.alabamashakes.com/",
-    "Tame Impala":         "https://interscope.com/products/tame-impala-the-complete-vinyl-collection",
+CENTER_CITY     = _cfg["center_city"]
+RADIUS_MILES    = _cfg["radius_miles"]
+CITIES_IN_RANGE = _cfg["cities_in_range"]
+STATES_IN_RANGE = _cfg["states_in_range"]
+
+# ALL artists → used for venue cross-reference matching (even paused ones)
+ARTIST_URLS = {name: info["url"] for name, info in _cfg["artists"].items()}
+
+# Only non-paused artists → actually scraped each run
+ACTIVE_ARTIST_URLS = {
+    name: info["url"]
+    for name, info in _cfg["artists"].items()
+    if not info.get("paused", False)
 }
 
+# VENUE_URLS: (city, is_local, url) tuples — only non-paused venues scraped
 VENUE_URLS = {
-    # key: (location, is_local, url)
-    # is_local=True  → within 200-mile radius (Des Moines metro)
-    # is_local=False → travel venue (tracked for artist cross-reference only)
-
-    # ── Local venues (Des Moines area) ────────────────────────────────────
-    "Hoyt Sherman Place":     ("Des Moines, IA",  True,  "https://hoytsherman.org/events/"),
-    "First Fleet Concerts":   ("Des Moines, IA",  True,  "https://www.firstfleetconcerts.com/events"),
-    # ↑ Covers Vibrant Music Hall, Wooly's, and Val Air Ballroom
-    "Iowa Events Center":     ("Des Moines, IA",  True,  "https://www.iowaeventscenter.com/events"),
-
-    # ── Travel venues ─────────────────────────────────────────────────────
-    "Starlight Theatre":      ("Kansas City, MO", False, "https://www.kcstarlight.com/events"),
-    "The Waiting Room":       ("Omaha, NE",        False, "https://waitingroomlounge.com/events/"),
-    "Ryman Auditorium":       ("Nashville, TN",    False, "https://www.ryman.com/events"),
-    "ACL Live":               ("Austin, TX",       False, "https://www.acllive.com/calendar"),
-    "The Salt Shed":          ("Chicago, IL",      False, "https://www.saltshedchicago.com/home#shows"),
+    name: (info["city"], info["is_local"], info["url"])
+    for name, info in _cfg["venues"].items()
+    if not info.get("paused", False)
 }
 
 TRACKED_ARTISTS = set(ARTIST_URLS.keys())
@@ -520,7 +540,7 @@ def main():
 
         # ── Scrape artists ──
         print("── Scraping artist tour pages ──")
-        for artist, url in ARTIST_URLS.items():
+        for artist, url in ACTIVE_ARTIST_URLS.items():
             try:
                 shows = scrape_artist(browser, artist, url)
                 new_artist_shows[artist] = shows
