@@ -19,22 +19,17 @@ $PIP_CMD install -r backend/requirements.txt -q --break-system-packages 2>/dev/n
   || $PIP_CMD install -r backend/requirements.txt -q
 
 # ── 2. Frontend build ─────────────────────────────────────────────────────────
-DIST="$REPO/frontend/dist"
-if [ ! -d "$DIST" ]; then
-  echo ""
-  echo "→ Building frontend (first run)…"
-  cd "$REPO/frontend"
-  if ! command -v npm &>/dev/null; then
-    echo "  ERROR: npm not found. Install Node.js (https://nodejs.org) then re-run."
-    exit 1
-  fi
-  npm install --silent
-  npm run build --silent
-  cd "$REPO"
-  echo "  Frontend built → frontend/dist/"
-else
-  echo "→ Frontend dist found (skip build — run 'cd frontend && npm run build' to rebuild)"
+echo ""
+echo "→ Building frontend (local mode)…"
+cd "$REPO/frontend"
+if ! command -v npm &>/dev/null; then
+  echo "  ERROR: npm not found. Install Node.js (https://nodejs.org) then re-run."
+  exit 1
 fi
+npm install --silent
+npm run build --silent
+cd "$REPO"
+echo "  Frontend built → frontend/dist/"
 
 # ── 3. Launch backend ─────────────────────────────────────────────────────────
 echo ""
