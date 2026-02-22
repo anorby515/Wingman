@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 
+const DEMO = import.meta.env.VITE_DEMO_MODE === 'true'
+
 const GENRE_COLORS = {
   'Country / Americana':  'bg-amber-100 text-amber-800',
   'Indie / Alt-Rock':     'bg-blue-100  text-blue-800',
@@ -162,13 +164,21 @@ export default function SummaryTab() {
   const [filter, setFilter] = useState('all') // 'all' | 'with-shows' | 'no-shows'
 
   useEffect(() => {
-    Promise.all([
-      fetch('/api/state').then(r => r.json()),
-      fetch('/api/config').then(r => r.json()),
-    ])
-      .then(([st, cfg]) => { setState(st); setConfig(cfg) })
-      .catch(e => setError(e.message))
-      .finally(() => setLoading(false))
+    if (DEMO) {
+      fetch(import.meta.env.BASE_URL + 'static-data.json')
+        .then(r => r.json())
+        .then(data => { setState(data.state); setConfig(data.config) })
+        .catch(e => setError(e.message))
+        .finally(() => setLoading(false))
+    } else {
+      Promise.all([
+        fetch('/api/state').then(r => r.json()),
+        fetch('/api/config').then(r => r.json()),
+      ])
+        .then(([st, cfg]) => { setState(st); setConfig(cfg) })
+        .catch(e => setError(e.message))
+        .finally(() => setLoading(false))
+    }
   }, [])
 
   if (loading) return <LoadingSpinner />
