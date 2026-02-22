@@ -5,7 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 const isDemo = process.env.VITE_DEMO_MODE === 'true'
 
 export default defineConfig({
-  base: '/Wingman/',
+  base: isDemo ? '/Wingman/' : '/',
   plugins: [
     react(),
     VitePWA({
