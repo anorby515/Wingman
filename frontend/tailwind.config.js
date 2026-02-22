@@ -4,6 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        gunmetal: '#2C3539',
         brand: {
           50:  '#eef2ff',
           100: '#e0e7ff',
