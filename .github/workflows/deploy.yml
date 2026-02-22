@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - 'claude/**'
   schedule:
     # Run weekly on Saturdays at 10:00 UTC (matches scraper cadence)
     - cron: '0 10 * * 6'
