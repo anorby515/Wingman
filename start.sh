@@ -11,8 +11,12 @@ echo "=== Wingman PWA Startup ==="
 # ── 1. Backend deps ───────────────────────────────────────────────────────────
 echo ""
 echo "→ Installing backend dependencies…"
-pip install -r backend/requirements.txt -q --break-system-packages 2>/dev/null \
-  || pip install -r backend/requirements.txt -q
+PIP_CMD="pip"
+if ! command -v pip &>/dev/null; then
+  PIP_CMD="pip3"
+fi
+$PIP_CMD install -r backend/requirements.txt -q --break-system-packages 2>/dev/null \
+  || $PIP_CMD install -r backend/requirements.txt -q
 
 # ── 2. Frontend build ─────────────────────────────────────────────────────────
 DIST="$REPO/frontend/dist"
@@ -37,4 +41,4 @@ echo ""
 echo "→ Starting Wingman API + frontend at http://localhost:8000"
 echo "  Press Ctrl+C to stop."
 echo ""
-uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+python3 -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
