@@ -1,0 +1,907 @@
+{
+  "state": {
+    "last_run": "2026-02-21",
+    "center": "Des Moines, IA",
+    "radius_miles": 200,
+    "artist_shows": {
+      "Luke Combs": [
+        {
+          "date": "Apr 11, 2026",
+          "venue": "Jack Trice Stadium",
+          "city": "Ames, IA",
+          "status": "on_sale"
+        }
+      ],
+      "Morgan Wallen": [],
+      "Eric Church": [],
+      "Zach Bryan": [
+        {
+          "date": "Apr 25, 2026",
+          "venue": "Memorial Stadium",
+          "city": "Lincoln, NE",
+          "status": "on_sale"
+        }
+      ],
+      "Zac Brown Band": [
+        {
+          "date": "Sep 10, 2026",
+          "venue": "T-Mobile Center",
+          "city": "Kansas City, MO",
+          "status": "on_sale"
+        },
+        {
+          "date": "Nov 19, 2026",
+          "venue": "Pinnacle Bank Arena",
+          "city": "Lincoln, NE",
+          "status": "on_sale"
+        },
+        {
+          "date": "Nov 20, 2026",
+          "venue": "Casey's Center",
+          "city": "Des Moines, IA",
+          "status": "on_sale"
+        }
+      ],
+      "Jason Isbell": [
+        {
+          "date": "Mar 4, 2026",
+          "venue": "Hancher Auditorium",
+          "city": "Iowa City, IA",
+          "status": "on_sale"
+        },
+        {
+          "date": "May 3, 2026",
+          "venue": "Uptown Theater",
+          "city": "Kansas City, MO",
+          "status": "on_sale"
+        }
+      ],
+      "Sturgill Simpson": [],
+      "CAAMP": [
+        {
+          "date": "Aug 24, 2026",
+          "venue": "Starlight Theatre",
+          "city": "Kansas City, MO",
+          "status": "on_sale"
+        }
+      ],
+      "Tyler Childers": [
+        {
+          "date": "Jul 14, 2026",
+          "venue": "Morton Amphitheater",
+          "city": "Kansas City, MO",
+          "status": "on_sale"
+        },
+        {
+          "date": "Jul 15, 2026",
+          "venue": "Casey's Center",
+          "city": "Des Moines, IA",
+          "status": "on_sale"
+        }
+      ],
+      "Chris Stapleton": [],
+      "Dierks Bentley": [
+        {
+          "date": "Jun 13, 2026",
+          "venue": "Morton Amphitheater",
+          "city": "Kansas City, MO",
+          "status": "on_sale"
+        }
+      ],
+      "Lainey Wilson": [],
+      "Colter Wall": [],
+      "The Red Clay Strays": [],
+      "Billy Strings": [],
+      "Wyatt Flores": [],
+      "Dylan Gossett": [],
+      "Johnny Blue Skies": [],
+      "The Lumineers": [],
+      "American Mary": [],
+      "Bon Iver": [],
+      "The War on Drugs": [],
+      "Vampire Weekend": [],
+      "Phoebe Bridgers": [],
+      "Rostam": [],
+      "Pearl Jam": [],
+      "The Black Keys": [
+        {
+          "date": "Jul 20, 2026",
+          "venue": "Astro Theater",
+          "city": "Omaha, NE",
+          "status": "on_sale"
+        }
+      ],
+      "Foo Fighters": [],
+      "Jack White": [],
+      "LCD Soundsystem": [],
+      "The Strokes": [],
+      "The 1975": [],
+      "The Smile": [],
+      "Noah Kahan": [],
+      "Mt. Joy": [
+        {
+          "date": "Apr 21, 2026",
+          "venue": "Starlight Theatre",
+          "city": "Kansas City, MO",
+          "status": "on_sale"
+        }
+      ],
+      "Lord Huron": [],
+      "Royel Otis": [],
+      "Massive Attack": [],
+      "Radiohead": [],
+      "The XX": [],
+      "Alabama Shakes": [],
+      "Tame Impala": []
+    },
+    "venue_shows": {
+      "Hoyt Sherman Place": [
+        {
+          "date": "Feb 21, 2026",
+          "artist": "The Black Jacket Symphony (Pink Floyd)",
+          "tracked": false
+        },
+        {
+          "date": "Mar 5, 2026",
+          "artist": "Gaelic Storm",
+          "tracked": false
+        },
+        {
+          "date": "Mar 9, 2026",
+          "artist": "Steven Curtis Chapman",
+          "tracked": false
+        },
+        {
+          "date": "Mar 10, 2026",
+          "artist": "Jeff Tweedy",
+          "tracked": false
+        },
+        {
+          "date": "Mar 11, 2026",
+          "artist": "TOTO",
+          "tracked": false
+        },
+        {
+          "date": "Mar 13, 2026",
+          "artist": "Trisha Yearwood",
+          "tracked": false
+        },
+        {
+          "date": "Mar 26, 2026",
+          "artist": "Marty Stuart",
+          "tracked": false
+        },
+        {
+          "date": "Mar 27, 2026",
+          "artist": "Jake Owen",
+          "tracked": false
+        },
+        {
+          "date": "Apr 2, 2026",
+          "artist": "Carly Pearce",
+          "tracked": false
+        },
+        {
+          "date": "Apr 28, 2026",
+          "artist": "Devon Allman",
+          "tracked": false
+        },
+        {
+          "date": "May 3, 2026",
+          "artist": "Kenny Wayne Shepherd Band",
+          "tracked": false
+        },
+        {
+          "date": "Jun 14, 2026",
+          "artist": "The Wallflowers",
+          "tracked": false
+        },
+        {
+          "date": "Jun 25, 2026",
+          "artist": "The Robert Cray Band",
+          "tracked": false
+        },
+        {
+          "date": "Jun 28, 2026",
+          "artist": "I'm With Her",
+          "tracked": false
+        },
+        {
+          "date": "Aug 21, 2026",
+          "artist": "Maria Bamford",
+          "tracked": false
+        },
+        {
+          "date": "Sep 11, 2026",
+          "artist": "Jefferson Starship",
+          "tracked": false
+        },
+        {
+          "date": "Oct 13, 2026",
+          "artist": "Snarky Puppy",
+          "tracked": false
+        },
+        {
+          "date": "Nov 8, 2026",
+          "artist": "Micky Dolenz",
+          "tracked": false
+        },
+        {
+          "date": "Nov 20, 2026",
+          "artist": "Stayin' Alive: Bee Gees Tribute",
+          "tracked": false
+        }
+      ],
+      "First Fleet Concerts": [
+        {
+          "date": "Feb 21, 2026",
+          "artist": "Brett Young @ Vibrant Music Hall",
+          "tracked": false
+        },
+        {
+          "date": "Feb 21, 2026",
+          "artist": "She's Crafty: Beastie Boys Tribute @ Wooly's",
+          "tracked": false
+        },
+        {
+          "date": "Feb 22, 2026",
+          "artist": "Bryce Vine @ Wooly's",
+          "tracked": false
+        },
+        {
+          "date": "Feb 24, 2026",
+          "artist": "Camping in Alaska @ XBK Live",
+          "tracked": false
+        },
+        {
+          "date": "Feb 26, 2026",
+          "artist": "Kolby Cooper @ Wildwood",
+          "tracked": false
+        }
+      ],
+      "Iowa Events Center": [
+        {
+          "date": "Mar 15, 2026",
+          "artist": "Winter Jam '26 (Christian concert) @ Casey's Center",
+          "tracked": false
+        },
+        {
+          "date": "Apr 8, 2026",
+          "artist": "Journey: Final Frontier Tour @ Casey's Center",
+          "tracked": false
+        },
+        {
+          "date": "Apr 11, 2026",
+          "artist": "Monster Jam @ Casey's Center",
+          "tracked": false
+        }
+      ],
+      "Starlight Theatre": [
+        {
+          "date": "Apr 21, 2026",
+          "artist": "Mt. Joy",
+          "tracked": true
+        },
+        {
+          "date": "May 5, 2026",
+          "artist": "David Byrne",
+          "tracked": false
+        },
+        {
+          "date": "May 13, 2026",
+          "artist": "Charlie Puth",
+          "tracked": false
+        },
+        {
+          "date": "May 16, 2026",
+          "artist": "Triumph",
+          "tracked": false
+        },
+        {
+          "date": "May 28, 2026",
+          "artist": "Claypool Gold",
+          "tracked": false
+        },
+        {
+          "date": "Jun 16, 2026",
+          "artist": "Paul Simon",
+          "tracked": false
+        },
+        {
+          "date": "Jul 14, 2026",
+          "artist": "The Fray",
+          "tracked": false
+        },
+        {
+          "date": "Jul 24, 2026",
+          "artist": "Sarah McLachlan",
+          "tracked": false
+        },
+        {
+          "date": "Jul 27, 2026",
+          "artist": "Rainbow Kitten Surprise",
+          "tracked": false
+        },
+        {
+          "date": "Aug 2, 2026",
+          "artist": "Young the Giant",
+          "tracked": false
+        },
+        {
+          "date": "Aug 10, 2026",
+          "artist": "Lindsey Stirling",
+          "tracked": false
+        },
+        {
+          "date": "Aug 16, 2026",
+          "artist": "John Mulaney",
+          "tracked": false
+        },
+        {
+          "date": "Aug 21, 2026",
+          "artist": "Flatland Cavalry",
+          "tracked": false
+        },
+        {
+          "date": "Aug 24, 2026",
+          "artist": "CAAMP",
+          "tracked": true
+        },
+        {
+          "date": "Aug 30, 2026",
+          "artist": "O.A.R.",
+          "tracked": false
+        },
+        {
+          "date": "Sep 15, 2026",
+          "artist": "Blues Traveler & Gin Blossoms",
+          "tracked": false
+        }
+      ],
+      "The Waiting Room": [
+        {
+          "date": "Feb 27, 2026",
+          "artist": "Pecos & the Rooftops",
+          "tracked": false
+        },
+        {
+          "date": "Mar 5, 2026",
+          "artist": "Tyler Farr",
+          "tracked": false
+        },
+        {
+          "date": "Mar 7, 2026",
+          "artist": "Fresh Fighters (Foo Fighters Tribute)",
+          "tracked": false
+        },
+        {
+          "date": "Mar 8, 2026",
+          "artist": "Volumes",
+          "tracked": false
+        },
+        {
+          "date": "Mar 9, 2026",
+          "artist": "The Floozies + Too Many Zooz",
+          "tracked": false
+        },
+        {
+          "date": "Mar 10, 2026",
+          "artist": "Hawthorne Heights",
+          "tracked": false
+        },
+        {
+          "date": "Mar 15, 2026",
+          "artist": "Kacey Johansing",
+          "tracked": false
+        },
+        {
+          "date": "Mar 17, 2026",
+          "artist": "Benjamin Tod and the Inline Six",
+          "tracked": false
+        },
+        {
+          "date": "Mar 20, 2026",
+          "artist": "Alice Unchained (Tribute)",
+          "tracked": false
+        },
+        {
+          "date": "Mar 21, 2026",
+          "artist": "Tyler Richton & The High Bank Boys",
+          "tracked": false
+        },
+        {
+          "date": "Mar 24, 2026",
+          "artist": "The Happy Fits",
+          "tracked": false
+        },
+        {
+          "date": "Mar 25, 2026",
+          "artist": "The Summer Set",
+          "tracked": false
+        },
+        {
+          "date": "Mar 27, 2026",
+          "artist": "San Holo",
+          "tracked": false
+        },
+        {
+          "date": "Apr 3, 2026",
+          "artist": "Disco Always",
+          "tracked": false
+        },
+        {
+          "date": "Apr 8, 2026",
+          "artist": "Magnolia Park",
+          "tracked": false
+        },
+        {
+          "date": "Apr 10, 2026",
+          "artist": "Bloodywood",
+          "tracked": false
+        },
+        {
+          "date": "Apr 12, 2026",
+          "artist": "Skizzy Mars",
+          "tracked": false
+        },
+        {
+          "date": "Apr 14, 2026",
+          "artist": "DevotchKa",
+          "tracked": false
+        },
+        {
+          "date": "Apr 15, 2026",
+          "artist": "Ratboys",
+          "tracked": false
+        },
+        {
+          "date": "Apr 16, 2026",
+          "artist": "Selwyn Birchwood",
+          "tracked": false
+        }
+      ],
+      "Ryman Auditorium": [
+        {
+          "date": "Feb 21, 2026",
+          "artist": "Shane Smith & The Saints",
+          "tracked": false
+        },
+        {
+          "date": "Feb 22, 2026",
+          "artist": "Billy Strings (Sold Out)",
+          "tracked": true
+        },
+        {
+          "date": "Feb 23, 2026",
+          "artist": "70th Anniversary Tribute to The Gatlin Brothers",
+          "tracked": false
+        },
+        {
+          "date": "Feb 24, 2026",
+          "artist": "Jesse Welles",
+          "tracked": false
+        },
+        {
+          "date": "Mar 5, 2026",
+          "artist": "Gaelic Storm",
+          "tracked": false
+        },
+        {
+          "date": "Mar 9, 2026",
+          "artist": "Steven Curtis Chapman",
+          "tracked": false
+        },
+        {
+          "date": "Mar 10, 2026",
+          "artist": "Jeff Tweedy",
+          "tracked": false
+        },
+        {
+          "date": "Mar 26, 2026",
+          "artist": "Marty Stuart",
+          "tracked": false
+        }
+      ],
+      "ACL Live": [
+        {
+          "date": "Feb 21, 2026",
+          "artist": "2026 Texas Songwriters Hall of Fame Awards",
+          "tracked": false
+        },
+        {
+          "date": "Feb 27, 2026",
+          "artist": "Wax Tailor",
+          "tracked": false
+        },
+        {
+          "date": "Feb 28, 2026",
+          "artist": "Yacht Rock Revue",
+          "tracked": false
+        },
+        {
+          "date": "Mar 15, 2026",
+          "artist": "Dropout Kings",
+          "tracked": false
+        },
+        {
+          "date": "Apr 4, 2026",
+          "artist": "The Last Dinner Party",
+          "tracked": false
+        },
+        {
+          "date": "May 7, 2026",
+          "artist": "Mac DeMarco",
+          "tracked": false
+        },
+        {
+          "date": "May 8, 2026",
+          "artist": "Disclosure Live",
+          "tracked": false
+        }
+      ],
+      "The Salt Shed": [
+        {
+          "date": "Feb 27, 2026",
+          "artist": "Crankdat",
+          "tracked": false
+        },
+        {
+          "date": "Feb 28, 2026",
+          "artist": "Rainbow Kitten Surprise",
+          "tracked": false
+        },
+        {
+          "date": "Mar 3, 2026",
+          "artist": "Dropkick Murphys",
+          "tracked": false
+        },
+        {
+          "date": "Mar 5, 2026",
+          "artist": "Artemas",
+          "tracked": false
+        },
+        {
+          "date": "Mar 6, 2026",
+          "artist": "Jason Isbell and the 400 Unit",
+          "tracked": true
+        },
+        {
+          "date": "Mar 7, 2026",
+          "artist": "Jason Isbell and the 400 Unit (Sold Out)",
+          "tracked": true
+        },
+        {
+          "date": "Mar 26, 2026",
+          "artist": "The Hives with The Chats",
+          "tracked": false
+        },
+        {
+          "date": "Apr 4, 2026",
+          "artist": "The Last Dinner Party",
+          "tracked": false
+        },
+        {
+          "date": "Apr 25, 2026",
+          "artist": "Stephen Wilson Jr.",
+          "tracked": false
+        },
+        {
+          "date": "May 2, 2026",
+          "artist": "The Midnight",
+          "tracked": false
+        },
+        {
+          "date": "May 7, 2026",
+          "artist": "Mac DeMarco",
+          "tracked": false
+        },
+        {
+          "date": "May 8, 2026",
+          "artist": "Disclosure Live",
+          "tracked": false
+        },
+        {
+          "date": "May 16, 2026",
+          "artist": "Yellowcard",
+          "tracked": false
+        },
+        {
+          "date": "May 22, 2026",
+          "artist": "The KidLAROI",
+          "tracked": false
+        },
+        {
+          "date": "May 28, 2026",
+          "artist": "Belle & Sebastian",
+          "tracked": false
+        },
+        {
+          "date": "Jun 3, 2026",
+          "artist": "Claypool Gold",
+          "tracked": false
+        },
+        {
+          "date": "Jun 8, 2026",
+          "artist": "James Blake",
+          "tracked": false
+        },
+        {
+          "date": "Jun 13, 2026",
+          "artist": "The Hold Steady",
+          "tracked": false
+        },
+        {
+          "date": "Jun 25, 2026",
+          "artist": "The Dead South",
+          "tracked": false
+        },
+        {
+          "date": "Jul 13, 2026",
+          "artist": "Royel Otis",
+          "tracked": true
+        },
+        {
+          "date": "Jul 14, 2026",
+          "artist": "Royel Otis (Night 2)",
+          "tracked": true
+        },
+        {
+          "date": "Jul 16, 2026",
+          "artist": "The Black Keys",
+          "tracked": true
+        },
+        {
+          "date": "Jul 21, 2026",
+          "artist": "KALEO with Dawes",
+          "tracked": false
+        },
+        {
+          "date": "Jul 22, 2026",
+          "artist": "Pavement",
+          "tracked": false
+        },
+        {
+          "date": "Aug 14, 2026",
+          "artist": "American Football",
+          "tracked": false
+        },
+        {
+          "date": "Aug 21, 2026",
+          "artist": "Billy Currington & Kip Moore",
+          "tracked": false
+        },
+        {
+          "date": "Sep 11, 2026",
+          "artist": "Yacht Rock Revue",
+          "tracked": false
+        },
+        {
+          "date": "Sep 14, 2026",
+          "artist": "Bikini Kill",
+          "tracked": false
+        },
+        {
+          "date": "Sep 26, 2026",
+          "artist": "Thee Sacred Souls",
+          "tracked": false
+        }
+      ]
+    }
+  },
+  "config": {
+    "center_city": "Des Moines, IA",
+    "radius_miles": 200,
+    "artists": {
+      "Luke Combs": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "Morgan Wallen": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "Eric Church": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "Zach Bryan": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "Zac Brown Band": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "Jason Isbell": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "Sturgill Simpson": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "CAAMP": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "Tyler Childers": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "Chris Stapleton": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "Dierks Bentley": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "Lainey Wilson": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "Colter Wall": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "The Red Clay Strays": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "Billy Strings": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "Wyatt Flores": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "Dylan Gossett": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "Johnny Blue Skies": {
+        "genre": "Country / Americana",
+        "paused": false
+      },
+      "The Lumineers": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "American Mary": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "Bon Iver": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "The War on Drugs": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "Vampire Weekend": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "Phoebe Bridgers": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "Rostam": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "Pearl Jam": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "The Black Keys": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "Foo Fighters": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "Jack White": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "LCD Soundsystem": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "The Strokes": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "The 1975": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "The Smile": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "Noah Kahan": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "Mt. Joy": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "Lord Huron": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "Royel Otis": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false
+      },
+      "Massive Attack": {
+        "genre": "Electronic / Art-Rock",
+        "paused": false
+      },
+      "Radiohead": {
+        "genre": "Electronic / Art-Rock",
+        "paused": false
+      },
+      "The XX": {
+        "genre": "Electronic / Art-Rock",
+        "paused": false
+      },
+      "Alabama Shakes": {
+        "genre": "Electronic / Art-Rock",
+        "paused": false
+      },
+      "Tame Impala": {
+        "genre": "Electronic / Art-Rock",
+        "paused": false
+      }
+    },
+    "venues": {
+      "Hoyt Sherman Place": {
+        "city": "Des Moines, IA",
+        "is_local": true,
+        "paused": false
+      },
+      "First Fleet Concerts": {
+        "city": "Des Moines, IA",
+        "is_local": true,
+        "paused": false
+      },
+      "Iowa Events Center": {
+        "city": "Des Moines, IA",
+        "is_local": true,
+        "paused": false
+      },
+      "Starlight Theatre": {
+        "city": "Kansas City, MO",
+        "is_local": false,
+        "paused": false
+      },
+      "The Waiting Room": {
+        "city": "Omaha, NE",
+        "is_local": false,
+        "paused": false
+      },
+      "Ryman Auditorium": {
+        "city": "Nashville, TN",
+        "is_local": false,
+        "paused": false
+      },
+      "ACL Live": {
+        "city": "Austin, TX",
+        "is_local": false,
+        "paused": false
+      },
+      "The Salt Shed": {
+        "city": "Chicago, IL",
+        "is_local": false,
+        "paused": false
+      }
+    }
+  }
+}

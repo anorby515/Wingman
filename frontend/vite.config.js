@@ -2,6 +2,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+const isDemo = process.env.VITE_DEMO_MODE === 'true'
+
 export default defineConfig({
   base: '/Wingman/',
   plugins: [
@@ -25,8 +27,8 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-        runtimeCaching: [
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
+        runtimeCaching: isDemo ? [] : [
           {
             urlPattern: /^\/api\//,
             handler: 'NetworkFirst',

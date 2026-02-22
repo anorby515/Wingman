@@ -4,12 +4,18 @@ import ArtistsTab  from './components/ArtistsTab.jsx'
 import VenuesTab   from './components/VenuesTab.jsx'
 import SettingsTab from './components/SettingsTab.jsx'
 
-const TABS = [
+const DEMO = import.meta.env.VITE_DEMO_MODE === 'true'
+
+const ALL_TABS = [
   { id: 'summary',  label: 'Summary',  icon: '🎵' },
   { id: 'artists',  label: 'Artists',  icon: '🎤' },
   { id: 'venues',   label: 'Venues',   icon: '🏟' },
   { id: 'settings', label: 'Settings', icon: '⚙️' },
 ]
+
+const TABS = DEMO
+  ? ALL_TABS.filter(t => t.id === 'summary')
+  : ALL_TABS
 
 export default function App() {
   const [active, setActive] = useState('summary')
