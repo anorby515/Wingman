@@ -209,6 +209,11 @@ def fetch_page(browser, url: str, wait: int = 3) -> str:
         return ""
 
 
+def strip_tags(text: str) -> str:
+    """Remove HTML tags and collapse whitespace."""
+    return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', text)).strip()
+
+
 def normalise_show(date_str: str, venue: str, city: str, status: str = "on_sale") -> dict:
     return {"date": date_str.strip(), "venue": venue.strip(),
             "city": city.strip(), "status": status}
@@ -296,6 +301,10 @@ def scrape_venue(browser, name: str, location: str, url: str) -> list[dict]:
                         not re.match(r'^(GET TICKET|BUY TICKET|RSVP|MORE INFO|SOLD OUT|\d)', candidate, re.I)):
                     artist = candidate
                     break
+            if not artist:
+                continue
+
+            artist = strip_tags(artist)
             if not artist:
                 continue
 
@@ -430,6 +439,12 @@ def build_diff_pdf(artist_changes: dict, venue_changes: dict,
     note_sty     = sty('N', fontSize=9, textColor=GREY, spaceAfter=14, alignment=TA_CENTER,
                         fontName='Helvetica-Oblique')
 
+    def esc(text: str) -> str:
+        """Escape text so it's safe inside a ReportLab Paragraph."""
+        text = strip_tags(text)
+        text = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        return text
+
     story = []
 
     story.append(Paragraph("&#127925; Concert Finder — Weekly Changes", title_sty))
@@ -445,19 +460,19 @@ def build_diff_pdf(artist_changes: dict, venue_changes: dict,
         story.append(Spacer(1, 4))
 
         for artist, ch in sorted(artist_changes.items()):
-            block = [Paragraph(artist, artist_sty)]
+            block = [Paragraph(esc(artist), artist_sty)]
             for show in sorted(ch["added"], key=lambda s: s["date"]):
-                loc = f"{show['venue']}, {show['city']}"
+                loc = f"{esc(show['venue'])}, {esc(show['city'])}"
                 block.append(Paragraph(
-                    f"&#9650; NEW &nbsp; <b>{show['date']}</b> — {loc}", added_sty))
+                    f"&#9650; NEW &nbsp; <b>{esc(show['date'])}</b> — {loc}", added_sty))
             for show in sorted(ch["removed"], key=lambda s: s["date"]):
-                loc = f"{show['venue']}, {show['city']}"
+                loc = f"{esc(show['venue'])}, {esc(show['city'])}"
                 block.append(Paragraph(
-                    f"&#9660; REMOVED &nbsp; <b>{show['date']}</b> — {loc}", removed_sty))
+                    f"&#9660; REMOVED &nbsp; <b>{esc(show['date'])}</b> — {loc}", removed_sty))
             for show in sorted(ch["newly_sold"], key=lambda s: s["date"]):
-                loc = f"{show['venue']}, {show['city']}"
+                loc = f"{esc(show['venue'])}, {esc(show['city'])}"
                 block.append(Paragraph(
-                    f"&#9679; SOLD OUT &nbsp; <b>{show['date']}</b> — {loc}", sold_sty))
+                    f"&#9679; SOLD OUT &nbsp; <b>{esc(show['date'])}</b> — {loc}", sold_sty))
             story.append(KeepTogether(block))
     else:
         story.append(Paragraph("  ARTIST TOUR UPDATES", sec_sty))
@@ -474,18 +489,18 @@ def build_diff_pdf(artist_changes: dict, venue_changes: dict,
             untracked_added = [e for e in ch["added"]   if not e.get("tracked")]
             tracked_removed = [e for e in ch["removed"] if e.get("tracked")]
 
-            block = [Paragraph(venue, artist_sty)]
+            block = [Paragraph(esc(venue), artist_sty)]
             for ev in sorted(tracked_added, key=lambda e: e["date"]):
                 block.append(Paragraph(
-                    f"&#9650; NEW (TRACKED) &nbsp; <b>{ev['date']}</b> — {ev['artist']}",
+                    f"&#9650; NEW (TRACKED) &nbsp; <b>{esc(ev['date'])}</b> — {esc(ev['artist'])}",
                     added_sty))
             for ev in sorted(tracked_removed, key=lambda e: e["date"]):
                 block.append(Paragraph(
-                    f"&#9660; REMOVED (TRACKED) &nbsp; <b>{ev['date']}</b> — {ev['artist']}",
+                    f"&#9660; REMOVED (TRACKED) &nbsp; <b>{esc(ev['date'])}</b> — {esc(ev['artist'])}",
                     removed_sty))
             for ev in sorted(untracked_added, key=lambda e: e["date"]):
                 block.append(Paragraph(
-                    f"&#9650; New &nbsp; <b>{ev['date']}</b> — {ev['artist']}",
+                    f"&#9650; New &nbsp; <b>{esc(ev['date'])}</b> — {esc(ev['artist'])}",
                     sty('ua', fontSize=9, textColor=GREEN, leftIndent=16, spaceAfter=1)))
             story.append(KeepTogether(block))
     else:
