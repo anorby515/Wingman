@@ -15,14 +15,14 @@ export default function App() {
   const [active, setActive] = useState('summary')
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-black">
       {/* ── Header ── */}
-      <header className="bg-brand-900 text-white sticky top-0 z-20 shadow-lg">
+      <header className="bg-gunmetal text-white sticky top-0 z-20 shadow-lg">
         <div className="max-w-3xl mx-auto px-4 pt-4 pb-0">
           <div className="flex items-center gap-3 mb-3">
             <span className="text-2xl">🎸</span>
             <div>
-              <h1 className="text-xl font-bold leading-tight">Wingman</h1>
+              <h1 className="text-[2.5rem] font-bold leading-tight">Wingman</h1>
               <p className="text-indigo-300 text-xs">Concert Tracker</p>
             </div>
           </div>
