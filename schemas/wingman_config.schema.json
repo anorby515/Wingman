@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WingmanConfig",
+  "description": "Configuration for artists, venues, and location settings. Written by local UI, read by Cowork.",
+  "type": "object",
+  "required": ["center_city", "radius_miles", "cities_in_range", "states_in_range", "artists", "venues"],
+  "properties": {
+    "center_city": {
+      "type": "string",
+      "description": "Center location for radius search, e.g. 'Des Moines, IA'"
+    },
+    "radius_miles": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1000,
+      "description": "Search radius in miles"
+    },
+    "cities_in_range": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Legacy: city names for text matching. Retained for backwards compatibility but geocoding is primary."
+    },
+    "states_in_range": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Legacy: state abbreviations for text matching. Retained for backwards compatibility but geocoding is primary."
+    },
+    "artists": {
+      "type": "object",
+      "description": "Map of artist name to artist config",
+      "additionalProperties": { "$ref": "#/definitions/ArtistConfig" }
+    },
+    "venues": {
+      "type": "object",
+      "description": "Map of venue name to venue config",
+      "additionalProperties": { "$ref": "#/definitions/VenueConfig" }
+    }
+  },
+  "definitions": {
+    "ArtistConfig": {
+      "type": "object",
+      "required": ["url", "genre", "paused"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "URL to artist's tour/shows page"
+        },
+        "genre": {
+          "type": "string",
+          "description": "Genre category, e.g. 'Country / Americana', 'Indie / Alt-Rock', 'Electronic / Art-Rock'"
+        },
+        "paused": {
+          "type": "boolean",
+          "description": "If true, artist is not scraped but still used for venue cross-reference"
+        }
+      }
+    },
+    "VenueConfig": {
+      "type": "object",
+      "required": ["url", "city", "is_local", "paused"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "URL to venue's events/calendar page"
+        },
+        "city": {
+          "type": "string",
+          "description": "Venue city, e.g. 'Des Moines, IA'"
+        },
+        "is_local": {
+          "type": "boolean",
+          "description": "True if venue is in the local area (vs. travel destination)"
+        },
+        "paused": {
+          "type": "boolean",
+          "description": "If true, venue is not scraped"
+        }
+      }
+    }
+  }
+}
