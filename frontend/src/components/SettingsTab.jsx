@@ -10,11 +10,9 @@ function Section({ title, children }) {
   )
 }
 
-// ── Radius & Center City ──────────────────────────────────────────────────────
-function LocationSettings({ config, onSave }) {
-  const [centerCity,   setCenterCity]   = useState(config.center_city   || '')
-  const [radiusMiles,  setRadiusMiles]  = useState(config.radius_miles  || 200)
-  const [citiesInRange, setCitiesInRange] = useState((config.cities_in_range || []).join(', '))
+// ── Map Home (center city) ────────────────────────────────────────────────────
+function MapHomeSettings({ config, onSave }) {
+  const [centerCity, setCenterCity] = useState(config.center_city || '')
   const [saving, setSaving] = useState(false)
   const [saved,  setSaved]  = useState(false)
   const [error,  setError]  = useState(null)
@@ -24,14 +22,11 @@ function LocationSettings({ config, onSave }) {
     setSaving(true)
     setError(null)
     try {
-      const cities = citiesInRange.split(',').map(s => s.trim()).filter(Boolean)
       const res = await fetch('/api/settings', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           center_city: centerCity.trim(),
-          radius_miles: Number(radiusMiles),
-          cities_in_range: cities,
         }),
       })
       if (!res.ok) throw new Error((await res.json()).detail)
@@ -47,57 +42,26 @@ function LocationSettings({ config, onSave }) {
   }
 
   return (
-    <Section title="Search Area">
+    <Section title="Map Home">
       <form onSubmit={handleSave} className="space-y-4">
         {error && <p className="text-sm text-red-600">{error}</p>}
 
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">Center City</label>
-            <input
-              className="input"
-              value={centerCity}
-              onChange={e => setCenterCity(e.target.value)}
-              placeholder="Des Moines, IA"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">
-              Search Radius: <span className="font-bold text-indigo-600">{radiusMiles} miles</span>
-            </label>
-            <input
-              type="range"
-              min={25} max={600} step={25}
-              value={radiusMiles}
-              onChange={e => setRadiusMiles(Number(e.target.value))}
-              className="w-full accent-indigo-600"
-            />
-            <div className="flex justify-between text-xs text-slate-400 mt-0.5">
-              <span>25 mi</span><span>600 mi</span>
-            </div>
-          </div>
-        </div>
-
         <div>
-          <label className="block text-xs font-medium text-slate-600 mb-1">
-            Cities in Range <span className="text-slate-400 font-normal">(comma-separated)</span>
-          </label>
-          <textarea
-            className="input resize-none"
-            rows={3}
-            value={citiesInRange}
-            onChange={e => setCitiesInRange(e.target.value)}
-            placeholder="Des Moines, Ames, Iowa City…"
+          <label className="block text-xs font-medium text-slate-600 mb-1">Home City</label>
+          <input
+            className="input"
+            value={centerCity}
+            onChange={e => setCenterCity(e.target.value)}
+            placeholder="Des Moines, IA"
           />
           <p className="text-xs text-slate-400 mt-1">
-            Used by concert_weekly.py to filter which cities are "in range".
-            Update this list when you change the center or radius.
+            The map starts centered on this city. All artist shows across North America are displayed.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button type="submit" className="btn-primary" disabled={saving}>
-            {saving ? 'Saving…' : 'Save Location Settings'}
+            {saving ? 'Saving\u2026' : 'Save'}
           </button>
           {saved && <span className="text-sm text-emerald-600 font-medium">Saved!</span>}
         </div>
@@ -458,7 +422,7 @@ export default function SettingsTab() {
 
   return (
     <div className="space-y-5">
-      <LocationSettings config={config} onSave={updated => setConfig(c => ({ ...c, ...updated }))} />
+      <MapHomeSettings config={config} onSave={updated => setConfig(c => ({ ...c, ...updated }))} />
       <GitHubPagesSettings config={config} onSave={updated => setConfig(c => ({ ...c, ...updated }))} />
       <SpotifySettings />
       <ScheduleSettings />
