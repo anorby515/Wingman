@@ -16,6 +16,9 @@ import asyncio
 import json
 import subprocess
 import sys
+import time
+import urllib.parse
+import urllib.request
 from pathlib import Path
 from typing import Any, Optional
 
@@ -25,11 +28,13 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 # ── Paths ────────────────────────────────────────────────────────────────────
-HERE        = Path(__file__).parent
-REPO        = HERE.parent
-CONFIG_FILE = REPO / "wingman_config.json"
-STATE_FILE  = REPO / "concert_state.json"
-SCRIPT      = REPO / "concert_weekly.py"
+HERE          = Path(__file__).parent
+REPO          = HERE.parent
+CONFIG_FILE   = REPO / "wingman_config.json"
+STATE_FILE    = REPO / "concert_state.json"
+FLAGGED_FILE  = REPO / "flagged_items.json"
+GEOCODE_FILE  = REPO / "geocode_cache.json"
+SCRIPT        = REPO / "concert_weekly.py"
 SCHEDULE_FILE = Path("/sessions/eager-gracious-cray/mnt/.claude/scheduled-tasks.json")
 
 # ── App ──────────────────────────────────────────────────────────────────────
@@ -57,6 +62,54 @@ def _read_config() -> dict:
 
 def _write_config(cfg: dict) -> None:
     CONFIG_FILE.write_text(json.dumps(cfg, indent=2))
+
+
+# ── Geocoding helper ──────────────────────────────────────────────────────────
+_last_geocode_call: float = 0.0
+
+
+def _geocode(location: str) -> tuple[float, float] | None:
+    """Return (lat, lon) for a location string, using cache or Nominatim."""
+    global _last_geocode_call
+
+    # Check cache first
+    cache: dict = {}
+    if GEOCODE_FILE.exists():
+        try:
+            cache = json.loads(GEOCODE_FILE.read_text())
+        except Exception:
+            pass
+    if location in cache:
+        entry = cache[location]
+        return entry["lat"], entry["lon"]
+
+    # Rate-limit: 1 req/sec
+    elapsed = time.time() - _last_geocode_call
+    if elapsed < 1.0:
+        time.sleep(1.0 - elapsed)
+
+    url = (
+        "https://nominatim.openstreetmap.org/search"
+        f"?q={urllib.parse.quote(location)}&format=json&limit=1"
+    )
+    req = urllib.request.Request(url, headers={"User-Agent": "Wingman/1.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read())
+        _last_geocode_call = time.time()
+    except Exception:
+        return None
+
+    if not data:
+        return None
+
+    lat, lon = float(data[0]["lat"]), float(data[0]["lon"])
+    cache[location] = {"lat": lat, "lon": lon}
+    try:
+        GEOCODE_FILE.write_text(json.dumps(cache, indent=2))
+    except Exception:
+        pass
+    return lat, lon
 
 
 # ── Pydantic models ───────────────────────────────────────────────────────────
@@ -91,6 +144,7 @@ class SettingsPatch(BaseModel):
     radius_miles: Optional[int] = None
     cities_in_range: Optional[list[str]] = None
     states_in_range: Optional[list[str]] = None
+    github_pages_url: Optional[str] = None
 
 
 class SchedulePatch(BaseModel):
@@ -110,7 +164,14 @@ def get_state() -> Any:
 # ── Config endpoint ───────────────────────────────────────────────────────────
 @app.get("/api/config")
 def get_config() -> Any:
-    return _read_config()
+    cfg = _read_config()
+    # Attach geocoded center coordinates for the map
+    center_city = cfg.get("center_city", "")
+    if center_city and "center_lat" not in cfg:
+        coords = _geocode(center_city)
+        if coords:
+            cfg["center_lat"], cfg["center_lon"] = coords
+    return cfg
 
 
 # ── Settings ──────────────────────────────────────────────────────────────────
@@ -125,12 +186,15 @@ def patch_settings(body: SettingsPatch) -> Any:
         cfg["cities_in_range"] = body.cities_in_range
     if body.states_in_range is not None:
         cfg["states_in_range"] = body.states_in_range
+    if body.github_pages_url is not None:
+        cfg["github_pages_url"] = body.github_pages_url
     _write_config(cfg)
     return {"ok": True, "settings": {
         "center_city": cfg["center_city"],
         "radius_miles": cfg["radius_miles"],
         "cities_in_range": cfg["cities_in_range"],
         "states_in_range": cfg["states_in_range"],
+        "github_pages_url": cfg.get("github_pages_url", ""),
     }}
 
 
@@ -354,6 +418,35 @@ async def trigger_run() -> Any:
 
     asyncio.create_task(_stream())
     return {"ok": True, "message": "Run started. Poll /api/run/status for progress."}
+
+
+# ── Flagged Items ────────────────────────────────────────────────────────────
+def _read_flagged() -> list[dict]:
+    if not FLAGGED_FILE.exists():
+        return []
+    try:
+        return json.loads(FLAGGED_FILE.read_text())
+    except Exception:
+        return []
+
+
+def _write_flagged(items: list[dict]) -> None:
+    FLAGGED_FILE.write_text(json.dumps(items, indent=2))
+
+
+@app.get("/api/flagged-items")
+def list_flagged_items() -> Any:
+    return _read_flagged()
+
+
+@app.delete("/api/flagged-items/{index}")
+def dismiss_flagged_item(index: int) -> Any:
+    items = _read_flagged()
+    if index < 0 or index >= len(items):
+        raise HTTPException(status_code=404, detail="Flagged item not found")
+    removed = items.pop(index)
+    _write_flagged(items)
+    return {"ok": True, "removed": removed}
 
 
 # ── Serve built frontend ──────────────────────────────────────────────────────

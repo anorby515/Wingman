@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GeocodeCache",
+  "description": "Cache of geocoded locations. Key is location string (e.g. 'Pella, IA'), value is coordinates.",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "required": ["lat", "lon"],
+    "properties": {
+      "lat": {
+        "type": "number",
+        "minimum": -90,
+        "maximum": 90,
+        "description": "Latitude"
+      },
+      "lon": {
+        "type": "number",
+        "minimum": -180,
+        "maximum": 180,
+        "description": "Longitude"
+      }
+    }
+  }
+}

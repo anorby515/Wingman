@@ -3,3 +3,12 @@ frontend/dist/
 __pycache__/
 *.pyc
 .DS_Store
+
+# Local-only data files (never push to GitHub)
+spotify_tokens.json
+geocode_cache.json
+dismissed_suggestions.json
+flagged_items.json
+
+# Generated PDFs (replaced by GitHub Pages summary)
+Concert_Changes_*.pdf

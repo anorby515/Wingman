@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import SummaryTab  from './components/SummaryTab.jsx'
 import ArtistsTab  from './components/ArtistsTab.jsx'
 import VenuesTab   from './components/VenuesTab.jsx'
@@ -19,6 +19,16 @@ const TABS = DEMO
 
 export default function App() {
   const [active, setActive] = useState('summary')
+  const [pagesUrl, setPagesUrl] = useState('')
+
+  useEffect(() => {
+    if (!DEMO) {
+      fetch('/api/config')
+        .then(r => r.json())
+        .then(cfg => setPagesUrl(cfg.github_pages_url || ''))
+        .catch(() => {})
+    }
+  }, [])
 
   return (
     <div className="min-h-screen flex flex-col bg-black">
@@ -27,10 +37,24 @@ export default function App() {
         <div className="max-w-3xl mx-auto px-4 pt-4 pb-0">
           <div className="flex items-center gap-3 mb-3">
             <span className="text-2xl">🎸</span>
-            <div>
+            <div className="flex-1">
               <h1 className="text-[2.5rem] font-bold leading-tight">Wingman</h1>
               <p className="text-indigo-300 text-xs">Concert Tracker</p>
             </div>
+            {!DEMO && pagesUrl && (
+              <a
+                href={pagesUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-medium transition-colors"
+                title="View public report on GitHub Pages"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                Public Report
+              </a>
+            )}
           </div>
 
           {/* ── Tab bar ── */}
