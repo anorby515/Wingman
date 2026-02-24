@@ -1,7 +1,9 @@
 {
-  "last_run": "2026-02-24",
+  "generated_at": "2026-02-24",
   "center": "Des Moines, IA",
-  "radius_miles": 250,
+  "radius_miles": 250.0,
+  "center_lat": 41.5868,
+  "center_lon": -93.625,
   "artist_shows": {
     "Luke Combs": [
       {
@@ -11,7 +13,8 @@
         "status": "on_sale",
         "distance_miles": 30.9,
         "lat": 42.0347,
-        "lon": -93.62
+        "lon": -93.62,
+        "is_new": true
       }
     ],
     "Morgan Wallen": [],
@@ -23,7 +26,8 @@
         "status": "on_sale",
         "distance_miles": 168.7,
         "lat": 40.8136,
-        "lon": -96.7026
+        "lon": -96.7026,
+        "is_new": false
       }
     ],
     "Tyler Childers": [
@@ -34,7 +38,8 @@
         "status": "on_sale",
         "distance_miles": 179.0,
         "lat": 39.0997,
-        "lon": -94.5786
+        "lon": -94.5786,
+        "is_new": false
       },
       {
         "date": "Jul 15, 2026",
@@ -43,7 +48,8 @@
         "status": "on_sale",
         "distance_miles": 0.0,
         "lat": 41.5868,
-        "lon": -93.625
+        "lon": -93.625,
+        "is_new": false
       }
     ],
     "Jason Isbell": [
@@ -54,7 +60,8 @@
         "status": "on_sale",
         "distance_miles": 108.3,
         "lat": 41.6611,
-        "lon": -91.5302
+        "lon": -91.5302,
+        "is_new": false
       },
       {
         "date": "May 3, 2026",
@@ -63,7 +70,8 @@
         "status": "on_sale",
         "distance_miles": 179.0,
         "lat": 39.0997,
-        "lon": -94.5786
+        "lon": -94.5786,
+        "is_new": false
       }
     ],
     "CAAMP": [
@@ -74,7 +82,8 @@
         "status": "on_sale",
         "distance_miles": 179.0,
         "lat": 39.0997,
-        "lon": -94.5786
+        "lon": -94.5786,
+        "is_new": false
       }
     ],
     "Chris Stapleton": [
@@ -85,7 +94,8 @@
         "status": "on_sale",
         "distance_miles": 168.7,
         "lat": 40.8136,
-        "lon": -96.7026
+        "lon": -96.7026,
+        "is_new": true
       },
       {
         "date": "Oct 9, 2026",
@@ -94,7 +104,8 @@
         "status": "on_sale",
         "distance_miles": 179.0,
         "lat": 39.0997,
-        "lon": -94.5786
+        "lon": -94.5786,
+        "is_new": true
       }
     ],
     "Dierks Bentley": [
@@ -105,7 +116,8 @@
         "status": "on_sale",
         "distance_miles": 179.0,
         "lat": 39.0997,
-        "lon": -94.5786
+        "lon": -94.5786,
+        "is_new": true
       },
       {
         "date": "Jun 20, 2026",
@@ -114,7 +126,8 @@
         "status": "on_sale",
         "distance_miles": 208.1,
         "lat": 43.546,
-        "lon": -96.7313
+        "lon": -96.7313,
+        "is_new": true
       }
     ],
     "Eric Church": [],
@@ -130,7 +143,8 @@
         "status": "on_sale",
         "distance_miles": 208.1,
         "lat": 43.546,
-        "lon": -96.7313
+        "lon": -96.7313,
+        "is_new": true
       }
     ],
     "Dylan Gossett": [
@@ -141,7 +155,8 @@
         "status": "on_sale",
         "distance_miles": 179.0,
         "lat": 39.0997,
-        "lon": -94.5786
+        "lon": -94.5786,
+        "is_new": true
       }
     ],
     "Sturgill Simpson": [],
@@ -162,7 +177,8 @@
         "status": "on_sale",
         "distance_miles": 127.8,
         "lat": 41.1844,
-        "lon": -96.0308
+        "lon": -96.0308,
+        "is_new": false
       }
     ],
     "Foo Fighters": [],
@@ -180,7 +196,8 @@
         "status": "on_sale",
         "distance_miles": 179.0,
         "lat": 39.0997,
-        "lon": -94.5786
+        "lon": -94.5786,
+        "is_new": false
       }
     ],
     "Lord Huron": [],
@@ -198,7 +215,8 @@
         "status": "on_sale",
         "distance_miles": 179.0,
         "lat": 39.0997,
-        "lon": -94.5786
+        "lon": -94.5786,
+        "is_new": false
       },
       {
         "date": "Nov 19, 2026",
@@ -207,7 +225,8 @@
         "status": "on_sale",
         "distance_miles": 168.7,
         "lat": 40.8136,
-        "lon": -96.7026
+        "lon": -96.7026,
+        "is_new": false
       },
       {
         "date": "Nov 20, 2026",
@@ -216,7 +235,8 @@
         "status": "on_sale",
         "distance_miles": 0.0,
         "lat": 41.5868,
-        "lon": -93.625
+        "lon": -93.625,
+        "is_new": false
       }
     ]
   },
@@ -697,5 +717,113 @@
         "tracked": true
       }
     ]
+  },
+  "changes": {
+    "artists": {
+      "Luke Combs": {
+        "added": [
+          {
+            "date": "Apr 11, 2026",
+            "venue": "Jack Trice Stadium",
+            "city": "Ames, IA",
+            "status": "on_sale",
+            "distance_miles": 30.9,
+            "lat": 42.0347,
+            "lon": -93.62,
+            "is_new": true
+          }
+        ],
+        "removed": [],
+        "newly_sold": []
+      },
+      "Chris Stapleton": {
+        "added": [
+          {
+            "date": "Oct 7, 2026",
+            "venue": "Pinnacle Bank Arena",
+            "city": "Lincoln, NE",
+            "status": "on_sale",
+            "distance_miles": 168.7,
+            "lat": 40.8136,
+            "lon": -96.7026,
+            "is_new": true
+          },
+          {
+            "date": "Oct 9, 2026",
+            "venue": "Morton Amphitheater",
+            "city": "Kansas City, MO",
+            "status": "on_sale",
+            "distance_miles": 179.0,
+            "lat": 39.0997,
+            "lon": -94.5786,
+            "is_new": true
+          }
+        ],
+        "removed": [],
+        "newly_sold": []
+      },
+      "Dierks Bentley": {
+        "added": [
+          {
+            "date": "Jun 13, 2026",
+            "venue": "Morton Amphitheater",
+            "city": "Kansas City, MO",
+            "status": "on_sale",
+            "distance_miles": 179.0,
+            "lat": 39.0997,
+            "lon": -94.5786,
+            "is_new": true
+          },
+          {
+            "date": "Jun 20, 2026",
+            "venue": "Denny Sanford PREMIER Center",
+            "city": "Sioux Falls, SD",
+            "status": "on_sale",
+            "distance_miles": 208.1,
+            "lat": 43.546,
+            "lon": -96.7313,
+            "is_new": true
+          }
+        ],
+        "removed": [],
+        "newly_sold": []
+      },
+      "Wyatt Flores": {
+        "added": [
+          {
+            "date": "Mar 31, 2026",
+            "venue": "The District",
+            "city": "Sioux Falls, SD",
+            "status": "on_sale",
+            "distance_miles": 208.1,
+            "lat": 43.546,
+            "lon": -96.7313,
+            "is_new": true
+          }
+        ],
+        "removed": [],
+        "newly_sold": []
+      },
+      "Dylan Gossett": {
+        "added": [
+          {
+            "date": "Aug 2, 2026",
+            "venue": "Morton Amphitheater",
+            "city": "Kansas City, MO",
+            "status": "on_sale",
+            "distance_miles": 179.0,
+            "lat": 39.0997,
+            "lon": -94.5786,
+            "is_new": true
+          }
+        ],
+        "removed": [],
+        "newly_sold": []
+      }
+    },
+    "venues": {},
+    "total_added": 7,
+    "total_removed": 0,
+    "total_sold_out": 0
   }
 }
