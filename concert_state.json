@@ -1,38 +1,410 @@
 {
   "last_run": "2026-02-24",
   "center": "Des Moines, IA",
-  "radius_miles": 250,
   "artist_shows": {
     "Luke Combs": [
+      {
+        "date": "Mar 21, 2026",
+        "venue": "T-Mobile Arena",
+        "city": "Las Vegas, NV",
+        "status": "on_sale",
+        "lat": 36.1674263,
+        "lon": -115.1484131
+      },
+      {
+        "date": "Apr 4, 2026",
+        "venue": "John Paul Jones Arena",
+        "city": "Charlottesville, VA",
+        "status": "on_sale",
+        "lat": 38.029306,
+        "lon": -78.4766781
+      },
       {
         "date": "Apr 11, 2026",
         "venue": "Jack Trice Stadium",
         "city": "Ames, IA",
         "status": "on_sale",
-        "distance_miles": 30.9,
         "lat": 42.0347,
         "lon": -93.62
+      },
+      {
+        "date": "Apr 18, 2026",
+        "venue": "Notre Dame Stadium",
+        "city": "South Bend, IN",
+        "status": "on_sale",
+        "lat": 41.6833813,
+        "lon": -86.2500066
+      },
+      {
+        "date": "Apr 25, 2026",
+        "venue": "Ohio Stadium",
+        "city": "Columbus, OH",
+        "status": "on_sale",
+        "lat": 39.9622601,
+        "lon": -83.0007065
+      },
+      {
+        "date": "May 2, 2026",
+        "venue": "Neyland Stadium",
+        "city": "Knoxville, TN",
+        "status": "on_sale",
+        "lat": 35.9603948,
+        "lon": -83.9210261
+      },
+      {
+        "date": "May 9, 2026",
+        "venue": "Gaylord Family Oklahoma Memorial Stadium",
+        "city": "Norman, OK",
+        "status": "on_sale",
+        "lat": 35.2225717,
+        "lon": -97.4394816
+      },
+      {
+        "date": "May 15, 2026",
+        "venue": "Lambeau Field",
+        "city": "Green Bay, WI",
+        "status": "on_sale",
+        "lat": 44.5126379,
+        "lon": -88.0125794
+      },
+      {
+        "date": "May 16, 2026",
+        "venue": "Lambeau Field",
+        "city": "Green Bay, WI",
+        "status": "on_sale",
+        "lat": 44.5126379,
+        "lon": -88.0125794
+      },
+      {
+        "date": "May 29, 2026",
+        "venue": "Percival Molson Memorial Stadium",
+        "city": "Montreal, QC",
+        "status": "on_sale",
+        "lat": 45.5031824,
+        "lon": -73.5698065
+      },
+      {
+        "date": "May 30, 2026",
+        "venue": "Percival Molson Memorial Stadium",
+        "city": "Montreal, QC",
+        "status": "on_sale",
+        "lat": 45.5031824,
+        "lon": -73.5698065
+      },
+      {
+        "date": "Jun 5, 2026",
+        "venue": "Rogers Centre",
+        "city": "Toronto, ON",
+        "status": "on_sale",
+        "lat": 43.6534817,
+        "lon": -79.3839347
+      },
+      {
+        "date": "Jun 6, 2026",
+        "venue": "Rogers Centre",
+        "city": "Toronto, ON",
+        "status": "on_sale",
+        "lat": 43.6534817,
+        "lon": -79.3839347
       }
     ],
     "Morgan Wallen": [],
     "Zach Bryan": [
       {
+        "date": "Mar 7, 2026",
+        "venue": "The Dome at America's Center",
+        "city": "St. Louis, MO",
+        "status": "on_sale",
+        "lat": 38.6254063,
+        "lon": -90.190009
+      },
+      {
+        "date": "Mar 14, 2026",
+        "venue": "Raymond James Stadium",
+        "city": "Tampa, FL",
+        "status": "on_sale",
+        "lat": 27.9449854,
+        "lon": -82.4583107
+      },
+      {
+        "date": "Mar 21, 2026",
+        "venue": "The Alamodome",
+        "city": "San Antonio, TX",
+        "status": "on_sale",
+        "lat": 29.4246002,
+        "lon": -98.4951405
+      },
+      {
+        "date": "Mar 28, 2026",
+        "venue": "Tiger Stadium",
+        "city": "Baton Rouge, LA",
+        "status": "on_sale",
+        "lat": 30.4494155,
+        "lon": -91.1869659
+      },
+      {
+        "date": "Apr 3, 2026",
+        "venue": "H.A. Chapman Stadium",
+        "city": "Tulsa, OK",
+        "status": "on_sale",
+        "lat": 36.1563122,
+        "lon": -95.9927516
+      },
+      {
+        "date": "Apr 4, 2026",
+        "venue": "H.A. Chapman Stadium",
+        "city": "Tulsa, OK",
+        "status": "on_sale",
+        "lat": 36.1563122,
+        "lon": -95.9927516
+      },
+      {
+        "date": "Apr 11, 2026",
+        "venue": "L&N Federal Credit Union Stadium",
+        "city": "Louisville, KY",
+        "status": "on_sale",
+        "lat": 38.2542376,
+        "lon": -85.759407
+      },
+      {
+        "date": "Apr 18, 2026",
+        "venue": "Bank of America Stadium",
+        "city": "Charlotte, NC",
+        "status": "on_sale",
+        "lat": 35.2272086,
+        "lon": -80.8430827
+      },
+      {
         "date": "Apr 25, 2026",
         "venue": "Memorial Stadium",
         "city": "Lincoln, NE",
         "status": "on_sale",
-        "distance_miles": 168.7,
         "lat": 40.8136,
         "lon": -96.7026
+      },
+      {
+        "date": "May 2, 2026",
+        "venue": "Davis Wade Stadium",
+        "city": "Starkville, MS",
+        "status": "on_sale",
+        "lat": 33.4638745,
+        "lon": -88.8152074
+      },
+      {
+        "date": "May 9, 2026",
+        "venue": "Huntington Bank Field",
+        "city": "Cleveland, OH",
+        "status": "on_sale",
+        "lat": 41.4996574,
+        "lon": -81.6936772
+      },
+      {
+        "date": "Jul 25, 2026",
+        "venue": "Autzen Stadium",
+        "city": "Eugene, OR",
+        "status": "on_sale",
+        "lat": 44.0505054,
+        "lon": -123.0950506
+      },
+      {
+        "date": "Jul 31, 2026",
+        "venue": "Snapdragon Stadium",
+        "city": "San Diego, CA",
+        "status": "on_sale",
+        "lat": 32.7174202,
+        "lon": -117.162772
+      },
+      {
+        "date": "Aug 1, 2026",
+        "venue": "Snapdragon Stadium",
+        "city": "San Diego, CA",
+        "status": "on_sale",
+        "lat": 32.7174202,
+        "lon": -117.162772
+      },
+      {
+        "date": "Aug 7, 2026",
+        "venue": "Rice-Eccles Stadium",
+        "city": "Salt Lake City, UT",
+        "status": "on_sale",
+        "lat": 40.7596198,
+        "lon": -111.886797
+      },
+      {
+        "date": "Aug 13, 2026",
+        "venue": "Empower Field at Mile High",
+        "city": "Denver, CO",
+        "status": "on_sale",
+        "lat": 39.7392364,
+        "lon": -104.984862
+      },
+      {
+        "date": "Aug 14, 2026",
+        "venue": "Empower Field at Mile High",
+        "city": "Denver, CO",
+        "status": "on_sale",
+        "lat": 39.7392364,
+        "lon": -104.984862
+      },
+      {
+        "date": "Aug 22, 2026",
+        "venue": "AT&T Stadium",
+        "city": "Arlington, TX",
+        "status": "on_sale",
+        "lat": 32.7355816,
+        "lon": -97.1071186
+      },
+      {
+        "date": "Sep 5, 2026",
+        "venue": "State Farm Stadium",
+        "city": "Glendale, AZ",
+        "status": "on_sale",
+        "lat": 33.5386858,
+        "lon": -112.185994
+      },
+      {
+        "date": "Sep 18, 2026",
+        "venue": "The Woodlands",
+        "city": "Dover, DE",
+        "status": "on_sale",
+        "lat": 39.158168,
+        "lon": -75.5243682
+      },
+      {
+        "date": "Sep 19, 2026",
+        "venue": "The Woodlands",
+        "city": "Dover, DE",
+        "status": "on_sale",
+        "lat": 39.158168,
+        "lon": -75.5243682
+      },
+      {
+        "date": "Sep 21, 2026",
+        "venue": "Rogers Centre",
+        "city": "Toronto, ON",
+        "status": "on_sale",
+        "lat": 43.6534817,
+        "lon": -79.3839347
+      },
+      {
+        "date": "Sep 22, 2026",
+        "venue": "Rogers Centre",
+        "city": "Toronto, ON",
+        "status": "on_sale",
+        "lat": 43.6534817,
+        "lon": -79.3839347
+      },
+      {
+        "date": "Oct 2, 2026",
+        "venue": "Gillette Stadium",
+        "city": "Foxborough, MA",
+        "status": "on_sale",
+        "lat": 42.0653768,
+        "lon": -71.2478308
+      },
+      {
+        "date": "Oct 3, 2026",
+        "venue": "Gillette Stadium",
+        "city": "Foxborough, MA",
+        "status": "on_sale",
+        "lat": 42.0653768,
+        "lon": -71.2478308
+      },
+      {
+        "date": "Oct 10, 2026",
+        "venue": "Jordan-Hare Stadium",
+        "city": "Auburn, AL",
+        "status": "on_sale",
+        "lat": 32.6098566,
+        "lon": -85.4807825
       }
     ],
     "Tyler Childers": [
       {
+        "date": "Apr 23, 2026",
+        "venue": "Dos Equis Amphitheatre",
+        "city": "Dallas, TX",
+        "status": "on_sale",
+        "lat": 32.7762719,
+        "lon": -96.7968559
+      },
+      {
+        "date": "Apr 25, 2026",
+        "venue": "Champions Square",
+        "city": "New Orleans, LA",
+        "status": "on_sale",
+        "lat": 29.9561422,
+        "lon": -90.0733934
+      },
+      {
+        "date": "Jun 4, 2026",
+        "venue": "Protective Stadium",
+        "city": "Birmingham, AL",
+        "status": "on_sale",
+        "lat": 33.5206824,
+        "lon": -86.8024326
+      },
+      {
+        "date": "Jun 5, 2026",
+        "venue": "Bon Secours Wellness Arena",
+        "city": "Greenville, SC",
+        "status": "on_sale",
+        "lat": 34.851354,
+        "lon": -82.3984882
+      },
+      {
+        "date": "Jun 7, 2026",
+        "venue": "Railbird Music Festival",
+        "city": "Lexington, KY",
+        "status": "on_sale",
+        "lat": 38.0464066,
+        "lon": -84.4970393
+      },
+      {
+        "date": "Jun 10, 2026",
+        "venue": "Darien Lake Amphitheater",
+        "city": "Darien Center, NY",
+        "status": "on_sale",
+        "lat": 42.9011709,
+        "lon": -78.3886312
+      },
+      {
+        "date": "Jun 11, 2026",
+        "venue": "Hersheypark Stadium",
+        "city": "Hershey, PA",
+        "status": "on_sale",
+        "lat": 40.2850285,
+        "lon": -76.6534662
+      },
+      {
+        "date": "Jun 13, 2026",
+        "venue": "Nationwide Arena",
+        "city": "Columbus, OH",
+        "status": "on_sale",
+        "lat": 39.9622601,
+        "lon": -83.0007065
+      },
+      {
+        "date": "Jul 9, 2026",
+        "venue": "Hollywood Casino Amphitheatre",
+        "city": "St. Louis, MO",
+        "status": "on_sale",
+        "lat": 38.6254063,
+        "lon": -90.190009
+      },
+      {
+        "date": "Jul 12, 2026",
+        "venue": "Wrigley Field",
+        "city": "Chicago, IL",
+        "status": "on_sale",
+        "lat": 41.8781,
+        "lon": -87.6298
+      },
+      {
         "date": "Jul 14, 2026",
-        "venue": "Morton Amphitheater",
+        "venue": "T-Mobile Center",
         "city": "Kansas City, MO",
         "status": "on_sale",
-        "distance_miles": 179.0,
         "lat": 39.0997,
         "lon": -94.5786
       },
@@ -41,29 +413,346 @@
         "venue": "Casey's Center",
         "city": "Des Moines, IA",
         "status": "on_sale",
-        "distance_miles": 0.0,
         "lat": 41.5868,
         "lon": -93.625
+      },
+      {
+        "date": "Jul 18, 2026",
+        "venue": "Folsom Field",
+        "city": "Boulder, CO",
+        "status": "on_sale",
+        "lat": 40.0149856,
+        "lon": -105.270545
+      },
+      {
+        "date": "Sep 30, 2026",
+        "venue": "Golden 1 Center",
+        "city": "Sacramento, CA",
+        "status": "on_sale",
+        "lat": 38.5810606,
+        "lon": -121.493895
+      },
+      {
+        "date": "Oct 2, 2026",
+        "venue": "Climate Pledge Arena",
+        "city": "Seattle, WA",
+        "status": "on_sale",
+        "lat": 47.6038321,
+        "lon": -122.330062
+      },
+      {
+        "date": "Oct 3, 2026",
+        "venue": "Moda Center",
+        "city": "Portland, OR",
+        "status": "on_sale",
+        "lat": 45.5202471,
+        "lon": -122.674194
       }
     ],
     "Jason Isbell": [
+      {
+        "date": "Feb 24, 2026",
+        "venue": "KeyBank State Theatre",
+        "city": "Cleveland, OH",
+        "status": "on_sale",
+        "lat": 41.4996574,
+        "lon": -81.6936772
+      },
+      {
+        "date": "Feb 25, 2026",
+        "venue": "Palace Theatre",
+        "city": "Columbus, OH",
+        "status": "on_sale",
+        "lat": 39.9622601,
+        "lon": -83.0007065
+      },
+      {
+        "date": "Feb 27, 2026",
+        "venue": "Boch Center Wang Theatre",
+        "city": "Boston, MA",
+        "status": "on_sale",
+        "lat": 42.3588336,
+        "lon": -71.0578303
+      },
+      {
+        "date": "Feb 28, 2026",
+        "venue": "Boch Center Wang Theatre",
+        "city": "Boston, MA",
+        "status": "on_sale",
+        "lat": 42.3588336,
+        "lon": -71.0578303
+      },
+      {
+        "date": "Mar 1, 2026",
+        "venue": "OLG Stage at Fallsview Casino",
+        "city": "Niagara Falls, ON",
+        "status": "on_sale",
+        "lat": 43.1065603,
+        "lon": -79.0639039
+      },
+      {
+        "date": "Mar 2, 2026",
+        "venue": "Benedum Center",
+        "city": "Pittsburgh, PA",
+        "status": "on_sale",
+        "lat": 40.4406968,
+        "lon": -80.0025666
+      },
       {
         "date": "Mar 4, 2026",
         "venue": "Hancher Auditorium",
         "city": "Iowa City, IA",
         "status": "on_sale",
-        "distance_miles": 108.3,
         "lat": 41.6611,
         "lon": -91.5302
+      },
+      {
+        "date": "Mar 5, 2026",
+        "venue": "The Armory",
+        "city": "Minneapolis, MN",
+        "status": "on_sale",
+        "lat": 44.9772995,
+        "lon": -93.2654692
+      },
+      {
+        "date": "Mar 6, 2026",
+        "venue": "The Salt Shed",
+        "city": "Chicago, IL",
+        "status": "on_sale",
+        "lat": 41.8781,
+        "lon": -87.6298
+      },
+      {
+        "date": "Mar 7, 2026",
+        "venue": "The Salt Shed",
+        "city": "Chicago, IL",
+        "status": "on_sale",
+        "lat": 41.8781,
+        "lon": -87.6298
+      },
+      {
+        "date": "Mar 13, 2026",
+        "venue": "Cayamo Cruise",
+        "city": "Miami, FL",
+        "status": "sold_out",
+        "lat": 25.7741566,
+        "lon": -80.1935973
+      },
+      {
+        "date": "Mar 25, 2026",
+        "venue": "SkyPAC",
+        "city": "Bowling Green, KY",
+        "status": "on_sale",
+        "lat": 36.9929203,
+        "lon": -86.4428677
+      },
+      {
+        "date": "Mar 26, 2026",
+        "venue": "Robinson Center",
+        "city": "Little Rock, AR",
+        "status": "on_sale",
+        "lat": 34.7465071,
+        "lon": -92.2896267
+      },
+      {
+        "date": "Mar 27, 2026",
+        "venue": "Orpheum Theatre",
+        "city": "Memphis, TN",
+        "status": "on_sale",
+        "lat": 35.1460249,
+        "lon": -90.0517638
+      },
+      {
+        "date": "Mar 28, 2026",
+        "venue": "Murat Theatre",
+        "city": "Indianapolis, IN",
+        "status": "on_sale",
+        "lat": 39.7683331,
+        "lon": -86.1583502
+      },
+      {
+        "date": "Apr 24, 2026",
+        "venue": "Sun, Sand, and Soul",
+        "city": "Miramar Beach, FL",
+        "status": "on_sale",
+        "lat": 30.377985,
+        "lon": -86.3616979
+      },
+      {
+        "date": "Apr 25, 2026",
+        "venue": "New Orleans Jazz & Heritage Festival",
+        "city": "New Orleans, LA",
+        "status": "on_sale",
+        "lat": 29.9561422,
+        "lon": -90.0733934
+      },
+      {
+        "date": "Apr 26, 2026",
+        "venue": "Dr. Phillips Center",
+        "city": "Orlando, FL",
+        "status": "on_sale",
+        "lat": 28.5421218,
+        "lon": -81.379045
+      },
+      {
+        "date": "Apr 28, 2026",
+        "venue": "Ameris Bank Amphitheatre",
+        "city": "Alpharetta, GA",
+        "status": "on_sale",
+        "lat": 34.0755962,
+        "lon": -84.2945964
+      },
+      {
+        "date": "Apr 29, 2026",
+        "venue": "The Fabulous Fox",
+        "city": "St. Louis, MO",
+        "status": "on_sale",
+        "lat": 38.6254063,
+        "lon": -90.190009
+      },
+      {
+        "date": "May 1, 2026",
+        "venue": "The Mission Ballroom",
+        "city": "Denver, CO",
+        "status": "on_sale",
+        "lat": 39.7392364,
+        "lon": -104.984862
+      },
+      {
+        "date": "May 2, 2026",
+        "venue": "Red Rocks Amphitheatre",
+        "city": "Morrison, CO",
+        "status": "on_sale",
+        "lat": 39.6535988,
+        "lon": -105.191099
       },
       {
         "date": "May 3, 2026",
         "venue": "Uptown Theater",
         "city": "Kansas City, MO",
         "status": "on_sale",
-        "distance_miles": 179.0,
         "lat": 39.0997,
         "lon": -94.5786
+      },
+      {
+        "date": "May 20, 2026",
+        "venue": "Winspear Opera House",
+        "city": "Dallas, TX",
+        "status": "on_sale",
+        "lat": 32.7762719,
+        "lon": -96.7968559
+      },
+      {
+        "date": "May 21, 2026",
+        "venue": "Winspear Opera House",
+        "city": "Dallas, TX",
+        "status": "on_sale",
+        "lat": 32.7762719,
+        "lon": -96.7968559
+      },
+      {
+        "date": "May 22, 2026",
+        "venue": "Long Center",
+        "city": "Austin, TX",
+        "status": "on_sale",
+        "lat": 30.2672,
+        "lon": -97.7431
+      },
+      {
+        "date": "May 23, 2026",
+        "venue": "Majestic Theatre",
+        "city": "San Antonio, TX",
+        "status": "on_sale",
+        "lat": 29.4246002,
+        "lon": -98.4951405
+      },
+      {
+        "date": "Jul 16, 2026",
+        "venue": "EKU Center for the Arts",
+        "city": "Richmond, KY",
+        "status": "on_sale",
+        "lat": 37.7478572,
+        "lon": -84.2946539
+      },
+      {
+        "date": "Jul 17, 2026",
+        "venue": "Tennessee Theatre",
+        "city": "Knoxville, TN",
+        "status": "on_sale",
+        "lat": 35.9603948,
+        "lon": -83.9210261
+      },
+      {
+        "date": "Jul 18, 2026",
+        "venue": "Tennessee Theatre",
+        "city": "Knoxville, TN",
+        "status": "on_sale",
+        "lat": 35.9603948,
+        "lon": -83.9210261
+      },
+      {
+        "date": "Jul 19, 2026",
+        "venue": "Brevard Music Center",
+        "city": "Brevard, NC",
+        "status": "on_sale",
+        "lat": 35.2334472,
+        "lon": -82.7342919
+      },
+      {
+        "date": "Jul 25, 2026",
+        "venue": "Rose Music Center",
+        "city": "Huber Heights, OH",
+        "status": "on_sale",
+        "lat": 39.8590241,
+        "lon": -84.1112699
+      },
+      {
+        "date": "Jul 26, 2026",
+        "venue": "Ting Pavilion",
+        "city": "Charlottesville, VA",
+        "status": "on_sale",
+        "lat": 38.029306,
+        "lon": -78.4766781
+      },
+      {
+        "date": "Jul 28, 2026",
+        "venue": "Koussevitzky Music Shed at Tanglewood",
+        "city": "Lenox, MA",
+        "status": "on_sale",
+        "lat": 42.3568223,
+        "lon": -73.2850851
+      },
+      {
+        "date": "Jul 30, 2026",
+        "venue": "Wolf Trap",
+        "city": "Vienna, VA",
+        "status": "on_sale",
+        "lat": 38.9013729,
+        "lon": -77.2651762
+      },
+      {
+        "date": "Aug 13, 2026",
+        "venue": "Woodland Park Zoo",
+        "city": "Seattle, WA",
+        "status": "on_sale",
+        "lat": 47.6038321,
+        "lon": -122.330062
+      },
+      {
+        "date": "Aug 14, 2026",
+        "venue": "McMenamins Grand Lodge",
+        "city": "Forest Grove, OR",
+        "status": "on_sale",
+        "lat": 45.5190404,
+        "lon": -123.1110551
+      },
+      {
+        "date": "Sep 24, 2026",
+        "venue": "Bourbon & Beyond Festival",
+        "city": "Louisville, KY",
+        "status": "on_sale",
+        "lat": 38.2542376,
+        "lon": -85.759407
       }
     ],
     "CAAMP": [
@@ -72,18 +761,312 @@
         "venue": "Starlight Theatre",
         "city": "Kansas City, MO",
         "status": "on_sale",
-        "distance_miles": 179.0,
         "lat": 39.0997,
         "lon": -94.5786
       }
     ],
     "Chris Stapleton": [
       {
+        "date": "Feb 27, 2026",
+        "venue": "Mohegan Sun Arena",
+        "city": "Uncasville, CT",
+        "status": "sold_out",
+        "lat": 41.4346637,
+        "lon": -72.109987
+      },
+      {
+        "date": "Feb 28, 2026",
+        "venue": "Mohegan Sun Arena",
+        "city": "Uncasville, CT",
+        "status": "sold_out",
+        "lat": 41.4346637,
+        "lon": -72.109987
+      },
+      {
+        "date": "Mar 12, 2026",
+        "venue": "Houston Rodeo",
+        "city": "Houston, TX",
+        "status": "on_sale",
+        "lat": 29.7589382,
+        "lon": -95.3676974
+      },
+      {
+        "date": "Apr 19, 2026",
+        "venue": "Two Step Inn",
+        "city": "Georgetown, TX",
+        "status": "on_sale",
+        "lat": 30.6370152,
+        "lon": -97.6775634
+      },
+      {
+        "date": "May 23, 2026",
+        "venue": "Nissan Stadium",
+        "city": "Nashville, TN",
+        "status": "on_sale",
+        "lat": 36.1627,
+        "lon": -86.7816
+      },
+      {
+        "date": "May 29, 2026",
+        "venue": "Gulf Coast Jam",
+        "city": "Panama City Beach, FL",
+        "status": "on_sale",
+        "lat": 30.1765914,
+        "lon": -85.805386
+      },
+      {
+        "date": "Jun 11, 2026",
+        "venue": "VyStar Veterans Memorial Arena",
+        "city": "Jacksonville, FL",
+        "status": "on_sale",
+        "lat": 30.3262247,
+        "lon": -81.6579179
+      },
+      {
+        "date": "Jun 13, 2026",
+        "venue": "Raymond James Stadium",
+        "city": "Tampa, FL",
+        "status": "on_sale",
+        "lat": 27.9449854,
+        "lon": -82.4583107
+      },
+      {
+        "date": "Jun 17, 2026",
+        "venue": "The Pavilion at Star Lake",
+        "city": "Burgettstown, PA",
+        "status": "on_sale",
+        "lat": 40.3820133,
+        "lon": -80.3928423
+      },
+      {
+        "date": "Jun 20, 2026",
+        "venue": "Bank of America Stadium",
+        "city": "Charlotte, NC",
+        "status": "on_sale",
+        "lat": 35.2272086,
+        "lon": -80.8430827
+      },
+      {
+        "date": "Jun 24, 2026",
+        "venue": "Hersheypark Stadium",
+        "city": "Hershey, PA",
+        "status": "on_sale",
+        "lat": 40.2850285,
+        "lon": -76.6534662
+      },
+      {
+        "date": "Jun 26, 2026",
+        "venue": "North Charleston Coliseum",
+        "city": "North Charleston, SC",
+        "status": "sold_out",
+        "lat": 32.8546197,
+        "lon": -79.9748103
+      },
+      {
+        "date": "Jun 27, 2026",
+        "venue": "North Charleston Coliseum",
+        "city": "North Charleston, SC",
+        "status": "on_sale",
+        "lat": 32.8546197,
+        "lon": -79.9748103
+      },
+      {
+        "date": "Jul 8, 2026",
+        "venue": "Shoreline Amphitheatre",
+        "city": "Mountain View, CA",
+        "status": "sold_out",
+        "lat": 37.3893889,
+        "lon": -122.0832101
+      },
+      {
+        "date": "Jul 10, 2026",
+        "venue": "North Island Credit Union Amphitheatre",
+        "city": "Chula Vista, CA",
+        "status": "sold_out",
+        "lat": 32.6400541,
+        "lon": -117.084195
+      },
+      {
+        "date": "Jul 11, 2026",
+        "venue": "North Island Credit Union Amphitheatre",
+        "city": "Chula Vista, CA",
+        "status": "on_sale",
+        "lat": 32.6400541,
+        "lon": -117.084195
+      },
+      {
+        "date": "Jul 14, 2026",
+        "venue": "CA Mid-State Fair",
+        "city": "Paso Robles, CA",
+        "status": "sold_out",
+        "lat": 35.6262618,
+        "lon": -120.6901319
+      },
+      {
+        "date": "Jul 17, 2026",
+        "venue": "Providence Park",
+        "city": "Portland, OR",
+        "status": "on_sale",
+        "lat": 45.5202471,
+        "lon": -122.674194
+      },
+      {
+        "date": "Jul 19, 2026",
+        "venue": "Under the Big Sky",
+        "city": "Whitefish, MT",
+        "status": "on_sale",
+        "lat": 48.4108018,
+        "lon": -114.334624
+      },
+      {
+        "date": "Jul 22, 2026",
+        "venue": "Rogers Arena",
+        "city": "Vancouver, BC",
+        "status": "sold_out",
+        "lat": 49.2608724,
+        "lon": -123.113952
+      },
+      {
+        "date": "Jul 24, 2026",
+        "venue": "The Gorge Amphitheatre",
+        "city": "George, WA",
+        "status": "sold_out",
+        "lat": 47.0807166,
+        "lon": -119.85709
+      },
+      {
+        "date": "Jul 25, 2026",
+        "venue": "The Gorge Amphitheatre",
+        "city": "George, WA",
+        "status": "on_sale",
+        "lat": 47.0807166,
+        "lon": -119.85709
+      },
+      {
+        "date": "Jul 29, 2026",
+        "venue": "Mystic Lake Amphitheater",
+        "city": "Shakopee, MN",
+        "status": "sold_out",
+        "lat": 44.7980186,
+        "lon": -93.5268986
+      },
+      {
+        "date": "Jul 30, 2026",
+        "venue": "Mystic Lake Amphitheater",
+        "city": "Shakopee, MN",
+        "status": "on_sale",
+        "lat": 44.7980186,
+        "lon": -93.5268986
+      },
+      {
+        "date": "Aug 1, 2026",
+        "venue": "Paycor Stadium",
+        "city": "Cincinnati, OH",
+        "status": "on_sale",
+        "lat": 39.1014537,
+        "lon": -84.5124602
+      },
+      {
+        "date": "Aug 6, 2026",
+        "venue": "Rogers Stadium",
+        "city": "Toronto, ON",
+        "status": "sold_out",
+        "lat": 43.6534817,
+        "lon": -79.3839347
+      },
+      {
+        "date": "Aug 8, 2026",
+        "venue": "Ford Field",
+        "city": "Detroit, MI",
+        "status": "on_sale",
+        "lat": 42.3315509,
+        "lon": -83.0466403
+      },
+      {
+        "date": "Aug 14, 2026",
+        "venue": "Fenway Park",
+        "city": "Boston, MA",
+        "status": "sold_out",
+        "lat": 42.3588336,
+        "lon": -71.0578303
+      },
+      {
+        "date": "Aug 15, 2026",
+        "venue": "Fenway Park",
+        "city": "Boston, MA",
+        "status": "on_sale",
+        "lat": 42.3588336,
+        "lon": -71.0578303
+      },
+      {
+        "date": "Aug 18, 2026",
+        "venue": "Veterans United Home Loans Amphitheater",
+        "city": "Virginia Beach, VA",
+        "status": "on_sale",
+        "lat": 36.8496579,
+        "lon": -75.9760751
+      },
+      {
+        "date": "Aug 21, 2026",
+        "venue": "Mercedes-Benz Stadium",
+        "city": "Atlanta, GA",
+        "status": "on_sale",
+        "lat": 33.7544657,
+        "lon": -84.3898151
+      },
+      {
+        "date": "Aug 26, 2026",
+        "venue": "Northwell at Jones Beach Theater",
+        "city": "Wantagh, NY",
+        "status": "sold_out",
+        "lat": 40.663289,
+        "lon": -73.513589
+      },
+      {
+        "date": "Aug 28, 2026",
+        "venue": "Freedom Mortgage Pavilion",
+        "city": "Philadelphia, PA",
+        "status": "sold_out",
+        "lat": 39.9527237,
+        "lon": -75.1635262
+      },
+      {
+        "date": "Aug 29, 2026",
+        "venue": "Freedom Mortgage Pavilion",
+        "city": "Philadelphia, PA",
+        "status": "on_sale",
+        "lat": 39.9527237,
+        "lon": -75.1635262
+      },
+      {
+        "date": "Sep 1, 2026",
+        "venue": "Rogers Stadium",
+        "city": "Toronto, ON",
+        "status": "on_sale",
+        "lat": 43.6534817,
+        "lon": -79.3839347
+      },
+      {
+        "date": "Sep 26, 2026",
+        "venue": "Bourbon & Beyond",
+        "city": "Louisville, KY",
+        "status": "on_sale",
+        "lat": 38.2542376,
+        "lon": -85.759407
+      },
+      {
+        "date": "Oct 2, 2026",
+        "venue": "Jiffy Lube Live",
+        "city": "Bristow, VA",
+        "status": "on_sale",
+        "lat": 38.7233263,
+        "lon": -77.5365669
+      },
+      {
         "date": "Oct 7, 2026",
         "venue": "Pinnacle Bank Arena",
         "city": "Lincoln, NE",
         "status": "on_sale",
-        "distance_miles": 168.7,
         "lat": 40.8136,
         "lon": -96.7026
       },
@@ -92,7 +1075,14 @@
         "venue": "Morton Amphitheater",
         "city": "Kansas City, MO",
         "status": "on_sale",
-        "distance_miles": 179.0,
+        "lat": 39.0997,
+        "lon": -94.5786
+      },
+      {
+        "date": "Oct 10, 2026",
+        "venue": "Morton Amphitheater",
+        "city": "Kansas City, MO",
+        "status": "on_sale",
         "lat": 39.0997,
         "lon": -94.5786
       }
@@ -103,7 +1093,6 @@
         "venue": "Morton Amphitheater",
         "city": "Kansas City, MO",
         "status": "on_sale",
-        "distance_miles": 179.0,
         "lat": 39.0997,
         "lon": -94.5786
       },
@@ -112,12 +1101,164 @@
         "venue": "Denny Sanford PREMIER Center",
         "city": "Sioux Falls, SD",
         "status": "on_sale",
-        "distance_miles": 208.1,
         "lat": 43.546,
         "lon": -96.7313
       }
     ],
-    "Eric Church": [],
+    "Eric Church": [
+      {
+        "date": "Feb 26, 2026",
+        "venue": "BOK Center",
+        "city": "Tulsa, OK",
+        "status": "on_sale",
+        "lat": 36.1563122,
+        "lon": -95.9927516
+      },
+      {
+        "date": "Feb 27, 2026",
+        "venue": "Dickies Arena",
+        "city": "Fort Worth, TX",
+        "status": "on_sale",
+        "lat": 32.753177,
+        "lon": -97.3327459
+      },
+      {
+        "date": "Feb 28, 2026",
+        "venue": "Moody Center",
+        "city": "Austin, TX",
+        "status": "on_sale",
+        "lat": 30.2672,
+        "lon": -97.7431
+      },
+      {
+        "date": "Mar 5, 2026",
+        "venue": "Thompson-Boling Arena at Food City Center",
+        "city": "Knoxville, TN",
+        "status": "on_sale",
+        "lat": 35.9603948,
+        "lon": -83.9210261
+      },
+      {
+        "date": "Mar 6, 2026",
+        "venue": "Greensboro Coliseum",
+        "city": "Greensboro, NC",
+        "status": "on_sale",
+        "lat": 36.0726355,
+        "lon": -79.7919754
+      },
+      {
+        "date": "Mar 7, 2026",
+        "venue": "North Charleston Coliseum",
+        "city": "North Charleston, SC",
+        "status": "on_sale",
+        "lat": 32.8546197,
+        "lon": -79.9748103
+      },
+      {
+        "date": "Mar 19, 2026",
+        "venue": "Legacy Arena at the BJCC",
+        "city": "Birmingham, AL",
+        "status": "on_sale",
+        "lat": 33.5206824,
+        "lon": -86.8024326
+      },
+      {
+        "date": "Mar 20, 2026",
+        "venue": "State Farm Arena",
+        "city": "Atlanta, GA",
+        "status": "on_sale",
+        "lat": 33.7544657,
+        "lon": -84.3898151
+      },
+      {
+        "date": "Mar 27, 2026",
+        "venue": "Hard Rock Live",
+        "city": "Hollywood, FL",
+        "status": "on_sale",
+        "lat": 26.0112014,
+        "lon": -80.1494901
+      },
+      {
+        "date": "Apr 3, 2026",
+        "venue": "Bon Secours Wellness Arena",
+        "city": "Greenville, SC",
+        "status": "on_sale",
+        "lat": 34.851354,
+        "lon": -82.3984882
+      },
+      {
+        "date": "Apr 4, 2026",
+        "venue": "Spectrum Center",
+        "city": "Charlotte, NC",
+        "status": "on_sale",
+        "lat": 35.2272086,
+        "lon": -80.8430827
+      },
+      {
+        "date": "Apr 10, 2026",
+        "venue": "VyStar Veterans Memorial Arena",
+        "city": "Jacksonville, FL",
+        "status": "on_sale",
+        "lat": 30.3262247,
+        "lon": -81.6579179
+      },
+      {
+        "date": "Apr 11, 2026",
+        "venue": "Amalie Arena",
+        "city": "Tampa, FL",
+        "status": "on_sale",
+        "lat": 27.9449854,
+        "lon": -82.4583107
+      },
+      {
+        "date": "Apr 25, 2026",
+        "venue": "Smoothie King Center",
+        "city": "New Orleans, LA",
+        "status": "on_sale",
+        "lat": 29.9561422,
+        "lon": -90.0733934
+      },
+      {
+        "date": "Jun 21, 2026",
+        "venue": "Wildwoods Convention Center",
+        "city": "Wildwood, NJ",
+        "status": "on_sale",
+        "lat": 38.9841969,
+        "lon": -74.8142502
+      },
+      {
+        "date": "Jun 27, 2026",
+        "venue": "Bridgestone Arena",
+        "city": "Nashville, TN",
+        "status": "on_sale",
+        "lat": 36.1627,
+        "lon": -86.7816
+      },
+      {
+        "date": "Jul 11, 2026",
+        "venue": "Covelli Centre",
+        "city": "Youngstown, OH",
+        "status": "on_sale",
+        "lat": 41.1035786,
+        "lon": -80.6520161
+      },
+      {
+        "date": "Jul 18, 2026",
+        "venue": "Vina Robles Amphitheatre",
+        "city": "Paso Robles, CA",
+        "status": "on_sale",
+        "lat": 35.6262618,
+        "lon": -120.6901319
+      },
+      {
+        "date": "Aug 28, 2026",
+        "venue": "Assumption Mutuelle De l'Est",
+        "city": "Dieppe, NB",
+        "status": "on_sale",
+        "lat": 46.0966797,
+        "lon": -64.7357347
+      }
+    ],
     "Lainey Wilson": [],
     "Colter Wall": [],
     "The Red Clay Strays": [],
@@ -128,7 +1269,6 @@
         "venue": "The District",
         "city": "Sioux Falls, SD",
         "status": "on_sale",
-        "distance_miles": 208.1,
         "lat": 43.546,
         "lon": -96.7313
       }
@@ -139,7 +1279,6 @@
         "venue": "Morton Amphitheater",
         "city": "Kansas City, MO",
         "status": "on_sale",
-        "distance_miles": 179.0,
         "lat": 39.0997,
         "lon": -94.5786
       }
@@ -160,7 +1299,6 @@
         "venue": "The Astro Amphitheater",
         "city": "La Vista, NE",
         "status": "on_sale",
-        "distance_miles": 127.8,
         "lat": 41.1844,
         "lon": -96.0308
       }
@@ -174,13 +1312,356 @@
     "Noah Kahan": [],
     "Mt. Joy": [
       {
+        "date": "Apr 9, 2026",
+        "venue": "Hard Rock Live",
+        "city": "Hollywood, FL",
+        "status": "on_sale",
+        "lat": 26.0112014,
+        "lon": -80.1494901
+      },
+      {
+        "date": "Apr 10, 2026",
+        "venue": "Gasparilla Music Festival",
+        "city": "Tampa, FL",
+        "status": "on_sale",
+        "lat": 27.9449854,
+        "lon": -82.4583107
+      },
+      {
+        "date": "Apr 11, 2026",
+        "venue": "The St. Augustine Amphitheatre",
+        "city": "St. Augustine, FL",
+        "status": "on_sale",
+        "lat": 29.8946952,
+        "lon": -81.3145395
+      },
+      {
+        "date": "Apr 14, 2026",
+        "venue": "Coca-Cola Amphitheater",
+        "city": "Birmingham, AL",
+        "status": "on_sale",
+        "lat": 33.5206824,
+        "lon": -86.8024326
+      },
+      {
+        "date": "Apr 16, 2026",
+        "venue": "Live Oak Bank Pavilion",
+        "city": "Wilmington, NC",
+        "status": "on_sale",
+        "lat": 34.2352853,
+        "lon": -77.9487284
+      },
+      {
+        "date": "Apr 17, 2026",
+        "venue": "Truliant Amphitheater",
+        "city": "Charlotte, NC",
+        "status": "on_sale",
+        "lat": 35.2272086,
+        "lon": -80.8430827
+      },
+      {
+        "date": "Apr 18, 2026",
+        "venue": "Synovus Bank Amphitheatre at Chastain Park",
+        "city": "Atlanta, GA",
+        "status": "on_sale",
+        "lat": 33.7544657,
+        "lon": -84.3898151
+      },
+      {
         "date": "Apr 21, 2026",
         "venue": "Starlight Theatre",
         "city": "Kansas City, MO",
         "status": "on_sale",
-        "distance_miles": 179.0,
         "lat": 39.0997,
         "lon": -94.5786
+      },
+      {
+        "date": "Apr 23, 2026",
+        "venue": "Champions Square",
+        "city": "New Orleans, LA",
+        "status": "on_sale",
+        "lat": 29.9561422,
+        "lon": -90.0733934
+      },
+      {
+        "date": "Apr 24, 2026",
+        "venue": "Longhorn Backyard Amphitheater",
+        "city": "Dallas, TX",
+        "status": "on_sale",
+        "lat": 32.7762719,
+        "lon": -96.7968559
+      },
+      {
+        "date": "Apr 25, 2026",
+        "venue": "Moody Center",
+        "city": "Austin, TX",
+        "status": "on_sale",
+        "lat": 30.2672,
+        "lon": -97.7431
+      },
+      {
+        "date": "May 22, 2026",
+        "venue": "BottleRock Napa Valley",
+        "city": "Napa, CA",
+        "status": "on_sale",
+        "lat": 38.4898675,
+        "lon": -122.3218414
+      },
+      {
+        "date": "Jun 4, 2026",
+        "venue": "Midway Lawn at Champlain Valley Expo",
+        "city": "Essex Junction, VT",
+        "status": "on_sale",
+        "lat": 44.4906817,
+        "lon": -73.11136
+      },
+      {
+        "date": "Jun 5, 2026",
+        "venue": "Jacobs Pavilion",
+        "city": "Cleveland, OH",
+        "status": "on_sale",
+        "lat": 41.4996574,
+        "lon": -81.6936772
+      },
+      {
+        "date": "Jun 6, 2026",
+        "venue": "Railbird Music Festival",
+        "city": "Lexington, KY",
+        "status": "on_sale",
+        "lat": 38.0464066,
+        "lon": -84.4970393
+      },
+      {
+        "date": "Jun 9, 2026",
+        "venue": "Michigan Lottery Amphitheatre at Freedom Hill",
+        "city": "Sterling Heights, MI",
+        "status": "on_sale",
+        "lat": 42.5803122,
+        "lon": -83.0302033
+      },
+      {
+        "date": "Jun 10, 2026",
+        "venue": "Stage AE",
+        "city": "Pittsburgh, PA",
+        "status": "on_sale",
+        "lat": 40.4406968,
+        "lon": -80.0025666
+      },
+      {
+        "date": "Jun 11, 2026",
+        "venue": "Bonnaroo",
+        "city": "Manchester, TN",
+        "status": "on_sale",
+        "lat": 35.4832001,
+        "lon": -86.0887296
+      },
+      {
+        "date": "Jun 13, 2026",
+        "venue": "Credit One Stadium",
+        "city": "Charleston, SC",
+        "status": "on_sale",
+        "lat": 32.7884363,
+        "lon": -79.9399309
+      },
+      {
+        "date": "Jul 17, 2026",
+        "venue": "Minnesota Yacht Club Festival",
+        "city": "Saint Paul, MN",
+        "status": "on_sale",
+        "lat": 44.9497487,
+        "lon": -93.0931028
+      },
+      {
+        "date": "Aug 1, 2026",
+        "venue": "Osheaga Festival",
+        "city": "Montreal, QC",
+        "status": "on_sale",
+        "lat": 45.5031824,
+        "lon": -73.5698065
+      },
+      {
+        "date": "Aug 13, 2026",
+        "venue": "Red Rocks Amphitheatre",
+        "city": "Morrison, CO",
+        "status": "on_sale",
+        "lat": 39.6535988,
+        "lon": -105.191099
+      },
+      {
+        "date": "Aug 14, 2026",
+        "venue": "Red Rocks Amphitheatre",
+        "city": "Morrison, CO",
+        "status": "on_sale",
+        "lat": 39.6535988,
+        "lon": -105.191099
+      },
+      {
+        "date": "Aug 15, 2026",
+        "venue": "Fiddler's Green Amphitheatre",
+        "city": "Greenwood Village, CO",
+        "status": "on_sale",
+        "lat": 39.6172101,
+        "lon": -104.950814
+      },
+      {
+        "date": "Aug 18, 2026",
+        "venue": "The Rady Shell at Jacobs Park",
+        "city": "San Diego, CA",
+        "status": "on_sale",
+        "lat": 32.7174202,
+        "lon": -117.162772
+      },
+      {
+        "date": "Aug 20, 2026",
+        "venue": "Greek Theatre",
+        "city": "Los Angeles, CA",
+        "status": "on_sale",
+        "lat": 34.0536909,
+        "lon": -118.242766
+      },
+      {
+        "date": "Aug 21, 2026",
+        "venue": "Greek Theatre",
+        "city": "Los Angeles, CA",
+        "status": "on_sale",
+        "lat": 34.0536909,
+        "lon": -118.242766
+      },
+      {
+        "date": "Aug 22, 2026",
+        "venue": "Arizona Financial Theatre",
+        "city": "Phoenix, AZ",
+        "status": "on_sale",
+        "lat": 33.4484367,
+        "lon": -112.074141
+      },
+      {
+        "date": "Aug 25, 2026",
+        "venue": "Ogden Twilight Concert Series",
+        "city": "Ogden, UT",
+        "status": "on_sale",
+        "lat": 41.2230048,
+        "lon": -111.9738429
+      },
+      {
+        "date": "Aug 26, 2026",
+        "venue": "KettleHouse Amphitheater",
+        "city": "Missoula, MT",
+        "status": "on_sale",
+        "lat": 46.8701049,
+        "lon": -113.995267
+      },
+      {
+        "date": "Aug 28, 2026",
+        "venue": "Venue TBA",
+        "city": "Vancouver, BC",
+        "status": "on_sale",
+        "lat": 49.2608724,
+        "lon": -123.113952
+      },
+      {
+        "date": "Aug 29, 2026",
+        "venue": "Hayden Homes Amphitheater",
+        "city": "Bend, OR",
+        "status": "on_sale",
+        "lat": 44.0581728,
+        "lon": -121.3153096
+      },
+      {
+        "date": "Sep 11, 2026",
+        "venue": "Hard Rock Casino Ottawa",
+        "city": "Ottawa, ON",
+        "status": "on_sale",
+        "lat": 45.4208777,
+        "lon": -75.6901106
+      },
+      {
+        "date": "Sep 12, 2026",
+        "venue": "RBC Amphitheatre",
+        "city": "Toronto, ON",
+        "status": "on_sale",
+        "lat": 43.6534817,
+        "lon": -79.3839347
+      },
+      {
+        "date": "Sep 15, 2026",
+        "venue": "Everwise Amphitheater at White River State Park",
+        "city": "Indianapolis, IN",
+        "status": "on_sale",
+        "lat": 39.7683331,
+        "lon": -86.1583502
+      },
+      {
+        "date": "Sep 17, 2026",
+        "venue": "Madison Square Garden",
+        "city": "New York, NY",
+        "status": "on_sale",
+        "lat": 40.7127281,
+        "lon": -74.0060152
+      },
+      {
+        "date": "Sep 18, 2026",
+        "venue": "Merriweather Post Pavilion",
+        "city": "Columbia, MD",
+        "status": "on_sale",
+        "lat": 39.1938429,
+        "lon": -76.8646092
+      },
+      {
+        "date": "Sep 19, 2026",
+        "venue": "TD Garden",
+        "city": "Boston, MA",
+        "status": "on_sale",
+        "lat": 42.3588336,
+        "lon": -71.0578303
+      },
+      {
+        "date": "Sep 22, 2026",
+        "venue": "Westville Music Bowl",
+        "city": "New Haven, CT",
+        "status": "on_sale",
+        "lat": 41.3082138,
+        "lon": -72.9250518
+      },
+      {
+        "date": "Sep 23, 2026",
+        "venue": "Thompson's Point",
+        "city": "Portland, ME",
+        "status": "on_sale",
+        "lat": 43.6573605,
+        "lon": -70.2586618
+      },
+      {
+        "date": "Sep 25, 2026",
+        "venue": "Freedom Mortgage Pavilion",
+        "city": "Camden, NJ",
+        "status": "on_sale",
+        "lat": 39.9448402,
+        "lon": -75.1198911
+      },
+      {
+        "date": "Sep 29, 2026",
+        "venue": "Allianz Amphitheater at Riverfront",
+        "city": "Richmond, VA",
+        "status": "on_sale",
+        "lat": 37.5385087,
+        "lon": -77.43428
+      },
+      {
+        "date": "Oct 2, 2026",
+        "venue": "Landmark Credit Union Live",
+        "city": "Milwaukee, WI",
+        "status": "on_sale",
+        "lat": 43.0386475,
+        "lon": -87.9090751
+      },
+      {
+        "date": "Oct 3, 2026",
+        "venue": "Huntington Bank Pavilion at Northerly Island",
+        "city": "Chicago, IL",
+        "status": "on_sale",
+        "lat": 41.8781,
+        "lon": -87.6298
       }
     ],
     "Lord Huron": [],
@@ -192,20 +1673,210 @@
     "Tame Impala": [],
     "Zac Brown Band": [
       {
+        "date": "Jul 17, 2026",
+        "venue": "Van Andel Arena",
+        "city": "Grand Rapids, MI",
+        "status": "on_sale",
+        "lat": 42.9632425,
+        "lon": -85.6678639
+      },
+      {
+        "date": "Jul 18, 2026",
+        "venue": "Rocket Arena",
+        "city": "Cleveland, OH",
+        "status": "on_sale",
+        "lat": 41.4996574,
+        "lon": -81.6936772
+      },
+      {
+        "date": "Jul 31, 2026",
+        "venue": "MVP Arena",
+        "city": "Albany, NY",
+        "status": "on_sale",
+        "lat": 42.6511674,
+        "lon": -73.754968
+      },
+      {
+        "date": "Aug 2, 2026",
+        "venue": "Fenway Park",
+        "city": "Boston, MA",
+        "status": "on_sale",
+        "lat": 42.3588336,
+        "lon": -71.0578303
+      },
+      {
+        "date": "Aug 6, 2026",
+        "venue": "Xroads41",
+        "city": "Oshkosh, WI",
+        "status": "on_sale",
+        "lat": 44.0206919,
+        "lon": -88.5408574
+      },
+      {
+        "date": "Aug 13, 2026",
+        "venue": "PPG Paints Arena",
+        "city": "Pittsburgh, PA",
+        "status": "on_sale",
+        "lat": 40.4406968,
+        "lon": -80.0025666
+      },
+      {
+        "date": "Aug 14, 2026",
+        "venue": "Nationwide Arena",
+        "city": "Columbus, OH",
+        "status": "on_sale",
+        "lat": 39.9622601,
+        "lon": -83.0007065
+      },
+      {
+        "date": "Aug 15, 2026",
+        "venue": "Merriweather Post Pavilion",
+        "city": "Columbia, MD",
+        "status": "on_sale",
+        "lat": 39.1938429,
+        "lon": -76.8646092
+      },
+      {
+        "date": "Aug 27, 2026",
+        "venue": "Forest Hills Stadium",
+        "city": "Forest Hills, NY",
+        "status": "on_sale",
+        "lat": 40.7231009,
+        "lon": -73.8466125
+      },
+      {
+        "date": "Aug 28, 2026",
+        "venue": "Forest Hills Stadium",
+        "city": "Forest Hills, NY",
+        "status": "on_sale",
+        "lat": 40.7231009,
+        "lon": -73.8466125
+      },
+      {
+        "date": "Aug 29, 2026",
+        "venue": "TD Pavilion at Highmark Mann",
+        "city": "Philadelphia, PA",
+        "status": "on_sale",
+        "lat": 39.9527237,
+        "lon": -75.1635262
+      },
+      {
         "date": "Sep 10, 2026",
         "venue": "T-Mobile Center",
         "city": "Kansas City, MO",
         "status": "on_sale",
-        "distance_miles": 179.0,
         "lat": 39.0997,
         "lon": -94.5786
+      },
+      {
+        "date": "Sep 11, 2026",
+        "venue": "Enterprise Center",
+        "city": "St. Louis, MO",
+        "status": "on_sale",
+        "lat": 38.6254063,
+        "lon": -90.190009
+      },
+      {
+        "date": "Sep 17, 2026",
+        "venue": "Credit One Stadium",
+        "city": "Charleston, SC",
+        "status": "on_sale",
+        "lat": 32.7884363,
+        "lon": -79.9399309
+      },
+      {
+        "date": "Sep 18, 2026",
+        "venue": "Benchmark International Arena",
+        "city": "Tampa, FL",
+        "status": "on_sale",
+        "lat": 27.9449854,
+        "lon": -82.4583107
+      },
+      {
+        "date": "Sep 19, 2026",
+        "venue": "Hard Rock Live at Seminole Hard Rock Hotel & Casino",
+        "city": "Hollywood, FL",
+        "status": "on_sale",
+        "lat": 26.0112014,
+        "lon": -80.1494901
+      },
+      {
+        "date": "Oct 8, 2026",
+        "venue": "Food City Center",
+        "city": "Knoxville, TN",
+        "status": "on_sale",
+        "lat": 35.9603948,
+        "lon": -83.9210261
+      },
+      {
+        "date": "Oct 9, 2026",
+        "venue": "Bon Secours Wellness Arena",
+        "city": "Greenville, SC",
+        "status": "on_sale",
+        "lat": 34.851354,
+        "lon": -82.3984882
+      },
+      {
+        "date": "Oct 10, 2026",
+        "venue": "First Horizon Coliseum",
+        "city": "Greensboro, NC",
+        "status": "on_sale",
+        "lat": 36.0726355,
+        "lon": -79.7919754
+      },
+      {
+        "date": "Oct 19, 2026",
+        "venue": "Red Rocks Amphitheatre",
+        "city": "Morrison, CO",
+        "status": "sold_out",
+        "lat": 39.6535988,
+        "lon": -105.191099
+      },
+      {
+        "date": "Oct 20, 2026",
+        "venue": "Red Rocks Amphitheatre",
+        "city": "Morrison, CO",
+        "status": "sold_out",
+        "lat": 39.6535988,
+        "lon": -105.191099
+      },
+      {
+        "date": "Oct 23, 2026",
+        "venue": "Target Center",
+        "city": "Minneapolis, MN",
+        "status": "on_sale",
+        "lat": 44.9772995,
+        "lon": -93.2654692
+      },
+      {
+        "date": "Oct 24, 2026",
+        "venue": "Denny Sanford PREMIER Center",
+        "city": "Sioux Falls, SD",
+        "status": "on_sale",
+        "lat": 43.546,
+        "lon": -96.7313
+      },
+      {
+        "date": "Nov 5, 2026",
+        "venue": "KeyBank Center",
+        "city": "Buffalo, NY",
+        "status": "on_sale",
+        "lat": 42.8864163,
+        "lon": -78.8781493
+      },
+      {
+        "date": "Nov 6, 2026",
+        "venue": "Little Caesars Arena",
+        "city": "Detroit, MI",
+        "status": "on_sale",
+        "lat": 42.3315509,
+        "lon": -83.0466403
       },
       {
         "date": "Nov 19, 2026",
         "venue": "Pinnacle Bank Arena",
         "city": "Lincoln, NE",
         "status": "on_sale",
-        "distance_miles": 168.7,
         "lat": 40.8136,
         "lon": -96.7026
       },
@@ -214,13 +1885,59 @@
         "venue": "Casey's Center",
         "city": "Des Moines, IA",
         "status": "on_sale",
-        "distance_miles": 0.0,
         "lat": 41.5868,
         "lon": -93.625
+      },
+      {
+        "date": "Nov 21, 2026",
+        "venue": "Allstate Arena",
+        "city": "Rosemont, IL",
+        "status": "on_sale",
+        "lat": 41.9941334,
+        "lon": -87.8756737
       }
     ]
   },
   "venue_shows": {
+    "The Salt Shed": [
+      {
+        "date": "Mar 6, 2026",
+        "artist": "Jason Isbell",
+        "tracked": true
+      },
+      {
+        "date": "Mar 7, 2026",
+        "artist": "Jason Isbell",
+        "tracked": true
+      },
+      {
+        "date": "Jul 13, 2026",
+        "artist": "Royel Otis",
+        "tracked": true
+      },
+      {
+        "date": "Jul 14, 2026",
+        "artist": "Royel Otis",
+        "tracked": true
+      },
+      {
+        "date": "Jul 16, 2026",
+        "artist": "The Black Keys",
+        "tracked": true
+      }
+    ],
+    "Starlight Theatre": [
+      {
+        "date": "Apr 21, 2026",
+        "artist": "Mt. Joy",
+        "tracked": true
+      },
+      {
+        "date": "Aug 24, 2026",
+        "artist": "CAAMP",
+        "tracked": true
+      }
+    ],
     "Hoyt Sherman Place": [
       {
         "date": "Feb 27, 2026",
@@ -464,83 +2181,6 @@
       {
         "date": "May 15, 2026",
         "artist": "Freddie Gibbs @ Val Air Ballroom",
-        "tracked": false
-      }
-    ],
-    "Starlight Theatre": [
-      {
-        "date": "Apr 21, 2026",
-        "artist": "Mt. Joy",
-        "tracked": true
-      },
-      {
-        "date": "May 5, 2026",
-        "artist": "David Byrne",
-        "tracked": false
-      },
-      {
-        "date": "May 13, 2026",
-        "artist": "Charlie Puth",
-        "tracked": false
-      },
-      {
-        "date": "May 16, 2026",
-        "artist": "Triumph with April Wine",
-        "tracked": false
-      },
-      {
-        "date": "May 28, 2026",
-        "artist": "Les Claypool's Frog Brigade / Primus",
-        "tracked": false
-      },
-      {
-        "date": "Jun 9, 2026",
-        "artist": "Hadestown (Broadway)",
-        "tracked": false
-      },
-      {
-        "date": "Jun 16, 2026",
-        "artist": "Paul Simon",
-        "tracked": false
-      },
-      {
-        "date": "Jul 7, 2026",
-        "artist": "A Beautiful Noise: The Neil Diamond Story (Broadway)",
-        "tracked": false
-      },
-      {
-        "date": "Jul 14, 2026",
-        "artist": "The Fray \u2013 Summer of Light Tour",
-        "tracked": false
-      },
-      {
-        "date": "Jul 24, 2026",
-        "artist": "Sarah McLachlan \u2013 Better Broken Tour",
-        "tracked": false
-      },
-      {
-        "date": "Jul 27, 2026",
-        "artist": "Rainbow Kitten Surprise: bones North American Tour",
-        "tracked": false
-      },
-      {
-        "date": "Aug 2, 2026",
-        "artist": "Young the Giant \u2013 Victory Garden Tour",
-        "tracked": false
-      },
-      {
-        "date": "Aug 10, 2026",
-        "artist": "Lindsey Stirling \u2013 Duality Untamed Tour",
-        "tracked": false
-      },
-      {
-        "date": "Aug 24, 2026",
-        "artist": "CAAMP",
-        "tracked": true
-      },
-      {
-        "date": "Sep 8, 2026",
-        "artist": "Disney's Newsies (Broadway)",
         "tracked": false
       }
     ],
@@ -968,58 +2608,6 @@
         "date": "Nov 1, 2026",
         "artist": "Jim Henson's Labyrinth: In Concert 40th Anniversary",
         "tracked": false
-      }
-    ],
-    "The Salt Shed": [
-      {
-        "date": "Mar 3, 2026",
-        "artist": "Dropkick Murphys: For The People In the Pit St. Patrick's Day 2026",
-        "tracked": false
-      },
-      {
-        "date": "Mar 5, 2026",
-        "artist": "Artemas: LOVERCORE Tour",
-        "tracked": false
-      },
-      {
-        "date": "Mar 6, 2026",
-        "artist": "Jason Isbell and the 400 Unit",
-        "tracked": true
-      },
-      {
-        "date": "Mar 7, 2026",
-        "artist": "Jason Isbell and the 400 Unit (SOLD OUT)",
-        "tracked": true
-      },
-      {
-        "date": "Mar 13, 2026",
-        "artist": "LEVEL UP X ZINGARA: Parallel Spirits 2026 Tour",
-        "tracked": false
-      },
-      {
-        "date": "Mar 15, 2026",
-        "artist": "Descendents & Frank Turner & The Sleeping Souls",
-        "tracked": false
-      },
-      {
-        "date": "Mar 17, 2026",
-        "artist": "bbno$: The Internet Explorer Tour",
-        "tracked": false
-      },
-      {
-        "date": "Mar 20, 2026",
-        "artist": "Maddox Batson: Live Worldwide Tour",
-        "tracked": false
-      },
-      {
-        "date": "Sep 14, 2026",
-        "artist": "Sturgill Simpson / Johnny Blue Skies: Why Not? Tour (Night 1)",
-        "tracked": true
-      },
-      {
-        "date": "Sep 15, 2026",
-        "artist": "Sturgill Simpson / Johnny Blue Skies: Why Not? Tour (Night 2)",
-        "tracked": true
       }
     ]
   }
