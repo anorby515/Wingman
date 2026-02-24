@@ -23,6 +23,9 @@ This document defines the contract between **Claude Code** (codebase maintainer)
 **Sequence:**
 1. Read `wingman_config.json` for artists, venues, settings
 2. For each active artist: Chrome skill navigates to tour page, Claude extracts structured show data
+   - **Include:** shows in the United States, Canada, and Mexico
+   - **Exclude:** shows in Europe, UK, Australia, Asia, South America, or any other non-North-America territory
+   - If country is ambiguous, check city/state — US state abbreviations or Canadian province abbreviations confirm inclusion
 3. For each active venue: Chrome skill navigates to calendar page, Claude extracts event data
    - **Standard venues:** read page text directly after load
    - **Lazy-load / "Load More" venues** (e.g. ACL Live): use the JS interval pattern to auto-click the button until it disappears, then extract:
@@ -42,6 +45,9 @@ This document defines the contract between **Claude Code** (codebase maintainer)
    - If cache miss: query Nominatim API (1 req/sec rate limit)
    - Store result in `geocode_cache.json`
 5. Include all North America shows (no distance filtering)
+   - Do **NOT** calculate or write `distance_miles` — that field has been removed from the Show schema
+   - Write `radius_miles: null` in `concert_state.json` (field is deprecated but kept for backward compat)
+   - Write `center: "Des Moines, IA"` in `concert_state.json` (used as map home position, not a filter)
 6. Diff new results against previous `concert_state.json`
 7. Write updated `concert_state.json` (MUST validate against schema)
 8. Write `docs/summary.json` (MUST validate against schema)
@@ -114,7 +120,7 @@ View full report: [GitHub Pages URL]
 |------|-----------|---------|-------------------|
 | `wingman_config.json` | Local UI (backend API) | Cowork, backend | No |
 | `concert_state.json` | Cowork | Code, frontend, Cowork | **Yes** |
-| `geocode_cache.json` | Cowork (geocoding step) | Cowork | No |
+| `geocode_cache.json` | Cowork (geocoding step) | Cowork, backend API | No |
 | `dismissed_suggestions.json` | Cowork (Spotify sync) | Cowork, backend | No |
 | `flagged_items.json` | Cowork (Spotify sync) | Backend (local UI) | No |
 | `spotify_tokens.json` | Backend (OAuth flow) | Cowork | **Never** (.gitignored) |
@@ -141,10 +147,12 @@ Top-level structure:
 **Show object:**
 - `date` (string) — display format, e.g. "Mar 15, 2026"
 - `venue` (string) — venue name
-- `city` (string) — "City, ST" format
+- `city` (string) — "City, ST" format (or "City, Province, CA" for Canada)
 - `status` (enum: "on_sale" | "sold_out")
-- `lat` (number | null) — venue latitude
-- `lon` (number | null) — venue longitude
+- `lat` (number | null) — venue latitude (from geocode_cache.json)
+- `lon` (number | null) — venue longitude (from geocode_cache.json)
+
+**Note:** `distance_miles` has been removed. Do NOT write this field.
 
 **VenueShow object:**
 - `date` (string) — display format
