@@ -363,7 +363,62 @@ export default function SummaryTab() {
           ))}
         </div>
       </section>
+
+      {/* ── Flagged Items (local mode only) ── */}
+      {!DEMO && <FlaggedItems />}
     </div>
+  )
+}
+
+// ── Flagged Items ─────────────────────────────────────────────────────────────
+function FlaggedItems() {
+  const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/flagged-items')
+      .then(r => r.json())
+      .then(setItems)
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
+
+  async function dismiss(index) {
+    try {
+      await fetch(`/api/flagged-items/${index}`, { method: 'DELETE' })
+      setItems(prev => prev.filter((_, i) => i !== index))
+    } catch {}
+  }
+
+  if (loading || items.length === 0) return null
+
+  return (
+    <section>
+      <SectionHeading count={items.length}>Flagged Items</SectionHeading>
+      <div className="space-y-2">
+        {items.map((item, i) => (
+          <div key={i} className="card p-3 flex items-start gap-3">
+            <div className="w-2 h-2 rounded-full bg-amber-400 mt-1.5 flex-shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-slate-800">{item.title || item.artist || 'Unknown'}</p>
+              <p className="text-xs text-slate-500 mt-0.5">{item.message || item.reason || ''}</p>
+              {item.source && (
+                <span className="text-xs text-slate-400">{item.source}</span>
+              )}
+            </div>
+            <button
+              onClick={() => dismiss(i)}
+              className="text-slate-400 hover:text-red-500 transition-colors flex-shrink-0"
+              title="Dismiss"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        ))}
+      </div>
+    </section>
   )
 }
 
