@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DismissedSuggestions",
+  "description": "Spotify artist suggestions dismissed by the user. Key is artist name. Delete an entry to allow re-suggestion immediately.",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "required": ["dismissed_at", "resurface_after", "reason", "source"],
+    "properties": {
+      "dismissed_at": {
+        "type": "string",
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "description": "Date the suggestion was dismissed"
+      },
+      "resurface_after": {
+        "type": "string",
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "description": "Date after which the artist can be suggested again (6 months from dismissal)"
+      },
+      "reason": {
+        "type": "string",
+        "description": "Why dismissed, e.g. 'user declined'"
+      },
+      "source": {
+        "type": "string",
+        "description": "Where the suggestion came from, e.g. 'top_artists_medium_term', 'recently_played'"
+      }
+    }
+  }
+}

@@ -1,17 +1,18 @@
 name: Deploy to GitHub Pages
 
+# Scraping is now handled by Claude Cowork sessions (not CI).
+# This workflow only builds the frontend and deploys to GitHub Pages.
+# Triggered when Cowork pushes updated data (concert_state.json, docs/).
+
 on:
   push:
     branches:
       - main
       - 'claude/**'
-  schedule:
-    # Run weekly on Saturdays at 10:00 UTC (matches scraper cadence)
-    - cron: '0 10 * * 6'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -25,34 +26,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # ── Scrape fresh concert data ──
+      # ── Export static data for demo frontend ──
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
       - name: Install Python dependencies
-        run: pip install playwright reportlab
-
-      - name: Install Playwright browser
-        run: python -m playwright install chromium --with-deps
-
-      - name: Run concert scraper
-        run: python concert_weekly.py
-        timeout-minutes: 20
+        run: pip install pydantic
 
       - name: Export static data for demo frontend
         run: python scripts/export_static_data.py
-
-      # ── Commit updated data back to repo ──
-      - name: Commit updated concert data
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add concert_state.json frontend/public/static-data.json
-          git diff --cached --quiet || git commit -m "chore: update concert data [skip ci]"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # ── Build frontend in demo mode ──
       - uses: actions/setup-node@v4
