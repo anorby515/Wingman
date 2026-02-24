@@ -225,9 +225,9 @@ export default function SummaryTab() {
     return shows
   }, [state])
 
-  // Extract center coordinates from state or summary data
-  const centerLat = state?.center_lat ?? null
-  const centerLon = state?.center_lon ?? null
+  // Extract center coordinates: prefer state (set by Cowork), fall back to config (geocoded on demand)
+  const centerLat = state?.center_lat ?? config?.center_lat ?? null
+  const centerLon = state?.center_lon ?? config?.center_lon ?? null
   const radiusMiles = state?.radius_miles || config?.radius_miles || 200
 
   if (loading) return <LoadingSpinner />

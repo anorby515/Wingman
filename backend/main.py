@@ -16,6 +16,9 @@ import asyncio
 import json
 import subprocess
 import sys
+import time
+import urllib.parse
+import urllib.request
 from pathlib import Path
 from typing import Any, Optional
 
@@ -30,6 +33,7 @@ REPO          = HERE.parent
 CONFIG_FILE   = REPO / "wingman_config.json"
 STATE_FILE    = REPO / "concert_state.json"
 FLAGGED_FILE  = REPO / "flagged_items.json"
+GEOCODE_FILE  = REPO / "geocode_cache.json"
 SCRIPT        = REPO / "concert_weekly.py"
 SCHEDULE_FILE = Path("/sessions/eager-gracious-cray/mnt/.claude/scheduled-tasks.json")
 
@@ -58,6 +62,54 @@ def _read_config() -> dict:
 
 def _write_config(cfg: dict) -> None:
     CONFIG_FILE.write_text(json.dumps(cfg, indent=2))
+
+
+# ── Geocoding helper ──────────────────────────────────────────────────────────
+_last_geocode_call: float = 0.0
+
+
+def _geocode(location: str) -> tuple[float, float] | None:
+    """Return (lat, lon) for a location string, using cache or Nominatim."""
+    global _last_geocode_call
+
+    # Check cache first
+    cache: dict = {}
+    if GEOCODE_FILE.exists():
+        try:
+            cache = json.loads(GEOCODE_FILE.read_text())
+        except Exception:
+            pass
+    if location in cache:
+        entry = cache[location]
+        return entry["lat"], entry["lon"]
+
+    # Rate-limit: 1 req/sec
+    elapsed = time.time() - _last_geocode_call
+    if elapsed < 1.0:
+        time.sleep(1.0 - elapsed)
+
+    url = (
+        "https://nominatim.openstreetmap.org/search"
+        f"?q={urllib.parse.quote(location)}&format=json&limit=1"
+    )
+    req = urllib.request.Request(url, headers={"User-Agent": "Wingman/1.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read())
+        _last_geocode_call = time.time()
+    except Exception:
+        return None
+
+    if not data:
+        return None
+
+    lat, lon = float(data[0]["lat"]), float(data[0]["lon"])
+    cache[location] = {"lat": lat, "lon": lon}
+    try:
+        GEOCODE_FILE.write_text(json.dumps(cache, indent=2))
+    except Exception:
+        pass
+    return lat, lon
 
 
 # ── Pydantic models ───────────────────────────────────────────────────────────
@@ -112,7 +164,14 @@ def get_state() -> Any:
 # ── Config endpoint ───────────────────────────────────────────────────────────
 @app.get("/api/config")
 def get_config() -> Any:
-    return _read_config()
+    cfg = _read_config()
+    # Attach geocoded center coordinates for the map
+    center_city = cfg.get("center_city", "")
+    if center_city and "center_lat" not in cfg:
+        coords = _geocode(center_city)
+        if coords:
+            cfg["center_lat"], cfg["center_lon"] = coords
+    return cfg
 
 
 # ── Settings ──────────────────────────────────────────────────────────────────
