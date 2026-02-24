@@ -25,11 +25,12 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 # ── Paths ────────────────────────────────────────────────────────────────────
-HERE        = Path(__file__).parent
-REPO        = HERE.parent
-CONFIG_FILE = REPO / "wingman_config.json"
-STATE_FILE  = REPO / "concert_state.json"
-SCRIPT      = REPO / "concert_weekly.py"
+HERE          = Path(__file__).parent
+REPO          = HERE.parent
+CONFIG_FILE   = REPO / "wingman_config.json"
+STATE_FILE    = REPO / "concert_state.json"
+FLAGGED_FILE  = REPO / "flagged_items.json"
+SCRIPT        = REPO / "concert_weekly.py"
 SCHEDULE_FILE = Path("/sessions/eager-gracious-cray/mnt/.claude/scheduled-tasks.json")
 
 # ── App ──────────────────────────────────────────────────────────────────────
@@ -91,6 +92,7 @@ class SettingsPatch(BaseModel):
     radius_miles: Optional[int] = None
     cities_in_range: Optional[list[str]] = None
     states_in_range: Optional[list[str]] = None
+    github_pages_url: Optional[str] = None
 
 
 class SchedulePatch(BaseModel):
@@ -125,12 +127,15 @@ def patch_settings(body: SettingsPatch) -> Any:
         cfg["cities_in_range"] = body.cities_in_range
     if body.states_in_range is not None:
         cfg["states_in_range"] = body.states_in_range
+    if body.github_pages_url is not None:
+        cfg["github_pages_url"] = body.github_pages_url
     _write_config(cfg)
     return {"ok": True, "settings": {
         "center_city": cfg["center_city"],
         "radius_miles": cfg["radius_miles"],
         "cities_in_range": cfg["cities_in_range"],
         "states_in_range": cfg["states_in_range"],
+        "github_pages_url": cfg.get("github_pages_url", ""),
     }}
 
 
@@ -354,6 +359,35 @@ async def trigger_run() -> Any:
 
     asyncio.create_task(_stream())
     return {"ok": True, "message": "Run started. Poll /api/run/status for progress."}
+
+
+# ── Flagged Items ────────────────────────────────────────────────────────────
+def _read_flagged() -> list[dict]:
+    if not FLAGGED_FILE.exists():
+        return []
+    try:
+        return json.loads(FLAGGED_FILE.read_text())
+    except Exception:
+        return []
+
+
+def _write_flagged(items: list[dict]) -> None:
+    FLAGGED_FILE.write_text(json.dumps(items, indent=2))
+
+
+@app.get("/api/flagged-items")
+def list_flagged_items() -> Any:
+    return _read_flagged()
+
+
+@app.delete("/api/flagged-items/{index}")
+def dismiss_flagged_item(index: int) -> Any:
+    items = _read_flagged()
+    if index < 0 or index >= len(items):
+        raise HTTPException(status_code=404, detail="Flagged item not found")
+    removed = items.pop(index)
+    _write_flagged(items)
+    return {"ok": True, "removed": removed}
 
 
 # ── Serve built frontend ──────────────────────────────────────────────────────
