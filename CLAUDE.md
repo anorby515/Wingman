@@ -41,15 +41,14 @@ This document defines the contract between **Claude Code** (codebase maintainer)
    - Check `geocode_cache.json` first
    - If cache miss: query Nominatim API (1 req/sec rate limit)
    - Store result in `geocode_cache.json`
-5. Calculate Haversine distance from `center_city` to each show's venue
-6. Include show only if `distance_miles <= radius_miles`
-7. Diff new results against previous `concert_state.json`
-8. Write updated `concert_state.json` (MUST validate against schema)
-9. Write `docs/summary.json` (MUST validate against schema)
-10. Copy current snapshot to `docs/history/YYYY-MM-DD.json`
-11. Run `python scripts/validate_state.py` to verify data integrity
-12. Commit and push: `concert_state.json`, `docs/summary.json`, `docs/history/*.json`
-13. Send Gmail digest via Chrome skill (send even if no changes)
+5. Include all North America shows (no distance filtering)
+6. Diff new results against previous `concert_state.json`
+7. Write updated `concert_state.json` (MUST validate against schema)
+8. Write `docs/summary.json` (MUST validate against schema)
+9. Copy current snapshot to `docs/history/YYYY-MM-DD.json`
+10. Run `python scripts/validate_state.py` to verify data integrity
+11. Commit and push: `concert_state.json`, `docs/summary.json`, `docs/history/*.json`
+12. Send Gmail digest via Chrome skill (send even if no changes)
 
 **Commit message format:** `Weekly update: YYYY-MM-DD - X new, Y removed`
 
@@ -134,8 +133,8 @@ All shared data files MUST conform to the JSON schemas in `schemas/`.
 
 Top-level structure:
 - `last_run` (string, date format YYYY-MM-DD)
-- `center` (string, e.g. "Des Moines, IA")
-- `radius_miles` (number)
+- `center` (string, e.g. "Des Moines, IA") — map home city
+- `radius_miles` (number | null) — deprecated, kept for backward compat
 - `artist_shows` (object: artist name -> array of Show objects)
 - `venue_shows` (object: venue name -> array of VenueShow objects)
 
@@ -144,7 +143,6 @@ Top-level structure:
 - `venue` (string) — venue name
 - `city` (string) — "City, ST" format
 - `status` (enum: "on_sale" | "sold_out")
-- `distance_miles` (number | null) — Haversine distance from center city
 - `lat` (number | null) — venue latitude
 - `lon` (number | null) — venue longitude
 
@@ -173,8 +171,8 @@ See `schemas/wingman_config.schema.json` for full definition.
 ### docs/summary.json
 
 See `schemas/summary.schema.json` for full definition. Includes:
-- Metadata (run date, center, radius)
-- All shows with distances
+- Metadata (run date, center/home city)
+- All North America shows with lat/lon coordinates
 - Diff from previous run (added, removed, sold_out)
 - Map data (center coordinates, show pin coordinates)
 
@@ -206,7 +204,7 @@ The public site is deployed from `frontend/dist` built in demo mode.
 
 - **Local UI** includes a link to the GitHub Pages URL (opens in new tab)
 - The GitHub Pages site does NOT link back to the local UI
-- GitHub Pages shows: summary table, Leaflet map with radius circle + show pins, "new this week" highlights
+- GitHub Pages shows: summary table, Leaflet map with show + venue pins, "new this week" highlights
 - Historical snapshots are accessible via `docs/history/`
 
 ---
@@ -216,9 +214,8 @@ The public site is deployed from `frontend/dist` built in demo mode.
 - **Provider:** OpenStreetMap Nominatim (free, no API key)
 - **Rate limit:** 1 request per second (enforced by caller)
 - **Cache:** `geocode_cache.json` — geocode once, reuse forever unless venue changes
-- **Distance formula:** Haversine (great-circle distance)
-- **Center city** is geocoded once and cached
-- **Inclusion rule:** `distance_miles <= radius_miles` from config
+- **Scope:** All North America shows (no distance filtering)
+- **Center city** is geocoded once and cached (used as map home position)
 - **Build-up approach:** First run geocodes all venues; subsequent runs only geocode new ones
 
 ---
@@ -238,13 +235,17 @@ The public site is deployed from `frontend/dist` built in demo mode.
 - Full local UI: React frontend + FastAPI backend, served from `frontend/dist`
 - Artist management (add, edit, pause, delete) with genre badges
 - Venue management (local vs. travel, add, edit, pause, delete)
-- Settings panel (center city, radius, cities/states in range, GitHub Pages URL)
+- Settings panel (map home city, GitHub Pages URL)
 - Schedule panel (next run display, cron config)
 - Flagged Items panel (Spotify sync flags surfaced in UI)
 - Concert summary tab: artist cards, venue sections, show listings
-- Leaflet map with radius circle and show pins (green=new, red=sold out, blue=on sale)
+- Leaflet map with artist show pins (green=new, red=sold out, blue=on sale) + venue pins (violet)
+- Interactive map filtering: click artist/venue card to filter map pins; map viewport filters visible cards
+- Compound filtering: artist/venue selection + viewport bounds both apply
+- Hover tooltips on map pins showing artist, date, venue details
 - Backend geocoding via Nominatim with `geocode_cache.json` cache
-- `/api/config` returns `center_lat`/`center_lon` for map rendering
+- `/api/config` returns `center_lat`/`center_lon` for map + venue lat/lon for venue pins
+- All North America shows scraped (no distance/radius filtering)
 - GitHub Pages demo build (VITE_DEMO_MODE=true) + GitHub Actions deploy workflow
 - JSON schemas + Pydantic validation (`scripts/validate_state.py`)
 

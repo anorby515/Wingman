@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import ConcertMap from './ConcertMap.jsx'
 
 const DEMO = import.meta.env.VITE_DEMO_MODE === 'true'
@@ -14,16 +14,41 @@ function genreColor(genre) {
   return GENRE_COLORS[genre] || GENRE_COLORS['Other']
 }
 
+/**
+ * Check if a lat/lon point is within Leaflet LatLngBounds.
+ * bounds has getSouthWest() and getNorthEast() methods.
+ */
+function isInBounds(lat, lon, bounds) {
+  if (!bounds) return true
+  const sw = bounds.getSouthWest()
+  const ne = bounds.getNorthEast()
+  return lat >= sw.lat && lat <= ne.lat && lon >= sw.lng && lon <= ne.lng
+}
+
 // ── Artist card ───────────────────────────────────────────────────────────────
-function ArtistCard({ name, genre, shows, paused }) {
-  const [open, setOpen] = useState(false)
+function ArtistCard({ name, genre, shows, paused, isSelected, onSelect }) {
+  // When selected via map filter, card is always expanded
+  const [manualOpen, setManualOpen] = useState(false)
+  const open = isSelected || manualOpen
+
+  function handleClick() {
+    if (isSelected) {
+      // Deselect: clear filter
+      onSelect(null)
+      setManualOpen(false)
+    } else {
+      // Select: set as map filter and expand
+      onSelect({ type: 'artist', name })
+    }
+  }
+
   const hasShows = shows && shows.length > 0
   const newCount = shows ? shows.filter(s => s.is_new).length : 0
 
   return (
-    <div className={`card transition-opacity ${paused ? 'opacity-50' : ''}`}>
+    <div className={`card transition-all ${paused ? 'opacity-50' : ''} ${isSelected ? 'ring-2 ring-indigo-400' : ''}`}>
       <button
-        onClick={() => setOpen(o => !o)}
+        onClick={handleClick}
         className="w-full p-4 text-left flex items-center gap-3"
       >
         <div className="flex-1 min-w-0">
@@ -34,11 +59,16 @@ function ArtistCard({ name, genre, shows, paused }) {
             {newCount > 0 && (
               <span className="badge-new">{newCount} new</span>
             )}
+            {isSelected && (
+              <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-medium">
+                Filtered
+              </span>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className={`text-sm font-semibold ${hasShows ? 'text-emerald-600' : 'text-slate-400'}`}>
-            {hasShows ? `${shows.length} show${shows.length !== 1 ? 's' : ''}` : 'None in range'}
+            {hasShows ? `${shows.length} show${shows.length !== 1 ? 's' : ''}` : 'No shows'}
           </span>
           <svg
             className={`w-4 h-4 text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`}
@@ -62,12 +92,6 @@ function ArtistCard({ name, genre, shows, paused }) {
                     <span className="text-slate-600">{show.venue}</span>
                     <span className="text-slate-400 mx-1">&middot;</span>
                     <span className="text-slate-500">{show.city}</span>
-                    {show.distance_miles != null && (
-                      <>
-                        <span className="text-slate-400 mx-1">&middot;</span>
-                        <span className="text-indigo-500 font-medium">{show.distance_miles} mi</span>
-                      </>
-                    )}
                   </div>
                   {show.status === 'sold_out' && (
                     <span className="badge-sold-out flex-shrink-0">Sold Out</span>
@@ -76,7 +100,7 @@ function ArtistCard({ name, genre, shows, paused }) {
               ))}
             </ul>
           ) : (
-            <p className="mt-3 text-sm text-slate-400 italic">No upcoming shows in range.</p>
+            <p className="mt-3 text-sm text-slate-400 italic">No upcoming shows found.</p>
           )}
         </div>
       )}
@@ -85,14 +109,24 @@ function ArtistCard({ name, genre, shows, paused }) {
 }
 
 // ── Venue card ────────────────────────────────────────────────────────────────
-function VenueCard({ name, city, events, paused }) {
-  const [open, setOpen] = useState(false)
+function VenueCard({ name, city, events, paused, isSelected, onSelect }) {
+  const [manualOpen, setManualOpen] = useState(false)
+  const open = isSelected || manualOpen
   const tracked = events ? events.filter(e => e.tracked) : []
 
+  function handleClick() {
+    if (isSelected) {
+      onSelect(null)
+      setManualOpen(false)
+    } else {
+      onSelect({ type: 'venue', name })
+    }
+  }
+
   return (
-    <div className={`card transition-opacity ${paused ? 'opacity-50' : ''}`}>
+    <div className={`card transition-all ${paused ? 'opacity-50' : ''} ${isSelected ? 'ring-2 ring-purple-400' : ''}`}>
       <button
-        onClick={() => setOpen(o => !o)}
+        onClick={handleClick}
         className="w-full p-4 text-left flex items-center gap-3"
       >
         <div className="flex-1 min-w-0">
@@ -105,11 +139,16 @@ function VenueCard({ name, city, events, paused }) {
                 {tracked.length} tracked
               </span>
             )}
+            {isSelected && (
+              <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-medium">
+                Filtered
+              </span>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className="text-sm font-semibold text-slate-500">
-            {events ? `${events.length} events` : '—'}
+            {events ? `${events.length} events` : '\u2014'}
           </span>
           <svg
             className={`w-4 h-4 text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`}
@@ -156,21 +195,25 @@ function VenueCard({ name, city, events, paused }) {
 }
 
 // ── Section heading ───────────────────────────────────────────────────────────
-function SectionHeading({ children, count }) {
+function SectionHeading({ children, count, total }) {
   return (
     <div className="flex items-center gap-2 mb-3">
       <h2 className="text-base font-bold text-slate-700">{children}</h2>
-      {count !== undefined && (
+      {count !== undefined && total !== undefined ? (
+        <span className="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full">
+          {count} / {total} in view
+        </span>
+      ) : count !== undefined ? (
         <span className="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full">{count}</span>
-      )}
+      ) : null}
     </div>
   )
 }
 
 // ── Map legend ────────────────────────────────────────────────────────────────
-function MapLegend() {
+function MapLegend({ mapFilter, onClearFilter }) {
   return (
-    <div className="flex flex-wrap gap-3 text-xs text-slate-500 mt-2 px-1">
+    <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mt-2 px-1">
       <span className="flex items-center gap-1">
         <span className="w-3 h-3 rounded-full bg-blue-500 inline-block" /> On Sale
       </span>
@@ -181,8 +224,22 @@ function MapLegend() {
         <span className="w-3 h-3 rounded-full bg-red-500 inline-block" /> Sold Out
       </span>
       <span className="flex items-center gap-1">
-        <span className="w-3 h-3 rounded-sm bg-indigo-100 border border-indigo-400 border-dashed inline-block" /> Search Radius
+        <span className="w-3 h-3 rounded-full bg-purple-500 inline-block" /> Venue
       </span>
+      <span className="flex items-center gap-1">
+        <span className="w-3 h-3 rounded-full bg-indigo-500 inline-block" /> Home
+      </span>
+      {mapFilter && (
+        <button
+          onClick={onClearFilter}
+          className="ml-auto flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 font-medium hover:bg-indigo-200 transition-colors"
+        >
+          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Clear filter: {mapFilter.name}
+        </button>
+      )}
     </div>
   )
 }
@@ -193,7 +250,11 @@ export default function SummaryTab() {
   const [config, setConfig] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError]   = useState(null)
-  const [filter, setFilter] = useState('all') // 'all' | 'with-shows' | 'no-shows'
+
+  // Map filter: { type: 'artist'|'venue', name: string } | null
+  const [mapFilter, setMapFilter] = useState(null)
+  // Map viewport bounds (Leaflet LatLngBounds object)
+  const [mapBounds, setMapBounds] = useState(null)
 
   useEffect(() => {
     if (DEMO) {
@@ -213,8 +274,13 @@ export default function SummaryTab() {
     }
   }, [])
 
+  // Stable callback for bounds changes
+  const handleBoundsChange = useCallback((bounds) => {
+    setMapBounds(bounds)
+  }, [])
+
   // Flatten all artist shows into a single array for the map
-  const allShows = useMemo(() => {
+  const allArtistShows = useMemo(() => {
     if (!state?.artist_shows) return []
     const shows = []
     for (const [artist, artistShows] of Object.entries(state.artist_shows)) {
@@ -225,10 +291,27 @@ export default function SummaryTab() {
     return shows
   }, [state])
 
-  // Extract center coordinates: prefer state (set by Cowork), fall back to config (geocoded on demand)
+  // Build venue show data with lat/lon from config for the map
+  const allVenueShows = useMemo(() => {
+    if (!state?.venue_shows || !config?.venues) return []
+    const venues = []
+    for (const [venueName, events] of Object.entries(state.venue_shows)) {
+      const venueConfig = config.venues[venueName]
+      if (!venueConfig) continue
+      venues.push({
+        venueName,
+        lat: venueConfig.lat || null,
+        lon: venueConfig.lon || null,
+        city: venueConfig.city,
+        events,
+      })
+    }
+    return venues
+  }, [state, config])
+
+  // Extract center coordinates
   const centerLat = state?.center_lat ?? config?.center_lat ?? null
   const centerLon = state?.center_lon ?? config?.center_lon ?? null
-  const radiusMiles = state?.radius_miles || config?.radius_miles || 200
 
   if (loading) return <LoadingSpinner />
   if (error)   return <ErrorBox message={error} />
@@ -249,17 +332,36 @@ export default function SummaryTab() {
     return a.name.localeCompare(b.name)
   })
 
-  const filtered = filter === 'with-shows'
-    ? artistList.filter(a => a.shows.length > 0)
-    : filter === 'no-shows'
-    ? artistList.filter(a => a.shows.length === 0)
-    : artistList
+  // Filter artist list by viewport bounds — hide artists with no shows in view
+  // Exception: the selected artist (mapFilter) is always visible
+  const visibleArtists = artistList.filter(a => {
+    // Selected artist is always visible
+    if (mapFilter?.type === 'artist' && mapFilter.name === a.name) return true
+    // No bounds yet → show all
+    if (!mapBounds) return true
+    // Show if at least one show is in viewport
+    return a.shows.some(s => s.lat != null && s.lon != null && isInBounds(s.lat, s.lon, mapBounds))
+  })
 
   const localVenues  = Object.entries(configVenues).filter(([, v]) => v.is_local)
   const travelVenues = Object.entries(configVenues).filter(([, v]) => !v.is_local)
 
+  // Filter venue lists by viewport bounds
+  function isVenueVisible(name, venueInfo) {
+    if (mapFilter?.type === 'venue' && mapFilter.name === name) return true
+    if (!mapBounds) return true
+    const lat = venueInfo.lat
+    const lon = venueInfo.lon
+    if (lat != null && lon != null) return isInBounds(lat, lon, mapBounds)
+    return true // no coords → show by default
+  }
+
+  const visibleLocalVenues = localVenues.filter(([name, info]) => isVenueVisible(name, info))
+  const visibleTravelVenues = travelVenues.filter(([name, info]) => isVenueVisible(name, info))
+
   const withShowsCount = artistList.filter(a => a.shows.length > 0).length
-  const newShowsCount = allShows.filter(s => s.is_new).length
+  const totalShowCount = allArtistShows.length
+  const newShowsCount = allArtistShows.filter(s => s.is_new).length
 
   return (
     <div className="space-y-8">
@@ -270,16 +372,16 @@ export default function SummaryTab() {
           {state?.last_run || <span className="text-slate-400 italic">Never</span>}
         </div>
         <div>
-          <span className="font-semibold text-slate-800">Center: </span>
-          {state?.center || config?.center_city || '—'}
+          <span className="font-semibold text-slate-800">Home: </span>
+          {state?.center || config?.center_city || '\u2014'}
         </div>
         <div>
-          <span className="font-semibold text-slate-800">Radius: </span>
-          {radiusMiles} miles
+          <span className="font-semibold text-slate-800">Artists: </span>
+          {withShowsCount} / {artistList.length} with shows
         </div>
         <div>
-          <span className="font-semibold text-slate-800">Shows found: </span>
-          {withShowsCount} / {artistList.length} artists
+          <span className="font-semibold text-slate-800">Total shows: </span>
+          {totalShowCount}
         </div>
         {newShowsCount > 0 && (
           <div>
@@ -294,55 +396,59 @@ export default function SummaryTab() {
         <ConcertMap
           centerLat={centerLat}
           centerLon={centerLon}
-          radiusMiles={radiusMiles}
-          shows={allShows}
+          artistShows={allArtistShows}
+          venueShows={allVenueShows}
+          mapFilter={mapFilter}
+          onBoundsChange={handleBoundsChange}
         />
-        <MapLegend />
+        <MapLegend mapFilter={mapFilter} onClearFilter={() => setMapFilter(null)} />
       </section>
 
       {/* ── Artist Shows ── */}
       <section>
         <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-          <SectionHeading count={artistList.length}>Artist Shows</SectionHeading>
-          <div className="flex gap-1 text-xs">
-            {[
-              { id: 'all', label: 'All' },
-              { id: 'with-shows', label: `With shows (${withShowsCount})` },
-              { id: 'no-shows', label: 'None in range' },
-            ].map(opt => (
-              <button
-                key={opt.id}
-                onClick={() => setFilter(opt.id)}
-                className={`px-2.5 py-1 rounded-full font-medium transition-colors ${
-                  filter === opt.id
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-slate-200 text-slate-600 hover:bg-slate-300'
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
+          <SectionHeading count={visibleArtists.length} total={artistList.length}>
+            Artist Shows
+          </SectionHeading>
+          {mapBounds && visibleArtists.length < artistList.length && (
+            <span className="text-xs text-slate-400 italic">
+              Zoom out or pan to see more artists
+            </span>
+          )}
         </div>
 
         <div className="grid sm:grid-cols-2 gap-3">
-          {filtered.map(a => (
-            <ArtistCard key={a.name} {...a} />
+          {visibleArtists.map(a => (
+            <ArtistCard
+              key={a.name}
+              {...a}
+              isSelected={mapFilter?.type === 'artist' && mapFilter.name === a.name}
+              onSelect={setMapFilter}
+            />
           ))}
+          {visibleArtists.length === 0 && (
+            <div className="col-span-2 card p-6 text-center text-slate-400 text-sm italic">
+              No artists with shows in the current map view. Zoom out to see more.
+            </div>
+          )}
         </div>
       </section>
 
       {/* ── Local Venues ── */}
       <section>
-        <SectionHeading count={localVenues.length}>Local Venues</SectionHeading>
+        <SectionHeading count={visibleLocalVenues.length} total={localVenues.length}>
+          Local Venues
+        </SectionHeading>
         <div className="grid sm:grid-cols-2 gap-3">
-          {localVenues.map(([name, info]) => (
+          {visibleLocalVenues.map(([name, info]) => (
             <VenueCard
               key={name}
               name={name}
               city={info.city}
               paused={info.paused}
               events={venueShows[name]}
+              isSelected={mapFilter?.type === 'venue' && mapFilter.name === name}
+              onSelect={setMapFilter}
             />
           ))}
         </div>
@@ -350,15 +456,19 @@ export default function SummaryTab() {
 
       {/* ── Travel Venues ── */}
       <section>
-        <SectionHeading count={travelVenues.length}>Travel Venues</SectionHeading>
+        <SectionHeading count={visibleTravelVenues.length} total={travelVenues.length}>
+          Travel Venues
+        </SectionHeading>
         <div className="grid sm:grid-cols-2 gap-3">
-          {travelVenues.map(([name, info]) => (
+          {visibleTravelVenues.map(([name, info]) => (
             <VenueCard
               key={name}
               name={name}
               city={info.city}
               paused={info.paused}
               events={venueShows[name]}
+              isSelected={mapFilter?.type === 'venue' && mapFilter.name === name}
+              onSelect={setMapFilter}
             />
           ))}
         </div>
