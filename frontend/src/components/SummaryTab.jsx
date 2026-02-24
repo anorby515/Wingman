@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import ConcertMap from './ConcertMap.jsx'
 
 const DEMO = import.meta.env.VITE_DEMO_MODE === 'true'
 
@@ -17,6 +18,7 @@ function genreColor(genre) {
 function ArtistCard({ name, genre, shows, paused }) {
   const [open, setOpen] = useState(false)
   const hasShows = shows && shows.length > 0
+  const newCount = shows ? shows.filter(s => s.is_new).length : 0
 
   return (
     <div className={`card transition-opacity ${paused ? 'opacity-50' : ''}`}>
@@ -29,6 +31,9 @@ function ArtistCard({ name, genre, shows, paused }) {
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
             <span className={`badge-genre ${genreColor(genre)}`}>{genre}</span>
             {paused && <span className="badge-paused">Paused</span>}
+            {newCount > 0 && (
+              <span className="badge-new">{newCount} new</span>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -49,13 +54,20 @@ function ArtistCard({ name, genre, shows, paused }) {
           {hasShows ? (
             <ul className="mt-3 space-y-2">
               {shows.map((show, i) => (
-                <li key={i} className="flex items-start justify-between gap-2 text-sm">
+                <li key={i} className={`flex items-start justify-between gap-2 text-sm ${show.is_new ? 'bg-emerald-50 -mx-2 px-2 py-1 rounded-lg' : ''}`}>
                   <div>
+                    {show.is_new && <span className="badge-new mr-1.5">NEW</span>}
                     <span className="font-medium text-slate-800">{show.date}</span>
-                    <span className="text-slate-400 mx-1">·</span>
+                    <span className="text-slate-400 mx-1">&middot;</span>
                     <span className="text-slate-600">{show.venue}</span>
-                    <span className="text-slate-400 mx-1">·</span>
+                    <span className="text-slate-400 mx-1">&middot;</span>
                     <span className="text-slate-500">{show.city}</span>
+                    {show.distance_miles != null && (
+                      <>
+                        <span className="text-slate-400 mx-1">&middot;</span>
+                        <span className="text-indigo-500 font-medium">{show.distance_miles} mi</span>
+                      </>
+                    )}
                   </div>
                   {show.status === 'sold_out' && (
                     <span className="badge-sold-out flex-shrink-0">Sold Out</span>
@@ -120,7 +132,7 @@ function VenueCard({ name, city, events, paused }) {
                   <span className="w-2 h-2 rounded-full bg-slate-200 flex-shrink-0" />
                 )}
                 <span className="font-medium text-slate-800">{ev.date}</span>
-                <span className="text-slate-400">·</span>
+                <span className="text-slate-400">&middot;</span>
                 <span className={ev.tracked ? 'text-slate-800 font-medium' : 'text-slate-500'}>
                   {ev.artist}
                 </span>
@@ -155,6 +167,26 @@ function SectionHeading({ children, count }) {
   )
 }
 
+// ── Map legend ────────────────────────────────────────────────────────────────
+function MapLegend() {
+  return (
+    <div className="flex flex-wrap gap-3 text-xs text-slate-500 mt-2 px-1">
+      <span className="flex items-center gap-1">
+        <span className="w-3 h-3 rounded-full bg-blue-500 inline-block" /> On Sale
+      </span>
+      <span className="flex items-center gap-1">
+        <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" /> New This Week
+      </span>
+      <span className="flex items-center gap-1">
+        <span className="w-3 h-3 rounded-full bg-red-500 inline-block" /> Sold Out
+      </span>
+      <span className="flex items-center gap-1">
+        <span className="w-3 h-3 rounded-sm bg-indigo-100 border border-indigo-400 border-dashed inline-block" /> Search Radius
+      </span>
+    </div>
+  )
+}
+
 // ── Main tab ──────────────────────────────────────────────────────────────────
 export default function SummaryTab() {
   const [state, setState]   = useState(null)
@@ -180,6 +212,23 @@ export default function SummaryTab() {
         .finally(() => setLoading(false))
     }
   }, [])
+
+  // Flatten all artist shows into a single array for the map
+  const allShows = useMemo(() => {
+    if (!state?.artist_shows) return []
+    const shows = []
+    for (const [artist, artistShows] of Object.entries(state.artist_shows)) {
+      for (const show of artistShows) {
+        shows.push({ ...show, artist })
+      }
+    }
+    return shows
+  }, [state])
+
+  // Extract center coordinates from state or summary data
+  const centerLat = state?.center_lat ?? null
+  const centerLon = state?.center_lon ?? null
+  const radiusMiles = state?.radius_miles || config?.radius_miles || 200
 
   if (loading) return <LoadingSpinner />
   if (error)   return <ErrorBox message={error} />
@@ -210,6 +259,7 @@ export default function SummaryTab() {
   const travelVenues = Object.entries(configVenues).filter(([, v]) => !v.is_local)
 
   const withShowsCount = artistList.filter(a => a.shows.length > 0).length
+  const newShowsCount = allShows.filter(s => s.is_new).length
 
   return (
     <div className="space-y-8">
@@ -225,13 +275,30 @@ export default function SummaryTab() {
         </div>
         <div>
           <span className="font-semibold text-slate-800">Radius: </span>
-          {state?.radius_miles || config?.radius_miles || '—'} miles
+          {radiusMiles} miles
         </div>
         <div>
           <span className="font-semibold text-slate-800">Shows found: </span>
           {withShowsCount} / {artistList.length} artists
         </div>
+        {newShowsCount > 0 && (
+          <div>
+            <span className="badge-new">{newShowsCount} new this week</span>
+          </div>
+        )}
       </div>
+
+      {/* ── Map ── */}
+      <section>
+        <SectionHeading>Concert Map</SectionHeading>
+        <ConcertMap
+          centerLat={centerLat}
+          centerLon={centerLon}
+          radiusMiles={radiusMiles}
+          shows={allShows}
+        />
+        <MapLegend />
+      </section>
 
       {/* ── Artist Shows ── */}
       <section>
