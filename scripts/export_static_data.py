@@ -10,6 +10,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 STATE_FILE = ROOT / "concert_state.json"
 CONFIG_FILE = ROOT / "wingman_config.json"
 GEOCODE_CACHE = ROOT / "geocode_cache.json"
+SUMMARY_FILE = ROOT / "docs" / "summary.json"
 OUT_FILE = ROOT / "frontend" / "public" / "static-data.json"
 
 
@@ -34,12 +35,25 @@ def main():
         except Exception:
             pass
 
-    # Resolve center city coordinates from geocode cache
+    # Resolve center city coordinates from geocode cache, falling back to
+    # docs/summary.json (which is committed and always has geocoded coords).
+    # geocode_cache.json is gitignored so it won't exist in CI.
     center_city = config.get("center_city", "")
     center_coords = geocode.get(center_city, {})
     if center_coords:
         state["center_lat"] = center_coords.get("lat")
         state["center_lon"] = center_coords.get("lon")
+    else:
+        # Fallback: read from docs/summary.json (written by Cowork, committed to git)
+        if SUMMARY_FILE.exists():
+            try:
+                summary = json.loads(SUMMARY_FILE.read_text())
+                if summary.get("center_lat") is not None:
+                    state["center_lat"] = summary["center_lat"]
+                    state["center_lon"] = summary["center_lon"]
+                    print(f"Center coords from summary.json: {state['center_lat']}, {state['center_lon']}")
+            except Exception as e:
+                print(f"Warning: could not read center coords from summary.json: {e}")
 
     # Strip URLs from config — the demo frontend doesn't need them
     # and they're not useful to expose publicly
