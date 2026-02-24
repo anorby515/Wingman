@@ -171,6 +171,12 @@ def get_config() -> Any:
         coords = _geocode(center_city)
         if coords:
             cfg["center_lat"], cfg["center_lon"] = coords
+    # Attach geocoded lat/lon to each venue for map rendering
+    for name, venue in cfg.get("venues", {}).items():
+        if "lat" not in venue and venue.get("city"):
+            coords = _geocode(venue["city"])
+            if coords:
+                venue["lat"], venue["lon"] = coords
     return cfg
 
 
