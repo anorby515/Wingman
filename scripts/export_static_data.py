@@ -26,7 +26,7 @@ def main():
 
     config = json.loads(CONFIG_FILE.read_text())
 
-    # Load geocode cache for center city coordinates
+    # Load geocode cache for center city and venue coordinates
     geocode = {}
     if GEOCODE_CACHE.exists():
         try:
@@ -50,19 +50,26 @@ def main():
             "paused": info.get("paused", False),
         }
 
+    # Include venue lat/lon from geocode cache for map rendering
     venues = {}
     for name, info in config.get("venues", {}).items():
-        venues[name] = {
+        venue_entry = {
             "city": info.get("city", ""),
             "is_local": info.get("is_local", False),
             "paused": info.get("paused", False),
         }
+        # Resolve venue coordinates from geocode cache
+        venue_city = info.get("city", "")
+        venue_coords = geocode.get(venue_city, {})
+        if venue_coords:
+            venue_entry["lat"] = venue_coords.get("lat")
+            venue_entry["lon"] = venue_coords.get("lon")
+        venues[name] = venue_entry
 
     static = {
         "state": state,
         "config": {
             "center_city": center_city,
-            "radius_miles": config.get("radius_miles", 0),
             "artists": artists,
             "venues": venues,
         },

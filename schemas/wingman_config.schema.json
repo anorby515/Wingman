@@ -1,29 +1,27 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "WingmanConfig",
-  "description": "Configuration for artists, venues, and location settings. Written by local UI, read by Cowork.",
+  "description": "Configuration for artists, venues, and map settings. Written by local UI, read by Cowork.",
   "type": "object",
-  "required": ["center_city", "radius_miles", "cities_in_range", "states_in_range", "artists", "venues"],
+  "required": ["center_city", "artists", "venues"],
   "properties": {
     "center_city": {
       "type": "string",
-      "description": "Center location for radius search, e.g. 'Des Moines, IA'"
+      "description": "Map home / default starting position, e.g. 'Des Moines, IA'"
     },
     "radius_miles": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 1000,
-      "description": "Search radius in miles"
+      "type": ["number", "null"],
+      "description": "Deprecated — kept for backward compat"
     },
     "cities_in_range": {
       "type": "array",
       "items": { "type": "string" },
-      "description": "Legacy: city names for text matching. Retained for backwards compatibility but geocoding is primary."
+      "description": "Deprecated — kept for backward compat"
     },
     "states_in_range": {
       "type": "array",
       "items": { "type": "string" },
-      "description": "Legacy: state abbreviations for text matching. Retained for backwards compatibility but geocoding is primary."
+      "description": "Deprecated — kept for backward compat"
     },
     "artists": {
       "type": "object",

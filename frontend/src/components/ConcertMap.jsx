@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
-import { MapContainer, TileLayer, Circle, Marker, Popup } from 'react-leaflet'
+import { useMemo, useEffect } from 'react'
+import { MapContainer, TileLayer, Circle, Marker, Tooltip, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -38,25 +38,76 @@ const SOLD_OUT_ICON = new L.Icon({
   shadowSize: [41, 41],
 })
 
-// Miles to meters for Leaflet Circle radius
-const MILES_TO_METERS = 1609.34
+const VENUE_ICON = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+})
+
+/**
+ * Child component that tracks map viewport changes and reports bounds.
+ */
+function MapEvents({ onBoundsChange }) {
+  const map = useMapEvents({
+    moveend() {
+      onBoundsChange(map.getBounds())
+    },
+  })
+
+  // Report initial bounds after map is ready
+  useEffect(() => {
+    // Small delay ensures map tiles have loaded and bounds are accurate
+    const timer = setTimeout(() => {
+      onBoundsChange(map.getBounds())
+    }, 200)
+    return () => clearTimeout(timer)
+  }, [map, onBoundsChange])
+
+  return null
+}
 
 /**
  * Concert Map — shows a Leaflet map with:
- * - A circle representing the search radius from center city
- * - Pins for each show that has lat/lon data
- * - Green pins for new shows, red for sold out, blue for on sale
+ * - A small marker for the home city (Des Moines)
+ * - Pins for artist shows (green=new, red=sold out, blue=on sale)
+ * - Pins for tracked venues (violet)
+ * - Hover tooltips showing event details
+ * - Viewport-based filtering reported via onBoundsChange
+ * - Pin filtering by mapFilter (selected artist or venue)
  *
  * Props:
- *   centerLat, centerLon — center city coordinates
- *   radiusMiles — search radius
- *   shows — array of { artist, date, venue, city, lat, lon, status, is_new }
+ *   centerLat, centerLon — home city coordinates (map starting position)
+ *   artistShows — array of { artist, date, venue, city, lat, lon, status, is_new }
+ *   venueShows — array of { venueName, lat, lon, events: [{ date, artist, tracked }] }
+ *   mapFilter — { type: 'artist'|'venue', name: string } | null
+ *   onBoundsChange — callback(LatLngBounds) when the viewport changes
  */
-export default function ConcertMap({ centerLat, centerLon, radiusMiles, shows }) {
-  // Deduplicate pins by venue location (group shows at same lat/lon)
-  const pins = useMemo(() => {
+export default function ConcertMap({ centerLat, centerLon, artistShows, venueShows, mapFilter, onBoundsChange }) {
+  // Filter artist shows based on mapFilter
+  const filteredArtistShows = useMemo(() => {
+    if (!artistShows) return []
+    if (!mapFilter) return artistShows
+    if (mapFilter.type === 'artist') return artistShows.filter(s => s.artist === mapFilter.name)
+    if (mapFilter.type === 'venue') return [] // hide artist pins when venue is selected
+    return artistShows
+  }, [artistShows, mapFilter])
+
+  // Filter venue shows based on mapFilter
+  const filteredVenueShows = useMemo(() => {
+    if (!venueShows) return []
+    if (!mapFilter) return venueShows
+    if (mapFilter.type === 'venue') return venueShows.filter(v => v.venueName === mapFilter.name)
+    if (mapFilter.type === 'artist') return [] // hide venue pins when artist is selected
+    return venueShows
+  }, [venueShows, mapFilter])
+
+  // Group artist shows by lat/lon (multiple shows at same venue)
+  const artistPins = useMemo(() => {
     const byLocation = {}
-    for (const show of shows) {
+    for (const show of filteredArtistShows) {
       if (show.lat == null || show.lon == null) continue
       const key = `${show.lat.toFixed(4)},${show.lon.toFixed(4)}`
       if (!byLocation[key]) {
@@ -65,7 +116,13 @@ export default function ConcertMap({ centerLat, centerLon, radiusMiles, shows })
       byLocation[key].shows.push(show)
     }
     return Object.values(byLocation)
-  }, [shows])
+  }, [filteredArtistShows])
+
+  // Venue pins (each venue is a single point with its events)
+  const venuePins = useMemo(() => {
+    if (!filteredVenueShows) return []
+    return filteredVenueShows.filter(v => v.lat != null && v.lon != null)
+  }, [filteredVenueShows])
 
   if (centerLat == null || centerLon == null) {
     return (
@@ -76,10 +133,10 @@ export default function ConcertMap({ centerLat, centerLon, radiusMiles, shows })
   }
 
   return (
-    <div className="card overflow-hidden" style={{ height: 400 }}>
+    <div className="card overflow-hidden" style={{ height: 500 }}>
       <MapContainer
         center={[centerLat, centerLon]}
-        zoom={7}
+        zoom={5}
         scrollWheelZoom={true}
         style={{ height: '100%', width: '100%' }}
       >
@@ -88,20 +145,10 @@ export default function ConcertMap({ centerLat, centerLon, radiusMiles, shows })
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* Radius circle */}
-        <Circle
-          center={[centerLat, centerLon]}
-          radius={radiusMiles * MILES_TO_METERS}
-          pathOptions={{
-            color: '#6366f1',
-            fillColor: '#6366f1',
-            fillOpacity: 0.06,
-            weight: 2,
-            dashArray: '8 4',
-          }}
-        />
+        {/* Track viewport changes */}
+        <MapEvents onBoundsChange={onBoundsChange} />
 
-        {/* Center city marker */}
+        {/* Home city marker */}
         <Circle
           center={[centerLat, centerLon]}
           radius={5000}
@@ -113,30 +160,58 @@ export default function ConcertMap({ centerLat, centerLon, radiusMiles, shows })
           }}
         />
 
-        {/* Show pins */}
-        {pins.map((pin, i) => {
+        {/* Artist show pins */}
+        {artistPins.map((pin, i) => {
           const hasNew = pin.shows.some(s => s.is_new)
           const allSoldOut = pin.shows.every(s => s.status === 'sold_out')
           const icon = hasNew ? NEW_ICON : allSoldOut ? SOLD_OUT_ICON : DEFAULT_ICON
+          const maxTooltip = 5
 
           return (
-            <Marker key={i} position={[pin.lat, pin.lon]} icon={icon}>
-              <Popup>
-                <div className="text-sm space-y-1">
-                  {pin.shows.map((s, j) => (
+            <Marker key={`a-${i}`} position={[pin.lat, pin.lon]} icon={icon}>
+              <Tooltip direction="top" offset={[0, -30]} opacity={0.95}>
+                <div className="text-xs space-y-0.5" style={{ maxWidth: 260 }}>
+                  {pin.shows.slice(0, maxTooltip).map((s, j) => (
                     <div key={j}>
                       <strong>{s.artist}</strong>
-                      <br />
-                      {s.date} &middot; {s.venue}
-                      {s.distance_miles != null && (
-                        <span className="text-slate-500"> &middot; {s.distance_miles} mi</span>
-                      )}
+                      {' \u00b7 '}{s.date}{' \u00b7 '}{s.venue}
                       {s.is_new && <span className="ml-1 text-emerald-600 font-semibold">NEW</span>}
                       {s.status === 'sold_out' && <span className="ml-1 text-red-500 font-semibold">SOLD OUT</span>}
                     </div>
                   ))}
+                  {pin.shows.length > maxTooltip && (
+                    <div className="text-slate-400 italic">+{pin.shows.length - maxTooltip} more</div>
+                  )}
                 </div>
-              </Popup>
+              </Tooltip>
+            </Marker>
+          )
+        })}
+
+        {/* Venue pins */}
+        {venuePins.map((venue, i) => {
+          const maxTooltip = 5
+          const events = venue.events || []
+
+          return (
+            <Marker key={`v-${i}`} position={[venue.lat, venue.lon]} icon={VENUE_ICON}>
+              <Tooltip direction="top" offset={[0, -30]} opacity={0.95}>
+                <div className="text-xs space-y-0.5" style={{ maxWidth: 260 }}>
+                  <div className="font-bold text-sm">{venue.venueName}</div>
+                  {events.slice(0, maxTooltip).map((e, j) => (
+                    <div key={j}>
+                      {e.date}{' \u00b7 '}{e.artist}
+                      {e.tracked && <span className="ml-1 text-emerald-600 font-semibold">\u2605</span>}
+                    </div>
+                  ))}
+                  {events.length > maxTooltip && (
+                    <div className="text-slate-400 italic">+{events.length - maxTooltip} more</div>
+                  )}
+                  {events.length === 0 && (
+                    <div className="text-slate-400 italic">No events data yet</div>
+                  )}
+                </div>
+              </Tooltip>
             </Marker>
           )
         })}

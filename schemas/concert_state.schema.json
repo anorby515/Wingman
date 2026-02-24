@@ -3,7 +3,7 @@
   "title": "ConcertState",
   "description": "Current state of scraped concert data. Written by Cowork, read by frontend and diff logic.",
   "type": "object",
-  "required": ["last_run", "center", "radius_miles", "artist_shows", "venue_shows"],
+  "required": ["last_run", "center", "artist_shows", "venue_shows"],
   "properties": {
     "last_run": {
       "type": "string",
@@ -12,16 +12,15 @@
     },
     "center": {
       "type": "string",
-      "description": "Center city for radius calculation, e.g. 'Des Moines, IA'"
+      "description": "Map home city, e.g. 'Des Moines, IA'"
     },
     "radius_miles": {
-      "type": "number",
-      "minimum": 0,
-      "description": "Search radius in miles from center city"
+      "type": ["number", "null"],
+      "description": "Deprecated — kept for backward compat, no longer used for filtering"
     },
     "artist_shows": {
       "type": "object",
-      "description": "Map of artist name to array of shows within radius",
+      "description": "Map of artist name to array of all North America shows",
       "additionalProperties": {
         "type": "array",
         "items": { "$ref": "#/definitions/Show" }
@@ -56,10 +55,6 @@
         "status": {
           "type": "string",
           "enum": ["on_sale", "sold_out"]
-        },
-        "distance_miles": {
-          "type": ["number", "null"],
-          "description": "Haversine distance from center city in miles"
         },
         "lat": {
           "type": ["number", "null"],
