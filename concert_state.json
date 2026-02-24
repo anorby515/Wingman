@@ -630,19 +630,344 @@
     ],
     "ACL Live": [
       {
+        "date": "Feb 27, 2026",
+        "artist": "Skyrocket!",
+        "tracked": false
+      },
+      {
+        "date": "Feb 28, 2026",
+        "artist": "Bad Bad Hats",
+        "tracked": false
+      },
+      {
+        "date": "Feb 28, 2026",
+        "artist": "Yacht Rock Revue",
+        "tracked": false
+      },
+      {
+        "date": "Mar 1, 2026",
+        "artist": "Barton Hills Choir",
+        "tracked": false
+      },
+      {
         "date": "Mar 4, 2026",
-        "artist": "ACL Live at The Moody Theater \u2013 upcoming shows",
+        "artist": "Rio Kosta",
         "tracked": false
       },
       {
         "date": "Mar 6, 2026",
-        "artist": "Colter Wall",
-        "tracked": true
+        "artist": "Molecular Steve",
+        "tracked": false
+      },
+      {
+        "date": "Mar 6, 2026",
+        "artist": "The Band of Heathens and Jamestown Revival",
+        "tracked": false
       },
       {
         "date": "Mar 7, 2026",
-        "artist": "Colter Wall",
+        "artist": "Holy Shit Improv",
+        "tracked": false
+      },
+      {
+        "date": "Mar 7, 2026",
+        "artist": "Blood Orange",
+        "tracked": false
+      },
+      {
+        "date": "Mar 7, 2026",
+        "artist": "Comedian Clash",
+        "tracked": false
+      },
+      {
+        "date": "Mar 12, 2026",
+        "artist": "Lola Young",
+        "tracked": false
+      },
+      {
+        "date": "Mar 13, 2026",
+        "artist": "Fuerza Regida",
+        "tracked": false
+      },
+      {
+        "date": "Mar 14, 2026",
+        "artist": "BigXthaPlug",
+        "tracked": false
+      },
+      {
+        "date": "Mar 17, 2026",
+        "artist": "Dropout Improv",
+        "tracked": false
+      },
+      {
+        "date": "Mar 20, 2026",
+        "artist": "John Paul White",
+        "tracked": false
+      },
+      {
+        "date": "Mar 21, 2026",
+        "artist": "Robert Plant with Saving Grace",
+        "tracked": false
+      },
+      {
+        "date": "Mar 21, 2026",
+        "artist": "Brendan Walter",
+        "tracked": false
+      },
+      {
+        "date": "Mar 26, 2026",
+        "artist": "American Aquarium",
+        "tracked": false
+      },
+      {
+        "date": "Mar 27, 2026",
+        "artist": "A Live One - Phish Tribute",
+        "tracked": false
+      },
+      {
+        "date": "Mar 27, 2026",
+        "artist": "The Last Dinner Party",
+        "tracked": false
+      },
+      {
+        "date": "Mar 28, 2026",
+        "artist": "Jim Jefferies",
+        "tracked": false
+      },
+      {
+        "date": "Mar 28, 2026",
+        "artist": "DJ Mel",
+        "tracked": false
+      },
+      {
+        "date": "Mar 29, 2026",
+        "artist": "The Rock and Roll Playhouse",
+        "tracked": false
+      },
+      {
+        "date": "Apr 2, 2026",
+        "artist": "Samara Joy",
+        "tracked": false
+      },
+      {
+        "date": "Apr 3, 2026",
+        "artist": "Kaden Mackay",
+        "tracked": false
+      },
+      {
+        "date": "Apr 4, 2026",
+        "artist": "Emmylou Harris",
+        "tracked": false
+      },
+      {
+        "date": "Apr 9, 2026",
+        "artist": "Coco & Clair Clair",
+        "tracked": false
+      },
+      {
+        "date": "Apr 10, 2026",
+        "artist": "Lina Lamont",
+        "tracked": false
+      },
+      {
+        "date": "Apr 16, 2026",
+        "artist": "Palaye Royale",
+        "tracked": false
+      },
+      {
+        "date": "Apr 17, 2026",
+        "artist": "Dermot Kennedy",
+        "tracked": false
+      },
+      {
+        "date": "Apr 18, 2026",
+        "artist": "Greyson Chance",
+        "tracked": false
+      },
+      {
+        "date": "Apr 18, 2026",
+        "artist": "Leon Bridges",
+        "tracked": false
+      },
+      {
+        "date": "Apr 19, 2026",
+        "artist": "Sycamore Smith",
+        "tracked": false
+      },
+      {
+        "date": "Apr 21, 2026",
+        "artist": "Ari Lennox",
+        "tracked": false
+      },
+      {
+        "date": "Apr 22, 2026",
+        "artist": "A Conversation with Hrishikesh Hirway and Special Guest",
+        "tracked": false
+      },
+      {
+        "date": "Apr 22, 2026",
+        "artist": "Maddox Batson",
+        "tracked": false
+      },
+      {
+        "date": "Apr 23, 2026",
+        "artist": "Happy Landing",
+        "tracked": false
+      },
+      {
+        "date": "Apr 24, 2026",
+        "artist": "Canaan Cox",
+        "tracked": false
+      },
+      {
+        "date": "Apr 24, 2026",
+        "artist": "Jack Ingram & Friends Concert",
+        "tracked": false
+      },
+      {
+        "date": "Apr 25, 2026",
+        "artist": "STS9",
+        "tracked": false
+      },
+      {
+        "date": "Apr 26, 2026",
+        "artist": "Melissa Etheridge",
+        "tracked": false
+      },
+      {
+        "date": "Apr 28, 2026",
+        "artist": "Ashnikko",
+        "tracked": false
+      },
+      {
+        "date": "Apr 29, 2026",
+        "artist": "A Night with David Lee Roth",
+        "tracked": false
+      },
+      {
+        "date": "Apr 30, 2026",
+        "artist": "Maren Morris",
+        "tracked": false
+      },
+      {
+        "date": "May 1, 2026",
+        "artist": "Avery Lynch",
+        "tracked": false
+      },
+      {
+        "date": "May 1, 2026",
+        "artist": "Joe Russo's Almost Dead",
+        "tracked": false
+      },
+      {
+        "date": "May 2, 2026",
+        "artist": "Hayley Williams at a Bachelorette Party",
+        "tracked": false
+      },
+      {
+        "date": "May 5, 2026",
+        "artist": "Mike Doughty",
+        "tracked": false
+      },
+      {
+        "date": "May 7, 2026",
+        "artist": "Eric Hutchinson",
+        "tracked": false
+      },
+      {
+        "date": "May 8, 2026",
+        "artist": "Ali Siddiq",
+        "tracked": false
+      },
+      {
+        "date": "May 8, 2026",
+        "artist": "Sun Kil Moon",
+        "tracked": false
+      },
+      {
+        "date": "May 10, 2026",
+        "artist": "Mika",
+        "tracked": false
+      },
+      {
+        "date": "May 14, 2026",
+        "artist": "Ashley Kutcher",
+        "tracked": false
+      },
+      {
+        "date": "May 16, 2026",
+        "artist": "Mac Demarco",
+        "tracked": false
+      },
+      {
+        "date": "May 19, 2026",
+        "artist": "Ryan Cassata",
+        "tracked": false
+      },
+      {
+        "date": "May 21, 2026",
+        "artist": "Drive-by Truckers",
+        "tracked": false
+      },
+      {
+        "date": "May 27, 2026",
+        "artist": "Counting Crows",
+        "tracked": false
+      },
+      {
+        "date": "May 28, 2026",
+        "artist": "Dispatch",
+        "tracked": false
+      },
+      {
+        "date": "Jun 11, 2026",
+        "artist": "CAAMP",
         "tracked": true
+      },
+      {
+        "date": "Jun 12, 2026",
+        "artist": "Faye Webster",
+        "tracked": false
+      },
+      {
+        "date": "Jul 9, 2026",
+        "artist": "Qveen Herby",
+        "tracked": false
+      },
+      {
+        "date": "Aug 5, 2026",
+        "artist": "O.A.R.",
+        "tracked": false
+      },
+      {
+        "date": "Aug 28, 2026",
+        "artist": "Buddy Guy 90",
+        "tracked": false
+      },
+      {
+        "date": "Sep 24, 2026",
+        "artist": "Alison Krauss & Union Station Featuring Jerry Douglas",
+        "tracked": false
+      },
+      {
+        "date": "Oct 16, 2026",
+        "artist": "Austin Quest for Ancient Civilizations",
+        "tracked": false
+      },
+      {
+        "date": "Oct 19, 2026",
+        "artist": "Snarky Puppy",
+        "tracked": false
+      },
+      {
+        "date": "Oct 26, 2026",
+        "artist": "Daniel Sloss",
+        "tracked": false
+      },
+      {
+        "date": "Nov 1, 2026",
+        "artist": "Jim Henson's Labyrinth: In Concert 40th Anniversary",
+        "tracked": false
       }
     ],
     "The Salt Shed": [
