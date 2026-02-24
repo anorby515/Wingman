@@ -37,6 +37,9 @@
   .badge-sold-out {
     @apply text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium;
   }
+  .badge-new {
+    @apply text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium;
+  }
   .toggle {
     @apply relative inline-flex items-center cursor-pointer;
   }

@@ -9,6 +9,7 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 STATE_FILE = ROOT / "concert_state.json"
 CONFIG_FILE = ROOT / "wingman_config.json"
+GEOCODE_CACHE = ROOT / "geocode_cache.json"
 OUT_FILE = ROOT / "frontend" / "public" / "static-data.json"
 
 
@@ -24,6 +25,21 @@ def main():
         sys.exit(1)
 
     config = json.loads(CONFIG_FILE.read_text())
+
+    # Load geocode cache for center city coordinates
+    geocode = {}
+    if GEOCODE_CACHE.exists():
+        try:
+            geocode = json.loads(GEOCODE_CACHE.read_text())
+        except Exception:
+            pass
+
+    # Resolve center city coordinates from geocode cache
+    center_city = config.get("center_city", "")
+    center_coords = geocode.get(center_city, {})
+    if center_coords:
+        state["center_lat"] = center_coords.get("lat")
+        state["center_lon"] = center_coords.get("lon")
 
     # Strip URLs from config — the demo frontend doesn't need them
     # and they're not useful to expose publicly
@@ -45,7 +61,7 @@ def main():
     static = {
         "state": state,
         "config": {
-            "center_city": config.get("center_city", ""),
+            "center_city": center_city,
             "radius_miles": config.get("radius_miles", 0),
             "artists": artists,
             "venues": venues,
