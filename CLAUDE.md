@@ -24,6 +24,19 @@ This document defines the contract between **Claude Code** (codebase maintainer)
 1. Read `wingman_config.json` for artists, venues, settings
 2. For each active artist: Chrome skill navigates to tour page, Claude extracts structured show data
 3. For each active venue: Chrome skill navigates to calendar page, Claude extracts event data
+   - **Standard venues:** read page text directly after load
+   - **Lazy-load / "Load More" venues** (e.g. ACL Live): use the JS interval pattern to auto-click the button until it disappears, then extract:
+     ```javascript
+     // Fire-and-forget repeated clicks every 2s until button gone
+     window._loadInterval = setInterval(() => {
+       const btn = [...document.querySelectorAll('button')]
+         .find(b => b.textContent.trim() === 'Load More Events');
+       if (btn) { btn.click(); }
+       else { clearInterval(window._loadInterval); window._loadDone = true; }
+     }, 2000);
+     ```
+     Wait ~30–60s, check `window._loadDone`, then extract `document.body.innerText` in chunks.
+   - **Venues flagged as lazy-load** (see table below): always use the scroll/load-more pattern
 4. For each extracted show: geocode the venue location
    - Check `geocode_cache.json` first
    - If cache miss: query Nominatim API (1 req/sec rate limit)
@@ -139,6 +152,19 @@ Top-level structure:
 - `date` (string) — display format
 - `artist` (string) — artist/event name
 - `tracked` (boolean) — true if artist is in the tracked artists list
+
+### Venue Scraping Behavior
+
+| Venue | Load Pattern | Notes |
+|-------|-------------|-------|
+| Hoyt Sherman Place | Standard page load | |
+| First Fleet Concerts | Standard page load | Covers Wooly's + Val Air |
+| Iowa Events Center | Standard page load | |
+| Starlight Theatre | Standard page load | |
+| The Waiting Room | Standard page load | |
+| Ryman Auditorium | Standard page load | |
+| **ACL Live** | **Lazy-load / "Load More" button** | Use JS interval pattern; ~8–10 clicks to reach full calendar |
+| The Salt Shed | Standard page load | |
 
 ### wingman_config.json
 
