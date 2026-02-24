@@ -203,3 +203,39 @@ The public site is deployed from `frontend/dist` built in demo mode.
 - **Commit messages:** `Weekly update: YYYY-MM-DD - X new, Y removed`
 - **Files committed by Cowork:** `concert_state.json`, `docs/summary.json`, `docs/history/*.json`
 - **Files NEVER committed:** `spotify_tokens.json`, `geocode_cache.json`, `dismissed_suggestions.json`, `flagged_items.json`
+
+---
+
+## Development Status
+
+### Completed
+- Full local UI: React frontend + FastAPI backend, served from `frontend/dist`
+- Artist management (add, edit, pause, delete) with genre badges
+- Venue management (local vs. travel, add, edit, pause, delete)
+- Settings panel (center city, radius, cities/states in range, GitHub Pages URL)
+- Schedule panel (next run display, cron config)
+- Flagged Items panel (Spotify sync flags surfaced in UI)
+- Concert summary tab: artist cards, venue sections, show listings
+- Leaflet map with radius circle and show pins (green=new, red=sold out, blue=on sale)
+- Backend geocoding via Nominatim with `geocode_cache.json` cache
+- `/api/config` returns `center_lat`/`center_lon` for map rendering
+- GitHub Pages demo build (VITE_DEMO_MODE=true) + GitHub Actions deploy workflow
+- JSON schemas + Pydantic validation (`scripts/validate_state.py`)
+
+### Known Local Setup Gotcha
+`geocode_cache.json` is gitignored and won't exist on a fresh clone. On first run,
+the backend tries Nominatim to geocode the center city — if that call fails (network,
+firewall, etc.), the map won't render. Fix: create the file manually:
+```bash
+echo '{"Des Moines, IA": {"lat": 41.5868, "lon": -93.625}}' > ~/Wingman/geocode_cache.json
+```
+After a Cowork scrape, this file will be populated automatically going forward.
+
+### Next: Spotify OAuth (Task #3)
+Build the Spotify Connect flow in the local UI:
+- Spotify Developer App credentials stored in `wingman_config.json` (client_id, client_secret, redirect_uri)
+- Backend OAuth endpoints: `GET /api/spotify/auth` (redirect to Spotify) + `GET /api/spotify/callback` (exchange code for tokens, save to `spotify_tokens.json`)
+- Frontend: "Connect Spotify" button in Settings tab → shows connection status (connected/disconnected) + disconnect option
+- `spotify_tokens.json` is NEVER committed (already in .gitignore)
+- Required scopes: `user-follow-read user-follow-modify user-top-read user-read-recently-played`
+- Prerequisite: user must create a Spotify Developer App at developer.spotify.com and have client_id + client_secret ready
