@@ -10,6 +10,7 @@ geocode_cache.json
 dismissed_suggestions.json
 flagged_items.json
 ticketmaster_cache.json
+ticketmaster_shows_cache.json
 
 # Generated PDFs (replaced by GitHub Pages summary)
 Concert_Changes_*.pdf

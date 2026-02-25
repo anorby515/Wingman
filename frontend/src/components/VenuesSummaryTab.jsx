@@ -3,11 +3,20 @@ import { useState, useEffect } from 'react'
 const DEMO = import.meta.env.VITE_DEMO_MODE === 'true'
 
 // ── Venue card ────────────────────────────────────────────────────────────────
-function VenueCard({ name, url, city, events, tmEvents, paused }) {
+function VenueCard({ name, url, city, events, tmShows, tmConfigured, paused }) {
   const [open, setOpen] = useState(false)
-  const tracked = events ? events.filter(e => e.tracked) : []
+
+  // TM is primary source when configured; scraped is fallback
+  const hasTm      = tmConfigured && tmShows && tmShows.length > 0
   const hasScraped = events && events.length > 0
-  const hasTm = tmEvents && tmEvents.length > 0
+  const tracked    = hasScraped ? events.filter(e => e.tracked) : []
+
+  // Count badge
+  const countLabel = hasTm
+    ? `${tmShows.length} event${tmShows.length !== 1 ? 's' : ''}`
+    : hasScraped
+    ? `${events.length} event${events.length !== 1 ? 's' : ''}`
+    : '\u2014'
 
   return (
     <div className={`card transition-all ${paused ? 'opacity-50' : ''}`}>
@@ -34,22 +43,15 @@ function VenueCard({ name, url, city, events, tmEvents, paused }) {
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
             <span className="text-xs text-slate-500">{city}</span>
             {paused && <span className="badge-paused">Paused</span>}
-            {tracked.length > 0 && (
+            {!hasTm && tracked.length > 0 && (
               <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
                 {tracked.length} tracked
-              </span>
-            )}
-            {!hasScraped && hasTm && (
-              <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">
-                {tmEvents.length} on Ticketmaster
               </span>
             )}
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <span className="text-sm font-semibold text-slate-500">
-            {hasScraped ? `${events.length} events` : hasTm ? `${tmEvents.length} TM` : '\u2014'}
-          </span>
+          <span className="text-sm font-semibold text-slate-500">{countLabel}</span>
           <svg
             className={`w-4 h-4 text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`}
             fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -59,7 +61,39 @@ function VenueCard({ name, url, city, events, tmEvents, paused }) {
         </div>
       </button>
 
-      {open && hasScraped && (
+      {/* ── TM shows (primary) ── */}
+      {open && hasTm && (
+        <div className="border-t border-slate-50 px-4 pb-4">
+          <ul className="mt-3 space-y-1.5">
+            {tmShows.map((ev, i) => (
+              <li key={i} className={`flex items-center justify-between gap-2 text-sm ${ev.not_yet_on_sale ? 'bg-amber-50 -mx-2 px-2 py-1 rounded-lg' : ''}`}>
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className={`w-2 h-2 rounded-full flex-shrink-0 ${ev.not_yet_on_sale ? 'bg-amber-400' : 'bg-slate-300'}`} />
+                  <span className="font-medium text-slate-800">{ev.date}</span>
+                  <span className="text-slate-400">&middot;</span>
+                  <span className="text-slate-600 truncate">{ev.artist}</span>
+                </div>
+                {ev.ticketmaster_url && (
+                  <a
+                    href={ev.ticketmaster_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-shrink-0 text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+                  >
+                    TM &rarr;
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-xs text-slate-400">
+            Amber = not yet on public sale
+          </p>
+        </div>
+      )}
+
+      {/* ── Scraped shows (fallback when TM not configured) ── */}
+      {open && !hasTm && hasScraped && (
         <div className="border-t border-slate-50 px-4 pb-4">
           <ul className="mt-3 space-y-1.5">
             {events.map((ev, i) => (
@@ -78,44 +112,13 @@ function VenueCard({ name, url, city, events, tmEvents, paused }) {
             ))}
           </ul>
           {tracked.length > 0 && (
-            <p className="mt-2 text-xs text-emerald-600">
-              Green dot = tracked artist
-            </p>
+            <p className="mt-2 text-xs text-emerald-600">Green dot = tracked artist</p>
           )}
         </div>
       )}
 
-      {open && !hasScraped && hasTm && (
-        <div className="border-t border-slate-50 px-4 pb-4">
-          <p className="mt-3 mb-2 text-xs text-amber-600 font-medium">
-            Not yet scraped — showing announced-but-not-on-sale shows from Ticketmaster:
-          </p>
-          <ul className="space-y-1.5">
-            {tmEvents.map((ev, i) => (
-              <li key={i} className="flex items-center justify-between gap-2 text-sm">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0" />
-                  <span className="font-medium text-slate-800">{ev.date}</span>
-                  <span className="text-slate-400">&middot;</span>
-                  <span className="text-slate-600 truncate">{ev.artist}</span>
-                </div>
-                {ev.ticketmaster_url && (
-                  <a
-                    href={ev.ticketmaster_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-shrink-0 text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
-                  >
-                    TM &rarr;
-                  </a>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {open && !hasScraped && !hasTm && (
+      {/* ── No data ── */}
+      {open && !hasTm && !hasScraped && (
         <div className="border-t border-slate-50 px-4 pb-4">
           <p className="mt-3 text-sm text-slate-400 italic">No events data yet.</p>
         </div>
@@ -155,7 +158,7 @@ export default function VenuesSummaryTab() {
       Promise.all([
         fetch('/api/state').then(r => r.json()),
         fetch('/api/config').then(r => r.json()),
-        fetch('/api/coming-soon').then(r => r.json()).catch(() => null),
+        fetch('/api/tm-shows').then(r => r.json()).catch(() => null),
       ])
         .then(([st, cfg, tm]) => { setState(st); setConfig(cfg); setTmData(tm) })
         .catch(e => setError(e.message))
@@ -166,15 +169,10 @@ export default function VenuesSummaryTab() {
   if (loading) return <LoadingSpinner />
   if (error)   return <ErrorBox message={error} />
 
-  const venueShows   = state?.venue_shows || {}
-  const configVenues = config?.venues     || {}
-
-  // Group TM venue events by tracked venue name
-  const tmByVenue = {}
-  for (const ev of (tmData?.venue_events || [])) {
-    if (!tmByVenue[ev.tracked_venue]) tmByVenue[ev.tracked_venue] = []
-    tmByVenue[ev.tracked_venue].push(ev)
-  }
+  const venueShows    = state?.venue_shows    || {}
+  const configVenues  = config?.venues        || {}
+  const tmConfigured  = tmData?.api_configured ?? false
+  const tmVenueShows  = tmData?.venue_shows   || {}
 
   const localVenues  = Object.entries(configVenues).filter(([, v]) => v.is_local)
   const travelVenues = Object.entries(configVenues).filter(([, v]) => !v.is_local)
@@ -193,7 +191,8 @@ export default function VenuesSummaryTab() {
               city={info.city}
               paused={info.paused}
               events={venueShows[name]}
-              tmEvents={tmByVenue[name]}
+              tmShows={tmVenueShows[name] ?? (tmConfigured ? [] : null)}
+              tmConfigured={tmConfigured}
             />
           ))}
           {localVenues.length === 0 && (
@@ -216,7 +215,8 @@ export default function VenuesSummaryTab() {
               city={info.city}
               paused={info.paused}
               events={venueShows[name]}
-              tmEvents={tmByVenue[name]}
+              tmShows={tmVenueShows[name] ?? (tmConfigured ? [] : null)}
+              tmConfigured={tmConfigured}
             />
           ))}
           {travelVenues.length === 0 && (
