@@ -34,65 +34,60 @@ function VenueCard({ name, url, city, shows, paused }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={e => e.stopPropagation()}
-                className="font-semibold text-slate-900 hover:text-indigo-600 hover:underline truncate"
+                className="font-semibold text-neutral-900 hover:text-neutral-600 hover:underline truncate"
               >
                 {name}
               </a>
             ) : (
-              <span className="font-semibold text-slate-900 truncate">{name}</span>
+              <span className="font-semibold text-neutral-900 truncate">{name}</span>
             )}
           </div>
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-            <span className="text-xs text-slate-500">{city}</span>
+            <span className="text-xs text-neutral-400">{city}</span>
             {paused && <span className="badge-paused">Paused</span>}
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <span className="text-sm font-semibold text-slate-500">{countLabel}</span>
-          <svg
-            className={`w-4 h-4 text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`}
-            fill="none" viewBox="0 0 24 24" stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
+          <span className="text-sm text-neutral-500">{countLabel}</span>
+          <span className="text-neutral-400 text-xs">{open ? '−' : '+'}</span>
         </div>
       </button>
 
       {open && hasShows && (
-        <div className="border-t border-slate-50 px-4 pb-4">
+        <div className="border-t border-neutral-100 px-4 pb-4">
           <ul className="mt-3 space-y-1.5">
             {shows.map((ev, i) => (
-              <li key={i} className={`flex items-center justify-between gap-2 text-sm ${ev.not_yet_on_sale ? 'bg-amber-50 -mx-2 px-2 py-1 rounded-lg' : ''}`}>
+              <li key={i} className={`flex items-center justify-between gap-2 text-sm ${ev.not_yet_on_sale ? 'bg-neutral-50 -mx-2 px-2 py-1' : ''}`}>
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className={`w-2 h-2 rounded-full flex-shrink-0 ${ev.not_yet_on_sale ? 'bg-amber-400' : 'bg-slate-300'}`} />
-                  <span className="font-medium text-slate-800">{ev.date}</span>
-                  <span className="text-slate-400">&middot;</span>
-                  <span className="text-slate-600 truncate">{ev.artist}</span>
+                  <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${ev.not_yet_on_sale ? 'bg-neutral-400' : 'bg-neutral-200'}`} />
+                  <span className="font-medium text-neutral-800">{ev.date}</span>
+                  <span className="text-neutral-300">&middot;</span>
+                  <span className="text-neutral-600 truncate">{ev.artist}</span>
                 </div>
                 {ev.ticketmaster_url && (
                   <a
                     href={ev.ticketmaster_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-shrink-0 text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+                    className="flex-shrink-0 text-xs text-neutral-500 hover:text-neutral-800 hover:underline"
                   >
-                    TM &rarr;
+                    TM →
                   </a>
                 )}
               </li>
             ))}
           </ul>
           {shows.some(s => s.not_yet_on_sale) && (
-            <p className="mt-2 text-xs text-slate-400">
-              Amber = not yet on public sale
+            <p className="mt-2 text-xs text-neutral-400">
+              Filled dot = not yet on public sale
             </p>
           )}
         </div>
       )}
 
       {open && !hasShows && (
-        <div className="border-t border-slate-50 px-4 pb-4">
-          <p className="mt-3 text-sm text-slate-400 italic">No events data yet.</p>
+        <div className="border-t border-neutral-100 px-4 pb-4">
+          <p className="mt-3 text-sm text-neutral-400 italic">No events data yet.</p>
         </div>
       )}
     </div>
@@ -103,9 +98,9 @@ function VenueCard({ name, url, city, shows, paused }) {
 function SectionHeading({ children, count }) {
   return (
     <div className="flex items-center gap-2 mb-3">
-      <h2 className="text-base font-bold text-slate-700">{children}</h2>
+      <h2 className="text-base font-bold text-neutral-800">{children}</h2>
       {count !== undefined && (
-        <span className="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full">{count}</span>
+        <span className="text-xs text-neutral-400">{count}</span>
       )}
     </div>
   )
@@ -165,7 +160,7 @@ export default function VenuesSummaryTab() {
             />
           ))}
           {localVenues.length === 0 && (
-            <div className="col-span-2 card p-6 text-center text-slate-400 text-sm italic">
+            <div className="col-span-2 card p-6 text-center text-neutral-400 text-sm italic">
               No local venues configured.
             </div>
           )}
@@ -187,7 +182,7 @@ export default function VenuesSummaryTab() {
             />
           ))}
           {travelVenues.length === 0 && (
-            <div className="col-span-2 card p-6 text-center text-slate-400 text-sm italic">
+            <div className="col-span-2 card p-6 text-center text-neutral-400 text-sm italic">
               No travel venues configured.
             </div>
           )}
@@ -200,7 +195,7 @@ export default function VenuesSummaryTab() {
 function LoadingSpinner() {
   return (
     <div className="flex items-center justify-center py-16">
-      <div className="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-neutral-200 border-t-neutral-700 rounded-full animate-spin" />
     </div>
   )
 }
@@ -208,9 +203,9 @@ function LoadingSpinner() {
 function ErrorBox({ message }) {
   return (
     <div className="card p-6 text-center">
-      <p className="text-red-600 font-medium">Failed to load data</p>
-      <p className="text-slate-500 text-sm mt-1">{message}</p>
-      <p className="text-slate-400 text-xs mt-2">Is the backend running? <code className="bg-slate-100 px-1 rounded">uvicorn backend.main:app --port 8000</code></p>
+      <p className="text-neutral-800 font-medium">Failed to load data</p>
+      <p className="text-neutral-500 text-sm mt-1">{message}</p>
+      <p className="text-neutral-400 text-xs mt-2">Is the backend running? <code className="bg-neutral-100 px-1">uvicorn backend.main:app --port 8000</code></p>
     </div>
   )
 }

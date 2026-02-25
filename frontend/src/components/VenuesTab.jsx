@@ -9,8 +9,8 @@ function Toggle({ checked, onChange, disabled }) {
       disabled={disabled}
       aria-checked={checked}
       className={[
-        'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-400',
-        checked ? 'bg-amber-400' : 'bg-slate-300',
+        'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400',
+        checked ? 'bg-neutral-800' : 'bg-neutral-200',
         disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
       ].join(' ')}
     >
@@ -59,29 +59,29 @@ function AddVenueForm({ onAdd, onCancel }) {
 
   return (
     <form onSubmit={handleSubmit} className="card p-4 space-y-3">
-      <h3 className="font-semibold text-slate-800">Add Venue</h3>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      <h3 className="font-semibold text-neutral-800">Add Venue</h3>
+      {error && <p className="text-sm text-neutral-800">{error}</p>}
       <div className="grid sm:grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs font-medium text-slate-600 mb-1">Venue Name</label>
+          <label className="block text-xs font-medium text-neutral-600 mb-1">Venue Name</label>
           <input className="input" placeholder="e.g. First Ave" value={name} onChange={e => setName(e.target.value)} required />
         </div>
         <div>
-          <label className="block text-xs font-medium text-slate-600 mb-1">City</label>
+          <label className="block text-xs font-medium text-neutral-600 mb-1">City</label>
           <input className="input" placeholder="e.g. Minneapolis, MN" value={city} onChange={e => setCity(e.target.value)} required />
         </div>
       </div>
       <div>
-        <label className="block text-xs font-medium text-slate-600 mb-1">Calendar URL</label>
+        <label className="block text-xs font-medium text-neutral-600 mb-1">Calendar URL</label>
         <input className="input" type="url" placeholder="https://venue.com/events" value={url} onChange={e => setUrl(e.target.value)} required />
       </div>
       <div className="flex items-center gap-3">
         <Toggle checked={isLocal} onChange={setIsLocal} />
         <div>
-          <span className="text-sm font-medium text-slate-700">
+          <span className="text-sm font-medium text-neutral-700">
             {isLocal ? 'Local venue' : 'Travel venue'}
           </span>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-neutral-400">
             {isLocal ? 'Within your search radius' : 'Worth the trip — tracked for artist matches only'}
           </p>
         </div>
@@ -130,19 +130,19 @@ function VenueRow({ venue, onTogglePause, onDelete }) {
   }
 
   return (
-    <div className={`flex items-center gap-3 px-4 py-3 border-b border-slate-50 last:border-0 transition-opacity ${venue.paused ? 'opacity-60' : ''}`}>
+    <div className={`flex items-center gap-3 px-4 py-3 border-b border-neutral-50 last:border-0 transition-opacity ${venue.paused ? 'opacity-60' : ''}`}>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-medium text-slate-900 text-sm">{venue.name}</span>
+          <span className="font-medium text-neutral-900 text-sm">{venue.name}</span>
           {venue.paused && <span className="badge-paused">Paused</span>}
         </div>
         <div className="flex items-center gap-2 mt-0.5">
-          <span className="text-xs text-slate-500">{venue.city}</span>
+          <span className="text-xs text-neutral-500">{venue.city}</span>
           <a
             href={venue.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-indigo-500 hover:underline truncate max-w-xs hidden sm:inline"
+            className="text-xs text-neutral-500 hover:underline truncate max-w-xs hidden sm:inline"
           >
             {venue.url}
           </a>
@@ -151,7 +151,7 @@ function VenueRow({ venue, onTogglePause, onDelete }) {
 
       <div className="flex items-center gap-3 flex-shrink-0">
         <div className="flex items-center gap-1.5">
-          <span className="text-xs text-slate-500 hidden sm:inline">
+          <span className="text-xs text-neutral-500 hidden sm:inline">
             {venue.paused ? 'Paused' : 'Active'}
           </span>
           <Toggle checked={venue.paused} onChange={handlePause} disabled={togglingPause} />
@@ -162,11 +162,11 @@ function VenueRow({ venue, onTogglePause, onDelete }) {
             <button
               onClick={handleDelete}
               disabled={deleting}
-              className="text-xs px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+              className="text-xs px-2 py-1 bg-neutral-900 text-white rounded hover:bg-neutral-700"
             >
               {deleting ? '…' : 'Confirm'}
             </button>
-            <button onClick={() => setConfirmDelete(false)} className="text-xs px-2 py-1 bg-slate-100 text-slate-600 rounded">
+            <button onClick={() => setConfirmDelete(false)} className="text-xs px-2 py-1 bg-neutral-100 text-neutral-600 rounded">
               Cancel
             </button>
           </div>
@@ -182,11 +182,11 @@ function VenueRow({ venue, onTogglePause, onDelete }) {
 function VenueGroup({ title, venues, onTogglePause, onDelete, accentClass }) {
   return (
     <div className="card overflow-hidden">
-      <div className={`px-4 py-2 text-xs font-bold uppercase tracking-wide ${accentClass}`}>
+      <div className="px-4 py-2 text-xs font-bold uppercase tracking-wide bg-neutral-50 text-neutral-600">
         {title} ({venues.length})
       </div>
       {venues.length === 0 ? (
-        <p className="px-4 py-3 text-sm text-slate-400 italic">No venues in this group.</p>
+        <p className="px-4 py-3 text-sm text-neutral-400 italic">No venues in this group.</p>
       ) : (
         venues.map(v => (
           <VenueRow key={v.name} venue={v} onTogglePause={onTogglePause} onDelete={onDelete} />
@@ -245,7 +245,7 @@ export default function VenuesTab() {
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
-        <div className="text-sm text-slate-500">
+        <div className="text-sm text-neutral-500">
           {activeCount} active / {venues.length} total
         </div>
         <button className="btn-primary" onClick={() => setShowAdd(s => !s)}>
@@ -260,18 +260,16 @@ export default function VenuesTab() {
         venues={local}
         onTogglePause={handleTogglePause}
         onDelete={handleDelete}
-        accentClass="bg-emerald-100 text-emerald-800"
       />
       <VenueGroup
         title="Travel Venues"
         venues={travel}
         onTogglePause={handleTogglePause}
         onDelete={handleDelete}
-        accentClass="bg-sky-100 text-sky-800"
       />
 
       {filtered.length === 0 && (
-        <p className="text-center text-slate-400 py-8">No venues match your search.</p>
+        <p className="text-center text-neutral-400 py-8">No venues match your search.</p>
       )}
     </div>
   )
@@ -280,10 +278,10 @@ export default function VenuesTab() {
 function Spinner() {
   return (
     <div className="flex justify-center py-16">
-      <div className="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-neutral-200 border-t-neutral-700 rounded-full animate-spin" />
     </div>
   )
 }
 function ErrBox({ message }) {
-  return <div className="card p-6 text-red-600 text-sm">{message}</div>
+  return <div className="card p-6 text-neutral-800 text-sm">{message}</div>
 }
