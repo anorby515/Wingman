@@ -460,18 +460,21 @@ Set up pytest (backend) and Vitest (frontend) test frameworks. No existing tests
 - Generates `docs/summary.json` + `docs/history/YYYY-MM-DD.json`
 - Commits data, builds frontend, deploys to Pages
 
-### Step 5: Notification System
+### Step 5: Local UI — Configuration Only
+Redesign the locally hosted site to focus exclusively on configuration, removing the viewer/dashboard functionality (which lives on GitHub Pages). Requirements are TBD — need to collaborate to define scope, what stays, what goes, and any new config-only features.
+
+### Step 6: Notification System
 - Backend detects triggers during refresh (new events, on-sale-soon)
 - Writes to `notification_state.json`
 - `GET /api/notifications` + `POST /api/notifications/clear` endpoints
 - Twilio config in `wingman_config.json` + Settings UI
 - Cowork reads triggers, sends email + SMS
 
-### Step 6: Cowork Workflow Rewrite
+### Step 7: Cowork Workflow Rewrite
 - Remove scraping workflows
 - Cowork = Spotify sync (manual) + notification delivery (email + SMS)
 
-### Step 7: Bandsintown Integration (FUTURE)
+### Step 8: Bandsintown Integration (FUTURE)
 - Secondary/supplemental data source for artists/venues not on TM
 - Deferred until TM-only gaps are assessed in practice
 
