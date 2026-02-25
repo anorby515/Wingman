@@ -136,6 +136,36 @@ class ComingSoonShow(BaseModel):
     lon: Optional[float] = None
 
 
+class ComingSoonVenueEvent(BaseModel):
+    """A show not yet on public sale at a tracked venue, sourced from Ticketmaster."""
+    tracked_venue: str = Field(description="Name of the tracked venue as stored in wingman_config.json")
+    artist: str = Field(description="Performing artist or act name")
+    date: str = Field(description="Display date, e.g. 'Aug 15, 2026'")
+    venue: str = Field(description="TM venue name (may differ slightly from tracked_venue)")
+    city: str
+    onsale_datetime: Optional[str] = Field(default=None, description="ISO 8601 public on-sale start")
+    onsale_tbd: bool = False
+    presales: list[ComingSoonPresale] = Field(default_factory=list)
+    ticketmaster_url: str
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+
+
+class ComingSoonFestivalEvent(BaseModel):
+    """A festival event not yet on public sale, sourced from Ticketmaster."""
+    tracked_festival: str = Field(description="Festival name as stored in wingman_config.json")
+    event_name: str = Field(description="TM event name (may include tier/pass info)")
+    date: str = Field(description="Display date, e.g. 'Aug 15, 2026'")
+    venue: str
+    city: str
+    onsale_datetime: Optional[str] = Field(default=None, description="ISO 8601 public on-sale start")
+    onsale_tbd: bool = False
+    presales: list[ComingSoonPresale] = Field(default_factory=list)
+    ticketmaster_url: str
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+
+
 # ── Summary (docs/summary.json) ──────────────────────────────────────────────
 
 class SummaryShow(BaseModel):
