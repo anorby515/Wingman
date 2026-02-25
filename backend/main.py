@@ -55,6 +55,11 @@ app.add_middleware(
 # ── Refresh state ────────────────────────────────────────────────────────────
 _refresh_progress: RefreshProgress = RefreshProgress()
 
+# ── Geocode background state ────────────────────────────────────────────────
+_geocode_running: bool = False
+_geocode_total: int = 0
+_geocode_done: int = 0
+
 
 # ── Config helpers ───────────────────────────────────────────────────────────
 def _read_config() -> dict:
@@ -159,6 +164,97 @@ class SettingsPatch(BaseModel):
     states_in_range: Optional[list[str]] = None
     github_pages_url: Optional[str] = None
     ticketmaster_api_key: Optional[str] = None
+
+
+# ── Background geocoding ─────────────────────────────────────────────────────
+def _collect_ungeocodable_locations() -> list[str]:
+    """Scan TM cache for shows missing lat/lon and return unique location strings."""
+    if not TM_CACHE_FILE.exists():
+        return []
+    try:
+        cache = json.loads(TM_CACHE_FILE.read_text())
+    except Exception:
+        return []
+
+    seen: set[str] = set()
+    locations: list[str] = []
+
+    for section in ("artist_shows", "venue_shows", "festival_shows"):
+        for _entity, shows in cache.get(section, {}).items():
+            for show in shows:
+                if show.get("lat") is not None and show.get("lon") is not None:
+                    continue
+                loc = f"{show.get('venue', '')}, {show.get('city', '')}"
+                if loc not in seen:
+                    seen.add(loc)
+                    locations.append(loc)
+                # Also try city-only as fallback key
+                city = show.get("city", "")
+                if city and city not in seen:
+                    seen.add(city)
+                    locations.append(city)
+
+    return locations
+
+
+def _apply_geocodes_to_cache() -> None:
+    """Re-read TM cache and fill in lat/lon from geocode cache for any shows still missing coords."""
+    if not TM_CACHE_FILE.exists():
+        return
+
+    try:
+        cache = json.loads(TM_CACHE_FILE.read_text())
+    except Exception:
+        return
+
+    geocode_data: dict = {}
+    if GEOCODE_FILE.exists():
+        try:
+            geocode_data = json.loads(GEOCODE_FILE.read_text())
+        except Exception:
+            pass
+
+    updated = False
+    for section in ("artist_shows", "venue_shows", "festival_shows"):
+        for _entity, shows in cache.get(section, {}).items():
+            for show in shows:
+                if show.get("lat") is not None and show.get("lon") is not None:
+                    continue
+                loc = f"{show.get('venue', '')}, {show.get('city', '')}"
+                entry = geocode_data.get(loc)
+                if not entry:
+                    entry = geocode_data.get(show.get("city", ""))
+                if entry:
+                    show["lat"] = entry["lat"]
+                    show["lon"] = entry["lon"]
+                    updated = True
+
+    if updated:
+        TM_CACHE_FILE.write_text(json.dumps(cache, indent=2))
+
+
+async def _background_geocode() -> None:
+    """Geocode uncached venue locations in the background after a refresh."""
+    global _geocode_running, _geocode_total, _geocode_done
+
+    locations = _collect_ungeocodable_locations()
+    if not locations:
+        return
+
+    _geocode_running = True
+    _geocode_total = len(locations)
+    _geocode_done = 0
+
+    try:
+        for loc in locations:
+            await asyncio.to_thread(_geocode, loc)
+            _geocode_done += 1
+        # Apply newly geocoded data back to the TM cache
+        _apply_geocodes_to_cache()
+    except Exception:
+        pass
+    finally:
+        _geocode_running = False
 
 
 # ── Shows endpoint (cache-only, never calls TM API) ─────────────────────────
@@ -285,6 +381,9 @@ async def trigger_refresh() -> Any:
                     "triggers": triggers,
                 }
                 NOTIFICATION_FILE.write_text(json.dumps(notification_data, indent=2))
+
+            # Start background geocoding for shows missing lat/lon
+            asyncio.create_task(_background_geocode())
 
         except Exception as e:
             _refresh_progress.error = str(e)
@@ -568,14 +667,21 @@ def dismiss_flagged_item(index: int) -> Any:
 # ── Geocode progress (for progressive map loading) ──────────────────────────
 @app.get("/api/geocode/progress")
 def get_geocode_progress() -> Any:
-    """Return current geocode cache status for progressive map loading."""
-    if not GEOCODE_FILE.exists():
-        return {"total_cached": 0, "locations": {}}
-    try:
-        cache = json.loads(GEOCODE_FILE.read_text())
-        return {"total_cached": len(cache), "locations": cache}
-    except Exception:
-        return {"total_cached": 0, "locations": {}}
+    """Return background geocoding progress for progressive map loading."""
+    total_cached = 0
+    if GEOCODE_FILE.exists():
+        try:
+            cache = json.loads(GEOCODE_FILE.read_text())
+            total_cached = len(cache)
+        except Exception:
+            pass
+
+    return {
+        "running": _geocode_running,
+        "total": _geocode_total,
+        "done": _geocode_done,
+        "total_cached": total_cached,
+    }
 
 
 # ── Serve built frontend ────────────────────────────────────────────────────
