@@ -37,6 +37,7 @@ from .ticketmaster import (
 HERE               = Path(__file__).parent
 REPO               = HERE.parent
 CONFIG_FILE        = REPO / "wingman_config.json"
+TRACKED_FILE       = REPO / "tracked.json"
 FLAGGED_FILE       = REPO / "flagged_items.json"
 GEOCODE_FILE       = REPO / "geocode_cache.json"
 TM_CACHE_FILE      = REPO / "ticketmaster_cache.json"
@@ -70,6 +71,38 @@ def _read_config() -> dict:
 
 def _write_config(cfg: dict) -> None:
     CONFIG_FILE.write_text(json.dumps(cfg, indent=2))
+    _write_tracked(cfg)
+
+
+def _write_tracked(cfg: dict) -> None:
+    """Write tracked.json — a sanitized subset of wingman_config.json
+    containing only entity tracking data (no API keys or credentials).
+    This file is committed to git so the GitHub Action can read it."""
+    tracked = {
+        "center_city": cfg.get("center_city", ""),
+        "artists": {},
+        "venues": {},
+        "festivals": {},
+    }
+    for name, info in cfg.get("artists", {}).items():
+        tracked["artists"][name] = {
+            "url": info.get("url", ""),
+            "genre": info.get("genre", "Other"),
+            "paused": info.get("paused", False),
+        }
+    for name, info in cfg.get("venues", {}).items():
+        tracked["venues"][name] = {
+            "url": info.get("url", ""),
+            "city": info.get("city", ""),
+            "is_local": info.get("is_local", False),
+            "paused": info.get("paused", False),
+        }
+    for name, info in cfg.get("festivals", {}).items():
+        tracked["festivals"][name] = {
+            "url": info.get("url", ""),
+            "paused": info.get("paused", False),
+        }
+    TRACKED_FILE.write_text(json.dumps(tracked, indent=2) + "\n")
 
 
 # ── Geocoding helper ────────────────────────────────────────────────────────

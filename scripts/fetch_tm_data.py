@@ -12,8 +12,7 @@ Usage:
   python scripts/fetch_tm_data.py [--config PATH] [--api-key KEY]
 
 Environment variables:
-  TICKETMASTER_API_KEY — overrides the key in wingman_config.json
-  WINGMAN_CONFIG       — JSON string of wingman_config.json (for CI)
+  TICKETMASTER_API_KEY — TM API key (required in CI)
 """
 
 from __future__ import annotations
@@ -69,20 +68,17 @@ def geocode(location: str, cache: dict) -> tuple[float, float] | None:
 # ── Config loading ───────────────────────────────────────────────────────────
 
 def load_config(config_path: pathlib.Path) -> dict:
-    """Load wingman_config.json from file or WINGMAN_CONFIG env var."""
-    # Check env var first (CI mode)
-    env_config = os.environ.get("WINGMAN_CONFIG")
-    if env_config:
-        print("Loading config from WINGMAN_CONFIG environment variable")
-        return json.loads(env_config)
+    """Load tracking config from tracked.json (committed) or wingman_config.json (local).
 
-    if not config_path.exists():
-        print(f"Error: config file not found: {config_path}", file=sys.stderr)
-        print("Hint: set WINGMAN_CONFIG env var with JSON content for CI", file=sys.stderr)
-        sys.exit(1)
+    In CI, tracked.json is always available since it's committed to the repo.
+    Locally, wingman_config.json is the primary source (tracked.json is also fine).
+    """
+    if config_path.exists():
+        print(f"Loading config from {config_path}")
+        return json.loads(config_path.read_text())
 
-    print(f"Loading config from {config_path}")
-    return json.loads(config_path.read_text())
+    print(f"Error: config file not found: {config_path}", file=sys.stderr)
+    sys.exit(1)
 
 
 # ── Summary generation ───────────────────────────────────────────────────────
@@ -304,8 +300,8 @@ def main():
     parser = argparse.ArgumentParser(description="Wingman Daily TM Data Fetch")
     parser.add_argument(
         "--config", type=str,
-        default=str(ROOT / "wingman_config.json"),
-        help="Path to wingman_config.json",
+        default=str(ROOT / "tracked.json"),
+        help="Path to tracked.json or wingman_config.json",
     )
     parser.add_argument(
         "--api-key", type=str, default=None,
