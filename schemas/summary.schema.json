@@ -58,6 +58,15 @@
         "total_removed": { "type": "number" },
         "total_sold_out": { "type": "number" }
       }
+    },
+    "coming_soon": {
+      "type": "array",
+      "description": "Shows not yet on public sale, sourced from Ticketmaster. Written by Cowork during weekly scrape.",
+      "items": { "$ref": "#/definitions/ComingSoonShow" }
+    },
+    "coming_soon_fetched": {
+      "type": ["string", "null"],
+      "description": "ISO 8601 datetime when coming_soon was last fetched from Ticketmaster"
     }
   },
   "definitions": {
@@ -96,6 +105,35 @@
       "properties": {
         "added": { "type": "array", "items": { "$ref": "#/definitions/SummaryVenueShow" } },
         "removed": { "type": "array", "items": { "$ref": "#/definitions/SummaryVenueShow" } }
+      }
+    },
+    "ComingSoonPresale": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "description": "Presale name, e.g. 'Fan Club Presale'" },
+        "start_datetime": { "type": ["string", "null"], "description": "ISO 8601 presale start" },
+        "end_datetime": { "type": ["string", "null"], "description": "ISO 8601 presale end" }
+      }
+    },
+    "ComingSoonShow": {
+      "type": "object",
+      "required": ["artist", "date", "venue", "city", "ticketmaster_url"],
+      "properties": {
+        "artist": { "type": "string" },
+        "genre": { "type": "string" },
+        "date": { "type": "string", "description": "Display date, e.g. 'Aug 15, 2026'" },
+        "venue": { "type": "string" },
+        "city": { "type": "string" },
+        "onsale_datetime": { "type": ["string", "null"], "description": "ISO 8601 public on-sale start" },
+        "onsale_tbd": { "type": "boolean" },
+        "presales": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ComingSoonPresale" }
+        },
+        "ticketmaster_url": { "type": "string" },
+        "lat": { "type": ["number", "null"] },
+        "lon": { "type": ["number", "null"] }
       }
     }
   }

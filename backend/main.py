@@ -19,6 +19,7 @@ import sys
 import time
 import urllib.parse
 import urllib.request
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
@@ -30,12 +31,14 @@ from pydantic import BaseModel
 # ── Paths ────────────────────────────────────────────────────────────────────
 HERE          = Path(__file__).parent
 REPO          = HERE.parent
-CONFIG_FILE   = REPO / "wingman_config.json"
-STATE_FILE    = REPO / "concert_state.json"
-FLAGGED_FILE  = REPO / "flagged_items.json"
-GEOCODE_FILE  = REPO / "geocode_cache.json"
-SCRIPT        = REPO / "concert_weekly.py"
-SCHEDULE_FILE = Path("/sessions/eager-gracious-cray/mnt/.claude/scheduled-tasks.json")
+CONFIG_FILE      = REPO / "wingman_config.json"
+STATE_FILE       = REPO / "concert_state.json"
+FLAGGED_FILE     = REPO / "flagged_items.json"
+GEOCODE_FILE     = REPO / "geocode_cache.json"
+TM_CACHE_FILE    = REPO / "ticketmaster_cache.json"
+TM_CACHE_TTL_HRS = 6
+SCRIPT           = REPO / "concert_weekly.py"
+SCHEDULE_FILE    = Path("/sessions/eager-gracious-cray/mnt/.claude/scheduled-tasks.json")
 
 # ── App ──────────────────────────────────────────────────────────────────────
 app = FastAPI(title="Wingman API")
@@ -155,6 +158,7 @@ class SettingsPatch(BaseModel):
     cities_in_range: Optional[list[str]] = None
     states_in_range: Optional[list[str]] = None
     github_pages_url: Optional[str] = None
+    ticketmaster_api_key: Optional[str] = None
 
 
 class SchedulePatch(BaseModel):
@@ -204,6 +208,11 @@ def patch_settings(body: SettingsPatch) -> Any:
         cfg["states_in_range"] = body.states_in_range
     if body.github_pages_url is not None:
         cfg["github_pages_url"] = body.github_pages_url
+    if body.ticketmaster_api_key is not None:
+        cfg["ticketmaster_api_key"] = body.ticketmaster_api_key or None
+        # Clear TM cache when API key changes
+        if TM_CACHE_FILE.exists():
+            TM_CACHE_FILE.unlink(missing_ok=True)
     _write_config(cfg)
     return {"ok": True, "settings": {
         "center_city": cfg["center_city"],
@@ -211,6 +220,7 @@ def patch_settings(body: SettingsPatch) -> Any:
         "cities_in_range": cfg["cities_in_range"],
         "states_in_range": cfg["states_in_range"],
         "github_pages_url": cfg.get("github_pages_url", ""),
+        "ticketmaster_api_key": cfg.get("ticketmaster_api_key") or "",
     }}
 
 
@@ -510,6 +520,173 @@ def dismiss_flagged_item(index: int) -> Any:
     removed = items.pop(index)
     _write_flagged(items)
     return {"ok": True, "removed": removed}
+
+
+# ── Ticketmaster Coming Soon ──────────────────────────────────────────────────
+
+def _name_matches(artist_name: str, attraction_names: list[str]) -> bool:
+    """Return True if artist_name has a reasonable TM attraction name match."""
+    a = artist_name.lower()
+    for n in attraction_names:
+        nl = n.lower()
+        if a in nl or nl in a:
+            return True
+    return False
+
+
+def _format_show_date(local_date: str) -> str:
+    """Convert '2026-07-15' → 'Jul 15, 2026'."""
+    try:
+        dt = datetime.strptime(local_date, "%Y-%m-%d")
+        return dt.strftime("%b %-d, %Y")
+    except Exception:
+        return local_date
+
+
+def _fetch_tm_coming_soon(api_key: str, artists: dict) -> list[dict]:
+    """Call Ticketmaster Discovery API for each tracked artist.
+    Returns shows whose public on-sale date is in the future."""
+    now_utc = datetime.now(timezone.utc)
+    results: list[dict] = []
+
+    for artist_name, artist_info in artists.items():
+        if artist_info.get("paused", False):
+            continue
+
+        params = urllib.parse.urlencode({
+            "apikey": api_key,
+            "keyword": artist_name,
+            "classificationName": "music",
+            "size": "50",
+            "sort": "date,asc",
+        })
+        url = f"https://app.ticketmaster.com/discovery/v2/events.json?{params}"
+        req = urllib.request.Request(url, headers={"User-Agent": "Wingman/1.0"})
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read())
+        except Exception:
+            continue
+
+        events = data.get("_embedded", {}).get("events", [])
+
+        for event in events:
+            # Validate attraction name match (when attractions are present)
+            attractions = event.get("_embedded", {}).get("attractions", [])
+            if attractions:
+                names = [a.get("name", "") for a in attractions]
+                if not _name_matches(artist_name, names):
+                    continue
+
+            # Only North America
+            venues = event.get("_embedded", {}).get("venues", [])
+            if not venues:
+                continue
+            venue = venues[0]
+            country = venue.get("country", {}).get("countryCode", "")
+            if country not in ("US", "CA", "MX"):
+                continue
+
+            # Only shows whose public on-sale is in the future
+            sales = event.get("sales", {})
+            public_sale = sales.get("public", {})
+            onsale_str = public_sale.get("startDateTime")
+            onsale_tbd = public_sale.get("startTBD", False)
+
+            if onsale_str:
+                try:
+                    onsale_dt = datetime.fromisoformat(onsale_str.replace("Z", "+00:00"))
+                    if onsale_dt <= now_utc:
+                        continue  # Already on sale
+                except Exception:
+                    continue
+            elif not onsale_tbd:
+                continue  # No future on-sale info at all
+
+            # Extract presales
+            presales = []
+            for p in sales.get("presales", []):
+                presales.append({
+                    "name": p.get("name", "Presale"),
+                    "start_datetime": p.get("startDateTime"),
+                    "end_datetime": p.get("endDateTime"),
+                })
+
+            # Format city
+            city_name = venue.get("city", {}).get("name", "")
+            state_code = venue.get("state", {}).get("stateCode", "")
+            if country == "US":
+                city = f"{city_name}, {state_code}" if state_code else city_name
+            elif country == "CA":
+                city = f"{city_name}, {state_code}, CA" if state_code else f"{city_name}, CA"
+            else:
+                city = f"{city_name}, MX"
+
+            # Geocode venue
+            venue_name = venue.get("name", "")
+            lat, lon = None, None
+            coords = _geocode(f"{venue_name}, {city}")
+            if not coords:
+                coords = _geocode(city)
+            if coords:
+                lat, lon = coords
+
+            results.append({
+                "artist": artist_name,
+                "genre": artist_info.get("genre", "Other"),
+                "date": _format_show_date(
+                    event.get("dates", {}).get("start", {}).get("localDate", "")
+                ),
+                "venue": venue_name,
+                "city": city,
+                "onsale_datetime": onsale_str,
+                "onsale_tbd": onsale_tbd,
+                "presales": presales,
+                "ticketmaster_url": event.get("url", ""),
+                "lat": lat,
+                "lon": lon,
+            })
+
+    return results
+
+
+@app.get("/api/coming-soon")
+def get_coming_soon(force: bool = False) -> Any:
+    cfg = _read_config()
+    api_key = cfg.get("ticketmaster_api_key") or ""
+
+    if not api_key:
+        return {"api_configured": False, "shows": [], "last_fetched": None}
+
+    now_utc = datetime.now(timezone.utc)
+
+    # Return cached data if fresh
+    if not force and TM_CACHE_FILE.exists():
+        try:
+            cache = json.loads(TM_CACHE_FILE.read_text())
+            fetched_at = datetime.fromisoformat(cache["last_fetched"])
+            age_hours = (now_utc - fetched_at).total_seconds() / 3600
+            if age_hours < TM_CACHE_TTL_HRS:
+                return {
+                    "api_configured": True,
+                    "shows": cache.get("shows", []),
+                    "last_fetched": cache["last_fetched"],
+                }
+        except Exception:
+            pass
+
+    # Fetch fresh from TM API
+    shows = _fetch_tm_coming_soon(api_key, cfg.get("artists", {}))
+    last_fetched = now_utc.isoformat()
+
+    try:
+        TM_CACHE_FILE.write_text(json.dumps(
+            {"last_fetched": last_fetched, "shows": shows}, indent=2
+        ))
+    except Exception:
+        pass
+
+    return {"api_configured": True, "shows": shows, "last_fetched": last_fetched}
 
 
 # ── Serve built frontend ──────────────────────────────────────────────────────
