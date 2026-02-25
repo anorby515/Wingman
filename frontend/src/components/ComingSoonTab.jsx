@@ -143,6 +143,62 @@ function ComingSoonCard({ artist, genre, url, shows }) {
   )
 }
 
+// ── Artists not found on Ticketmaster ────────────────────────────────────────
+function NotFoundSection({ artists, configArtists }) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="card">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full p-4 text-left flex items-center justify-between gap-3"
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-slate-500">
+            Not found on Ticketmaster
+          </span>
+          <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium">
+            {artists.length}
+          </span>
+        </div>
+        <svg
+          className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`}
+          fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {open && (
+        <div className="border-t border-slate-50 px-4 pb-4">
+          <p className="text-xs text-slate-400 mt-3 mb-3">
+            These tracked artists returned no results on Ticketmaster. They may tour under a different name, not list shows on Ticketmaster, or not have upcoming North America dates.
+          </p>
+          <ul className="space-y-1.5">
+            {artists.map(name => (
+              <li key={name} className="flex items-center gap-2 text-sm text-slate-600">
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-300 flex-shrink-0" />
+                {configArtists[name]?.url ? (
+                  <a
+                    href={configArtists[name].url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-indigo-600 hover:underline"
+                  >
+                    {name}
+                  </a>
+                ) : (
+                  name
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── Loading / error helpers ───────────────────────────────────────────────────
 function LoadingSpinner() {
   return (
@@ -231,8 +287,9 @@ export default function ComingSoonTab() {
     )
   }
 
-  const shows         = data.shows || []
-  const configArtists = config?.artists || {}
+  const shows            = data.shows || []
+  const notFound         = data.artists_not_found || []
+  const configArtists    = config?.artists || {}
 
   // Group by artist, preserve order (most shows first)
   const byArtist = {}
@@ -317,6 +374,11 @@ export default function ComingSoonTab() {
             />
           ))}
         </div>
+      )}
+
+      {/* ── Not found on Ticketmaster ── */}
+      {!DEMO && notFound.length > 0 && (
+        <NotFoundSection artists={notFound} configArtists={configArtists} />
       )}
     </div>
   )

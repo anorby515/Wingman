@@ -543,11 +543,13 @@ def _format_show_date(local_date: str) -> str:
         return local_date
 
 
-def _fetch_tm_coming_soon(api_key: str, artists: dict) -> list[dict]:
+def _fetch_tm_coming_soon(api_key: str, artists: dict) -> tuple[list[dict], list[str]]:
     """Call Ticketmaster Discovery API for each tracked artist.
-    Returns shows whose public on-sale date is in the future."""
+    Returns (shows, artists_not_found) where shows have a future public on-sale date
+    and artists_not_found are artists with zero matching North America results on TM."""
     now_utc = datetime.now(timezone.utc)
     results: list[dict] = []
+    not_found: list[str] = []
 
     for artist_name, artist_info in artists.items():
         if artist_info.get("paused", False):
@@ -566,9 +568,12 @@ def _fetch_tm_coming_soon(api_key: str, artists: dict) -> list[dict]:
             with urllib.request.urlopen(req, timeout=10) as resp:
                 data = json.loads(resp.read())
         except Exception:
-            continue
+            continue  # Network/API error — skip silently, don't flag as not found
 
         events = data.get("_embedded", {}).get("events", [])
+
+        # Track whether any event passed name + NA country checks
+        matched_any = False
 
         for event in events:
             # Validate attraction name match (when attractions are present)
@@ -586,6 +591,9 @@ def _fetch_tm_coming_soon(api_key: str, artists: dict) -> list[dict]:
             country = venue.get("country", {}).get("countryCode", "")
             if country not in ("US", "CA", "MX"):
                 continue
+
+            # Artist has at least one matching NA event on TM
+            matched_any = True
 
             # Only shows whose public on-sale is in the future
             sales = event.get("sales", {})
@@ -647,7 +655,10 @@ def _fetch_tm_coming_soon(api_key: str, artists: dict) -> list[dict]:
                 "lon": lon,
             })
 
-    return results
+        if not matched_any:
+            not_found.append(artist_name)
+
+    return results, not_found
 
 
 @app.get("/api/coming-soon")
@@ -670,23 +681,30 @@ def get_coming_soon(force: bool = False) -> Any:
                 return {
                     "api_configured": True,
                     "shows": cache.get("shows", []),
+                    "artists_not_found": cache.get("artists_not_found", []),
                     "last_fetched": cache["last_fetched"],
                 }
         except Exception:
             pass
 
     # Fetch fresh from TM API
-    shows = _fetch_tm_coming_soon(api_key, cfg.get("artists", {}))
+    shows, artists_not_found = _fetch_tm_coming_soon(api_key, cfg.get("artists", {}))
     last_fetched = now_utc.isoformat()
 
     try:
         TM_CACHE_FILE.write_text(json.dumps(
-            {"last_fetched": last_fetched, "shows": shows}, indent=2
+            {"last_fetched": last_fetched, "shows": shows, "artists_not_found": artists_not_found},
+            indent=2,
         ))
     except Exception:
         pass
 
-    return {"api_configured": True, "shows": shows, "last_fetched": last_fetched}
+    return {
+        "api_configured": True,
+        "shows": shows,
+        "artists_not_found": artists_not_found,
+        "last_fetched": last_fetched,
+    }
 
 
 # ── Serve built frontend ──────────────────────────────────────────────────────
