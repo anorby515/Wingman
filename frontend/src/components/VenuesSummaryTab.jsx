@@ -86,98 +86,6 @@ function VenueCard({ name, url, city, events, paused }) {
   )
 }
 
-// ── Festival card ─────────────────────────────────────────────────────────────
-function FestivalCard({ name, url, paused, lineup }) {
-  const [open, setOpen] = useState(false)
-  const hasLineup = lineup && lineup.length > 0
-  const trackedCount = hasLineup ? lineup.filter(e => e.tracked).length : 0
-
-  return (
-    <div className={`card transition-all ${paused ? 'opacity-50' : ''}`}>
-      <div className="p-4 flex items-center gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5 min-w-0">
-            {url ? (
-              <a
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold text-slate-900 hover:text-indigo-600 hover:underline truncate"
-              >
-                {name}
-              </a>
-            ) : (
-              <span className="font-semibold text-slate-900 truncate">{name}</span>
-            )}
-          </div>
-          <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-            {paused && <span className="badge-paused">Paused</span>}
-            {trackedCount > 0 && (
-              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
-                {trackedCount} tracked
-              </span>
-            )}
-            {!hasLineup && !paused && (
-              <span className="text-xs text-slate-400 italic">Lineup not yet scraped</span>
-            )}
-            {hasLineup && (
-              <span className="text-xs text-slate-500">{lineup.length} artists</span>
-            )}
-          </div>
-        </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          {url && (
-            <a
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={e => e.stopPropagation()}
-              className="flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700"
-              title="View lineup page"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
-          )}
-          {hasLineup && (
-            <button onClick={() => setOpen(o => !o)}>
-              <svg
-                className={`w-4 h-4 text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`}
-                fill="none" viewBox="0 0 24 24" stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-          )}
-        </div>
-      </div>
-
-      {open && hasLineup && (
-        <div className="border-t border-slate-50 px-4 pb-4">
-          <ul className="mt-3 space-y-1.5">
-            {lineup.map((entry, i) => (
-              <li key={i} className="flex items-center gap-2 text-sm">
-                {entry.tracked ? (
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0" title="Tracked artist" />
-                ) : (
-                  <span className="w-2 h-2 rounded-full bg-slate-200 flex-shrink-0" />
-                )}
-                <span className={entry.tracked ? 'text-slate-800 font-medium' : 'text-slate-500'}>
-                  {entry.artist}
-                </span>
-              </li>
-            ))}
-          </ul>
-          {trackedCount > 0 && (
-            <p className="mt-2 text-xs text-emerald-600">Green dot = tracked artist</p>
-          )}
-        </div>
-      )}
-    </div>
-  )
-}
-
 // ── Section heading ───────────────────────────────────────────────────────────
 function SectionHeading({ children, count }) {
   return (
@@ -218,14 +126,11 @@ export default function VenuesSummaryTab() {
   if (loading) return <LoadingSpinner />
   if (error)   return <ErrorBox message={error} />
 
-  const venueShows      = state?.venue_shows    || {}
-  const festivalShows   = state?.festival_shows || {}
-  const configVenues    = config?.venues        || {}
-  const configFestivals = config?.festivals     || {}
+  const venueShows   = state?.venue_shows || {}
+  const configVenues = config?.venues     || {}
 
   const localVenues  = Object.entries(configVenues).filter(([, v]) => v.is_local)
   const travelVenues = Object.entries(configVenues).filter(([, v]) => !v.is_local)
-  const festivals    = Object.entries(configFestivals)
 
   return (
     <div className="space-y-8">
@@ -268,27 +173,6 @@ export default function VenuesSummaryTab() {
           {travelVenues.length === 0 && (
             <div className="col-span-2 card p-6 text-center text-slate-400 text-sm italic">
               No travel venues configured.
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* ── Festivals ── */}
-      <section>
-        <SectionHeading count={festivals.length}>Festivals</SectionHeading>
-        <div className="grid sm:grid-cols-2 gap-3">
-          {festivals.map(([name, info]) => (
-            <FestivalCard
-              key={name}
-              name={name}
-              url={info.url}
-              paused={info.paused}
-              lineup={festivalShows[name]}
-            />
-          ))}
-          {festivals.length === 0 && (
-            <div className="col-span-2 card p-6 text-center text-slate-400 text-sm italic">
-              No festivals configured.
             </div>
           )}
         </div>
