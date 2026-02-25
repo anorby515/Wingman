@@ -34,6 +34,12 @@ class VenueShow(BaseModel):
     tracked: bool = Field(description="True if artist is in the tracked artists list")
 
 
+class FestivalLineupEntry(BaseModel):
+    """A single artist entry on a festival lineup."""
+    artist: str = Field(description="Artist or act name as listed on the lineup page")
+    tracked: bool = Field(description="True if artist matches an entry in wingman_config.json artists")
+
+
 class ConcertState(BaseModel):
     """Top-level concert state. Written by Cowork after each scrape run."""
     last_run: str = Field(description="Date of last run, YYYY-MM-DD")
@@ -49,6 +55,10 @@ class ConcertState(BaseModel):
     venue_shows: dict[str, list[VenueShow]] = Field(
         default_factory=dict,
         description="Map of venue name to events at that venue",
+    )
+    festival_shows: dict[str, list[FestivalLineupEntry]] = Field(
+        default_factory=dict,
+        description="Map of festival name to lineup entries",
     )
 
 

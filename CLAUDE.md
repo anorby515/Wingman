@@ -21,7 +21,7 @@ This document defines the contract between **Claude Code** (codebase maintainer)
 **Trigger:** Scheduled Cowork session (weekly) OR manual Cowork session.
 
 **Sequence:**
-1. Read `wingman_config.json` for artists, venues, settings
+1. Read `wingman_config.json` for artists, venues, festivals, settings
 2. For each active artist: Chrome skill navigates to tour page, Claude extracts structured show data
    - **Include:** shows in the United States, Canada, and Mexico
    - **Exclude:** shows in Europe, UK, Australia, Asia, South America, or any other non-North-America territory
@@ -40,6 +40,11 @@ This document defines the contract between **Claude Code** (codebase maintainer)
      ```
      Wait ~30–60s, check `window._loadDone`, then extract `document.body.innerText` in chunks.
    - **Venues flagged as lazy-load** (see table below): always use the scroll/load-more pattern
+3a. For each active festival: Chrome skill navigates to lineup URL, Claude extracts the artist lineup
+   - Read the page and extract every performing artist or act listed on the lineup page
+   - For each extracted artist, check whether their name (case-insensitive) appears in `wingman_config.json` artists → set `tracked: true` if matched, `false` otherwise
+   - Store results as a `FestivalLineupEntry` array under `festival_shows[festival_name]` in `concert_state.json`
+   - **Standard lineup pages:** read page text directly after load (see Festival Scraping Behavior table below)
 4. For each extracted show: geocode the venue location
    - Check `geocode_cache.json` first
    - If cache miss: query Nominatim API (1 req/sec rate limit)
@@ -143,6 +148,7 @@ Top-level structure:
 - `radius_miles` (number | null) — deprecated, kept for backward compat
 - `artist_shows` (object: artist name -> array of Show objects)
 - `venue_shows` (object: venue name -> array of VenueShow objects)
+- `festival_shows` (object: festival name -> array of FestivalLineupEntry objects)
 
 **Show object:**
 - `date` (string) — display format, e.g. "Mar 15, 2026"
@@ -159,6 +165,10 @@ Top-level structure:
 - `artist` (string) — artist/event name
 - `tracked` (boolean) — true if artist is in the tracked artists list
 
+**FestivalLineupEntry object:**
+- `artist` (string) — artist or act name as it appears on the lineup page
+- `tracked` (boolean) — true if artist name matches an entry in `wingman_config.json` artists (case-insensitive)
+
 ### Venue Scraping Behavior
 
 | Venue | Load Pattern | Notes |
@@ -171,6 +181,13 @@ Top-level structure:
 | Ryman Auditorium | Standard page load | |
 | **ACL Live** | **Lazy-load / "Load More" button** | Use JS interval pattern; ~8–10 clicks to reach full calendar |
 | The Salt Shed | Standard page load | |
+
+### Festival Scraping Behavior
+
+| Festival | Load Pattern | Notes |
+|----------|-------------|-------|
+| Minnesota Yacht Club Festival | Standard page load | Extract all artists from lineup page |
+| Hinterland Music Festival | Standard page load | Extract all artists from lineup page |
 
 ### wingman_config.json
 
@@ -243,14 +260,18 @@ The public site is deployed from `frontend/dist` built in demo mode.
 - Full local UI: React frontend + FastAPI backend, served from `frontend/dist`
 - Artist management (add, edit, pause, delete) with genre badges
 - Venue management (local vs. travel, add, edit, pause, delete)
+- Festival management (add, pause, delete) — Configure > Festivals sub-tab
 - Settings panel (map home city, GitHub Pages URL)
 - Schedule panel (next run display, cron config)
 - Flagged Items panel (Spotify sync flags surfaced in UI)
-- Concert summary tab: artist cards, venue sections, show listings
+- Artists tab: artist cards (names link to tour pages) + interactive Leaflet map with viewport filtering
+- Venues tab: venue cards (names link to calendars), split local/travel/festivals; no map
+- Festivals section in Venues tab: cards linking to lineup pages; expandable with tracked artists when `festival_shows` data available
+- Map tooltips show all shows (no "+N more" truncation)
 - Leaflet map with artist show pins (green=new, red=sold out, blue=on sale) + venue pins (violet)
-- Interactive map filtering: click artist/venue card to filter map pins; map viewport filters visible cards
-- Compound filtering: artist/venue selection + viewport bounds both apply
-- Hover tooltips on map pins showing artist, date, venue details
+- Interactive map filtering: click artist card to filter map pins; map viewport filters visible cards
+- Hover tooltips on map pins showing all artist/date/venue details
+- Configure tab: combined management with sub-tabs for Artists, Venues, Festivals
 - Backend geocoding via Nominatim with `geocode_cache.json` cache
 - `/api/config` returns `center_lat`/`center_lon` for map + venue lat/lon for venue pins
 - All North America shows scraped (no distance/radius filtering)
