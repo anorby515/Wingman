@@ -37,6 +37,8 @@ def _export_from_summary(summary: dict) -> dict:
         "coming_soon_fetched": summary.get("coming_soon_fetched"),
         "config": {
             "center_city": summary.get("center", ""),
+            "center_lat": summary.get("center_lat"),
+            "center_lon": summary.get("center_lon"),
             "artists": {},
             "venues": {},
         },
@@ -112,6 +114,8 @@ def main():
             "state": state,
             "config": {
                 "center_city": center_city,
+                "center_lat": state.get("center_lat"),
+                "center_lon": state.get("center_lon"),
                 "artists": artists,
                 "venues": venues,
             },

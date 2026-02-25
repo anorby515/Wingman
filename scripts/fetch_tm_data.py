@@ -288,6 +288,8 @@ def build_static_data(
         "coming_soon_fetched": summary.get("coming_soon_fetched"),
         "config": {
             "center_city": center_city,
+            "center_lat": center_coords.get("lat"),
+            "center_lon": center_coords.get("lon"),
             "artists": artists_cfg,
             "venues": venues_cfg,
         },

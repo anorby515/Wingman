@@ -269,7 +269,11 @@ export default function ArtistsSummaryTab() {
             artist_shows: data.state?.artist_shows || {},
             last_refreshed: data.coming_soon_fetched || null,
           })
-          setConfig(data.config)
+          setConfig({
+            ...data.config,
+            center_lat: data.config?.center_lat ?? data.state?.center_lat,
+            center_lon: data.config?.center_lon ?? data.state?.center_lon,
+          })
         })
         .catch(e => setError(e.message))
         .finally(() => setLoading(false))
