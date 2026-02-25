@@ -9,12 +9,12 @@ import SettingsTab         from './components/SettingsTab.jsx'
 const DEMO = import.meta.env.VITE_DEMO_MODE === 'true'
 
 const ALL_TABS = [
-  { id: 'coming-soon', label: 'Coming Soon', icon: '🎟' },
-  { id: 'artists',     label: 'Artists',     icon: '🎤' },
-  { id: 'festivals',   label: 'Festivals',   icon: '🎪' },
-  { id: 'venues',      label: 'Venues',      icon: '🏟' },
-  { id: 'configure',   label: 'Configure',   icon: '🔧' },
-  { id: 'settings',    label: 'Settings',    icon: '⚙️' },
+  { id: 'coming-soon', label: 'Coming Soon' },
+  { id: 'artists',     label: 'Artists'     },
+  { id: 'festivals',   label: 'Festivals'   },
+  { id: 'venues',      label: 'Venues'      },
+  { id: 'configure',   label: 'Configure'   },
+  { id: 'settings',    label: 'Settings'    },
 ]
 
 const TABS = DEMO
@@ -98,7 +98,6 @@ export default function App() {
     const poll = async () => {
       try {
         const gp = await fetch('/api/geocode/progress').then(r => r.json())
-        // If new locations were geocoded, bump version so map re-renders
         if (gp.total_cached > lastCached && lastCached > 0) {
           setRefreshVersion(v => v + 1)
         }
@@ -106,7 +105,6 @@ export default function App() {
         if (gp.running) {
           setTimeout(poll, 2000)
         } else if (gp.total_cached > 0) {
-          // Final bump to pick up any remaining geocodes
           setRefreshVersion(v => v + 1)
         }
       } catch {
@@ -117,63 +115,51 @@ export default function App() {
   }, [])
 
   return (
-    <div className="min-h-screen flex flex-col bg-black">
+    <div className="min-h-screen flex flex-col bg-neutral-100">
       {/* ── Header ── */}
-      <header className="bg-gunmetal text-white sticky top-0 z-20 shadow-lg">
+      <header className="sticky top-0 z-20 bg-neutral-100">
         <div className="max-w-3xl mx-auto px-4 pt-4 pb-0">
-          <div className="flex items-center gap-3 mb-3">
-            <span className="text-2xl">🎸</span>
-            <div className="flex-1">
-              <h1 className="text-[2.5rem] font-bold leading-tight">Wingman</h1>
-              <p className="text-indigo-300 text-xs">Concert Tracker</p>
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight text-neutral-900">WINGMAN</h1>
+              <p className="text-xs text-neutral-400 tracking-wide">Concert Tracker</p>
             </div>
 
             <div className="flex items-center gap-2 flex-shrink-0">
               {/* Last refreshed */}
               {!DEMO && lastRefreshed && (
-                <span className="text-xs text-indigo-300" title={lastRefreshed}>
-                  Updated {timeAgo(lastRefreshed)}
+                <span className="text-xs text-neutral-400" title={lastRefreshed}>
+                  {timeAgo(lastRefreshed)}
                 </span>
               )}
 
-              {/* Refresh Data button (local only) */}
+              {/* Refresh button (local only) */}
               {!DEMO && (
                 <button
                   onClick={handleRefresh}
                   disabled={refreshing}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 hover:bg-amber-400 disabled:bg-amber-600 disabled:cursor-not-allowed rounded-lg text-sm font-medium transition-colors text-slate-900"
+                  className="px-3 py-1 bg-neutral-900 text-white text-xs font-medium hover:bg-neutral-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   title="Fetch latest data from Ticketmaster"
                 >
                   {refreshing ? (
-                    <>
-                      <span className="w-3.5 h-3.5 border-2 border-slate-700 border-t-transparent rounded-full animate-spin" />
-                      Refreshing...
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                      </svg>
-                      Refresh Data
-                    </>
-                  )}
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-3 h-3 border border-neutral-500 border-t-white rounded-full animate-spin" />
+                      Refreshing
+                    </span>
+                  ) : 'Refresh'}
                 </button>
               )}
 
-              {/* Public Report link */}
+              {/* Live link */}
               {!DEMO && pagesUrl && (
                 <a
                   href={pagesUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-medium transition-colors"
+                  className="px-3 py-1 border border-neutral-300 text-neutral-700 text-xs font-medium hover:bg-neutral-50 transition-colors"
                   title="View public report on GitHub Pages"
                 >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                  Public Report
+                  Live →
                 </a>
               )}
             </div>
@@ -181,13 +167,15 @@ export default function App() {
 
           {/* Refresh error */}
           {refreshError && (
-            <div className="mb-2 px-3 py-1.5 bg-red-500/20 rounded text-xs text-red-200">
+            <div className="mb-2 px-3 py-1.5 border border-neutral-200 text-xs text-neutral-600">
               Refresh failed: {refreshError}
             </div>
           )}
 
+          <hr className="border-neutral-200" />
+
           {/* ── Tab bar ── */}
-          <nav className="flex -mb-px" role="tablist">
+          <nav className="flex -mb-px mt-0" role="tablist">
             {TABS.map(tab => (
               <button
                 key={tab.id}
@@ -195,13 +183,12 @@ export default function App() {
                 aria-selected={active === tab.id}
                 onClick={() => setActive(tab.id)}
                 className={[
-                  'flex-1 py-3 text-sm font-medium transition-colors border-b-2',
+                  'flex-1 py-2.5 text-sm transition-colors border-b-2',
                   active === tab.id
-                    ? 'border-amber-400 text-white'
-                    : 'border-transparent text-indigo-300 hover:text-white hover:border-indigo-400',
+                    ? 'border-neutral-900 text-neutral-900 font-semibold'
+                    : 'border-transparent text-neutral-400 hover:text-neutral-700',
                 ].join(' ')}
               >
-                <span className="hidden sm:inline mr-1">{tab.icon}</span>
                 {tab.label}
               </button>
             ))}

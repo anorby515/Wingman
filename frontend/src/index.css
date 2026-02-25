@@ -4,41 +4,41 @@
 
 @layer base {
   html { font-family: system-ui, -apple-system, sans-serif; }
-  body { @apply bg-slate-50 text-slate-900; }
+  body { @apply bg-neutral-100 text-neutral-900; }
 }
 
 @layer components {
   .btn-primary {
-    @apply px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium
-           hover:bg-indigo-700 active:bg-indigo-800 transition-colors
-           disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply px-4 py-2 bg-neutral-900 text-white rounded-sm text-sm font-medium
+           hover:bg-neutral-700 active:bg-neutral-800 transition-colors
+           disabled:opacity-40 disabled:cursor-not-allowed;
   }
   .btn-ghost {
-    @apply px-3 py-1.5 text-slate-600 rounded-lg hover:bg-slate-100
-           active:bg-slate-200 transition-colors text-sm;
+    @apply px-3 py-1.5 text-neutral-600 border border-neutral-200 rounded-sm
+           hover:bg-neutral-50 active:bg-neutral-100 transition-colors text-sm;
   }
   .btn-danger {
-    @apply px-3 py-1.5 text-red-600 rounded-lg hover:bg-red-50
-           active:bg-red-100 transition-colors text-sm;
+    @apply px-3 py-1.5 text-neutral-600 hover:text-red-700
+           transition-colors text-sm underline;
   }
   .card {
-    @apply bg-white rounded-xl border border-slate-100 shadow-sm;
+    @apply bg-white border border-neutral-200 rounded-sm;
   }
   .input {
-    @apply w-full border border-slate-200 rounded-lg px-3 py-2 text-sm
-           focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent;
+    @apply w-full border border-neutral-200 rounded-sm px-3 py-2 text-sm
+           focus:outline-none focus:ring-1 focus:ring-neutral-400 focus:border-transparent;
   }
   .badge-genre {
-    @apply text-xs px-2 py-0.5 rounded-full font-medium;
+    @apply text-xs text-neutral-400;
   }
   .badge-paused {
-    @apply text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium;
+    @apply text-xs text-neutral-400 italic;
   }
   .badge-sold-out {
-    @apply text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium;
+    @apply text-xs text-neutral-500;
   }
   .badge-new {
-    @apply text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium;
+    @apply text-xs text-neutral-500 font-medium;
   }
   .toggle {
     @apply relative inline-flex items-center cursor-pointer;

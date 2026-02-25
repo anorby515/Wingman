@@ -2,21 +2,7 @@
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
-    extend: {
-      colors: {
-        gunmetal: '#2C3539',
-        brand: {
-          50:  '#eef2ff',
-          100: '#e0e7ff',
-          500: '#6366f1',
-          700: '#4338ca',
-          900: '#1e1b4b',
-        },
-        amber: {
-          400: '#fbbf24',
-        }
-      }
-    }
+    extend: {},
   },
   plugins: [],
 }

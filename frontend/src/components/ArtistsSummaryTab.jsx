@@ -12,16 +12,6 @@ function fmtOnsale(isoStr) {
   } catch { return null }
 }
 
-const GENRE_COLORS = {
-  'Country / Americana':  'bg-amber-100 text-amber-800',
-  'Indie / Alt-Rock':     'bg-blue-100  text-blue-800',
-  'Electronic / Art-Rock':'bg-purple-100 text-purple-800',
-  'Other':                'bg-slate-100 text-slate-700',
-}
-
-function genreColor(genre) {
-  return GENRE_COLORS[genre] || GENRE_COLORS['Other']
-}
 
 function isInBounds(lat, lon, bounds) {
   if (!bounds) return true
@@ -60,7 +50,7 @@ function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
   }, [shows])
 
   return (
-    <div className={`card transition-all ${paused ? 'opacity-50' : ''} ${isSelected ? 'ring-2 ring-indigo-400' : ''}`}>
+    <div className={`card transition-all ${paused ? 'opacity-50' : ''} ${isSelected ? 'ring-1 ring-neutral-600' : ''}`}>
       <button
         onClick={handleClick}
         className="w-full p-4 text-left flex items-center gap-3"
@@ -73,57 +63,52 @@ function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={e => e.stopPropagation()}
-                className="font-semibold text-slate-900 hover:text-indigo-600 hover:underline truncate"
+                className="font-semibold text-neutral-900 hover:text-neutral-600 hover:underline truncate"
               >
                 {name}
               </a>
             ) : (
-              <span className="font-semibold text-slate-900 truncate">{name}</span>
+              <span className="font-semibold text-neutral-900 truncate">{name}</span>
             )}
           </div>
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-            <span className={`badge-genre ${genreColor(genre)}`}>{genre}</span>
+            <span className="badge-genre">{genre}</span>
             {paused && <span className="badge-paused">Paused</span>}
             {isSelected && (
-              <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-medium">
-                Filtered
-              </span>
+              <span className="text-xs text-neutral-500 font-medium">Filtered</span>
             )}
           </div>
         </div>
 
-        {/* Count badges */}
+        {/* Count indicators */}
         <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
           {onSale.length > 0 && (
-            <span className="text-sm font-semibold text-emerald-600">
+            <span className="flex items-center gap-1 text-sm text-neutral-800">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-neutral-800 flex-shrink-0" />
               {onSale.length} on sale
             </span>
           )}
           {preSale.length > 0 && (
-            <span className="text-xs font-semibold text-amber-600">
-              {preSale.length} coming soon
+            <span className="flex items-center gap-1 text-xs text-neutral-400">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-neutral-300 flex-shrink-0" />
+              {preSale.length} soon
             </span>
           )}
           {shows.length === 0 && (
-            <span className="text-sm font-semibold text-slate-400">No shows</span>
+            <span className="text-sm text-neutral-400">No shows</span>
           )}
-          <svg
-            className={`w-4 h-4 text-slate-400 transition-transform mt-0.5 ${open ? 'rotate-180' : ''}`}
-            fill="none" viewBox="0 0 24 24" stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
+          <span className="text-neutral-400 text-xs mt-0.5">{open ? '−' : '+'}</span>
         </div>
       </button>
 
       {open && (
-        <div className="border-t border-slate-50 px-4 pb-4">
+        <div className="border-t border-neutral-100 px-4 pb-4">
           {mergedRows.length > 0 ? (
             <ul className="mt-3 space-y-2">
               {mergedRows.map((show, i) =>
                 show._src === 'presale' ? (
                   // ── Not-yet-on-sale show ──
-                  <li key={i} className="bg-amber-50 -mx-2 px-2 py-1.5 rounded-lg text-sm">
+                  <li key={i} className="bg-neutral-50 -mx-2 px-2 py-1.5 text-sm">
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <span className="font-medium text-slate-800">{show.date}</span>
@@ -138,15 +123,15 @@ function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={e => e.stopPropagation()}
-                          className="flex-shrink-0 text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+                          className="flex-shrink-0 text-xs text-neutral-500 hover:text-neutral-800 hover:underline"
                         >
-                          TM &rarr;
+                          TM →
                         </a>
                       )}
                     </div>
                     <div className="flex items-center gap-1 mt-0.5">
-                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
-                      <span className="text-xs text-amber-700 font-medium">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-neutral-400 flex-shrink-0" />
+                      <span className="text-xs text-neutral-500 font-medium">
                         {show.onsale_tbd
                           ? 'On-sale date TBD'
                           : show.onsale_datetime
@@ -157,11 +142,11 @@ function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
                     {show.presales && show.presales.length > 0 && (
                       <ul className="mt-1 space-y-0.5">
                         {show.presales.map((p, pi) => (
-                          <li key={pi} className="flex items-center gap-1 text-xs text-slate-500">
-                            <span className="w-1.5 h-1.5 rounded-full bg-violet-400 flex-shrink-0" />
-                            <span className="font-medium text-slate-600">{p.name}</span>
+                          <li key={pi} className="flex items-center gap-1 text-xs text-neutral-400">
+                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-300 flex-shrink-0" />
+                            <span className="font-medium text-neutral-500">{p.name}</span>
                             {p.start_datetime && (
-                              <span className="text-slate-400">— starts {fmtOnsale(p.start_datetime)}</span>
+                              <span className="text-neutral-400">— starts {fmtOnsale(p.start_datetime)}</span>
                             )}
                           </li>
                         ))}
@@ -172,11 +157,11 @@ function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
                   // ── On-sale show ──
                   <li key={i} className="flex items-start justify-between gap-2 text-sm">
                     <div>
-                      <span className="font-medium text-slate-800">{show.date}</span>
-                      <span className="text-slate-400 mx-1">&middot;</span>
-                      <span className="text-slate-600">{show.venue}</span>
-                      <span className="text-slate-400 mx-1">&middot;</span>
-                      <span className="text-slate-500">{show.city}</span>
+                      <span className="font-medium text-neutral-800">{show.date}</span>
+                      <span className="text-neutral-300 mx-1">&middot;</span>
+                      <span className="text-neutral-600">{show.venue}</span>
+                      <span className="text-neutral-300 mx-1">&middot;</span>
+                      <span className="text-neutral-400">{show.city}</span>
                     </div>
                     {show.ticketmaster_url && (
                       <a
@@ -184,9 +169,9 @@ function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={e => e.stopPropagation()}
-                        className="flex-shrink-0 text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+                        className="flex-shrink-0 text-xs text-neutral-500 hover:text-neutral-800 hover:underline"
                       >
-                        TM &rarr;
+                        TM →
                       </a>
                     )}
                   </li>
@@ -194,7 +179,7 @@ function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
               )}
             </ul>
           ) : (
-            <p className="mt-3 text-sm text-slate-400 italic">No upcoming shows found.</p>
+            <p className="mt-3 text-sm text-neutral-400 italic">No upcoming shows found.</p>
           )}
         </div>
       )}
@@ -206,13 +191,11 @@ function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
 function SectionHeading({ children, count, total }) {
   return (
     <div className="flex items-center gap-2 mb-3">
-      <h2 className="text-base font-bold text-slate-700">{children}</h2>
+      <h2 className="text-base font-bold text-neutral-800">{children}</h2>
       {count !== undefined && total !== undefined ? (
-        <span className="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full">
-          {count} / {total} in view
-        </span>
+        <span className="text-xs text-neutral-400">{count} / {total} in view</span>
       ) : count !== undefined ? (
-        <span className="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full">{count}</span>
+        <span className="text-xs text-neutral-400">{count}</span>
       ) : null}
     </div>
   )
@@ -221,27 +204,24 @@ function SectionHeading({ children, count, total }) {
 // ── Map legend ────────────────────────────────────────────────────────────────
 function MapLegend({ mapFilter, onClearFilter }) {
   return (
-    <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mt-2 px-1">
+    <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-400 mt-2 px-1">
       <span className="flex items-center gap-1">
-        <span className="w-3 h-3 rounded-full bg-blue-500 inline-block" /> On Sale
+        <span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" /> On Sale
       </span>
       <span className="flex items-center gap-1">
-        <span className="w-3 h-3 rounded-full bg-orange-500 inline-block" /> Coming Soon
+        <span className="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block" /> Coming Soon
       </span>
       <span className="flex items-center gap-1">
-        <span className="w-3 h-3 rounded-full bg-purple-500 inline-block" /> Venue
+        <span className="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block" /> Venue
       </span>
       <span className="flex items-center gap-1">
-        <span className="w-3 h-3 rounded-full bg-indigo-500 inline-block" /> Home
+        <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 inline-block" /> Home
       </span>
       {mapFilter && (
         <button
           onClick={onClearFilter}
-          className="ml-auto flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 font-medium hover:bg-indigo-200 transition-colors"
+          className="ml-auto text-xs text-neutral-500 hover:text-neutral-900 underline transition-colors"
         >
-          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
           Clear filter: {mapFilter.name}
         </button>
       )}
@@ -347,21 +327,21 @@ export default function ArtistsSummaryTab() {
   return (
     <div className="space-y-8">
       {/* Meta */}
-      <div className="card p-4 flex flex-wrap gap-4 text-sm text-slate-600">
+      <div className="card p-4 flex flex-wrap gap-4 text-sm text-neutral-500">
         <div>
-          <span className="font-semibold text-slate-800">Home: </span>
+          <span className="font-medium text-neutral-700">Home: </span>
           {config?.center_city || '\u2014'}
         </div>
         <div>
-          <span className="font-semibold text-slate-800">Artists: </span>
+          <span className="font-medium text-neutral-700">Artists: </span>
           {withShowsCount} / {artistList.length} with shows
         </div>
         <div>
-          <span className="font-semibold text-slate-800">Total shows: </span>
+          <span className="font-medium text-neutral-700">Total shows: </span>
           {totalShows}
         </div>
         {shows?.stale && (
-          <div><span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">Data may be stale — click Refresh Data</span></div>
+          <div><span className="text-xs text-neutral-500 italic">Data may be stale — click Refresh</span></div>
         )}
       </div>
 
@@ -387,7 +367,7 @@ export default function ArtistsSummaryTab() {
           </SectionHeading>
           <div className="flex items-center gap-3">
             {mapBounds && visibleArtists.length < artistList.length && (
-              <span className="text-xs text-slate-400 italic">Zoom out or pan to see more artists</span>
+              <span className="text-xs text-neutral-400 italic">Zoom out or pan to see more artists</span>
             )}
             <label className="flex items-center gap-1.5 text-xs text-slate-500 cursor-pointer">
               <input
@@ -411,7 +391,7 @@ export default function ArtistsSummaryTab() {
             />
           ))}
           {visibleArtists.length === 0 && (
-            <div className="col-span-2 card p-6 text-center text-slate-400 text-sm italic">
+            <div className="col-span-2 card p-6 text-center text-neutral-400 text-sm italic">
               No artists with shows in the current map view. Zoom out to see more.
             </div>
           )}
@@ -455,7 +435,7 @@ function FlaggedItems() {
       <div className="space-y-2">
         {items.map((item, i) => (
           <div key={i} className="card p-3 flex items-start gap-3">
-            <div className="w-2 h-2 rounded-full bg-amber-400 mt-1.5 flex-shrink-0" />
+            <div className="w-2 h-2 rounded-full bg-neutral-400 mt-1.5 flex-shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-slate-800">{item.title || item.artist || 'Unknown'}</p>
               <p className="text-xs text-slate-500 mt-0.5">{item.message || item.reason || ''}</p>
@@ -482,7 +462,7 @@ function FlaggedItems() {
 function LoadingSpinner() {
   return (
     <div className="flex items-center justify-center py-16">
-      <div className="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-neutral-200 border-t-neutral-700 rounded-full animate-spin" />
     </div>
   )
 }
@@ -490,9 +470,9 @@ function LoadingSpinner() {
 function ErrorBox({ message }) {
   return (
     <div className="card p-6 text-center">
-      <p className="text-red-600 font-medium">Failed to load data</p>
-      <p className="text-slate-500 text-sm mt-1">{message}</p>
-      <p className="text-slate-400 text-xs mt-2">Is the backend running? <code className="bg-slate-100 px-1 rounded">uvicorn backend.main:app --port 8000</code></p>
+      <p className="text-neutral-800 font-medium">Failed to load data</p>
+      <p className="text-neutral-500 text-sm mt-1">{message}</p>
+      <p className="text-neutral-400 text-xs mt-2">Is the backend running? <code className="bg-neutral-100 px-1">uvicorn backend.main:app --port 8000</code></p>
     </div>
   )
 }

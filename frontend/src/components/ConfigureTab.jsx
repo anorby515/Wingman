@@ -11,8 +11,8 @@ function Toggle({ checked, onChange, disabled }) {
       disabled={disabled}
       aria-checked={checked}
       className={[
-        'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-400',
-        checked ? 'bg-amber-400' : 'bg-slate-300',
+        'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400',
+        checked ? 'bg-neutral-800' : 'bg-neutral-200',
         disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
       ].join(' ')}
     >
@@ -59,10 +59,10 @@ function AddFestivalForm({ onAdd, onCancel }) {
 
   return (
     <form onSubmit={handleSubmit} className="card p-4 space-y-3">
-      <h3 className="font-semibold text-slate-800">Add Festival</h3>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      <h3 className="font-semibold text-neutral-800">Add Festival</h3>
+      {error && <p className="text-sm text-neutral-800">{error}</p>}
       <div>
-        <label className="block text-xs font-medium text-slate-600 mb-1">Festival Name</label>
+        <label className="block text-xs font-medium text-neutral-600 mb-1">Festival Name</label>
         <input
           className="input"
           placeholder="e.g. Bonnaroo Music Festival"
@@ -72,7 +72,7 @@ function AddFestivalForm({ onAdd, onCancel }) {
         />
       </div>
       <div>
-        <label className="block text-xs font-medium text-slate-600 mb-1">Lineup URL</label>
+        <label className="block text-xs font-medium text-neutral-600 mb-1">Lineup URL</label>
         <input
           className="input"
           type="url"
@@ -126,17 +126,17 @@ function FestivalRow({ festival, onTogglePause, onDelete }) {
   }
 
   return (
-    <div className={`flex items-center gap-3 px-4 py-3 border-b border-slate-50 last:border-0 transition-opacity ${festival.paused ? 'opacity-60' : ''}`}>
+    <div className={`flex items-center gap-3 px-4 py-3 border-b border-neutral-50 last:border-0 transition-opacity ${festival.paused ? 'opacity-60' : ''}`}>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-medium text-slate-900 text-sm">{festival.name}</span>
+          <span className="font-medium text-neutral-900 text-sm">{festival.name}</span>
           {festival.paused && <span className="badge-paused">Paused</span>}
         </div>
         <a
           href={festival.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs text-indigo-500 hover:underline truncate block mt-0.5 max-w-xs"
+          className="text-xs text-neutral-500 hover:underline truncate block mt-0.5 max-w-xs"
         >
           {festival.url}
         </a>
@@ -144,7 +144,7 @@ function FestivalRow({ festival, onTogglePause, onDelete }) {
 
       <div className="flex items-center gap-3 flex-shrink-0">
         <div className="flex items-center gap-1.5">
-          <span className="text-xs text-slate-500 hidden sm:inline">
+          <span className="text-xs text-neutral-500 hidden sm:inline">
             {festival.paused ? 'Paused' : 'Active'}
           </span>
           <Toggle checked={festival.paused} onChange={handlePause} disabled={togglingPause} />
@@ -155,11 +155,11 @@ function FestivalRow({ festival, onTogglePause, onDelete }) {
             <button
               onClick={handleDelete}
               disabled={deleting}
-              className="text-xs px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+              className="text-xs px-2 py-1 bg-neutral-900 text-white rounded hover:bg-neutral-700"
             >
               {deleting ? '…' : 'Confirm'}
             </button>
-            <button onClick={() => setConfirmDelete(false)} className="text-xs px-2 py-1 bg-slate-100 text-slate-600 rounded">
+            <button onClick={() => setConfirmDelete(false)} className="text-xs px-2 py-1 bg-neutral-100 text-neutral-600 rounded">
               Cancel
             </button>
           </div>
@@ -205,7 +205,7 @@ function FestivalsSection() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
-        <div className="text-sm text-slate-500 flex-1">
+        <div className="text-sm text-neutral-500 flex-1">
           {activeCount} active / {festivals.length} total
         </div>
         <button className="btn-primary" onClick={() => setShowAdd(s => !s)}>
@@ -216,11 +216,11 @@ function FestivalsSection() {
       {showAdd && <AddFestivalForm onAdd={handleAdd} onCancel={() => setShowAdd(false)} />}
 
       <div className="card overflow-hidden">
-        <div className="px-4 py-2 text-xs font-bold uppercase tracking-wide bg-violet-100 text-violet-800">
+        <div className="px-4 py-2 text-xs font-bold uppercase tracking-wide bg-neutral-50 text-neutral-600">
           Festivals ({festivals.length})
         </div>
         {festivals.length === 0 ? (
-          <p className="px-4 py-3 text-sm text-slate-400 italic">No festivals configured.</p>
+          <p className="px-4 py-3 text-sm text-neutral-400 italic">No festivals configured.</p>
         ) : (
           festivals.map(f => (
             <FestivalRow key={f.name} festival={f} onTogglePause={handleTogglePause} onDelete={handleDelete} />
@@ -244,7 +244,7 @@ export default function ConfigureTab() {
   return (
     <div className="space-y-4">
       {/* Sub-tab bar */}
-      <div className="flex border-b border-slate-200">
+      <div className="flex border-b border-neutral-200">
         {SUB_TABS.map(tab => (
           <button
             key={tab.id}
@@ -252,8 +252,8 @@ export default function ConfigureTab() {
             className={[
               'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
               active === tab.id
-                ? 'border-amber-400 text-slate-900'
-                : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300',
+                ? 'border-neutral-900 text-neutral-900'
+                : 'border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300',
             ].join(' ')}
           >
             {tab.label}
@@ -272,10 +272,10 @@ export default function ConfigureTab() {
 function Spinner() {
   return (
     <div className="flex justify-center py-16">
-      <div className="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-neutral-200 border-t-neutral-700 rounded-full animate-spin" />
     </div>
   )
 }
 function ErrBox({ message }) {
-  return <div className="card p-6 text-red-600 text-sm">{message}</div>
+  return <div className="card p-6 text-neutral-800 text-sm">{message}</div>
 }
