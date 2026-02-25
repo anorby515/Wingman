@@ -89,7 +89,7 @@ function ShowRow({ show }) {
   )
 }
 
-// ── Venue event row (artist-first layout) ─────────────────────────────────────
+// ── Venue event row ─────────────────────────────────────────────────────────
 function VenueEventRow({ event }) {
   const onsaleLabel = event.onsale_tbd
     ? 'On-sale date TBD'
@@ -101,7 +101,7 @@ function VenueEventRow({ event }) {
     <li className="text-sm border-t border-slate-50 pt-2 mt-2 first:border-0 first:pt-0 first:mt-0">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <span className="font-medium text-slate-800">{event.artist}</span>
+          <span className="font-medium text-slate-800">{event.artist || event.event_name || ''}</span>
           <span className="text-slate-400 mx-1">&middot;</span>
           <span className="text-slate-600">{event.date}</span>
           <span className="text-slate-400 mx-1">&middot;</span>
@@ -158,7 +158,7 @@ function FestivalEventRow({ event }) {
           </a>
         )}
       </div>
-      {event.event_name !== event.tracked_festival && (
+      {event.event_name && event.event_name !== event.tracked_festival && (
         <p className="text-xs text-slate-400 mt-0.5 italic">{event.event_name}</p>
       )}
       <div className="mt-1 flex items-center gap-1.5">
@@ -183,13 +183,9 @@ function VenueEventCard({ venueName, venueUrl, events }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 min-w-0">
             {venueUrl ? (
-              <a
-                href={venueUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <a href={venueUrl} target="_blank" rel="noopener noreferrer"
                 onClick={e => e.stopPropagation()}
-                className="font-semibold text-slate-900 hover:text-indigo-600 hover:underline truncate"
-              >
+                className="font-semibold text-slate-900 hover:text-indigo-600 hover:underline truncate">
                 {venueName}
               </a>
             ) : (
@@ -204,18 +200,14 @@ function VenueEventCard({ venueName, venueUrl, events }) {
         </div>
         <svg
           className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`}
-          fill="none" viewBox="0 0 24 24" stroke="currentColor"
-        >
+          fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-
       {open && (
         <div className="border-t border-slate-50 px-4 pb-4">
           <ul className="mt-3">
-            {events.map((ev, i) => (
-              <VenueEventRow key={i} event={ev} />
-            ))}
+            {events.map((ev, i) => <VenueEventRow key={i} event={ev} />)}
           </ul>
         </div>
       )}
@@ -236,13 +228,9 @@ function FestivalEventCard({ festivalName, festivalUrl, events }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 min-w-0">
             {festivalUrl ? (
-              <a
-                href={festivalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <a href={festivalUrl} target="_blank" rel="noopener noreferrer"
                 onClick={e => e.stopPropagation()}
-                className="font-semibold text-slate-900 hover:text-indigo-600 hover:underline truncate"
-              >
+                className="font-semibold text-slate-900 hover:text-indigo-600 hover:underline truncate">
                 {festivalName}
               </a>
             ) : (
@@ -257,18 +245,14 @@ function FestivalEventCard({ festivalName, festivalUrl, events }) {
         </div>
         <svg
           className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`}
-          fill="none" viewBox="0 0 24 24" stroke="currentColor"
-        >
+          fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-
       {open && (
         <div className="border-t border-slate-50 px-4 pb-4">
           <ul className="mt-3">
-            {events.map((ev, i) => (
-              <FestivalEventRow key={i} event={ev} />
-            ))}
+            {events.map((ev, i) => <FestivalEventRow key={i} event={ev} />)}
           </ul>
         </div>
       )}
@@ -289,13 +273,9 @@ function ComingSoonCard({ artist, genre, url, shows }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 min-w-0">
             {url ? (
-              <a
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
+              <a href={url} target="_blank" rel="noopener noreferrer"
                 onClick={e => e.stopPropagation()}
-                className="font-semibold text-slate-900 hover:text-indigo-600 hover:underline truncate"
-              >
+                className="font-semibold text-slate-900 hover:text-indigo-600 hover:underline truncate">
                 {artist}
               </a>
             ) : (
@@ -311,18 +291,14 @@ function ComingSoonCard({ artist, genre, url, shows }) {
         </div>
         <svg
           className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`}
-          fill="none" viewBox="0 0 24 24" stroke="currentColor"
-        >
+          fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-
       {open && (
         <div className="border-t border-slate-50 px-4 pb-4">
           <ul className="mt-3">
-            {shows.map((show, i) => (
-              <ShowRow key={i} show={show} />
-            ))}
+            {shows.map((show, i) => <ShowRow key={i} show={show} />)}
           </ul>
         </div>
       )}
@@ -350,12 +326,10 @@ function NotFoundSection({ label, items, configItems, explanation }) {
         </div>
         <svg
           className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`}
-          fill="none" viewBox="0 0 24 24" stroke="currentColor"
-        >
+          fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-
       {open && (
         <div className="border-t border-slate-50 px-4 pb-4">
           <p className="text-xs text-slate-400 mt-3 mb-3">{explanation}</p>
@@ -364,17 +338,11 @@ function NotFoundSection({ label, items, configItems, explanation }) {
               <li key={name} className="flex items-center gap-2 text-sm text-slate-600">
                 <span className="w-1.5 h-1.5 rounded-full bg-slate-300 flex-shrink-0" />
                 {configItems[name]?.url ? (
-                  <a
-                    href={configItems[name].url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-indigo-600 hover:underline"
-                  >
+                  <a href={configItems[name].url} target="_blank" rel="noopener noreferrer"
+                    className="hover:text-indigo-600 hover:underline">
                     {name}
                   </a>
-                ) : (
-                  name
-                )}
+                ) : name}
               </li>
             ))}
           </ul>
@@ -404,60 +372,46 @@ function ErrorBox({ message }) {
 
 // ── Main tab ──────────────────────────────────────────────────────────────────
 export default function ComingSoonTab() {
-  const [data, setData]         = useState(null)
-  const [config, setConfig]     = useState(null)
-  const [loading, setLoading]   = useState(true)
-  const [error, setError]       = useState(null)
-  const [refreshing, setRefreshing] = useState(false)
-
-  async function loadData() {
-    if (DEMO) {
-      const res  = await fetch(import.meta.env.BASE_URL + 'static-data.json')
-      const json = await res.json()
-      setData({
-        api_configured:    true,
-        shows:             json.coming_soon || [],
-        venue_events:      [],
-        festival_events:   [],
-        last_fetched:      json.coming_soon_fetched || null,
-      })
-      setConfig(json.config || {})
-    } else {
-      const [apiData, cfg] = await Promise.all([
-        fetch('/api/coming-soon').then(r => r.json()),
-        fetch('/api/config').then(r => r.json()),
-      ])
-      setData(apiData)
-      setConfig(cfg)
-    }
-  }
+  const [showsData, setShowsData] = useState(null)
+  const [config, setConfig]       = useState(null)
+  const [loading, setLoading]     = useState(true)
+  const [error, setError]         = useState(null)
 
   useEffect(() => {
-    loadData()
-      .catch(e => setError(e.message))
-      .finally(() => setLoading(false))
-  }, [])
-
-  async function handleRefresh() {
-    setRefreshing(true)
-    try {
-      const res = await fetch('/api/coming-soon?force=true')
-      setData(await res.json())
-    } catch (e) {
-      setError(e.message)
-    } finally {
-      setRefreshing(false)
+    if (DEMO) {
+      fetch(import.meta.env.BASE_URL + 'static-data.json')
+        .then(r => r.json())
+        .then(data => {
+          setShowsData({
+            api_configured: true,
+            coming_soon: data.coming_soon || [],
+            artists_not_found: [],
+            venues_not_found: [],
+            festivals_not_found: [],
+            last_refreshed: data.coming_soon_fetched || null,
+          })
+          setConfig(data.config || {})
+        })
+        .catch(e => setError(e.message))
+        .finally(() => setLoading(false))
+    } else {
+      Promise.all([
+        fetch('/api/shows').then(r => r.json()),
+        fetch('/api/config').then(r => r.json()),
+      ])
+        .then(([s, cfg]) => { setShowsData(s); setConfig(cfg) })
+        .catch(e => setError(e.message))
+        .finally(() => setLoading(false))
     }
-  }
+  }, [])
 
   if (loading)  return <LoadingSpinner />
   if (error)    return <ErrorBox message={error} />
 
   // Not configured
-  if (!data?.api_configured) {
+  if (!showsData?.api_configured) {
     return (
       <div className="card p-8 text-center space-y-3">
-        <div className="text-3xl">🎟</div>
         <p className="font-semibold text-slate-800">Ticketmaster API not configured</p>
         <p className="text-sm text-slate-500 max-w-xs mx-auto">
           Add your free Discovery API key in the Settings tab to see upcoming on-sale dates and presale windows for your tracked artists, venues, and festivals.
@@ -474,21 +428,24 @@ export default function ComingSoonTab() {
     )
   }
 
-  const shows            = data.shows || []
-  const artistsNotFound  = data.artists_not_found || []
-  const venueEvents      = data.venue_events || []
-  const venuesNotFound   = data.venues_not_found || []
-  const festivalEvents   = data.festival_events || []
-  const festivalsNotFound = data.festivals_not_found || []
+  const comingSoon       = showsData.coming_soon || []
+  const artistsNotFound  = showsData.artists_not_found || []
+  const venuesNotFound   = showsData.venues_not_found || []
+  const festivalsNotFound = showsData.festivals_not_found || []
   const configArtists    = config?.artists || {}
   const configVenues     = config?.venues || {}
   const configFestivals  = config?.festivals || {}
 
+  // Split coming_soon into artist / venue / festival groups
+  const artistShows   = comingSoon.filter(s => s.artist && !s.tracked_venue && !s.tracked_festival)
+  const venueEvents   = comingSoon.filter(s => s.tracked_venue)
+  const festivalEvents = comingSoon.filter(s => s.tracked_festival)
+
   // Group artist shows by artist (most shows first)
   const byArtist = {}
-  for (const show of shows) {
+  for (const show of artistShows) {
     if (!byArtist[show.artist]) {
-      byArtist[show.artist] = { genre: show.genre, shows: [] }
+      byArtist[show.artist] = { genre: show.genre || 'Other', shows: [] }
     }
     byArtist[show.artist].shows.push(show)
   }
@@ -516,7 +473,7 @@ export default function ComingSoonTab() {
     ([, a], [, b]) => b.length - a.length
   )
 
-  const totalNotYetOnSale = shows.length + venueEvents.length + festivalEvents.length
+  const totalNotYetOnSale = comingSoon.length
 
   return (
     <div className="space-y-6">
@@ -542,35 +499,8 @@ export default function ComingSoonTab() {
             {festivalGroups.length}
           </div>
         )}
-        {data.last_fetched && (
-          <div>
-            <span className="font-semibold text-slate-800">Last checked: </span>
-            {new Date(data.last_fetched).toLocaleString(undefined, {
-              month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
-            })}
-          </div>
-        )}
-        {!DEMO && (
-          <button
-            onClick={handleRefresh}
-            disabled={refreshing}
-            className="ml-auto btn-ghost text-xs border border-slate-200 flex items-center gap-1.5"
-          >
-            {refreshing ? (
-              <>
-                <span className="w-3 h-3 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
-                Refreshing…
-              </>
-            ) : (
-              <>
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                Refresh
-              </>
-            )}
-          </button>
+        {showsData?.stale && (
+          <div><span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">Data may be stale — click Refresh Data</span></div>
         )}
       </div>
 
@@ -580,7 +510,6 @@ export default function ComingSoonTab() {
         <span>
           Shows listed here are <strong className="text-slate-500">announced but not yet on public sale</strong>.
           Presale windows (violet dots) may allow early access.
-          {!DEMO && <span className="ml-1">Data refreshes every 6 hours.</span>}
         </span>
       </div>
 
@@ -589,13 +518,13 @@ export default function ComingSoonTab() {
         <div className="space-y-2">
           <h3 className="text-xs font-bold uppercase tracking-wide text-slate-400 px-1">Artists</h3>
           <div className="grid sm:grid-cols-2 gap-3">
-            {artistGroups.map(([artist, { genre, shows: artistShows }]) => (
+            {artistGroups.map(([artist, { genre, shows }]) => (
               <ComingSoonCard
                 key={artist}
                 artist={artist}
                 genre={genre}
                 url={configArtists[artist]?.url || null}
-                shows={artistShows}
+                shows={shows}
               />
             ))}
           </div>

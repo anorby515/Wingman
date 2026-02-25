@@ -18,6 +18,23 @@ beforeEach(() => {
         }),
       })
     }
+    if (url === '/api/shows') {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({
+          api_configured: false,
+          artist_shows: {},
+          venue_shows: {},
+          festival_shows: {},
+          coming_soon: [],
+          artists_not_found: [],
+          venues_not_found: [],
+          festivals_not_found: [],
+          last_refreshed: null,
+          stale: true,
+        }),
+      })
+    }
     // Default: return empty array for list endpoints
     return Promise.resolve({
       ok: true,
@@ -41,6 +58,11 @@ describe('App', () => {
     expect(screen.getByRole('tab', { name: /Venues/i })).toBeInTheDocument()
     expect(screen.getByRole('tab', { name: /Configure/i })).toBeInTheDocument()
     expect(screen.getByRole('tab', { name: /Settings/i })).toBeInTheDocument()
+  })
+
+  it('renders the Refresh Data button in local mode', () => {
+    render(<App />)
+    expect(screen.getByText('Refresh Data')).toBeInTheDocument()
   })
 
   it('defaults to Coming Soon tab as active', () => {
