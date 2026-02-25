@@ -136,7 +136,7 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
   if (centerLat == null || centerLon == null) {
     return (
       <div className="card p-6 text-center text-slate-400 text-sm italic">
-        Map unavailable — no geocoded data yet. Run a Cowork scrape session to populate coordinates.
+        Map unavailable — no geocoded data yet. Click Refresh Data to populate coordinates.
       </div>
     )
   }
