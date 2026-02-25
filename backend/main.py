@@ -35,8 +35,9 @@ CONFIG_FILE      = REPO / "wingman_config.json"
 STATE_FILE       = REPO / "concert_state.json"
 FLAGGED_FILE     = REPO / "flagged_items.json"
 GEOCODE_FILE     = REPO / "geocode_cache.json"
-TM_CACHE_FILE    = REPO / "ticketmaster_cache.json"
-TM_CACHE_TTL_HRS = 6
+TM_CACHE_FILE       = REPO / "ticketmaster_cache.json"
+TM_SHOWS_CACHE_FILE = REPO / "ticketmaster_shows_cache.json"
+TM_CACHE_TTL_HRS    = 6
 SCRIPT           = REPO / "concert_weekly.py"
 SCHEDULE_FILE    = Path("/sessions/eager-gracious-cray/mnt/.claude/scheduled-tasks.json")
 
@@ -946,6 +947,267 @@ def get_coming_soon(force: bool = False) -> Any:
         "venues_not_found": venues_not_found,
         "festival_events": festival_events,
         "festivals_not_found": festivals_not_found,
+        "last_fetched": last_fetched,
+    }
+
+
+# ── Ticketmaster All Upcoming Shows ──────────────────────────────────────────
+
+def _build_tm_show(event: dict, now_utc) -> dict | None:
+    """Extract a normalised show dict from a TM event object.
+    Returns None if the event is outside North America or in the past."""
+    venues = event.get("_embedded", {}).get("venues", [])
+    if not venues:
+        return None
+    venue = venues[0]
+    country = venue.get("country", {}).get("countryCode", "")
+    if country not in ("US", "CA", "MX"):
+        return None
+
+    local_date = event.get("dates", {}).get("start", {}).get("localDate", "")
+    if not local_date:
+        return None
+    if local_date < now_utc.date().isoformat():
+        return None  # Past event — skip
+
+    # Determine on-sale status
+    sales = event.get("sales", {})
+    public_sale = sales.get("public", {})
+    onsale_str = public_sale.get("startDateTime")
+    onsale_tbd = public_sale.get("startTBD", False)
+
+    not_yet_on_sale = False
+    if onsale_str:
+        try:
+            onsale_dt = datetime.fromisoformat(onsale_str.replace("Z", "+00:00"))
+            not_yet_on_sale = onsale_dt > now_utc
+        except Exception:
+            pass
+    elif onsale_tbd:
+        not_yet_on_sale = True
+
+    # Presales only relevant for not-yet-on-sale shows
+    presales = []
+    if not_yet_on_sale:
+        for p in sales.get("presales", []):
+            presales.append({
+                "name": p.get("name", "Presale"),
+                "start_datetime": p.get("startDateTime"),
+                "end_datetime": p.get("endDateTime"),
+            })
+
+    # Format city
+    city_name = venue.get("city", {}).get("name", "")
+    state_code = venue.get("state", {}).get("stateCode", "")
+    if country == "US":
+        city = f"{city_name}, {state_code}" if state_code else city_name
+    elif country == "CA":
+        city = f"{city_name}, {state_code}, CA" if state_code else f"{city_name}, CA"
+    else:
+        city = f"{city_name}, MX"
+
+    venue_name = venue.get("name", "")
+    lat, lon = None, None
+    coords = _geocode(f"{venue_name}, {city}")
+    if not coords:
+        coords = _geocode(city)
+    if coords:
+        lat, lon = coords
+
+    return {
+        "date": _format_show_date(local_date),
+        "venue": venue_name,
+        "city": city,
+        "not_yet_on_sale": not_yet_on_sale,
+        "onsale_datetime": onsale_str if not_yet_on_sale else None,
+        "onsale_tbd": onsale_tbd if not_yet_on_sale else False,
+        "presales": presales,
+        "ticketmaster_url": event.get("url", ""),
+        "lat": lat,
+        "lon": lon,
+    }
+
+
+def _fetch_tm_all_artist_shows(api_key: str, artists: dict) -> dict[str, list[dict]]:
+    """Return {artist_name: [show]} for ALL upcoming NA shows per tracked artist."""
+    now_utc = datetime.now(timezone.utc)
+    results: dict[str, list[dict]] = {}
+
+    for artist_name, artist_info in artists.items():
+        if artist_info.get("paused", False):
+            continue
+
+        params = urllib.parse.urlencode({
+            "apikey": api_key,
+            "keyword": artist_name,
+            "classificationName": "music",
+            "size": "50",
+            "sort": "date,asc",
+        })
+        url = f"https://app.ticketmaster.com/discovery/v2/events.json?{params}"
+        req = urllib.request.Request(url, headers={"User-Agent": "Wingman/1.0"})
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read())
+        except Exception:
+            continue
+
+        shows: list[dict] = []
+        for event in data.get("_embedded", {}).get("events", []):
+            attractions = event.get("_embedded", {}).get("attractions", [])
+            if attractions and not _name_matches(artist_name, [a.get("name", "") for a in attractions]):
+                continue
+            show = _build_tm_show(event, now_utc)
+            if show:
+                shows.append(show)
+
+        if shows:
+            results[artist_name] = shows
+
+    return results
+
+
+def _fetch_tm_all_venue_shows(api_key: str, venues: dict) -> dict[str, list[dict]]:
+    """Return {venue_name: [show]} for ALL upcoming NA shows at each tracked venue."""
+    now_utc = datetime.now(timezone.utc)
+    results: dict[str, list[dict]] = {}
+
+    for venue_name, venue_info in venues.items():
+        if venue_info.get("paused", False):
+            continue
+
+        params = urllib.parse.urlencode({
+            "apikey": api_key,
+            "keyword": venue_name,
+            "classificationName": "music",
+            "size": "50",
+            "sort": "date,asc",
+        })
+        url = f"https://app.ticketmaster.com/discovery/v2/events.json?{params}"
+        req = urllib.request.Request(url, headers={"User-Agent": "Wingman/1.0"})
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read())
+        except Exception:
+            continue
+
+        shows: list[dict] = []
+        for event in data.get("_embedded", {}).get("events", []):
+            tm_venues = event.get("_embedded", {}).get("venues", [])
+            if not tm_venues:
+                continue
+            tm_venue_name = tm_venues[0].get("name", "")
+            if not _name_matches(venue_name, [tm_venue_name]):
+                continue
+
+            attractions = event.get("_embedded", {}).get("attractions", [])
+            artist = attractions[0].get("name", "") if attractions else event.get("name", "")
+
+            show = _build_tm_show(event, now_utc)
+            if show:
+                shows.append({**show, "artist": artist})
+
+        if shows:
+            results[venue_name] = shows
+
+    return results
+
+
+def _fetch_tm_all_festival_shows(api_key: str, festivals: dict) -> dict[str, list[dict]]:
+    """Return {festival_name: [show]} for ALL upcoming festival events on TM."""
+    now_utc = datetime.now(timezone.utc)
+    results: dict[str, list[dict]] = {}
+
+    for festival_name, festival_info in festivals.items():
+        if festival_info.get("paused", False):
+            continue
+
+        params = urllib.parse.urlencode({
+            "apikey": api_key,
+            "keyword": festival_name,
+            "classificationName": "music",
+            "size": "50",
+            "sort": "date,asc",
+        })
+        url = f"https://app.ticketmaster.com/discovery/v2/events.json?{params}"
+        req = urllib.request.Request(url, headers={"User-Agent": "Wingman/1.0"})
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read())
+        except Exception:
+            continue
+
+        shows: list[dict] = []
+        for event in data.get("_embedded", {}).get("events", []):
+            event_name = event.get("name", "")
+            if not _name_matches(festival_name, [event_name]):
+                continue
+            show = _build_tm_show(event, now_utc)
+            if show:
+                shows.append({**show, "event_name": event_name})
+
+        if shows:
+            results[festival_name] = shows
+
+    return results
+
+
+@app.get("/api/tm-shows")
+def get_tm_shows(force: bool = False) -> Any:
+    """Return ALL upcoming TM shows for tracked artists, venues, and festivals.
+    Unlike /api/coming-soon this includes shows already on public sale."""
+    cfg = _read_config()
+    api_key = cfg.get("ticketmaster_api_key") or ""
+
+    if not api_key:
+        return {
+            "api_configured": False,
+            "artist_shows": {},
+            "venue_shows": {},
+            "festival_shows": {},
+            "last_fetched": None,
+        }
+
+    now_utc = datetime.now(timezone.utc)
+
+    if not force and TM_SHOWS_CACHE_FILE.exists():
+        try:
+            cache = json.loads(TM_SHOWS_CACHE_FILE.read_text())
+            fetched_at = datetime.fromisoformat(cache["last_fetched"])
+            if (now_utc - fetched_at).total_seconds() / 3600 < TM_CACHE_TTL_HRS:
+                return {
+                    "api_configured": True,
+                    "artist_shows": cache.get("artist_shows", {}),
+                    "venue_shows": cache.get("venue_shows", {}),
+                    "festival_shows": cache.get("festival_shows", {}),
+                    "last_fetched": cache["last_fetched"],
+                }
+        except Exception:
+            pass
+
+    artist_shows  = _fetch_tm_all_artist_shows(api_key, cfg.get("artists", {}))
+    venue_shows   = _fetch_tm_all_venue_shows(api_key, cfg.get("venues", {}))
+    festival_shows = _fetch_tm_all_festival_shows(api_key, cfg.get("festivals", {}))
+    last_fetched  = now_utc.isoformat()
+
+    try:
+        TM_SHOWS_CACHE_FILE.write_text(json.dumps(
+            {
+                "last_fetched": last_fetched,
+                "artist_shows": artist_shows,
+                "venue_shows": venue_shows,
+                "festival_shows": festival_shows,
+            },
+            indent=2,
+        ))
+    except Exception:
+        pass
+
+    return {
+        "api_configured": True,
+        "artist_shows": artist_shows,
+        "venue_shows": venue_shows,
+        "festival_shows": festival_shows,
         "last_fetched": last_fetched,
     }
 
