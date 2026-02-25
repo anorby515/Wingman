@@ -535,6 +535,27 @@ def _name_matches(artist_name: str, attraction_names: list[str]) -> bool:
     return False
 
 
+def _get_tm_venue_id(api_key: str, venue_name: str) -> str | None:
+    """Look up Ticketmaster venue ID for a given venue name.
+    Returns the TM venue ID string, or None if not found."""
+    params = urllib.parse.urlencode({
+        "apikey": api_key,
+        "keyword": venue_name,
+        "size": "10",
+    })
+    url = f"https://app.ticketmaster.com/discovery/v2/venues.json?{params}"
+    req = urllib.request.Request(url, headers={"User-Agent": "Wingman/1.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read())
+    except Exception:
+        return None
+    for tv in data.get("_embedded", {}).get("venues", []):
+        if _name_matches(venue_name, [tv.get("name", "")]):
+            return tv.get("id")
+    return None
+
+
 def _format_show_date(local_date: str) -> str:
     """Convert '2026-07-15' → 'Jul 15, 2026'."""
     try:
@@ -555,9 +576,14 @@ def _fetch_tm_venue_events(api_key: str, venues: dict) -> tuple[list[dict], list
         if venue_info.get("paused", False):
             continue
 
+        venue_id = _get_tm_venue_id(api_key, venue_name)
+        if not venue_id:
+            not_found.append(venue_name)
+            continue
+
         params = urllib.parse.urlencode({
             "apikey": api_key,
-            "keyword": venue_name,
+            "venueId": venue_id,
             "classificationName": "music",
             "size": "50",
             "sort": "date,asc",
@@ -571,24 +597,18 @@ def _fetch_tm_venue_events(api_key: str, venues: dict) -> tuple[list[dict], list
             continue
 
         events = data.get("_embedded", {}).get("events", [])
-        matched_any = False
 
         for event in events:
-            # TM venue name must match our tracked venue
             tm_venues = event.get("_embedded", {}).get("venues", [])
             if not tm_venues:
                 continue
             tm_venue = tm_venues[0]
             tm_venue_name = tm_venue.get("name", "")
-            if not _name_matches(venue_name, [tm_venue_name]):
-                continue
 
             # Only North America
             country = tm_venue.get("country", {}).get("countryCode", "")
             if country not in ("US", "CA", "MX"):
                 continue
-
-            matched_any = True
 
             # Only not-yet-on-sale shows
             sales = event.get("sales", {})
@@ -651,9 +671,6 @@ def _fetch_tm_venue_events(api_key: str, venues: dict) -> tuple[list[dict], list
                 "lat": lat,
                 "lon": lon,
             })
-
-        if not matched_any:
-            not_found.append(venue_name)
 
     return results, not_found
 
@@ -1076,9 +1093,13 @@ def _fetch_tm_all_venue_shows(api_key: str, venues: dict) -> dict[str, list[dict
         if venue_info.get("paused", False):
             continue
 
+        venue_id = _get_tm_venue_id(api_key, venue_name)
+        if not venue_id:
+            continue
+
         params = urllib.parse.urlencode({
             "apikey": api_key,
-            "keyword": venue_name,
+            "venueId": venue_id,
             "classificationName": "music",
             "size": "50",
             "sort": "date,asc",
@@ -1093,13 +1114,6 @@ def _fetch_tm_all_venue_shows(api_key: str, venues: dict) -> dict[str, list[dict
 
         shows: list[dict] = []
         for event in data.get("_embedded", {}).get("events", []):
-            tm_venues = event.get("_embedded", {}).get("venues", [])
-            if not tm_venues:
-                continue
-            tm_venue_name = tm_venues[0].get("name", "")
-            if not _name_matches(venue_name, [tm_venue_name]):
-                continue
-
             attractions = event.get("_embedded", {}).get("attractions", [])
             artist = attractions[0].get("name", "") if attractions else event.get("name", "")
 
