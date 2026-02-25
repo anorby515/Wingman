@@ -330,6 +330,18 @@
       "city": "Austin, Tx",
       "is_local": false,
       "paused": false
+    },
+    "The Salt Shed Outdoors": {
+      "url": "https://www.saltshedchicago.com/home#shows",
+      "city": "Chicago, IL",
+      "is_local": false,
+      "paused": false
+    },
+    "The Salt Shed Indoors (Shed)": {
+      "url": "https://www.saltshedchicago.com/home#shows",
+      "city": "Chicago, IL",
+      "is_local": false,
+      "paused": false
     }
   },
   "festivals": {
