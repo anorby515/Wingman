@@ -22,12 +22,16 @@ This document defines the contract between **Claude Code** (codebase maintainer)
 
 **Sequence:**
 1. Read `wingman_config.json` for artists, venues, festivals, settings
-2. For each active artist: Chrome skill navigates to tour page, Claude extracts structured show data
+2. For each active artist: **try Ticketmaster API first; fall back to web scrape only if TM returns no results**
+   - **TM API (primary):** query `GET /discovery/v2/attractions.json?keyword=<artist>&classificationName=music` — if a matching attraction is found (exact name match), then query `GET /discovery/v2/events.json` filtered to that attraction ID + North America (`countryCode=US,CA,MX`). Use TM event data as the sole source; do NOT also scrape the tour page.
+   - **Web scrape (fallback):** only used when TM returns 0 results for the artist. Chrome skill navigates to the artist's tour page URL from `wingman_config.json` and extracts structured show data.
    - **Include:** shows in the United States, Canada, and Mexico
    - **Exclude:** shows in Europe, UK, Australia, Asia, South America, or any other non-North-America territory
    - If country is ambiguous, check city/state — US state abbreviations or Canadian province abbreviations confirm inclusion
-3. For each active venue: Chrome skill navigates to calendar page, Claude extracts event data
-   - **Standard venues:** read page text directly after load
+3. For each active venue: **try Ticketmaster API first; fall back to web scrape only if TM returns no results**
+   - **TM API (primary):** query `GET /discovery/v2/venues.json?keyword=<venue>&countryCode=US` to find the venue entity, then query `GET /discovery/v2/events.json?venueId=<id>` to get upcoming events. Use TM event data as the sole source; do NOT also scrape the venue calendar.
+   - **Web scrape (fallback):** only used when TM returns 0 venue results. Chrome skill navigates to the venue's calendar URL from `wingman_config.json` and extracts event data.
+   - **Standard venues (scrape fallback):** read page text directly after load
    - **Lazy-load / "Load More" venues** (e.g. ACL Live): use the JS interval pattern to auto-click the button until it disappears, then extract:
      ```javascript
      // Fire-and-forget repeated clicks every 2s until button gone
@@ -40,11 +44,11 @@ This document defines the contract between **Claude Code** (codebase maintainer)
      ```
      Wait ~30–60s, check `window._loadDone`, then extract `document.body.innerText` in chunks.
    - **Venues flagged as lazy-load** (see table below): always use the scroll/load-more pattern
-3a. For each active festival: Chrome skill navigates to lineup URL, Claude extracts the artist lineup
-   - Read the page and extract every performing artist or act listed on the lineup page
-   - For each extracted artist, check whether their name (case-insensitive) appears in `wingman_config.json` artists → set `tracked: true` if matched, `false` otherwise
+3a. For each active festival: **try Ticketmaster API first; fall back to web scrape only if TM returns no results**
+   - **TM API (primary):** query `GET /discovery/v2/events.json?keyword=<festival>&classificationName=music&countryCode=US` — if matching events are found, extract the artist lineup from the event attractions. For each extracted artist, check whether their name (case-insensitive) appears in `wingman_config.json` artists → set `tracked: true` if matched, `false` otherwise.
+   - **Web scrape (fallback):** only used when TM returns 0 results. Chrome skill navigates to the festival's lineup URL from `wingman_config.json`, reads the page, and extracts every performing artist or act listed.
    - Store results as a `FestivalLineupEntry` array under `festival_shows[festival_name]` in `concert_state.json`
-   - **Standard lineup pages:** read page text directly after load (see Festival Scraping Behavior table below)
+   - **Standard lineup pages (scrape fallback):** read page text directly after load (see Festival Scraping Behavior table below)
 4. For each extracted show: geocode the venue location
    - Check `geocode_cache.json` first
    - If cache miss: query Nominatim API (1 req/sec rate limit)
@@ -132,7 +136,8 @@ Wingman uses the [Ticketmaster Discovery API v2](https://developer.ticketmaster.
 
 - **API key:** Stored in `wingman_config.json` under `ticketmaster_api_key`. The user enters it via Settings > Ticketmaster in the local UI.
 - **Backend endpoint:** `GET /api/coming-soon` — the FastAPI backend queries TM, filters results, and caches the response in `ticketmaster_cache.json` (6-hour TTL). Pass `?force=true` to bypass the cache.
-- **Cowork role:** Cowork does **NOT** call the TM API directly. During the weekly scrape, Cowork calls `GET http://localhost:8000/api/coming-soon` and copies the result into `docs/summary.json` so GitHub Pages can display Coming Soon data.
+- **Cowork role (data collection):** Cowork calls the TM Discovery API **directly** (using the key from `wingman_config.json`) as the primary data source for artists, venues, and festivals during the weekly scrape. Web scraping is the fallback when TM returns no results.
+- **Cowork role (coming soon):** Cowork still calls `GET http://localhost:8000/api/coming-soon` (the local backend) to fetch announced-but-not-yet-on-sale data, and copies the result into `docs/summary.json` for GitHub Pages.
 
 ### What the API returns
 
