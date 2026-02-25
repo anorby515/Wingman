@@ -2610,6 +2610,722 @@
           "artist": "Jim Henson's Labyrinth: In Concert 40th Anniversary",
           "tracked": false
         }
+      ],
+      "Red Rocks": [
+        {
+          "date": "Mar 27, 2026",
+          "artist": "CRANKDAT",
+          "tracked": false
+        },
+        {
+          "date": "Mar 28, 2026",
+          "artist": "Ravenscoon & Jantsen",
+          "tracked": false
+        },
+        {
+          "date": "Apr 3, 2026",
+          "artist": "INZO",
+          "tracked": false
+        },
+        {
+          "date": "Apr 4, 2026",
+          "artist": "it's murph",
+          "tracked": false
+        },
+        {
+          "date": "Apr 5, 2026",
+          "artist": "DAYBREAKER",
+          "tracked": false
+        },
+        {
+          "date": "Apr 10, 2026",
+          "artist": "ZINGARA & LEVEL UP",
+          "tracked": false
+        },
+        {
+          "date": "Apr 11, 2026",
+          "artist": "Liquid Stranger",
+          "tracked": false
+        },
+        {
+          "date": "Apr 15, 2026",
+          "artist": "John Mulaney",
+          "tracked": false
+        },
+        {
+          "date": "Apr 16, 2026",
+          "artist": "bbno$",
+          "tracked": false
+        },
+        {
+          "date": "Apr 17, 2026",
+          "artist": "Sublime",
+          "tracked": false
+        },
+        {
+          "date": "Apr 18, 2026",
+          "artist": "Sublime",
+          "tracked": false
+        },
+        {
+          "date": "Apr 19, 2026",
+          "artist": "Wiz Khalifa",
+          "tracked": false
+        },
+        {
+          "date": "Apr 20, 2026",
+          "artist": "Ice Cube",
+          "tracked": false
+        },
+        {
+          "date": "Apr 21, 2026",
+          "artist": "Ethel Cain",
+          "tracked": false
+        },
+        {
+          "date": "Apr 22, 2026",
+          "artist": "Dustin Lynch & Chase Rice",
+          "tracked": false
+        },
+        {
+          "date": "Apr 23, 2026",
+          "artist": "Subtronics: Cyclops Rocks VI",
+          "tracked": false
+        },
+        {
+          "date": "Apr 24, 2026",
+          "artist": "Subtronics: Cyclops Rocks VI",
+          "tracked": false
+        },
+        {
+          "date": "Apr 25, 2026",
+          "artist": "Alesso",
+          "tracked": false
+        },
+        {
+          "date": "Apr 26, 2026",
+          "artist": "Bob Moses & Cannons",
+          "tracked": false
+        },
+        {
+          "date": "Apr 28, 2026",
+          "artist": "Lewis Capaldi",
+          "tracked": false
+        },
+        {
+          "date": "Apr 29, 2026",
+          "artist": "Lewis Capaldi",
+          "tracked": false
+        },
+        {
+          "date": "Apr 30, 2026",
+          "artist": "Electric Callboy",
+          "tracked": false
+        },
+        {
+          "date": "May 1, 2026",
+          "artist": "Two Friends",
+          "tracked": false
+        },
+        {
+          "date": "May 2, 2026",
+          "artist": "Jason Isbell and the 400 Unit",
+          "tracked": true
+        },
+        {
+          "date": "May 3, 2026",
+          "artist": "Puscifer",
+          "tracked": false
+        },
+        {
+          "date": "May 5, 2026",
+          "artist": "David Guetta",
+          "tracked": false
+        },
+        {
+          "date": "May 6, 2026",
+          "artist": "Bright Eyes",
+          "tracked": false
+        },
+        {
+          "date": "May 7, 2026",
+          "artist": "Alejandro Fern\u00e1ndez",
+          "tracked": false
+        },
+        {
+          "date": "May 8, 2026",
+          "artist": "ALLEYCVT PRESENTS: SUPERSONIC ROCKS",
+          "tracked": false
+        },
+        {
+          "date": "May 9, 2026",
+          "artist": "Cloonee",
+          "tracked": false
+        },
+        {
+          "date": "May 10, 2026",
+          "artist": "Hippie Sabotage",
+          "tracked": false
+        },
+        {
+          "date": "May 11, 2026",
+          "artist": "YUNGBLUD",
+          "tracked": false
+        },
+        {
+          "date": "May 13, 2026",
+          "artist": "Russell Dickerson",
+          "tracked": false
+        },
+        {
+          "date": "May 16, 2026",
+          "artist": "LSDREAM presents: DREAMROCKS II",
+          "tracked": false
+        },
+        {
+          "date": "May 17, 2026",
+          "artist": "The Elovaters",
+          "tracked": false
+        },
+        {
+          "date": "May 18, 2026",
+          "artist": "Khalid",
+          "tracked": false
+        },
+        {
+          "date": "May 19, 2026",
+          "artist": "Kevin Gates",
+          "tracked": false
+        },
+        {
+          "date": "May 21, 2026",
+          "artist": "flipturn",
+          "tracked": false
+        },
+        {
+          "date": "May 22, 2026",
+          "artist": "Seven Lions",
+          "tracked": false
+        },
+        {
+          "date": "May 23, 2026",
+          "artist": "FISHER",
+          "tracked": false
+        },
+        {
+          "date": "May 24, 2026",
+          "artist": "Alabama Shakes",
+          "tracked": true
+        },
+        {
+          "date": "May 25, 2026",
+          "artist": "Alabama Shakes",
+          "tracked": true
+        },
+        {
+          "date": "May 27, 2026",
+          "artist": "Santana",
+          "tracked": false
+        },
+        {
+          "date": "May 28, 2026",
+          "artist": "Santana",
+          "tracked": false
+        },
+        {
+          "date": "May 29, 2026",
+          "artist": "Michael Franti & Spearhead",
+          "tracked": false
+        },
+        {
+          "date": "May 30, 2026",
+          "artist": "Alan Walker",
+          "tracked": false
+        },
+        {
+          "date": "Jun 2, 2026",
+          "artist": "Alex Warren",
+          "tracked": false
+        },
+        {
+          "date": "Jun 3, 2026",
+          "artist": "Yo-Yo Ma with the Colorado Symphony",
+          "tracked": false
+        },
+        {
+          "date": "Jun 4, 2026",
+          "artist": "Brit Floyd",
+          "tracked": false
+        },
+        {
+          "date": "Jun 5, 2026",
+          "artist": "Brit Floyd",
+          "tracked": false
+        },
+        {
+          "date": "Jun 6, 2026",
+          "artist": "Big Head Todd and the Monsters",
+          "tracked": false
+        },
+        {
+          "date": "Jun 7, 2026",
+          "artist": "Trey Anastasio with Colorado Symphony",
+          "tracked": false
+        },
+        {
+          "date": "Jun 9, 2026",
+          "artist": "Jimmy Eat World",
+          "tracked": false
+        },
+        {
+          "date": "Jun 10, 2026",
+          "artist": "Lord Huron",
+          "tracked": true
+        },
+        {
+          "date": "Jun 11, 2026",
+          "artist": "Jon Bellion",
+          "tracked": false
+        },
+        {
+          "date": "Jun 12, 2026",
+          "artist": "Paul Simon",
+          "tracked": false
+        },
+        {
+          "date": "Jun 13, 2026",
+          "artist": "Paul Simon",
+          "tracked": false
+        },
+        {
+          "date": "Jun 14, 2026",
+          "artist": "Trevor Hall, Thievery Corporation, & Dirtwire",
+          "tracked": false
+        },
+        {
+          "date": "Jun 15, 2026",
+          "artist": "Rod Stewart",
+          "tracked": false
+        },
+        {
+          "date": "Jun 16, 2026",
+          "artist": "Rod Stewart",
+          "tracked": false
+        },
+        {
+          "date": "Jun 17, 2026",
+          "artist": "Amyl and The Sniffers",
+          "tracked": false
+        },
+        {
+          "date": "Jun 18, 2026",
+          "artist": "THIRD DAY 30th Anniversary",
+          "tracked": false
+        },
+        {
+          "date": "Jun 19, 2026",
+          "artist": "Louis Tomlinson",
+          "tracked": false
+        },
+        {
+          "date": "Jun 20, 2026",
+          "artist": "O.A.R.",
+          "tracked": false
+        },
+        {
+          "date": "Jun 23, 2026",
+          "artist": "\"Weird Al\" Yankovic",
+          "tracked": false
+        },
+        {
+          "date": "Jun 24, 2026",
+          "artist": "Ziggy Marley & Stephen Marley",
+          "tracked": false
+        },
+        {
+          "date": "Jun 25, 2026",
+          "artist": "Dirty Heads",
+          "tracked": false
+        },
+        {
+          "date": "Jul 1, 2026",
+          "artist": "Treaty Oak Revival",
+          "tracked": false
+        },
+        {
+          "date": "Jul 2, 2026",
+          "artist": "DEADROCKS XII with Zeds Dead",
+          "tracked": false
+        },
+        {
+          "date": "Jul 3, 2026",
+          "artist": "DEADROCKS XII with Zeds Dead",
+          "tracked": false
+        },
+        {
+          "date": "Jul 4, 2026",
+          "artist": "Blues Traveler",
+          "tracked": false
+        },
+        {
+          "date": "Jul 10, 2026",
+          "artist": "The Avett Brothers",
+          "tracked": false
+        },
+        {
+          "date": "Jul 11, 2026",
+          "artist": "The Avett Brothers",
+          "tracked": false
+        },
+        {
+          "date": "Jul 12, 2026",
+          "artist": "The Avett Brothers",
+          "tracked": false
+        },
+        {
+          "date": "Jul 14, 2026",
+          "artist": "KALEO",
+          "tracked": false
+        },
+        {
+          "date": "Jul 15, 2026",
+          "artist": "The Head And The Heart",
+          "tracked": false
+        },
+        {
+          "date": "Jul 16, 2026",
+          "artist": "The Head And The Heart",
+          "tracked": false
+        },
+        {
+          "date": "Jul 17, 2026",
+          "artist": "The String Cheese Incident",
+          "tracked": false
+        },
+        {
+          "date": "Jul 18, 2026",
+          "artist": "The String Cheese Incident",
+          "tracked": false
+        },
+        {
+          "date": "Jul 20, 2026",
+          "artist": "Hilary Duff",
+          "tracked": false
+        },
+        {
+          "date": "Jul 24, 2026",
+          "artist": "Cross Canadian Ragweed",
+          "tracked": false
+        },
+        {
+          "date": "Jul 25, 2026",
+          "artist": "Darius Rucker",
+          "tracked": false
+        },
+        {
+          "date": "Jul 28, 2026",
+          "artist": "Sarah McLachlan",
+          "tracked": false
+        },
+        {
+          "date": "Jul 29, 2026",
+          "artist": "Parker McCollum",
+          "tracked": false
+        },
+        {
+          "date": "Jul 30, 2026",
+          "artist": "Killer Queen",
+          "tracked": false
+        },
+        {
+          "date": "Jul 31, 2026",
+          "artist": "Tedeschi Trucks Band",
+          "tracked": false
+        },
+        {
+          "date": "Aug 1, 2026",
+          "artist": "Tedeschi Trucks Band",
+          "tracked": false
+        },
+        {
+          "date": "Aug 8, 2026",
+          "artist": "Slightly Stoopid",
+          "tracked": false
+        },
+        {
+          "date": "Aug 9, 2026",
+          "artist": "Motionless In White",
+          "tracked": false
+        },
+        {
+          "date": "Aug 13, 2026",
+          "artist": "Mt. Joy",
+          "tracked": true
+        },
+        {
+          "date": "Aug 14, 2026",
+          "artist": "Mt. Joy",
+          "tracked": true
+        },
+        {
+          "date": "Aug 17, 2026",
+          "artist": "Train",
+          "tracked": false
+        },
+        {
+          "date": "Aug 20, 2026",
+          "artist": "Tori Amos",
+          "tracked": false
+        },
+        {
+          "date": "Aug 22, 2026",
+          "artist": "Reggae on the Rocks",
+          "tracked": false
+        },
+        {
+          "date": "Aug 23, 2026",
+          "artist": "Joe Bonamassa",
+          "tracked": false
+        },
+        {
+          "date": "Aug 25, 2026",
+          "artist": "Ian Munsick",
+          "tracked": false
+        },
+        {
+          "date": "Aug 26, 2026",
+          "artist": "Ray LaMontagne",
+          "tracked": false
+        },
+        {
+          "date": "Aug 27, 2026",
+          "artist": "An Evening With Goose",
+          "tracked": false
+        },
+        {
+          "date": "Aug 28, 2026",
+          "artist": "An Evening With Goose",
+          "tracked": false
+        },
+        {
+          "date": "Sep 4, 2026",
+          "artist": "MAN\u00c1",
+          "tracked": false
+        },
+        {
+          "date": "Sep 5, 2026",
+          "artist": "MAN\u00c1",
+          "tracked": false
+        },
+        {
+          "date": "Sep 6, 2026",
+          "artist": "Gregory Alan Isakov with the Colorado Symphony",
+          "tracked": false
+        },
+        {
+          "date": "Sep 7, 2026",
+          "artist": "Gregory Alan Isakov with the Colorado Symphony",
+          "tracked": false
+        },
+        {
+          "date": "Sep 8, 2026",
+          "artist": "Five Finger Death Punch",
+          "tracked": false
+        },
+        {
+          "date": "Sep 9, 2026",
+          "artist": "Cole Swindell",
+          "tracked": false
+        },
+        {
+          "date": "Sep 17, 2026",
+          "artist": "Get The Led Out",
+          "tracked": false
+        },
+        {
+          "date": "Sep 20, 2026",
+          "artist": "Andrea Bocelli",
+          "tracked": false
+        },
+        {
+          "date": "Sep 21, 2026",
+          "artist": "Andrea Bocelli",
+          "tracked": false
+        },
+        {
+          "date": "Sep 25, 2026",
+          "artist": "The Revivalists",
+          "tracked": false
+        },
+        {
+          "date": "Oct 3, 2026",
+          "artist": "REZZ ROCKS VIII",
+          "tracked": false
+        },
+        {
+          "date": "Oct 8, 2026",
+          "artist": "Tape B Presents: Hallow Rocks",
+          "tracked": false
+        },
+        {
+          "date": "Oct 9, 2026",
+          "artist": "Tape B Presents: Hallow Rocks",
+          "tracked": false
+        },
+        {
+          "date": "Oct 16, 2026",
+          "artist": "Sammy Virji",
+          "tracked": false
+        },
+        {
+          "date": "Oct 18, 2026",
+          "artist": "Matt Rife",
+          "tracked": false
+        },
+        {
+          "date": "Oct 19, 2026",
+          "artist": "Zac Brown Band",
+          "tracked": true
+        },
+        {
+          "date": "Oct 20, 2026",
+          "artist": "Zac Brown Band",
+          "tracked": true
+        },
+        {
+          "date": "Oct 23, 2026",
+          "artist": "Mersiv",
+          "tracked": false
+        },
+        {
+          "date": "Oct 26, 2026",
+          "artist": "Evanescence",
+          "tracked": false
+        },
+        {
+          "date": "Oct 29, 2026",
+          "artist": "Cypress Hill & Method Man & Redman",
+          "tracked": false
+        },
+        {
+          "date": "Nov 14, 2026",
+          "artist": "mike.",
+          "tracked": false
+        },
+        {
+          "date": "Nov 15, 2026",
+          "artist": "mike.",
+          "tracked": false
+        }
+      ],
+      "Wrigley Field": [
+        {
+          "date": "Jun 11, 2026",
+          "artist": "Mumford and Sons",
+          "tracked": true
+        },
+        {
+          "date": "Jun 12, 2026",
+          "artist": "R\u00dcF\u00dcS DU SOL",
+          "tracked": false
+        },
+        {
+          "date": "Jul 11, 2026",
+          "artist": "John Mulaney",
+          "tracked": false
+        },
+        {
+          "date": "Jul 12, 2026",
+          "artist": "Tyler Childers",
+          "tracked": true
+        },
+        {
+          "date": "Jul 14, 2026",
+          "artist": "Noah Kahan",
+          "tracked": true
+        },
+        {
+          "date": "Jul 15, 2026",
+          "artist": "Noah Kahan",
+          "tracked": true
+        },
+        {
+          "date": "Jul 24, 2026",
+          "artist": "The Savannah Bananas",
+          "tracked": false
+        },
+        {
+          "date": "Jul 25, 2026",
+          "artist": "The Savannah Bananas",
+          "tracked": false
+        },
+        {
+          "date": "Jul 26, 2026",
+          "artist": "The Savannah Bananas",
+          "tracked": false
+        }
+      ],
+      "Fenway Park": [
+        {
+          "date": "Jun 22, 2026",
+          "artist": "Mumford & Sons",
+          "tracked": true
+        },
+        {
+          "date": "Jun 23, 2026",
+          "artist": "R\u00dcF\u00dcS DU SOL",
+          "tracked": false
+        },
+        {
+          "date": "Jul 7, 2026",
+          "artist": "Noah Kahan",
+          "tracked": true
+        },
+        {
+          "date": "Jul 8, 2026",
+          "artist": "Noah Kahan",
+          "tracked": true
+        },
+        {
+          "date": "Jul 10, 2026",
+          "artist": "Noah Kahan",
+          "tracked": true
+        },
+        {
+          "date": "Jul 11, 2026",
+          "artist": "Noah Kahan",
+          "tracked": true
+        },
+        {
+          "date": "Jul 30, 2026",
+          "artist": "Tim McGraw",
+          "tracked": false
+        },
+        {
+          "date": "Jul 31, 2026",
+          "artist": "Phish",
+          "tracked": false
+        },
+        {
+          "date": "Aug 1, 2026",
+          "artist": "Phish",
+          "tracked": false
+        },
+        {
+          "date": "Aug 2, 2026",
+          "artist": "Zac Brown Band",
+          "tracked": true
+        },
+        {
+          "date": "Aug 14, 2026",
+          "artist": "Chris Stapleton",
+          "tracked": true
+        },
+        {
+          "date": "Aug 15, 2026",
+          "artist": "Chris Stapleton",
+          "tracked": true
+        }
       ]
     },
     "center_lat": 41.5868,
@@ -2867,6 +3583,21 @@
       },
       "The Salt Shed": {
         "city": "Chicago, IL",
+        "is_local": false,
+        "paused": false
+      },
+      "Red Rocks": {
+        "city": "Morrison, CO",
+        "is_local": false,
+        "paused": false
+      },
+      "Wrigley Field": {
+        "city": "Chicago, IL",
+        "is_local": false,
+        "paused": false
+      },
+      "Fenway Park": {
+        "city": "Boston, MA",
         "is_local": false,
         "paused": false
       }
