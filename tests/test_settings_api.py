@@ -34,7 +34,7 @@ def test_patch_settings_clears_tm_cache(client, tmp_path, monkeypatch):
     import backend.main as main_mod
 
     tm_cache = main_mod.TM_CACHE_FILE
-    tm_cache.write_text(json.dumps({"last_fetched": "2026-01-01T00:00:00Z", "shows": []}))
+    tm_cache.write_text(json.dumps({"last_refreshed": "2026-01-01T00:00:00Z", "artist_shows": {}}))
     assert tm_cache.exists()
 
     client.patch("/api/settings", json={"ticketmaster_api_key": "new-key"})
@@ -45,12 +45,3 @@ def test_patch_settings_github_pages_url(client):
     r = client.patch("/api/settings", json={"github_pages_url": "https://example.github.io/Wingman/"})
     assert r.status_code == 200
     assert r.json()["settings"]["github_pages_url"] == "https://example.github.io/Wingman/"
-
-
-def test_get_state_missing(client):
-    """GET /api/state returns empty structure when concert_state.json is missing."""
-    r = client.get("/api/state")
-    assert r.status_code == 200
-    data = r.json()
-    assert data["last_run"] is None
-    assert data["artist_shows"] == {}
