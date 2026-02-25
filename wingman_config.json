@@ -116,11 +116,6 @@
       "genre": "Indie / Alt-Rock",
       "paused": false
     },
-    "American Mary": {
-      "url": "https://www.americanmary.com/#tour",
-      "genre": "Indie / Alt-Rock",
-      "paused": false
-    },
     "Bon Iver": {
       "url": "https://boniver.org/tour/",
       "genre": "Indie / Alt-Rock",
@@ -250,6 +245,11 @@
       "url": "https://www.thecamwhitcomb.com/",
       "genre": "Country / Americana",
       "paused": false
+    },
+    "The National": {
+      "url": "https://www.americanmary.com/#tour",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
     }
   },
   "venues": {
@@ -317,6 +317,30 @@
       "url": "https://www.mlb.com/redsox/tickets/concerts",
       "city": "Boston, MA",
       "is_local": false,
+      "paused": false
+    },
+    "Wooly's": {
+      "url": "https://www.firstfleetconcerts.com/woolys",
+      "city": "Des Moines, IA",
+      "is_local": true,
+      "paused": false
+    },
+    "Vibrant Music Hall": {
+      "url": "https://www.vibrantmusichall.com/?utm_source=GMBlisting&utm_medium=organic",
+      "city": "West Des Moines, IA",
+      "is_local": true,
+      "paused": false
+    },
+    "Lauridsen Amphitheater": {
+      "url": "https://www.waterworkspark.org/",
+      "city": "Des Moines, IA",
+      "is_local": true,
+      "paused": false
+    },
+    "The Moody Theatre": {
+      "url": "https://www.acllive.com/?utm_campaign=acl&utm_medium=organicsearch&utm_source=googlemybusiness&utm_audience=tofu_googlemybusiness&utm_content=brandstory_google_my_business_website_link",
+      "city": "Austin, Tx",
+      "is_local": true,
       "paused": false
     }
   },
