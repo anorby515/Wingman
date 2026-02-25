@@ -165,13 +165,12 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
           const hasNew = pin.shows.some(s => s.is_new)
           const allSoldOut = pin.shows.every(s => s.status === 'sold_out')
           const icon = hasNew ? NEW_ICON : allSoldOut ? SOLD_OUT_ICON : DEFAULT_ICON
-          const maxTooltip = 5
 
           return (
             <Marker key={`a-${i}`} position={[pin.lat, pin.lon]} icon={icon}>
               <Tooltip direction="top" offset={[0, -30]} opacity={0.95}>
                 <div className="text-xs space-y-0.5" style={{ maxWidth: 260 }}>
-                  {pin.shows.slice(0, maxTooltip).map((s, j) => (
+                  {pin.shows.map((s, j) => (
                     <div key={j}>
                       <strong>{s.artist}</strong>
                       {' \u00b7 '}{s.date}{' \u00b7 '}{s.venue}
@@ -179,9 +178,6 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
                       {s.status === 'sold_out' && <span className="ml-1 text-red-500 font-semibold">SOLD OUT</span>}
                     </div>
                   ))}
-                  {pin.shows.length > maxTooltip && (
-                    <div className="text-slate-400 italic">+{pin.shows.length - maxTooltip} more</div>
-                  )}
                 </div>
               </Tooltip>
             </Marker>
@@ -190,7 +186,6 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
 
         {/* Venue pins */}
         {venuePins.map((venue, i) => {
-          const maxTooltip = 5
           const events = venue.events || []
 
           return (
@@ -198,15 +193,12 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
               <Tooltip direction="top" offset={[0, -30]} opacity={0.95}>
                 <div className="text-xs space-y-0.5" style={{ maxWidth: 260 }}>
                   <div className="font-bold text-sm">{venue.venueName}</div>
-                  {events.slice(0, maxTooltip).map((e, j) => (
+                  {events.map((e, j) => (
                     <div key={j}>
                       {e.date}{' \u00b7 '}{e.artist}
                       {e.tracked && <span className="ml-1 text-emerald-600 font-semibold">\u2605</span>}
                     </div>
                   ))}
-                  {events.length > maxTooltip && (
-                    <div className="text-slate-400 italic">+{events.length - maxTooltip} more</div>
-                  )}
                   {events.length === 0 && (
                     <div className="text-slate-400 italic">No events data yet</div>
                   )}
