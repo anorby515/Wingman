@@ -55,11 +55,16 @@ This document defines the contract between **Claude Code** (codebase maintainer)
    - Write `center: "Des Moines, IA"` in `concert_state.json` (used as map home position, not a filter)
 6. Diff new results against previous `concert_state.json`
 7. Write updated `concert_state.json` (MUST validate against schema)
-8. Write `docs/summary.json` (MUST validate against schema)
-9. Copy current snapshot to `docs/history/YYYY-MM-DD.json`
-10. Run `python scripts/validate_state.py` to verify data integrity
-11. Commit and push: `concert_state.json`, `docs/summary.json`, `docs/history/*.json`
-12. Send Gmail digest via Chrome skill (send even if no changes)
+8. Fetch Ticketmaster Coming Soon data for `docs/summary.json`:
+   - Call `GET http://localhost:8000/api/coming-soon` (the local backend handles TM API + caching)
+   - If the response has `api_configured: true`, include `coming_soon` and `coming_soon_fetched` in `docs/summary.json`
+   - If `api_configured: false` (no API key set), write `coming_soon: []` and `coming_soon_fetched: null`
+   - Do **NOT** call the Ticketmaster API directly — always go through the backend endpoint
+9. Write `docs/summary.json` (MUST validate against schema — includes `coming_soon` array)
+10. Copy current snapshot to `docs/history/YYYY-MM-DD.json`
+11. Run `python scripts/validate_state.py` to verify data integrity
+12. Commit and push: `concert_state.json`, `docs/summary.json`, `docs/history/*.json`
+13. Send Gmail digest via Chrome skill (send even if no changes)
 
 **Commit message format:** `Weekly update: YYYY-MM-DD - X new, Y removed`
 
@@ -119,6 +124,51 @@ View full report: [GitHub Pages URL]
 
 ---
 
+## Ticketmaster Integration
+
+Wingman uses the [Ticketmaster Discovery API v2](https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/) to surface **announced-but-not-yet-on-sale** shows for tracked artists.
+
+### How it works
+
+- **API key:** Stored in `wingman_config.json` under `ticketmaster_api_key`. The user enters it via Settings > Ticketmaster in the local UI.
+- **Backend endpoint:** `GET /api/coming-soon` — the FastAPI backend queries TM, filters results, and caches the response in `ticketmaster_cache.json` (6-hour TTL). Pass `?force=true` to bypass the cache.
+- **Cowork role:** Cowork does **NOT** call the TM API directly. During the weekly scrape, Cowork calls `GET http://localhost:8000/api/coming-soon` and copies the result into `docs/summary.json` so GitHub Pages can display Coming Soon data.
+
+### What the API returns
+
+For each tracked (non-paused) artist, the backend:
+1. Searches TM by `keyword=<artist_name>` with `classificationName=music`
+2. Filters to North America only (`countryCode` in `US`, `CA`, `MX`)
+3. Matches events against the artist name via attraction names (fuzzy substring match to avoid tribute bands)
+4. Keeps only shows where `sales.public.startDateTime` is **in the future** (i.e., not yet on sale) OR `sales.public.startTBD` is true
+5. Extracts presale windows (`sales.presales[]`)
+
+### Artists not found
+
+If an artist returns zero matching North America events on TM (after name filtering), they are included in the `artists_not_found` list in the API response. This is displayed as a collapsible section in the Coming Soon tab of the local UI. Common reasons an artist is not found:
+- They tour under a different name than what is stored in Wingman
+- They don't list shows on Ticketmaster
+- They have no upcoming North America dates at all
+
+**Note:** A network/API error during a fetch does NOT add an artist to `artists_not_found` — only a genuine zero-results response does.
+
+### Cache behavior
+
+- Cache file: `ticketmaster_cache.json` (gitignored, local only)
+- TTL: 6 hours. The backend serves cached data within that window.
+- Cache is cleared automatically when the API key changes in Settings.
+- Cowork should call the endpoint at the start of each weekly scrape (before writing `summary.json`) to get fresh data. If the cache is still valid, the backend returns it immediately; if not, it fetches fresh from TM.
+
+### `docs/summary.json` — Coming Soon fields
+
+The `Summary` schema includes two TM-specific fields:
+- `coming_soon` — array of `ComingSoonShow` objects (see `schemas/summary.schema.json`)
+- `coming_soon_fetched` — ISO 8601 datetime string of when data was last fetched from TM
+
+These are written by Cowork during the weekly scrape (step 8 above) and consumed by the GitHub Pages frontend to display the Coming Soon tab in demo mode.
+
+---
+
 ## File Ownership
 
 | File | Written By | Read By | Pushed to GitHub? |
@@ -126,6 +176,7 @@ View full report: [GitHub Pages URL]
 | `wingman_config.json` | Local UI (backend API) | Cowork, backend | No |
 | `concert_state.json` | Cowork | Code, frontend, Cowork | **Yes** |
 | `geocode_cache.json` | Cowork (geocoding step) | Cowork, backend API | No |
+| `ticketmaster_cache.json` | Backend (`/api/coming-soon`) | Backend | **Never** (.gitignored) |
 | `dismissed_suggestions.json` | Cowork (Spotify sync) | Cowork, backend | No |
 | `flagged_items.json` | Cowork (Spotify sync) | Backend (local UI) | No |
 | `spotify_tokens.json` | Backend (OAuth flow) | Cowork | **Never** (.gitignored) |
@@ -280,7 +331,7 @@ This applies whether creating a new PR or pushing additional commits to an exist
 - Venues tab: venue cards (names link to calendars), split local/travel/festivals; no map
 - Festivals section in Venues tab: cards linking to lineup pages; expandable with tracked artists when `festival_shows` data available
 - Map tooltips show all shows (no "+N more" truncation)
-- Leaflet map with artist show pins (green=new, red=sold out, blue=on sale) + venue pins (violet)
+- Leaflet map with artist show pins (green=new, red=sold out, blue=on sale, orange=coming soon) + venue pins (violet)
 - Interactive map filtering: click artist card to filter map pins; map viewport filters visible cards
 - Hover tooltips on map pins showing all artist/date/venue details
 - Configure tab: combined management with sub-tabs for Artists, Venues, Festivals
@@ -289,6 +340,7 @@ This applies whether creating a new PR or pushing additional commits to an exist
 - All North America shows scraped (no distance/radius filtering)
 - GitHub Pages demo build (VITE_DEMO_MODE=true) + GitHub Actions deploy workflow
 - JSON schemas + Pydantic validation (`scripts/validate_state.py`)
+- **Ticketmaster integration:** Coming Soon tab (announced but not-yet-on-sale shows + presale windows); TM data merged natively into Artist cards; orange map pins for coming-soon shows; "Not found on Ticketmaster" collapsible list; API key stored in `wingman_config.json`; 6-hour cache in `ticketmaster_cache.json`; `docs/summary.json` includes `coming_soon` array for GitHub Pages
 
 ### Known Local Setup Gotcha
 `geocode_cache.json` is gitignored and won't exist on a fresh clone. On first run,
