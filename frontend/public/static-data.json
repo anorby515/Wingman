@@ -2620,171 +2620,213 @@
     "artists": {
       "Luke Combs": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://www.lukecombs.com/tour-dates/"
       },
       "Morgan Wallen": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://morganwallen.com/"
       },
       "Eric Church": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://www.ericchurch.com/tours"
       },
       "Zach Bryan": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://www.zachbryan.com/tour"
       },
       "Zac Brown Band": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://zacbrownband.com/pages/tour"
       },
       "Jason Isbell": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://www.jasonisbell.com/shows"
       },
       "Sturgill Simpson": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://sturgillsimpson.com/"
       },
       "CAAMP": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://www.caamptheband.com/caamp-tour-dates"
       },
       "Tyler Childers": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://tylerchildersmusic.com/pages/tour-dates"
       },
       "Chris Stapleton": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://chrisstapleton.com/"
       },
       "Dierks Bentley": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://dierks.com/"
       },
       "Lainey Wilson": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://www.laineywilson.com/"
       },
       "Colter Wall": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "http://www.ColterWall.com"
       },
       "The Red Clay Strays": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://musicrow.com/2026/02/the-red-clay-strays-add-additional-tour-dates/"
       },
       "Billy Strings": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://www.billystrings.com/"
       },
       "Wyatt Flores": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://www.wyattfloresmusic.com/"
       },
       "Dylan Gossett": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://www.dylangossett.com/"
       },
       "Johnny Blue Skies": {
         "genre": "Country / Americana",
-        "paused": false
+        "paused": false,
+        "url": "https://liveforlivemusic.com/news/johnny-blue-skies-sturgill-simpson-refutes-dan-auerbach/"
       },
       "The Lumineers": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://www.thelumineers.com/tour"
       },
       "American Mary": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://www.americanmary.com/#tour"
       },
       "Bon Iver": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://boniver.org/tour/"
       },
       "The War on Drugs": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://www.thewarondrugs.net/tour"
       },
       "Vampire Weekend": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://www.vampireweekend.com/#tour"
       },
       "Phoebe Bridgers": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://phoebefuckingbridgers.com/"
       },
       "Rostam": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://officialrostam.com/#dates"
       },
       "Pearl Jam": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://pearljam.com/tour"
       },
       "The Black Keys": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://www.theblackkeys.com/"
       },
       "Foo Fighters": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://www.foofighters.com/tour-dates"
       },
       "Jack White": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://jackwhiteiii.com/tour-dates/"
       },
       "LCD Soundsystem": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://lcdsoundsystem.com/"
       },
       "The Strokes": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://www.thestrokes.com/"
       },
       "The 1975": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://the1975.com/"
       },
       "The Smile": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://www.thesmiletheband.com/"
       },
       "Noah Kahan": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://noahkahan.com/"
       },
       "Mt. Joy": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://www.mtjoyband.com/"
       },
       "Lord Huron": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://www.lordhuron.com/"
       },
       "Royel Otis": {
         "genre": "Indie / Alt-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://www.royelotis.com/"
       },
       "Massive Attack": {
         "genre": "Electronic / Art-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://www.massiveattack.co.uk/"
       },
       "Radiohead": {
         "genre": "Electronic / Art-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://www.radiohead.com/"
       },
       "The XX": {
         "genre": "Electronic / Art-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://thexx.info/"
       },
       "Alabama Shakes": {
         "genre": "Electronic / Art-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://www.alabamashakes.com/"
       },
       "Tame Impala": {
         "genre": "Electronic / Art-Rock",
-        "paused": false
+        "paused": false,
+        "url": "https://interscope.com/products/tame-impala-the-complete-vinyl-collection"
       }
     },
     "venues": {
