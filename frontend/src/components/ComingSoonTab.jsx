@@ -89,6 +89,193 @@ function ShowRow({ show }) {
   )
 }
 
+// ── Venue event row (artist-first layout) ─────────────────────────────────────
+function VenueEventRow({ event }) {
+  const onsaleLabel = event.onsale_tbd
+    ? 'On-sale date TBD'
+    : event.onsale_datetime
+    ? `On sale ${formatDatetime(event.onsale_datetime)}`
+    : 'On-sale date not announced'
+
+  return (
+    <li className="text-sm border-t border-slate-50 pt-2 mt-2 first:border-0 first:pt-0 first:mt-0">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <span className="font-medium text-slate-800">{event.artist}</span>
+          <span className="text-slate-400 mx-1">&middot;</span>
+          <span className="text-slate-600">{event.date}</span>
+          <span className="text-slate-400 mx-1">&middot;</span>
+          <span className="text-slate-500">{event.city}</span>
+        </div>
+        {event.ticketmaster_url && (
+          <a
+            href={event.ticketmaster_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={e => e.stopPropagation()}
+            className="flex-shrink-0 text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+          >
+            TM &rarr;
+          </a>
+        )}
+      </div>
+      <div className="mt-1 flex items-center gap-1.5">
+        <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
+        <span className="text-xs text-amber-700 font-medium">{onsaleLabel}</span>
+      </div>
+      <PresaleList presales={event.presales} />
+    </li>
+  )
+}
+
+// ── Festival event row ────────────────────────────────────────────────────────
+function FestivalEventRow({ event }) {
+  const onsaleLabel = event.onsale_tbd
+    ? 'On-sale date TBD'
+    : event.onsale_datetime
+    ? `On sale ${formatDatetime(event.onsale_datetime)}`
+    : 'On-sale date not announced'
+
+  return (
+    <li className="text-sm border-t border-slate-50 pt-2 mt-2 first:border-0 first:pt-0 first:mt-0">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <span className="font-medium text-slate-800">{event.date}</span>
+          <span className="text-slate-400 mx-1">&middot;</span>
+          <span className="text-slate-600">{event.venue}</span>
+          <span className="text-slate-400 mx-1">&middot;</span>
+          <span className="text-slate-500">{event.city}</span>
+        </div>
+        {event.ticketmaster_url && (
+          <a
+            href={event.ticketmaster_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={e => e.stopPropagation()}
+            className="flex-shrink-0 text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+          >
+            TM &rarr;
+          </a>
+        )}
+      </div>
+      {event.event_name !== event.tracked_festival && (
+        <p className="text-xs text-slate-400 mt-0.5 italic">{event.event_name}</p>
+      )}
+      <div className="mt-1 flex items-center gap-1.5">
+        <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
+        <span className="text-xs text-amber-700 font-medium">{onsaleLabel}</span>
+      </div>
+      <PresaleList presales={event.presales} />
+    </li>
+  )
+}
+
+// ── Per-venue card ────────────────────────────────────────────────────────────
+function VenueEventCard({ venueName, venueUrl, events }) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="card transition-all">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full p-4 text-left flex items-center gap-3"
+      >
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5 min-w-0">
+            {venueUrl ? (
+              <a
+                href={venueUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={e => e.stopPropagation()}
+                className="font-semibold text-slate-900 hover:text-indigo-600 hover:underline truncate"
+              >
+                {venueName}
+              </a>
+            ) : (
+              <span className="font-semibold text-slate-900 truncate">{venueName}</span>
+            )}
+          </div>
+          <div className="mt-1">
+            <span className="text-xs bg-violet-100 text-violet-800 px-2 py-0.5 rounded-full font-medium">
+              {events.length} coming soon
+            </span>
+          </div>
+        </div>
+        <svg
+          className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`}
+          fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {open && (
+        <div className="border-t border-slate-50 px-4 pb-4">
+          <ul className="mt-3">
+            {events.map((ev, i) => (
+              <VenueEventRow key={i} event={ev} />
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Per-festival card ─────────────────────────────────────────────────────────
+function FestivalEventCard({ festivalName, festivalUrl, events }) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="card transition-all">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full p-4 text-left flex items-center gap-3"
+      >
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5 min-w-0">
+            {festivalUrl ? (
+              <a
+                href={festivalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={e => e.stopPropagation()}
+                className="font-semibold text-slate-900 hover:text-indigo-600 hover:underline truncate"
+              >
+                {festivalName}
+              </a>
+            ) : (
+              <span className="font-semibold text-slate-900 truncate">{festivalName}</span>
+            )}
+          </div>
+          <div className="mt-1">
+            <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-medium">
+              {events.length} coming soon
+            </span>
+          </div>
+        </div>
+        <svg
+          className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`}
+          fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {open && (
+        <div className="border-t border-slate-50 px-4 pb-4">
+          <ul className="mt-3">
+            {events.map((ev, i) => (
+              <FestivalEventRow key={i} event={ev} />
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── Per-artist card ───────────────────────────────────────────────────────────
 function ComingSoonCard({ artist, genre, url, shows }) {
   const [open, setOpen] = useState(false)
@@ -143,8 +330,8 @@ function ComingSoonCard({ artist, genre, url, shows }) {
   )
 }
 
-// ── Artists not found on Ticketmaster ────────────────────────────────────────
-function NotFoundSection({ artists, configArtists }) {
+// ── Entities not found on Ticketmaster ───────────────────────────────────────
+function NotFoundSection({ label, items, configItems, explanation }) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -155,10 +342,10 @@ function NotFoundSection({ artists, configArtists }) {
       >
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-slate-500">
-            Not found on Ticketmaster
+            Not found on Ticketmaster — {label}
           </span>
           <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium">
-            {artists.length}
+            {items.length}
           </span>
         </div>
         <svg
@@ -171,16 +358,14 @@ function NotFoundSection({ artists, configArtists }) {
 
       {open && (
         <div className="border-t border-slate-50 px-4 pb-4">
-          <p className="text-xs text-slate-400 mt-3 mb-3">
-            These tracked artists returned no results on Ticketmaster. They may tour under a different name, not list shows on Ticketmaster, or not have upcoming North America dates.
-          </p>
+          <p className="text-xs text-slate-400 mt-3 mb-3">{explanation}</p>
           <ul className="space-y-1.5">
-            {artists.map(name => (
+            {items.map(name => (
               <li key={name} className="flex items-center gap-2 text-sm text-slate-600">
                 <span className="w-1.5 h-1.5 rounded-full bg-slate-300 flex-shrink-0" />
-                {configArtists[name]?.url ? (
+                {configItems[name]?.url ? (
                   <a
-                    href={configArtists[name].url}
+                    href={configItems[name].url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-indigo-600 hover:underline"
@@ -232,6 +417,8 @@ export default function ComingSoonTab() {
       setData({
         api_configured:    true,
         shows:             json.coming_soon || [],
+        venue_events:      [],
+        festival_events:   [],
         last_fetched:      json.coming_soon_fetched || null,
       })
       setConfig(json.config || {})
@@ -273,7 +460,7 @@ export default function ComingSoonTab() {
         <div className="text-3xl">🎟</div>
         <p className="font-semibold text-slate-800">Ticketmaster API not configured</p>
         <p className="text-sm text-slate-500 max-w-xs mx-auto">
-          Add your free Discovery API key in the Settings tab to see upcoming on-sale dates and presale windows for your tracked artists.
+          Add your free Discovery API key in the Settings tab to see upcoming on-sale dates and presale windows for your tracked artists, venues, and festivals.
         </p>
         <a
           href="https://developer.ticketmaster.com"
@@ -288,10 +475,16 @@ export default function ComingSoonTab() {
   }
 
   const shows            = data.shows || []
-  const notFound         = data.artists_not_found || []
+  const artistsNotFound  = data.artists_not_found || []
+  const venueEvents      = data.venue_events || []
+  const venuesNotFound   = data.venues_not_found || []
+  const festivalEvents   = data.festival_events || []
+  const festivalsNotFound = data.festivals_not_found || []
   const configArtists    = config?.artists || {}
+  const configVenues     = config?.venues || {}
+  const configFestivals  = config?.festivals || {}
 
-  // Group by artist, preserve order (most shows first)
+  // Group artist shows by artist (most shows first)
   const byArtist = {}
   for (const show of shows) {
     if (!byArtist[show.artist]) {
@@ -303,18 +496,52 @@ export default function ComingSoonTab() {
     ([, a], [, b]) => b.shows.length - a.shows.length
   )
 
+  // Group venue events by tracked venue
+  const byVenue = {}
+  for (const ev of venueEvents) {
+    if (!byVenue[ev.tracked_venue]) byVenue[ev.tracked_venue] = []
+    byVenue[ev.tracked_venue].push(ev)
+  }
+  const venueGroups = Object.entries(byVenue).sort(
+    ([, a], [, b]) => b.length - a.length
+  )
+
+  // Group festival events by tracked festival
+  const byFestival = {}
+  for (const ev of festivalEvents) {
+    if (!byFestival[ev.tracked_festival]) byFestival[ev.tracked_festival] = []
+    byFestival[ev.tracked_festival].push(ev)
+  }
+  const festivalGroups = Object.entries(byFestival).sort(
+    ([, a], [, b]) => b.length - a.length
+  )
+
+  const totalNotYetOnSale = shows.length + venueEvents.length + festivalEvents.length
+
   return (
     <div className="space-y-6">
       {/* ── Meta bar ── */}
       <div className="card p-4 flex flex-wrap gap-4 text-sm text-slate-600">
         <div>
           <span className="font-semibold text-slate-800">Not yet on sale: </span>
-          {shows.length} show{shows.length !== 1 ? 's' : ''}
+          {totalNotYetOnSale} show{totalNotYetOnSale !== 1 ? 's' : ''}
         </div>
         <div>
           <span className="font-semibold text-slate-800">Artists: </span>
           {artistGroups.length}
         </div>
+        {venueGroups.length > 0 && (
+          <div>
+            <span className="font-semibold text-slate-800">Venues: </span>
+            {venueGroups.length}
+          </div>
+        )}
+        {festivalGroups.length > 0 && (
+          <div>
+            <span className="font-semibold text-slate-800">Festivals: </span>
+            {festivalGroups.length}
+          </div>
+        )}
         {data.last_fetched && (
           <div>
             <span className="font-semibold text-slate-800">Last checked: </span>
@@ -357,28 +584,88 @@ export default function ComingSoonTab() {
         </span>
       </div>
 
-      {/* ── Artist cards ── */}
-      {artistGroups.length === 0 ? (
-        <div className="card p-8 text-center text-slate-400 text-sm italic">
-          No upcoming shows with future on-sale dates found for your tracked artists.
+      {/* ── Artists section ── */}
+      {artistGroups.length > 0 && (
+        <div className="space-y-2">
+          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-400 px-1">Artists</h3>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {artistGroups.map(([artist, { genre, shows: artistShows }]) => (
+              <ComingSoonCard
+                key={artist}
+                artist={artist}
+                genre={genre}
+                url={configArtists[artist]?.url || null}
+                shows={artistShows}
+              />
+            ))}
+          </div>
         </div>
-      ) : (
-        <div className="grid sm:grid-cols-2 gap-3">
-          {artistGroups.map(([artist, { genre, shows: artistShows }]) => (
-            <ComingSoonCard
-              key={artist}
-              artist={artist}
-              genre={genre}
-              url={configArtists[artist]?.url || null}
-              shows={artistShows}
-            />
-          ))}
+      )}
+
+      {artistGroups.length === 0 && venueGroups.length === 0 && festivalGroups.length === 0 && (
+        <div className="card p-8 text-center text-slate-400 text-sm italic">
+          No upcoming shows with future on-sale dates found for your tracked artists, venues, or festivals.
+        </div>
+      )}
+
+      {/* ── Venues section ── */}
+      {venueGroups.length > 0 && (
+        <div className="space-y-2">
+          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-400 px-1">Venues</h3>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {venueGroups.map(([venueName, events]) => (
+              <VenueEventCard
+                key={venueName}
+                venueName={venueName}
+                venueUrl={configVenues[venueName]?.url || null}
+                events={events}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Festivals section ── */}
+      {festivalGroups.length > 0 && (
+        <div className="space-y-2">
+          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-400 px-1">Festivals</h3>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {festivalGroups.map(([festivalName, events]) => (
+              <FestivalEventCard
+                key={festivalName}
+                festivalName={festivalName}
+                festivalUrl={configFestivals[festivalName]?.url || null}
+                events={events}
+              />
+            ))}
+          </div>
         </div>
       )}
 
       {/* ── Not found on Ticketmaster ── */}
-      {!DEMO && notFound.length > 0 && (
-        <NotFoundSection artists={notFound} configArtists={configArtists} />
+      {!DEMO && artistsNotFound.length > 0 && (
+        <NotFoundSection
+          label="Artists"
+          items={artistsNotFound}
+          configItems={configArtists}
+          explanation="These tracked artists returned no results on Ticketmaster. They may tour under a different name, not list shows on Ticketmaster, or not have upcoming North America dates."
+        />
+      )}
+      {!DEMO && venuesNotFound.length > 0 && (
+        <NotFoundSection
+          label="Venues"
+          items={venuesNotFound}
+          configItems={configVenues}
+          explanation="These tracked venues returned no matching results on Ticketmaster. The venue may use a different name on Ticketmaster, or may have no upcoming shows with future on-sale dates."
+        />
+      )}
+      {!DEMO && festivalsNotFound.length > 0 && (
+        <NotFoundSection
+          label="Festivals"
+          items={festivalsNotFound}
+          configItems={configFestivals}
+          explanation="These tracked festivals returned no matching results on Ticketmaster. The festival may not yet be listed on Ticketmaster, or tickets may already be on sale."
+        />
       )}
     </div>
   )
