@@ -10,81 +10,155 @@ This document defines the contract between **Claude Code** (codebase maintainer)
 | Actor | Responsibility |
 |-------|---------------|
 | **Claude Code** | Maintains codebase, schemas, models, frontend, backend. Commits and pushes code changes. |
-| **Claude Cowork** | Executes weekly scrape (Chrome skills), Spotify sync (interactive), Gmail digest. Writes data files per schemas below. |
-| **GitHub Actions** | Triggered by push. Builds frontend in demo mode, deploys to GitHub Pages. Does NOT run the scraper. |
-| **Local UI** | Flask/FastAPI backend + React frontend. Manages artists, venues, settings. Displays last summary + link to GitHub Pages. |
+| **Claude Cowork** | Spotify sync (interactive, manual trigger), notification delivery (email via Gmail + SMS via Twilio). |
+| **GitHub Actions** | Daily TM data fetch, generates `docs/summary.json`, builds frontend, deploys to GitHub Pages. |
+| **Local UI** | FastAPI backend + React frontend. Configuration (artists, venues, festivals, settings). Manual "Refresh Data" button triggers TM API fetch. Displays all show data from TM cache. |
+| **GitHub Pages** | Public site. Full-featured viewer: Artists, Venues, Festivals, Map, Coming Soon. Updated daily by GitHub Action. |
 
 ---
 
-## Workflow: Weekly Concert Scrape
+## Architecture Overview
 
-**Trigger:** Scheduled Cowork session (weekly) OR manual Cowork session.
+### Data Flow
+
+```
+Ticketmaster Discovery API (5000 calls/day limit)
+          |
+    +-----------+------------------+
+    |                              |
+  Local Backend                GitHub Action
+  (manual "Refresh" button)    (daily schedule or manual dispatch)
+    |                              |
+  ticketmaster_cache.json       docs/summary.json (committed)
+  (local, gitignored)          docs/history/YYYY-MM-DD.json
+    |                              |
+  Local Site                   GitHub Pages
+  (config + viewer)            (public viewer)
+```
+
+### Key Principles
+
+1. **Browser refresh NEVER triggers TM API calls.** Data is always served from cache.
+2. **TM API is called only on explicit trigger:** manual "Refresh Data" button (local) or scheduled GitHub Action.
+3. **No web scraping.** Ticketmaster API is the sole data source. (Bandsintown API planned as supplemental source — future.)
+4. **No `concert_state.json`.** All event data comes from TM API, cached locally.
+5. **5000 calls/day budget.** ~90 calls per full refresh. Safe for ~55 refreshes/day.
+
+---
+
+## Workflow: Data Refresh (Local Backend)
+
+**Trigger:** User clicks "Refresh Data" button in the local UI header.
 
 **Sequence:**
-1. Read `wingman_config.json` for artists, venues, festivals, settings
-2. For each active artist: **try Ticketmaster API first; fall back to web scrape only if TM returns no results**
-   - **TM API (primary):** query `GET /discovery/v2/attractions.json?keyword=<artist>&classificationName=music` — if a matching attraction is found (exact name match), then query `GET /discovery/v2/events.json` filtered to that attraction ID + North America (`countryCode=US,CA,MX`). Use TM event data as the sole source; do NOT also scrape the tour page.
-   - **Web scrape (fallback):** only used when TM returns 0 results for the artist. Chrome skill navigates to the artist's tour page URL from `wingman_config.json` and extracts structured show data.
-   - **Include:** shows in the United States, Canada, and Mexico
-   - **Exclude:** shows in Europe, UK, Australia, Asia, South America, or any other non-North-America territory
-   - If country is ambiguous, check city/state — US state abbreviations or Canadian province abbreviations confirm inclusion
-3. For each active venue: **try Ticketmaster API first; fall back to web scrape only if TM returns no results**
-   - **TM API (primary):** query `GET /discovery/v2/venues.json?keyword=<venue>&countryCode=US` to find the venue entity, then query `GET /discovery/v2/events.json?venueId=<id>` to get upcoming events. Use TM event data as the sole source; do NOT also scrape the venue calendar.
-   - **Web scrape (fallback):** only used when TM returns 0 venue results. Chrome skill navigates to the venue's calendar URL from `wingman_config.json` and extracts event data.
-   - **Standard venues (scrape fallback):** read page text directly after load
-   - **Lazy-load / "Load More" venues** (e.g. ACL Live): use the JS interval pattern to auto-click the button until it disappears, then extract:
-     ```javascript
-     // Fire-and-forget repeated clicks every 2s until button gone
-     window._loadInterval = setInterval(() => {
-       const btn = [...document.querySelectorAll('button')]
-         .find(b => b.textContent.trim() === 'Load More Events');
-       if (btn) { btn.click(); }
-       else { clearInterval(window._loadInterval); window._loadDone = true; }
-     }, 2000);
-     ```
-     Wait ~30–60s, check `window._loadDone`, then extract `document.body.innerText` in chunks.
-   - **Venues flagged as lazy-load** (see table below): always use the scroll/load-more pattern
-3a. For each active festival: **try Ticketmaster API first; fall back to web scrape only if TM returns no results**
-   - **TM API (primary):** query `GET /discovery/v2/events.json?keyword=<festival>&classificationName=music&countryCode=US` — if matching events are found, extract the artist lineup from the event attractions. For each extracted artist, check whether their name (case-insensitive) appears in `wingman_config.json` artists → set `tracked: true` if matched, `false` otherwise.
-   - **Web scrape (fallback):** only used when TM returns 0 results. Chrome skill navigates to the festival's lineup URL from `wingman_config.json`, reads the page, and extracts every performing artist or act listed.
-   - Store results as a `FestivalLineupEntry` array under `festival_shows[festival_name]` in `concert_state.json`
-   - **Standard lineup pages (scrape fallback):** read page text directly after load (see Festival Scraping Behavior table below)
-4. For each extracted show: geocode the venue location
-   - Check `geocode_cache.json` first
-   - If cache miss: query Nominatim API (1 req/sec rate limit)
-   - Store result in `geocode_cache.json`
-5. Include all North America shows (no distance filtering)
-   - Do **NOT** calculate or write `distance_miles` — that field has been removed from the Show schema
-   - Write `radius_miles: null` in `concert_state.json` (field is deprecated but kept for backward compat)
-   - Write `center: "Des Moines, IA"` in `concert_state.json` (used as map home position, not a filter)
-6. **Print TM API misses to the console** — after all TM lookups are complete, print a summary of every artist, venue, and festival that returned 0 TM results (i.e., fell back to web scrape). Format:
-   ```
-   === Ticketmaster API Misses ===
-   Artists:  Johnny Blue Skies
-   Venues:   First Fleet Concerts, Hinterland Music Festival
-   Festivals: Hinterland Music Festival
-   (or "None" for any category with no misses)
-   ```
-7. Diff new results against previous `concert_state.json`
-8. Write updated `concert_state.json` (MUST validate against schema)
-9. Fetch Ticketmaster Coming Soon data for `docs/summary.json`:
-   - Call `GET http://localhost:8000/api/coming-soon` (the local backend handles TM API + caching)
-   - If the response has `api_configured: true`, include `coming_soon` and `coming_soon_fetched` in `docs/summary.json`
-   - If `api_configured: false` (no API key set), write `coming_soon: []` and `coming_soon_fetched: null`
-   - Do **NOT** call the Ticketmaster API directly — always go through the backend endpoint
-10. Write `docs/summary.json` (MUST validate against schema — includes `coming_soon` array)
-11. Copy current snapshot to `docs/history/YYYY-MM-DD.json`
-12. Run `python scripts/validate_state.py` to verify data integrity
-13. Commit and push: `concert_state.json`, `docs/summary.json`, `docs/history/*.json`
-14. Send Gmail digest via Chrome skill (send even if no changes)
+1. Frontend calls `POST /api/refresh`
+2. Backend fetches from TM Discovery API for all active artists, venues, festivals:
+   - For each artist: `GET /discovery/v2/events.json?keyword=<artist>&classificationName=music&size=50&sort=date,asc`
+   - For each venue: look up venue ID via `GET /discovery/v2/venues.json`, then `GET /discovery/v2/events.json?venueId=<id>`
+   - For each festival: `GET /discovery/v2/events.json?keyword=<festival>&classificationName=music`
+3. Filter results to North America only (`countryCode` in `US`, `CA`, `MX`)
+4. Match events via attraction names (fuzzy substring match to avoid tribute bands)
+5. Classify each show: on-sale, coming-soon (public on-sale date in the future), or on-sale TBD
+6. Write unified cache to `ticketmaster_cache.json`
+7. Compare new data against previous cache to detect notification triggers:
+   - New events added since last refresh
+   - Events with on-sale date within 7 days
+   - Events with on-sale date within 48 hours
+8. Write triggers to `notification_state.json`
+9. Geocode uncached venues in background (progressive — does not block response)
+10. Return results immediately (shows may have `lat: null, lon: null` if not yet geocoded)
 
-**Commit message format:** `Weekly update: YYYY-MM-DD - X new, Y removed`
+**Frontend polls `GET /api/refresh/status`** for progress during refresh.
+**Frontend polls `GET /api/geocode/progress`** for map pin updates after refresh.
+
+---
+
+## Workflow: Data Refresh (GitHub Action)
+
+**Trigger:** Daily schedule + `workflow_dispatch` (manual).
+
+**Sequence:**
+1. Run `scripts/fetch_tm_data.py` (shared TM logic from `backend/ticketmaster.py`)
+2. Uses TM API key from `secrets.TICKETMASTER_API_KEY`
+3. Fetch all shows for tracked artists, venues, festivals (same logic as local backend)
+4. Geocode all venues (can take time in CI — not user-facing)
+5. Compare against previous `docs/summary.json` for diff detection
+6. Generate `docs/summary.json` (full snapshot with all show data + coming_soon + diffs)
+7. Copy to `docs/history/YYYY-MM-DD.json`
+8. Commit data files to repo
+9. Build frontend with `VITE_DEMO_MODE=true`
+10. Deploy to GitHub Pages
+
+**Commit message format:** `Data update: YYYY-MM-DD - X artists, Y shows`
+
+---
+
+## Workflow: Notifications
+
+**Detection:** Backend detects triggers during `POST /api/refresh` (local) or GitHub Action (CI).
+
+**Delivery:** Claude Cowork reads triggers and sends messages.
+
+### Trigger Types
+
+| Trigger | Condition |
+|---------|-----------|
+| `new_event` | Show exists in new data but not in previous cache |
+| `onsale_7_days` | Show's `onsale_datetime` is within 7 days from now |
+| `onsale_48_hours` | Show's `onsale_datetime` is within 48 hours from now |
+
+### Storage
+
+Triggers are written to `notification_state.json`:
+```json
+{
+  "generated_at": "2026-02-25T10:00:00Z",
+  "triggers": [
+    {
+      "type": "new_event",
+      "artist": "Tyler Childers",
+      "date": "Aug 15, 2026",
+      "venue": "Kinnick Stadium",
+      "city": "Iowa City, IA"
+    },
+    {
+      "type": "onsale_48_hours",
+      "artist": "Zach Bryan",
+      "date": "Jun 20, 2026",
+      "venue": "Wells Fargo Arena",
+      "city": "Des Moines, IA",
+      "onsale_datetime": "2026-02-27T10:00:00Z"
+    }
+  ]
+}
+```
+
+### Delivery (Cowork)
+
+1. Read `GET /api/notifications` from local backend
+2. Format email digest (Gmail Chrome skill)
+3. Send SMS via Twilio API (credentials in `wingman_config.json`)
+4. Call `POST /api/notifications/clear` to mark as sent
+
+### Email Format
+```
+Subject: Wingman Alert — YYYY-MM-DD
+
+NEW EVENTS:
+- Tyler Childers @ Kinnick Stadium, Iowa City, IA — Aug 15, 2026
+
+ON SALE SOON:
+- Zach Bryan @ Wells Fargo Arena, Des Moines, IA — Jun 20, 2026
+  On sale: Feb 27, 10:00 AM
+
+View full report: [GitHub Pages URL]
+```
 
 ---
 
 ## Workflow: Spotify Sync
 
-**Trigger:** Manual only — user clicks "Sync Spotify" button in local UI, then starts Cowork session.
+**Trigger:** Manual only — user starts Cowork session and requests Spotify sync.
 
 **Sequence:**
 1. Read `wingman_config.json` for current artist list
@@ -118,67 +192,80 @@ This document defines the contract between **Claude Code** (codebase maintainer)
 
 ---
 
-## Workflow: Email Digest
+## Ticketmaster Integration
 
-**Method:** Claude Cowork sends via Gmail Chrome skill (no code infrastructure).
+Wingman uses the [Ticketmaster Discovery API v2](https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/) as its sole data source for concert/event information.
 
-**When:** End of every weekly scrape session, regardless of whether changes were found.
+### Unified Endpoint
 
-**Format:**
-```
-Subject: Wingman Weekly — YYYY-MM-DD
+**`GET /api/shows`** — single endpoint returning ALL event data from TM cache.
 
-X new shows found, Y shows removed, Z newly sold out.
-(or: No changes this week.)
+Returns:
+- `artist_shows` — all upcoming shows per tracked artist (on-sale + coming-soon)
+- `venue_shows` — all upcoming events at tracked venues
+- `festival_shows` — all upcoming festival events
+- `coming_soon` — filtered view: only not-yet-on-sale shows (across artists, venues, festivals)
+- `artists_not_found` / `venues_not_found` / `festivals_not_found` — entities with 0 TM results
+- `last_refreshed` — ISO 8601 timestamp of last TM fetch
+- `stale` — true if cache is expired or missing (prompt user to refresh)
 
-View full report: [GitHub Pages URL]
-```
+**This endpoint NEVER calls the TM API.** It only reads from `ticketmaster_cache.json`.
+
+### Refresh Endpoint
+
+**`POST /api/refresh`** — triggers a full TM API fetch cycle.
+
+- Fetches all artists, venues, festivals from TM
+- Writes results to `ticketmaster_cache.json`
+- Detects notification triggers (new events, on-sale-soon)
+- Starts background geocoding for uncached venues
+- Returns `202 Accepted` with a job ID for status polling
+
+**`GET /api/refresh/status`** — returns progress (`{running, artists_processed, venues_processed, total, ...}`).
+
+### How TM Data is Processed
+
+For each tracked (non-paused) entity:
+1. Search TM by keyword with `classificationName=music`
+2. Filter to North America only (`countryCode` in `US`, `CA`, `MX`)
+3. Match events via attraction names (fuzzy substring match to avoid tribute bands)
+4. Classify: `not_yet_on_sale = true` if `sales.public.startDateTime` is in the future or `startTBD` is true
+5. Extract presale windows for coming-soon shows
+6. Geocode venue locations (cache in `geocode_cache.json`)
+
+### Artists/Venues Not Found
+
+If an entity returns zero matching North America events on TM, it appears in the `*_not_found` list. Common reasons:
+- Tours under a different name than stored in Wingman
+- Doesn't list shows on Ticketmaster
+- No upcoming North America dates
+
+**Note:** A network/API error does NOT add an entity to `*_not_found` — only a genuine zero-results response does.
+
+### Cache Behavior
+
+- Cache file: `ticketmaster_cache.json` (gitignored, local only)
+- Cache is refreshed ONLY when `POST /api/refresh` is called
+- Cache is cleared when the API key changes in Settings
+- `GET /api/shows` always returns whatever is in the cache (even if stale)
+
+### API Call Budget
+
+| Trigger | Calls per run | Frequency | Daily total |
+|---------|--------------|-----------|-------------|
+| Local "Refresh" button | ~90 (30 artists x2 + 10 venues x2 + 5 festivals x1) | 2-3x daily | ~270 |
+| GitHub Action daily run | ~90 | 1x daily | ~90 |
+| **Total** | | | **~360 / 5000** |
 
 ---
 
-## Ticketmaster Integration
+## Shared TM Logic Module
 
-Wingman uses the [Ticketmaster Discovery API v2](https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/) to surface **announced-but-not-yet-on-sale** shows for tracked artists.
+TM API fetch logic is extracted into `backend/ticketmaster.py`, shared by:
+- Local backend (`POST /api/refresh`)
+- GitHub Action script (`scripts/fetch_tm_data.py`)
 
-### How it works
-
-- **API key:** Stored in `wingman_config.json` under `ticketmaster_api_key`. The user enters it via Settings > Ticketmaster in the local UI.
-- **Backend endpoint:** `GET /api/coming-soon` — the FastAPI backend queries TM, filters results, and caches the response in `ticketmaster_cache.json` (6-hour TTL). Pass `?force=true` to bypass the cache.
-- **Cowork role (data collection):** Cowork calls the TM Discovery API **directly** (using the key from `wingman_config.json`) as the primary data source for artists, venues, and festivals during the weekly scrape. Web scraping is the fallback when TM returns no results.
-- **Cowork role (coming soon):** Cowork still calls `GET http://localhost:8000/api/coming-soon` (the local backend) to fetch announced-but-not-yet-on-sale data, and copies the result into `docs/summary.json` for GitHub Pages.
-
-### What the API returns
-
-For each tracked (non-paused) artist, the backend:
-1. Searches TM by `keyword=<artist_name>` with `classificationName=music`
-2. Filters to North America only (`countryCode` in `US`, `CA`, `MX`)
-3. Matches events against the artist name via attraction names (fuzzy substring match to avoid tribute bands)
-4. Keeps only shows where `sales.public.startDateTime` is **in the future** (i.e., not yet on sale) OR `sales.public.startTBD` is true
-5. Extracts presale windows (`sales.presales[]`)
-
-### Artists not found
-
-If an artist returns zero matching North America events on TM (after name filtering), they are included in the `artists_not_found` list in the API response. This is displayed as a collapsible section in the Coming Soon tab of the local UI. Common reasons an artist is not found:
-- They tour under a different name than what is stored in Wingman
-- They don't list shows on Ticketmaster
-- They have no upcoming North America dates at all
-
-**Note:** A network/API error during a fetch does NOT add an artist to `artists_not_found` — only a genuine zero-results response does.
-
-### Cache behavior
-
-- Cache file: `ticketmaster_cache.json` (gitignored, local only)
-- TTL: 6 hours. The backend serves cached data within that window.
-- Cache is cleared automatically when the API key changes in Settings.
-- Cowork should call the endpoint at the start of each weekly scrape (before writing `summary.json`) to get fresh data. If the cache is still valid, the backend returns it immediately; if not, it fetches fresh from TM.
-
-### `docs/summary.json` — Coming Soon fields
-
-The `Summary` schema includes two TM-specific fields:
-- `coming_soon` — array of `ComingSoonShow` objects (see `schemas/summary.schema.json`)
-- `coming_soon_fetched` — ISO 8601 datetime string of when data was last fetched from TM
-
-These are written by Cowork during the weekly scrape (step 8 above) and consumed by the GitHub Pages frontend to display the Coming Soon tab in demo mode.
+This ensures identical data processing regardless of where the fetch runs.
 
 ---
 
@@ -186,17 +273,18 @@ These are written by Cowork during the weekly scrape (step 8 above) and consumed
 
 | File | Written By | Read By | Pushed to GitHub? |
 |------|-----------|---------|-------------------|
-| `wingman_config.json` | Local UI (backend API) | Cowork, backend | No |
-| `concert_state.json` | Cowork | Code, frontend, Cowork | **Yes** |
-| `geocode_cache.json` | Cowork (geocoding step) | Cowork, backend API | No |
-| `ticketmaster_cache.json` | Backend (`/api/coming-soon`) | Backend | **Never** (.gitignored) |
+| `wingman_config.json` | Local UI (backend API) | Backend, Cowork, GH Action | No |
+| `ticketmaster_cache.json` | Backend (`POST /api/refresh`) | Backend (`GET /api/shows`) | **Never** (.gitignored) |
+| `geocode_cache.json` | Backend (geocoding after refresh) | Backend | No |
+| `notification_state.json` | Backend (during refresh) | Cowork (notification delivery) | No |
 | `dismissed_suggestions.json` | Cowork (Spotify sync) | Cowork, backend | No |
 | `flagged_items.json` | Cowork (Spotify sync) | Backend (local UI) | No |
 | `spotify_tokens.json` | Backend (OAuth flow) | Cowork | **Never** (.gitignored) |
-| `docs/summary.json` | Cowork | GitHub Pages frontend | **Yes** |
-| `docs/history/YYYY-MM-DD.json` | Cowork | GitHub Pages frontend | **Yes** |
-| `schemas/*.schema.json` | Claude Code | Cowork (validation) | Yes |
+| `docs/summary.json` | GitHub Action | GitHub Pages frontend | **Yes** |
+| `docs/history/YYYY-MM-DD.json` | GitHub Action | GitHub Pages frontend | **Yes** |
+| `schemas/*.schema.json` | Claude Code | Backend (validation) | Yes |
 | `backend/models.py` | Claude Code | Backend (validation) | Yes |
+| `backend/ticketmaster.py` | Claude Code | Backend, GH Action script | Yes |
 
 ---
 
@@ -204,97 +292,40 @@ These are written by Cowork during the weekly scrape (step 8 above) and consumed
 
 All shared data files MUST conform to the JSON schemas in `schemas/`.
 
-### concert_state.json
-
-Top-level structure:
-- `last_run` (string, date format YYYY-MM-DD)
-- `center` (string, e.g. "Des Moines, IA") — map home city
-- `radius_miles` (number | null) — deprecated, kept for backward compat
-- `artist_shows` (object: artist name -> array of Show objects)
-- `venue_shows` (object: venue name -> array of VenueShow objects)
-- `festival_shows` (object: festival name -> array of FestivalLineupEntry objects)
-
-**Show object:**
-- `date` (string) — display format, e.g. "Mar 15, 2026"
-- `venue` (string) — venue name
-- `city` (string) — "City, ST" format (or "City, Province, CA" for Canada)
-- `status` (enum: "on_sale" | "sold_out")
-- `lat` (number | null) — venue latitude (from geocode_cache.json)
-- `lon` (number | null) — venue longitude (from geocode_cache.json)
-
-**Note:** `distance_miles` has been removed. Do NOT write this field.
-
-**VenueShow object:**
-- `date` (string) — display format
-- `artist` (string) — artist/event name
-- `tracked` (boolean) — true if artist is in the tracked artists list
-
-**FestivalLineupEntry object:**
-- `artist` (string) — artist or act name as it appears on the lineup page
-- `tracked` (boolean) — true if artist name matches an entry in `wingman_config.json` artists (case-insensitive)
-
-### Venue Scraping Behavior
-
-| Venue | Load Pattern | Notes |
-|-------|-------------|-------|
-| Hoyt Sherman Place | Standard page load | |
-| First Fleet Concerts | Standard page load | Covers Wooly's + Val Air |
-| Iowa Events Center | Standard page load | |
-| Starlight Theatre | Standard page load | |
-| The Waiting Room | Standard page load | |
-| Ryman Auditorium | Standard page load | |
-| **ACL Live** | **Lazy-load / "Load More" button** | Use JS interval pattern; ~8–10 clicks to reach full calendar |
-| The Salt Shed | Standard page load | |
-
-### Festival Scraping Behavior
-
-| Festival | Load Pattern | Notes |
-|----------|-------------|-------|
-| Minnesota Yacht Club Festival | Standard page load | Extract all artists from lineup page |
-| Hinterland Music Festival | Standard page load | Extract all artists from lineup page |
-
 ### wingman_config.json
 
-See `schemas/wingman_config.schema.json` for full definition.
+See `schemas/wingman_config.schema.json` for full definition. Key fields:
+- `center_city` — map home / default starting position
+- `artists` — map of artist name to `{url, genre, paused}`
+- `venues` — map of venue name to `{url, city, is_local, paused}`
+- `festivals` — map of festival name to `{url, paused}`
+- `ticketmaster_api_key` — TM Discovery API key
+- `twilio_account_sid` — Twilio account SID (for SMS notifications)
+- `twilio_auth_token` — Twilio auth token
+- `twilio_from_number` — Twilio sender phone number
+- `twilio_to_number` — Recipient phone number
+- `notification_email` — Email address for digest notifications
 
 ### docs/summary.json
 
 See `schemas/summary.schema.json` for full definition. Includes:
-- Metadata (run date, center/home city)
+- Metadata (run date, center/home city, center coordinates)
 - All North America shows with lat/lon coordinates
 - Diff from previous run (added, removed, sold_out)
-- Map data (center coordinates, show pin coordinates)
+- `coming_soon` array (not-yet-on-sale shows with presale windows)
+- `coming_soon_fetched` — ISO 8601 datetime of last TM fetch
 
 ### geocode_cache.json
 
 Simple key-value: location string -> `{"lat": number, "lon": number}`
 
+### notification_state.json
+
+See Notifications section above for schema.
+
 ### dismissed_suggestions.json
 
 Artist name -> `{"dismissed_at": "YYYY-MM-DD", "resurface_after": "YYYY-MM-DD", "reason": string, "source": string}`
-
----
-
-## Validation
-
-Before committing data, Cowork MUST run:
-```bash
-python scripts/validate_state.py
-```
-
-This validates `concert_state.json` against the Pydantic models in `backend/models.py`.
-If validation fails, fix the data before committing.
-
----
-
-## GitHub Pages
-
-The public site is deployed from `frontend/dist` built in demo mode.
-
-- **Local UI** includes a link to the GitHub Pages URL (opens in new tab)
-- The GitHub Pages site does NOT link back to the local UI
-- GitHub Pages shows: summary table, Leaflet map with show + venue pins, "new this week" highlights
-- Historical snapshots are accessible via `docs/history/`
 
 ---
 
@@ -304,17 +335,32 @@ The public site is deployed from `frontend/dist` built in demo mode.
 - **Rate limit:** 1 request per second (enforced by caller)
 - **Cache:** `geocode_cache.json` — geocode once, reuse forever unless venue changes
 - **Scope:** All North America shows (no distance filtering)
+- **Progressive loading:** After a refresh, shows appear immediately in cards; map pins appear as venues are geocoded in the background
 - **Center city** is geocoded once and cached (used as map home position)
-- **Build-up approach:** First run geocodes all venues; subsequent runs only geocode new ones
+
+---
+
+## GitHub Pages
+
+The public site is deployed from `frontend/dist` built in demo mode by the GitHub Action.
+
+- Full-featured viewer: Artists tab, Venues tab, Festivals tab, Map, Coming Soon tab
+- **NOT a "demo"** — this is the primary public site, updated daily with fresh TM data
+- Artist names link to tour pages, venue names link to calendars
+- Interactive Leaflet map with show + venue pins
+- "Show/hide artists not on tour" toggle
+- Historical snapshots accessible via `docs/history/`
+- Local UI includes a link to the GitHub Pages URL (opens in new tab)
+- The GitHub Pages site does NOT link back to the local UI
 
 ---
 
 ## Git Conventions
 
-- **Branch:** Cowork pushes data to `main`
-- **Commit messages:** `Weekly update: YYYY-MM-DD - X new, Y removed`
-- **Files committed by Cowork:** `concert_state.json`, `docs/summary.json`, `docs/history/*.json`
-- **Files NEVER committed:** `spotify_tokens.json`, `geocode_cache.json`, `dismissed_suggestions.json`, `flagged_items.json`
+- **Branch:** GitHub Action pushes data to `main`; Claude Code pushes code to feature branches
+- **Data commit messages (GH Action):** `Data update: YYYY-MM-DD - X artists, Y shows`
+- **Files committed by GH Action:** `docs/summary.json`, `docs/history/*.json`
+- **Files NEVER committed:** `spotify_tokens.json`, `geocode_cache.json`, `ticketmaster_cache.json`, `notification_state.json`, `dismissed_suggestions.json`, `flagged_items.json`, `wingman_config.json`
 
 ## Frontend Build Requirement
 
@@ -330,6 +376,24 @@ This applies whether creating a new PR or pushing additional commits to an exist
 
 ---
 
+## Testing
+
+### Backend (Python — pytest)
+
+Test directory: `tests/`
+Dependencies: `pytest`, `pytest-asyncio`, `httpx` (for FastAPI TestClient)
+
+Run: `cd /home/user/Wingman && python -m pytest tests/ -v`
+
+### Frontend (JavaScript — Vitest)
+
+Test directory: `frontend/src/__tests__/`
+Dependencies: `vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `jsdom`
+
+Run: `cd /home/user/Wingman/frontend && npx vitest run`
+
+---
+
 ## Development Status
 
 ### Completed
@@ -337,23 +401,76 @@ This applies whether creating a new PR or pushing additional commits to an exist
 - Artist management (add, edit, pause, delete) with genre badges
 - Venue management (local vs. travel, add, edit, pause, delete)
 - Festival management (add, pause, delete) — Configure > Festivals sub-tab
-- Settings panel (map home city, GitHub Pages URL)
-- Schedule panel (next run display, cron config)
+- Settings panel (map home city, GitHub Pages URL, Ticketmaster API key)
 - Flagged Items panel (Spotify sync flags surfaced in UI)
 - Artists tab: artist cards (names link to tour pages) + interactive Leaflet map with viewport filtering
-- Venues tab: venue cards (names link to calendars), split local/travel/festivals; no map
-- Festivals section in Venues tab: cards linking to lineup pages; expandable with tracked artists when `festival_shows` data available
-- Map tooltips show all shows (no "+N more" truncation)
-- Leaflet map with artist show pins (green=new, red=sold out, blue=on sale, orange=coming soon) + venue pins (violet)
+- Venues tab: venue cards (names link to calendars), split local/travel/festivals
+- Festivals tab: cards linking to lineup pages; expandable with tracked artists
+- Leaflet map with show pins (blue=on sale, orange=coming soon) + venue pins (violet) + home pin (indigo)
 - Interactive map filtering: click artist card to filter map pins; map viewport filters visible cards
 - Hover tooltips on map pins showing all artist/date/venue details
 - Configure tab: combined management with sub-tabs for Artists, Venues, Festivals
 - Backend geocoding via Nominatim with `geocode_cache.json` cache
 - `/api/config` returns `center_lat`/`center_lon` for map + venue lat/lon for venue pins
-- All North America shows scraped (no distance/radius filtering)
-- GitHub Pages demo build (VITE_DEMO_MODE=true) + GitHub Actions deploy workflow
-- JSON schemas + Pydantic validation (`scripts/validate_state.py`)
-- **Ticketmaster integration:** Coming Soon tab (announced but not-yet-on-sale shows + presale windows); TM data merged natively into Artist cards; orange map pins for coming-soon shows; "Not found on Ticketmaster" collapsible list; API key stored in `wingman_config.json`; 6-hour cache in `ticketmaster_cache.json`; `docs/summary.json` includes `coming_soon` array for GitHub Pages
+- GitHub Pages build (VITE_DEMO_MODE=true) + GitHub Actions deploy workflow
+- JSON schemas + Pydantic validation
+- TM integration: artist/venue/festival shows + coming soon with presale windows; merged into cards; orange map pins; "Not found on TM" lists; 6-hour cache
+
+### In Progress: API Refactor (Sites + Data Architecture)
+Refactoring the data architecture to eliminate `concert_state.json` and web scraping. See Implementation Plan below.
+
+### Future
+- **Bandsintown API** — supplemental data source for artists/venues not on Ticketmaster
+- **Spotify OAuth** — Connect flow in local UI for Cowork Spotify sync
+- **Filter/sort options** — Advanced filtering and sorting on the GitHub Pages site
+
+---
+
+## Implementation Plan
+
+### Step 0: Test Infrastructure Setup
+Set up pytest (backend) and Vitest (frontend) test frameworks. No existing tests exist.
+
+### Step 1: Backend — Decouple Data Refresh from Page Load
+- Create unified `GET /api/shows` (cache-only, never calls TM API)
+- Create `POST /api/refresh` (explicit TM fetch trigger)
+- Create `GET /api/refresh/status` (progress polling)
+- Extract TM logic into `backend/ticketmaster.py` (shared module)
+- Merge `/api/coming-soon` and `/api/tm-shows` into single cache
+- Remove `/api/state` endpoint and `concert_state.json` dependency
+
+### Step 2: Frontend — Use TM Cache as Sole Data Source
+- Remove all `/api/state` fetches from components
+- All components read from `GET /api/shows`
+- Add "Refresh Data" button to header (local mode only)
+- Add "Last refreshed: X ago" indicator
+- Add "Show/hide artists not on tour" toggle
+
+### Step 3: Progressive Geocoding
+- Background geocoding after `POST /api/refresh` completes
+- `GET /api/geocode/progress` for frontend polling
+- Map pins appear progressively as venues are geocoded
+
+### Step 4: GitHub Action — Daily TM Data Fetch + Deploy
+- New workflow: `.github/workflows/update-data.yml`
+- Script: `scripts/fetch_tm_data.py` (uses `backend/ticketmaster.py`)
+- Generates `docs/summary.json` + `docs/history/YYYY-MM-DD.json`
+- Commits data, builds frontend, deploys to Pages
+
+### Step 5: Notification System
+- Backend detects triggers during refresh (new events, on-sale-soon)
+- Writes to `notification_state.json`
+- `GET /api/notifications` + `POST /api/notifications/clear` endpoints
+- Twilio config in `wingman_config.json` + Settings UI
+- Cowork reads triggers, sends email + SMS
+
+### Step 6: Cowork Workflow Rewrite
+- Remove scraping workflows
+- Cowork = Spotify sync (manual) + notification delivery (email + SMS)
+
+### Step 7: Bandsintown Integration (FUTURE)
+- Secondary/supplemental data source for artists/venues not on TM
+- Deferred until TM-only gaps are assessed in practice
 
 ### Known Local Setup Gotcha
 `geocode_cache.json` is gitignored and won't exist on a fresh clone. On first run,
@@ -362,13 +479,4 @@ firewall, etc.), the map won't render. Fix: create the file manually:
 ```bash
 echo '{"Des Moines, IA": {"lat": 41.5868, "lon": -93.625}}' > ~/Wingman/geocode_cache.json
 ```
-After a Cowork scrape, this file will be populated automatically going forward.
-
-### Next: Spotify OAuth (Task #3)
-Build the Spotify Connect flow in the local UI:
-- Spotify Developer App credentials stored in `wingman_config.json` (client_id, client_secret, redirect_uri)
-- Backend OAuth endpoints: `GET /api/spotify/auth` (redirect to Spotify) + `GET /api/spotify/callback` (exchange code for tokens, save to `spotify_tokens.json`)
-- Frontend: "Connect Spotify" button in Settings tab → shows connection status (connected/disconnected) + disconnect option
-- `spotify_tokens.json` is NEVER committed (already in .gitignore)
-- Required scopes: `user-follow-read user-follow-modify user-top-read user-read-recently-played`
-- Prerequisite: user must create a Spotify Developer App at developer.spotify.com and have client_id + client_secret ready
+After clicking "Refresh Data", this file will be populated automatically going forward.
