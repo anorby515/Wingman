@@ -69,6 +69,12 @@ class VenueConfig(BaseModel):
     paused: bool = Field(default=False, description="If true, not scraped")
 
 
+class FestivalConfig(BaseModel):
+    """Configuration for a single tracked festival."""
+    url: str = Field(description="URL to festival lineup/info page")
+    paused: bool = Field(default=False, description="If true, not scraped")
+
+
 class WingmanConfig(BaseModel):
     """Top-level configuration. Written by local UI, read by Cowork."""
     center_city: str = Field(description="Map home / default starting position")
@@ -86,6 +92,7 @@ class WingmanConfig(BaseModel):
     )
     artists: dict[str, ArtistConfig] = Field(default_factory=dict)
     venues: dict[str, VenueConfig] = Field(default_factory=dict)
+    festivals: dict[str, FestivalConfig] = Field(default_factory=dict)
 
 
 # ── Summary (docs/summary.json) ──────────────────────────────────────────────

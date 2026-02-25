@@ -300,5 +300,15 @@
       "paused": false
     }
   },
+  "festivals": {
+    "Minnesota Yacht Club Festival": {
+      "url": "https://www.minnesotayachtclubfestival.com/lineup",
+      "paused": false
+    },
+    "Hinterland Music Festival": {
+      "url": "https://www.hinterlandiowa.com/lineup",
+      "paused": false
+    }
+  },
   "github_pages_url": "https://anorby515.github.io/Wingman/"
 }
