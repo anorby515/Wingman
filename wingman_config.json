@@ -230,6 +230,26 @@
       "url": "https://interscope.com/products/tame-impala-the-complete-vinyl-collection",
       "genre": "Electronic / Art-Rock",
       "paused": false
+    },
+    "Riley Green": {
+      "url": "https://www.rileygreenmusic.com/tour/#/",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Stephen Wilson Jr.": {
+      "url": "https://stephenwilsonjr.com/",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Turnpike Troubadours": {
+      "url": "https://turnpiketroubadours.com/",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Cameron Whitcomb": {
+      "url": "https://www.thecamwhitcomb.com/",
+      "genre": "Country / Americana",
+      "paused": false
     }
   },
   "venues": {
@@ -307,6 +327,10 @@
     },
     "Hinterland Music Festival": {
       "url": "https://www.hinterlandiowa.com/lineup",
+      "paused": false
+    },
+    "Two Step Inn": {
+      "url": "https://www.twostepinn.com/lineup",
       "paused": false
     }
   },
