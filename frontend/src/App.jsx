@@ -83,12 +83,38 @@ export default function App() {
       const showsData = await fetch('/api/shows').then(r => r.json())
       setLastRefreshed(showsData.last_refreshed)
       setRefreshVersion(v => v + 1)
+
+      // Poll for background geocoding progress (map pins appear progressively)
+      pollGeocodeProgress()
     } catch (e) {
       setRefreshError(e.message)
     } finally {
       setRefreshing(false)
     }
   }, [refreshing])
+
+  const pollGeocodeProgress = useCallback(() => {
+    let lastCached = 0
+    const poll = async () => {
+      try {
+        const gp = await fetch('/api/geocode/progress').then(r => r.json())
+        // If new locations were geocoded, bump version so map re-renders
+        if (gp.total_cached > lastCached && lastCached > 0) {
+          setRefreshVersion(v => v + 1)
+        }
+        lastCached = gp.total_cached
+        if (gp.running) {
+          setTimeout(poll, 2000)
+        } else if (gp.total_cached > 0) {
+          // Final bump to pick up any remaining geocodes
+          setRefreshVersion(v => v + 1)
+        }
+      } catch {
+        // Stop polling on error
+      }
+    }
+    poll()
+  }, [])
 
   return (
     <div className="min-h-screen flex flex-col bg-black">
