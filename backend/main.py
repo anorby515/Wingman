@@ -543,6 +543,231 @@ def _format_show_date(local_date: str) -> str:
         return local_date
 
 
+def _fetch_tm_venue_events(api_key: str, venues: dict) -> tuple[list[dict], list[str]]:
+    """Call Ticketmaster for music events not yet on sale at each tracked venue.
+    Returns (venue_events, venues_not_found)."""
+    now_utc = datetime.now(timezone.utc)
+    results: list[dict] = []
+    not_found: list[str] = []
+
+    for venue_name, venue_info in venues.items():
+        if venue_info.get("paused", False):
+            continue
+
+        params = urllib.parse.urlencode({
+            "apikey": api_key,
+            "keyword": venue_name,
+            "classificationName": "music",
+            "size": "50",
+            "sort": "date,asc",
+        })
+        url = f"https://app.ticketmaster.com/discovery/v2/events.json?{params}"
+        req = urllib.request.Request(url, headers={"User-Agent": "Wingman/1.0"})
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read())
+        except Exception:
+            continue
+
+        events = data.get("_embedded", {}).get("events", [])
+        matched_any = False
+
+        for event in events:
+            # TM venue name must match our tracked venue
+            tm_venues = event.get("_embedded", {}).get("venues", [])
+            if not tm_venues:
+                continue
+            tm_venue = tm_venues[0]
+            tm_venue_name = tm_venue.get("name", "")
+            if not _name_matches(venue_name, [tm_venue_name]):
+                continue
+
+            # Only North America
+            country = tm_venue.get("country", {}).get("countryCode", "")
+            if country not in ("US", "CA", "MX"):
+                continue
+
+            matched_any = True
+
+            # Only not-yet-on-sale shows
+            sales = event.get("sales", {})
+            public_sale = sales.get("public", {})
+            onsale_str = public_sale.get("startDateTime")
+            onsale_tbd = public_sale.get("startTBD", False)
+            if onsale_str:
+                try:
+                    onsale_dt = datetime.fromisoformat(onsale_str.replace("Z", "+00:00"))
+                    if onsale_dt <= now_utc:
+                        continue
+                except Exception:
+                    continue
+            elif not onsale_tbd:
+                continue
+
+            # Extract artist/performer name from attractions
+            attractions = event.get("_embedded", {}).get("attractions", [])
+            artist = attractions[0].get("name", "") if attractions else event.get("name", "")
+
+            # Extract presales
+            presales = []
+            for p in sales.get("presales", []):
+                presales.append({
+                    "name": p.get("name", "Presale"),
+                    "start_datetime": p.get("startDateTime"),
+                    "end_datetime": p.get("endDateTime"),
+                })
+
+            # Format city
+            city_name = tm_venue.get("city", {}).get("name", "")
+            state_code = tm_venue.get("state", {}).get("stateCode", "")
+            if country == "US":
+                city = f"{city_name}, {state_code}" if state_code else city_name
+            elif country == "CA":
+                city = f"{city_name}, {state_code}, CA" if state_code else f"{city_name}, CA"
+            else:
+                city = f"{city_name}, MX"
+
+            # Geocode
+            lat, lon = None, None
+            coords = _geocode(f"{tm_venue_name}, {city}")
+            if not coords:
+                coords = _geocode(city)
+            if coords:
+                lat, lon = coords
+
+            results.append({
+                "tracked_venue": venue_name,
+                "artist": artist,
+                "date": _format_show_date(
+                    event.get("dates", {}).get("start", {}).get("localDate", "")
+                ),
+                "venue": tm_venue_name,
+                "city": city,
+                "onsale_datetime": onsale_str,
+                "onsale_tbd": onsale_tbd,
+                "presales": presales,
+                "ticketmaster_url": event.get("url", ""),
+                "lat": lat,
+                "lon": lon,
+            })
+
+        if not matched_any:
+            not_found.append(venue_name)
+
+    return results, not_found
+
+
+def _fetch_tm_festival_events(api_key: str, festivals: dict) -> tuple[list[dict], list[str]]:
+    """Call Ticketmaster for festival events not yet on sale.
+    Returns (festival_events, festivals_not_found)."""
+    now_utc = datetime.now(timezone.utc)
+    results: list[dict] = []
+    not_found: list[str] = []
+
+    for festival_name, festival_info in festivals.items():
+        if festival_info.get("paused", False):
+            continue
+
+        params = urllib.parse.urlencode({
+            "apikey": api_key,
+            "keyword": festival_name,
+            "classificationName": "music",
+            "size": "50",
+            "sort": "date,asc",
+        })
+        url = f"https://app.ticketmaster.com/discovery/v2/events.json?{params}"
+        req = urllib.request.Request(url, headers={"User-Agent": "Wingman/1.0"})
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read())
+        except Exception:
+            continue
+
+        events = data.get("_embedded", {}).get("events", [])
+        matched_any = False
+
+        for event in events:
+            # Festival name must appear in the TM event name
+            event_name = event.get("name", "")
+            if not _name_matches(festival_name, [event_name]):
+                continue
+
+            # Only North America
+            tm_venues = event.get("_embedded", {}).get("venues", [])
+            if not tm_venues:
+                continue
+            tm_venue = tm_venues[0]
+            country = tm_venue.get("country", {}).get("countryCode", "")
+            if country not in ("US", "CA", "MX"):
+                continue
+
+            matched_any = True
+
+            # Only not-yet-on-sale shows
+            sales = event.get("sales", {})
+            public_sale = sales.get("public", {})
+            onsale_str = public_sale.get("startDateTime")
+            onsale_tbd = public_sale.get("startTBD", False)
+            if onsale_str:
+                try:
+                    onsale_dt = datetime.fromisoformat(onsale_str.replace("Z", "+00:00"))
+                    if onsale_dt <= now_utc:
+                        continue
+                except Exception:
+                    continue
+            elif not onsale_tbd:
+                continue
+
+            # Extract presales
+            presales = []
+            for p in sales.get("presales", []):
+                presales.append({
+                    "name": p.get("name", "Presale"),
+                    "start_datetime": p.get("startDateTime"),
+                    "end_datetime": p.get("endDateTime"),
+                })
+
+            # Format city
+            venue_name_tm = tm_venue.get("name", "")
+            city_name = tm_venue.get("city", {}).get("name", "")
+            state_code = tm_venue.get("state", {}).get("stateCode", "")
+            if country == "US":
+                city = f"{city_name}, {state_code}" if state_code else city_name
+            elif country == "CA":
+                city = f"{city_name}, {state_code}, CA" if state_code else f"{city_name}, CA"
+            else:
+                city = f"{city_name}, MX"
+
+            # Geocode
+            lat, lon = None, None
+            coords = _geocode(f"{venue_name_tm}, {city}")
+            if not coords:
+                coords = _geocode(city)
+            if coords:
+                lat, lon = coords
+
+            results.append({
+                "tracked_festival": festival_name,
+                "event_name": event_name,
+                "date": _format_show_date(
+                    event.get("dates", {}).get("start", {}).get("localDate", "")
+                ),
+                "venue": venue_name_tm,
+                "city": city,
+                "onsale_datetime": onsale_str,
+                "onsale_tbd": onsale_tbd,
+                "presales": presales,
+                "ticketmaster_url": event.get("url", ""),
+                "lat": lat,
+                "lon": lon,
+            })
+
+        if not matched_any:
+            not_found.append(festival_name)
+
+    return results, not_found
+
+
 def _fetch_tm_coming_soon(api_key: str, artists: dict) -> tuple[list[dict], list[str]]:
     """Call Ticketmaster Discovery API for each tracked artist.
     Returns (shows, artists_not_found) where shows have a future public on-sale date
@@ -682,6 +907,10 @@ def get_coming_soon(force: bool = False) -> Any:
                     "api_configured": True,
                     "shows": cache.get("shows", []),
                     "artists_not_found": cache.get("artists_not_found", []),
+                    "venue_events": cache.get("venue_events", []),
+                    "venues_not_found": cache.get("venues_not_found", []),
+                    "festival_events": cache.get("festival_events", []),
+                    "festivals_not_found": cache.get("festivals_not_found", []),
                     "last_fetched": cache["last_fetched"],
                 }
         except Exception:
@@ -689,11 +918,21 @@ def get_coming_soon(force: bool = False) -> Any:
 
     # Fetch fresh from TM API
     shows, artists_not_found = _fetch_tm_coming_soon(api_key, cfg.get("artists", {}))
+    venue_events, venues_not_found = _fetch_tm_venue_events(api_key, cfg.get("venues", {}))
+    festival_events, festivals_not_found = _fetch_tm_festival_events(api_key, cfg.get("festivals", {}))
     last_fetched = now_utc.isoformat()
 
     try:
         TM_CACHE_FILE.write_text(json.dumps(
-            {"last_fetched": last_fetched, "shows": shows, "artists_not_found": artists_not_found},
+            {
+                "last_fetched": last_fetched,
+                "shows": shows,
+                "artists_not_found": artists_not_found,
+                "venue_events": venue_events,
+                "venues_not_found": venues_not_found,
+                "festival_events": festival_events,
+                "festivals_not_found": festivals_not_found,
+            },
             indent=2,
         ))
     except Exception:
@@ -703,6 +942,10 @@ def get_coming_soon(force: bool = False) -> Any:
         "api_configured": True,
         "shows": shows,
         "artists_not_found": artists_not_found,
+        "venue_events": venue_events,
+        "venues_not_found": venues_not_found,
+        "festival_events": festival_events,
+        "festivals_not_found": festivals_not_found,
         "last_fetched": last_fetched,
     }
 
