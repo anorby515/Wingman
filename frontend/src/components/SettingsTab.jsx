@@ -368,6 +368,86 @@ function GitHubPagesSettings({ config, onSave }) {
   )
 }
 
+// ── Ticketmaster Integration ──────────────────────────────────────────────────
+function TicketmasterSettings({ config, onSave }) {
+  const [apiKey,  setApiKey]  = useState(config.ticketmaster_api_key || '')
+  const [saving,  setSaving]  = useState(false)
+  const [saved,   setSaved]   = useState(false)
+  const [error,   setError]   = useState(null)
+
+  const isConfigured = !!config.ticketmaster_api_key
+
+  async function handleSave(e) {
+    e.preventDefault()
+    setSaving(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ticketmaster_api_key: apiKey.trim() }),
+      })
+      if (!res.ok) throw new Error((await res.json()).detail)
+      onSave({ ticketmaster_api_key: apiKey.trim() || null })
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2500)
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <Section title="Ticketmaster Integration">
+      <form onSubmit={handleSave} className="space-y-3">
+        {error && <p className="text-sm text-red-600">{error}</p>}
+        <p className="text-sm text-slate-600">
+          Powers the <strong>Coming Soon</strong> tab — shows announced concerts not yet on public sale,
+          plus any presale windows (fan club, credit card, etc.).
+        </p>
+        <div>
+          <label className="block text-xs font-medium text-slate-600 mb-1">
+            Discovery API Key{' '}
+            {isConfigured && (
+              <span className="text-emerald-600 font-medium">(configured)</span>
+            )}
+          </label>
+          <input
+            className="input font-mono text-sm"
+            type="password"
+            value={apiKey}
+            onChange={e => setApiKey(e.target.value)}
+            placeholder="Paste your TM Discovery API key"
+          />
+          <p className="text-xs text-slate-400 mt-1">
+            Free tier at{' '}
+            <a
+              href="https://developer.ticketmaster.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-indigo-500 hover:underline"
+            >
+              developer.ticketmaster.com
+            </a>
+            {' '}— up to 5,000 calls/day. Results cached for 6 hours.
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={saving || !apiKey.trim()}
+          >
+            {saving ? 'Saving…' : 'Save'}
+          </button>
+          {saved && <span className="text-sm text-emerald-600 font-medium">Saved!</span>}
+        </div>
+      </form>
+    </Section>
+  )
+}
+
 // ── Spotify Connect ──────────────────────────────────────────────────────────
 function SpotifySettings() {
   return (
@@ -424,6 +504,7 @@ export default function SettingsTab() {
     <div className="space-y-5">
       <MapHomeSettings config={config} onSave={updated => setConfig(c => ({ ...c, ...updated }))} />
       <GitHubPagesSettings config={config} onSave={updated => setConfig(c => ({ ...c, ...updated }))} />
+      <TicketmasterSettings config={config} onSave={updated => setConfig(c => ({ ...c, ...updated }))} />
       <SpotifySettings />
       <ScheduleSettings />
       <RunNow />
