@@ -57,18 +57,26 @@ This document defines the contract between **Claude Code** (codebase maintainer)
    - Do **NOT** calculate or write `distance_miles` — that field has been removed from the Show schema
    - Write `radius_miles: null` in `concert_state.json` (field is deprecated but kept for backward compat)
    - Write `center: "Des Moines, IA"` in `concert_state.json` (used as map home position, not a filter)
-6. Diff new results against previous `concert_state.json`
-7. Write updated `concert_state.json` (MUST validate against schema)
-8. Fetch Ticketmaster Coming Soon data for `docs/summary.json`:
+6. **Print TM API misses to the console** — after all TM lookups are complete, print a summary of every artist, venue, and festival that returned 0 TM results (i.e., fell back to web scrape). Format:
+   ```
+   === Ticketmaster API Misses ===
+   Artists:  Johnny Blue Skies
+   Venues:   First Fleet Concerts, Hinterland Music Festival
+   Festivals: Hinterland Music Festival
+   (or "None" for any category with no misses)
+   ```
+7. Diff new results against previous `concert_state.json`
+8. Write updated `concert_state.json` (MUST validate against schema)
+9. Fetch Ticketmaster Coming Soon data for `docs/summary.json`:
    - Call `GET http://localhost:8000/api/coming-soon` (the local backend handles TM API + caching)
    - If the response has `api_configured: true`, include `coming_soon` and `coming_soon_fetched` in `docs/summary.json`
    - If `api_configured: false` (no API key set), write `coming_soon: []` and `coming_soon_fetched: null`
    - Do **NOT** call the Ticketmaster API directly — always go through the backend endpoint
-9. Write `docs/summary.json` (MUST validate against schema — includes `coming_soon` array)
-10. Copy current snapshot to `docs/history/YYYY-MM-DD.json`
-11. Run `python scripts/validate_state.py` to verify data integrity
-12. Commit and push: `concert_state.json`, `docs/summary.json`, `docs/history/*.json`
-13. Send Gmail digest via Chrome skill (send even if no changes)
+10. Write `docs/summary.json` (MUST validate against schema — includes `coming_soon` array)
+11. Copy current snapshot to `docs/history/YYYY-MM-DD.json`
+12. Run `python scripts/validate_state.py` to verify data integrity
+13. Commit and push: `concert_state.json`, `docs/summary.json`, `docs/history/*.json`
+14. Send Gmail digest via Chrome skill (send even if no changes)
 
 **Commit message format:** `Weekly update: YYYY-MM-DD - X new, Y removed`
 
