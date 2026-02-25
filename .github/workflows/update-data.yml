@@ -1,0 +1,95 @@
+name: Daily TM Data Fetch + Deploy
+
+# Fetches Ticketmaster data daily, generates docs/summary.json,
+# builds the frontend, and deploys to GitHub Pages.
+
+on:
+  schedule:
+    # Run daily at 10:00 UTC (5:00 AM Central)
+    - cron: '0 10 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  fetch-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # ── Python: fetch TM data + geocode ──
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: pip install pydantic
+
+      - name: Write config from secret
+        if: env.WINGMAN_CONFIG != ''
+        env:
+          WINGMAN_CONFIG: ${{ secrets.WINGMAN_CONFIG }}
+        run: echo "$WINGMAN_CONFIG" > wingman_config.json
+
+      - name: Fetch Ticketmaster data
+        env:
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+          WINGMAN_CONFIG: ${{ secrets.WINGMAN_CONFIG }}
+        run: python scripts/fetch_tm_data.py
+
+      # ── Commit data files ──
+      - name: Read fetch stats
+        id: stats
+        run: |
+          if [ -f .fetch_stats.json ]; then
+            echo "date=$(python3 -c "import json; print(json.load(open('.fetch_stats.json'))['date'])")" >> "$GITHUB_OUTPUT"
+            echo "artists=$(python3 -c "import json; print(json.load(open('.fetch_stats.json'))['artists_count'])")" >> "$GITHUB_OUTPUT"
+            echo "shows=$(python3 -c "import json; print(json.load(open('.fetch_stats.json'))['total_shows'])")" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit data updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/summary.json "docs/history/*.json"
+          if git diff --cached --quiet; then
+            echo "No data changes to commit"
+          else
+            git commit -m "Data update: ${{ steps.stats.outputs.date }} - ${{ steps.stats.outputs.artists }} artists, ${{ steps.stats.outputs.shows }} shows"
+            git push
+          fi
+
+      # ── Node: build frontend ──
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Build frontend (demo mode)
+        run: npm run build
+        working-directory: frontend
+        env:
+          VITE_DEMO_MODE: 'true'
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist
+
+      - uses: actions/deploy-pages@v4
+        id: deployment
