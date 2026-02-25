@@ -103,6 +103,37 @@ class WingmanConfig(BaseModel):
     artists: dict[str, ArtistConfig] = Field(default_factory=dict)
     venues: dict[str, VenueConfig] = Field(default_factory=dict)
     festivals: dict[str, FestivalConfig] = Field(default_factory=dict)
+    ticketmaster_api_key: Optional[str] = Field(
+        default=None,
+        description="Ticketmaster Discovery API key for Coming Soon tab",
+    )
+
+
+# ── Coming Soon (Ticketmaster) ────────────────────────────────────────────────
+
+class ComingSoonPresale(BaseModel):
+    """A presale window for an upcoming show."""
+    name: str = Field(description="Presale name, e.g. 'Fan Club Presale'")
+    start_datetime: Optional[str] = Field(default=None, description="ISO 8601 presale start")
+    end_datetime: Optional[str] = Field(default=None, description="ISO 8601 presale end")
+
+
+class ComingSoonShow(BaseModel):
+    """A show not yet on public sale, sourced from Ticketmaster Discovery API."""
+    artist: str
+    genre: str = "Other"
+    date: str = Field(description="Display date, e.g. 'Aug 15, 2026'")
+    venue: str
+    city: str
+    onsale_datetime: Optional[str] = Field(
+        default=None,
+        description="ISO 8601 public on-sale start (null if TBD)",
+    )
+    onsale_tbd: bool = Field(default=False, description="True if on-sale date is not yet announced")
+    presales: list[ComingSoonPresale] = Field(default_factory=list)
+    ticketmaster_url: str = Field(description="Direct link to buy tickets on Ticketmaster")
+    lat: Optional[float] = None
+    lon: Optional[float] = None
 
 
 # ── Summary (docs/summary.json) ──────────────────────────────────────────────
@@ -153,6 +184,14 @@ class Summary(BaseModel):
     artist_shows: dict[str, list[SummaryShow]] = Field(default_factory=dict)
     venue_shows: dict[str, list[VenueShow]] = Field(default_factory=dict)
     changes: SummaryChanges = Field(default_factory=SummaryChanges)
+    coming_soon: list[ComingSoonShow] = Field(
+        default_factory=list,
+        description="Shows not yet on public sale, sourced from Ticketmaster",
+    )
+    coming_soon_fetched: Optional[str] = Field(
+        default=None,
+        description="ISO 8601 datetime when coming_soon was last fetched",
+    )
 
 
 # ── Geocode Cache (geocode_cache.json) ────────────────────────────────────────

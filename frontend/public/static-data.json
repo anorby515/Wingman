@@ -3602,5 +3602,64 @@
         "paused": false
       }
     }
-  }
+  },
+  "coming_soon": [
+    {
+      "artist": "Luke Combs",
+      "genre": "Country / Americana",
+      "date": "Aug 22, 2026",
+      "venue": "Kinnick Stadium",
+      "city": "Iowa City, IA",
+      "onsale_datetime": "2026-03-15T15:00:00Z",
+      "onsale_tbd": false,
+      "presales": [
+        {
+          "name": "Fan Club Presale",
+          "start_datetime": "2026-03-13T15:00:00Z",
+          "end_datetime": "2026-03-14T23:59:00Z"
+        },
+        {
+          "name": "Citi Cardmember Presale",
+          "start_datetime": "2026-03-13T15:00:00Z",
+          "end_datetime": "2026-03-14T23:59:00Z"
+        }
+      ],
+      "ticketmaster_url": "https://www.ticketmaster.com",
+      "lat": 41.6584,
+      "lon": -91.5508
+    },
+    {
+      "artist": "Zach Bryan",
+      "genre": "Country / Americana",
+      "date": "Jul 11, 2026",
+      "venue": "Busch Stadium",
+      "city": "St. Louis, MO",
+      "onsale_datetime": "2026-03-20T14:00:00Z",
+      "onsale_tbd": false,
+      "presales": [
+        {
+          "name": "Artist Presale",
+          "start_datetime": "2026-03-18T14:00:00Z",
+          "end_datetime": "2026-03-19T22:00:00Z"
+        }
+      ],
+      "ticketmaster_url": "https://www.ticketmaster.com",
+      "lat": 38.6226,
+      "lon": -90.1928
+    },
+    {
+      "artist": "The Lumineers",
+      "genre": "Indie / Alt-Rock",
+      "date": "Sep 5, 2026",
+      "venue": "Northwell Health at Jones Beach Theater",
+      "city": "Wantagh, NY",
+      "onsale_datetime": null,
+      "onsale_tbd": true,
+      "presales": [],
+      "ticketmaster_url": "https://www.ticketmaster.com",
+      "lat": 40.6076,
+      "lon": -73.5085
+    }
+  ],
+  "coming_soon_fetched": "2026-02-25T12:00:00Z"
 }
