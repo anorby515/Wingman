@@ -55,12 +55,18 @@ This document defines the contract between **Claude Code** (codebase maintainer)
    - Write `center: "Des Moines, IA"` in `concert_state.json` (used as map home position, not a filter)
 6. Diff new results against previous `concert_state.json`
 7. Write updated `concert_state.json` (MUST validate against schema)
-8. Fetch Ticketmaster Coming Soon data for `docs/summary.json`:
-   - Call `GET http://localhost:8000/api/coming-soon` (the local backend handles TM API + caching)
-   - If the response has `api_configured: true`, include `coming_soon` and `coming_soon_fetched` in `docs/summary.json`
-   - If `api_configured: false` (no API key set), write `coming_soon: []` and `coming_soon_fetched: null`
-   - Do **NOT** call the Ticketmaster API directly — always go through the backend endpoint
-9. Write `docs/summary.json` (MUST validate against schema — includes `coming_soon` array)
+8. Fetch Ticketmaster data for `docs/summary.json`:
+   - Call `GET http://localhost:8000/api/coming-soon` for pre-sale artist shows
+     - If `api_configured: true`, include `coming_soon` and `coming_soon_fetched` in `docs/summary.json`
+     - If `api_configured: false`, write `coming_soon: []` and `coming_soon_fetched: null`
+   - Call `GET http://localhost:8000/api/tm-shows` for all upcoming TM shows (venues and festivals)
+     - If `api_configured: true`, include `tm_venue_shows` and `tm_festival_shows` in `docs/summary.json`
+       - `tm_venue_shows`: object mapping tracked venue name → array of TM show objects (from `venue_shows` in the response)
+       - `tm_festival_shows`: object mapping tracked festival name → array of TM show objects (from `festival_shows` in the response)
+     - If `api_configured: false`, write `tm_venue_shows: {}` and `tm_festival_shows: {}`
+   - Do **NOT** call the Ticketmaster API directly — always go through the backend endpoints
+   - These TM fields are picked up by `scripts/export_static_data.py` and embedded in `static-data.json` for the GitHub Pages demo
+9. Write `docs/summary.json` (MUST validate against schema — includes `coming_soon`, `tm_venue_shows`, `tm_festival_shows`)
 10. Copy current snapshot to `docs/history/YYYY-MM-DD.json`
 11. Run `python scripts/validate_state.py` to verify data integrity
 12. Commit and push: `concert_state.json`, `docs/summary.json`, `docs/history/*.json`

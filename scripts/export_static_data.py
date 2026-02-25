@@ -88,6 +88,24 @@ def main():
         },
     }
 
+    # Pull Ticketmaster and coming-soon data from docs/summary.json (written by Cowork).
+    # These are committed to git so they're available in CI.
+    if SUMMARY_FILE.exists():
+        try:
+            summary = json.loads(SUMMARY_FILE.read_text())
+            # Coming Soon artist pre-sale data for the Coming Soon tab
+            if "coming_soon" in summary:
+                static["coming_soon"] = summary["coming_soon"]
+            if "coming_soon_fetched" in summary:
+                static["coming_soon_fetched"] = summary["coming_soon_fetched"]
+            # TM all-shows data for Venue and Festival cards in demo mode
+            if "tm_venue_shows" in summary:
+                static["tm_venue_shows"] = summary["tm_venue_shows"]
+            if "tm_festival_shows" in summary:
+                static["tm_festival_shows"] = summary["tm_festival_shows"]
+        except Exception as e:
+            print(f"Warning: could not read TM data from summary.json: {e}")
+
     OUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     OUT_FILE.write_text(json.dumps(static, indent=2) + "\n")
     print(f"Wrote {OUT_FILE} ({OUT_FILE.stat().st_size:,} bytes)")

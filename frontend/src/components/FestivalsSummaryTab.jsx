@@ -223,7 +223,13 @@ export default function FestivalsSummaryTab() {
     if (DEMO) {
       fetch(import.meta.env.BASE_URL + 'static-data.json')
         .then(r => r.json())
-        .then(data => { setState(data.state); setConfig(data.config) })
+        .then(data => {
+          setState(data.state)
+          setConfig(data.config)
+          if (data.tm_festival_shows) {
+            setTmData({ api_configured: true, festival_shows: data.tm_festival_shows })
+          }
+        })
         .catch(e => setError(e.message))
         .finally(() => setLoading(false))
     } else {
