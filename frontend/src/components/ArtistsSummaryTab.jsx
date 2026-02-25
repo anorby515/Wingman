@@ -31,7 +31,7 @@ function isInBounds(lat, lon, bounds) {
 }
 
 // ── Artist card ───────────────────────────────────────────────────────────────
-function ArtistCard({ name, url, genre, shows, tmShows, tmConfigured, paused, isSelected, onSelect }) {
+function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
   const [manualOpen, setManualOpen] = useState(false)
   const open = isSelected || manualOpen
 
@@ -44,30 +44,20 @@ function ArtistCard({ name, url, genre, shows, tmShows, tmConfigured, paused, is
     }
   }
 
-  const newCount = shows ? shows.filter(s => s.is_new).length : 0
-
-  // When TM is configured: TM shows are primary; scraped are fallback.
-  // When TM is not configured: scraped shows are the source.
-  const hasTm      = tmConfigured && tmShows && tmShows.length > 0
-  const tmOnSale   = hasTm ? tmShows.filter(s => !s.not_yet_on_sale) : []
-  const tmPreSale  = hasTm ? tmShows.filter(s => s.not_yet_on_sale)  : []
+  const onSale   = shows.filter(s => !s.not_yet_on_sale)
+  const preSale  = shows.filter(s => s.not_yet_on_sale)
 
   const mergedRows = useMemo(() => {
-    if (hasTm) {
-      // Primary: TM on-sale, then TM pre-sale — sorted by date
-      const rows = [
-        ...tmOnSale.map(s => ({ ...s, _src: 'tm-on-sale' })),
-        ...tmPreSale.map(s => ({ ...s, _src: 'tm-presale' })),
-      ]
-      rows.sort((a, b) => {
-        const da = new Date(a.date), db = new Date(b.date)
-        return (!isNaN(da) && !isNaN(db)) ? da - db : 0
-      })
-      return rows
-    }
-    // Fallback: scraped shows
-    return (shows || []).map(s => ({ ...s, _src: 'cowork' }))
-  }, [shows, tmShows, hasTm])
+    const rows = [
+      ...onSale.map(s => ({ ...s, _src: 'on-sale' })),
+      ...preSale.map(s => ({ ...s, _src: 'presale' })),
+    ]
+    rows.sort((a, b) => {
+      const da = new Date(a.date), db = new Date(b.date)
+      return (!isNaN(da) && !isNaN(db)) ? da - db : 0
+    })
+    return rows
+  }, [shows])
 
   return (
     <div className={`card transition-all ${paused ? 'opacity-50' : ''} ${isSelected ? 'ring-2 ring-indigo-400' : ''}`}>
@@ -94,7 +84,6 @@ function ArtistCard({ name, url, genre, shows, tmShows, tmConfigured, paused, is
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
             <span className={`badge-genre ${genreColor(genre)}`}>{genre}</span>
             {paused && <span className="badge-paused">Paused</span>}
-            {newCount > 0 && <span className="badge-new">{newCount} new</span>}
             {isSelected && (
               <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-medium">
                 Filtered
@@ -105,30 +94,18 @@ function ArtistCard({ name, url, genre, shows, tmShows, tmConfigured, paused, is
 
         {/* Count badges */}
         <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
-          {hasTm ? (
-            <>
-              {tmOnSale.length > 0 && (
-                <span className="text-sm font-semibold text-emerald-600">
-                  {tmOnSale.length} on sale
-                </span>
-              )}
-              {tmPreSale.length > 0 && (
-                <span className="text-xs font-semibold text-amber-600">
-                  {tmPreSale.length} coming soon
-                </span>
-              )}
-              {tmOnSale.length === 0 && tmPreSale.length === 0 && (
-                <span className="text-sm font-semibold text-slate-400">No shows</span>
-              )}
-            </>
-          ) : (
-            shows && shows.length > 0 ? (
-              <span className="text-sm font-semibold text-emerald-600">
-                {shows.length} show{shows.length !== 1 ? 's' : ''}
-              </span>
-            ) : (
-              <span className="text-sm font-semibold text-slate-400">No shows</span>
-            )
+          {onSale.length > 0 && (
+            <span className="text-sm font-semibold text-emerald-600">
+              {onSale.length} on sale
+            </span>
+          )}
+          {preSale.length > 0 && (
+            <span className="text-xs font-semibold text-amber-600">
+              {preSale.length} coming soon
+            </span>
+          )}
+          {shows.length === 0 && (
+            <span className="text-sm font-semibold text-slate-400">No shows</span>
           )}
           <svg
             className={`w-4 h-4 text-slate-400 transition-transform mt-0.5 ${open ? 'rotate-180' : ''}`}
@@ -144,30 +121,8 @@ function ArtistCard({ name, url, genre, shows, tmShows, tmConfigured, paused, is
           {mergedRows.length > 0 ? (
             <ul className="mt-3 space-y-2">
               {mergedRows.map((show, i) =>
-                show._src === 'tm-on-sale' ? (
-                  // ── TM on-sale show ──
-                  <li key={i} className="flex items-start justify-between gap-2 text-sm">
-                    <div>
-                      <span className="font-medium text-slate-800">{show.date}</span>
-                      <span className="text-slate-400 mx-1">&middot;</span>
-                      <span className="text-slate-600">{show.venue}</span>
-                      <span className="text-slate-400 mx-1">&middot;</span>
-                      <span className="text-slate-500">{show.city}</span>
-                    </div>
-                    {show.ticketmaster_url && (
-                      <a
-                        href={show.ticketmaster_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={e => e.stopPropagation()}
-                        className="flex-shrink-0 text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
-                      >
-                        TM &rarr;
-                      </a>
-                    )}
-                  </li>
-                ) : show._src === 'tm-presale' ? (
-                  // ── TM not-yet-on-sale show ──
+                show._src === 'presale' ? (
+                  // ── Not-yet-on-sale show ──
                   <li key={i} className="bg-amber-50 -mx-2 px-2 py-1.5 rounded-lg text-sm">
                     <div className="flex items-start justify-between gap-2">
                       <div>
@@ -214,16 +169,26 @@ function ArtistCard({ name, url, genre, shows, tmShows, tmConfigured, paused, is
                     )}
                   </li>
                 ) : (
-                  // ── Scraped (cowork) show — fallback when TM not configured ──
-                  <li key={i} className={`flex items-start justify-between gap-2 text-sm ${show.is_new ? 'bg-emerald-50 -mx-2 px-2 py-1 rounded-lg' : ''}`}>
+                  // ── On-sale show ──
+                  <li key={i} className="flex items-start justify-between gap-2 text-sm">
                     <div>
-                      {show.is_new && <span className="badge-new mr-1.5">NEW</span>}
                       <span className="font-medium text-slate-800">{show.date}</span>
                       <span className="text-slate-400 mx-1">&middot;</span>
                       <span className="text-slate-600">{show.venue}</span>
                       <span className="text-slate-400 mx-1">&middot;</span>
                       <span className="text-slate-500">{show.city}</span>
                     </div>
+                    {show.ticketmaster_url && (
+                      <a
+                        href={show.ticketmaster_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={e => e.stopPropagation()}
+                        className="flex-shrink-0 text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+                      >
+                        TM &rarr;
+                      </a>
+                    )}
                   </li>
                 )
               )}
@@ -261,9 +226,6 @@ function MapLegend({ mapFilter, onClearFilter }) {
         <span className="w-3 h-3 rounded-full bg-blue-500 inline-block" /> On Sale
       </span>
       <span className="flex items-center gap-1">
-        <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" /> New This Week
-      </span>
-      <span className="flex items-center gap-1">
         <span className="w-3 h-3 rounded-full bg-orange-500 inline-block" /> Coming Soon
       </span>
       <span className="flex items-center gap-1">
@@ -289,33 +251,34 @@ function MapLegend({ mapFilter, onClearFilter }) {
 
 // ── Main tab ──────────────────────────────────────────────────────────────────
 export default function ArtistsSummaryTab() {
-  const [state, setState]           = useState(null)
-  const [config, setConfig]         = useState(null)
-  const [tmData, setTmData]         = useState(null)
-  const [loading, setLoading]       = useState(true)
-  const [error, setError]           = useState(null)
-  const [mapFilter, setMapFilter]   = useState(null)
-  const [mapBounds, setMapBounds]   = useState(null)
+  const [shows, setShows]             = useState(null)
+  const [config, setConfig]           = useState(null)
+  const [loading, setLoading]         = useState(true)
+  const [error, setError]             = useState(null)
+  const [mapFilter, setMapFilter]     = useState(null)
+  const [mapBounds, setMapBounds]     = useState(null)
+  const [hideNoShows, setHideNoShows] = useState(false)
 
   useEffect(() => {
     if (DEMO) {
       fetch(import.meta.env.BASE_URL + 'static-data.json')
         .then(r => r.json())
         .then(data => {
-          setState(data.state)
+          setShows({
+            api_configured: true,
+            artist_shows: data.state?.artist_shows || {},
+            last_refreshed: data.coming_soon_fetched || null,
+          })
           setConfig(data.config)
-          // Demo mode has no TM all-shows; fall back to coming_soon for pre-sale pins
-          setTmData({ api_configured: !!data.coming_soon?.length, artist_shows: {} })
         })
         .catch(e => setError(e.message))
         .finally(() => setLoading(false))
     } else {
       Promise.all([
-        fetch('/api/state').then(r => r.json()),
+        fetch('/api/shows').then(r => r.json()),
         fetch('/api/config').then(r => r.json()),
-        fetch('/api/tm-shows').then(r => r.json()).catch(() => ({ api_configured: false, artist_shows: {} })),
       ])
-        .then(([st, cfg, tm]) => { setState(st); setConfig(cfg); setTmData(tm) })
+        .then(([s, cfg]) => { setShows(s); setConfig(cfg) })
         .catch(e => setError(e.message))
         .finally(() => setLoading(false))
     }
@@ -323,85 +286,67 @@ export default function ArtistsSummaryTab() {
 
   const handleBoundsChange = useCallback((bounds) => { setMapBounds(bounds) }, [])
 
-  const tmConfigured   = tmData?.api_configured ?? false
-  const tmArtistShows  = tmData?.artist_shows   ?? {}
+  const artistShows = shows?.artist_shows ?? {}
 
-  // Map pin data: prefer TM shows; fall back to scraped
+  // Map pin data
   const allArtistShows = useMemo(() => {
-    const shows = []
-    if (tmConfigured && Object.keys(tmArtistShows).length > 0) {
-      for (const [artist, artistTmShows] of Object.entries(tmArtistShows)) {
-        for (const show of artistTmShows) {
-          shows.push({
-            ...show,
-            artist,
-            status: 'on_sale',
-            source: show.not_yet_on_sale ? 'tm' : undefined,
-          })
-        }
-      }
-    } else {
-      for (const [artist, artistShows] of Object.entries(state?.artist_shows || {})) {
-        for (const show of artistShows) shows.push({ ...show, artist })
+    const arr = []
+    for (const [artist, artistShowList] of Object.entries(artistShows)) {
+      for (const show of artistShowList) {
+        arr.push({
+          ...show,
+          artist,
+          status: 'on_sale',
+          source: show.not_yet_on_sale ? 'tm' : undefined,
+        })
       }
     }
-    return shows
-  }, [state, tmArtistShows, tmConfigured])
+    return arr
+  }, [artistShows])
 
   const allVenueShows = useMemo(() => {
-    if (!state?.venue_shows || !config?.venues) return []
-    return Object.entries(state.venue_shows)
-      .map(([venueName, events]) => {
-        const venueConfig = config.venues[venueName]
+    if (!config?.venues) return []
+    return Object.entries(config.venues)
+      .map(([venueName, venueConfig]) => {
         if (!venueConfig) return null
-        return { venueName, lat: venueConfig.lat || null, lon: venueConfig.lon || null, city: venueConfig.city, events }
+        return { venueName, lat: venueConfig.lat || null, lon: venueConfig.lon || null, city: venueConfig.city, events: [] }
       })
       .filter(Boolean)
-  }, [state, config])
+  }, [config])
 
-  const centerLat = state?.center_lat ?? config?.center_lat ?? null
-  const centerLon = state?.center_lon ?? config?.center_lon ?? null
+  const centerLat = config?.center_lat ?? null
+  const centerLon = config?.center_lon ?? null
 
   if (loading) return <LoadingSpinner />
   if (error)   return <ErrorBox message={error} />
 
-  const artistShows   = state?.artist_shows || {}
   const configArtists = config?.artists || {}
 
   const artistList = Object.entries(configArtists).map(([name, info]) => {
-    const tmShows    = tmArtistShows[name] ?? (tmConfigured ? [] : null)
-    const scraped    = artistShows[name] || []
-    const totalCount = tmShows ? tmShows.length : scraped.length
-    return { name, url: info.url || null, genre: info.genre || 'Other', paused: info.paused || false, shows: scraped, tmShows, totalCount }
+    const showList = artistShows[name] || []
+    return { name, url: info.url || null, genre: info.genre || 'Other', paused: info.paused || false, shows: showList, totalCount: showList.length }
   }).sort((a, b) => {
     if (b.totalCount !== a.totalCount) return b.totalCount - a.totalCount
     return a.name.localeCompare(b.name)
   })
 
   const visibleArtists = artistList.filter(a => {
+    if (hideNoShows && a.totalCount === 0) return false
     if (mapFilter?.type === 'artist' && mapFilter.name === a.name) return true
     if (!mapBounds) return true
-    const src = a.tmShows ?? a.shows
-    return src.some(s => s.lat != null && s.lon != null && isInBounds(s.lat, s.lon, mapBounds))
+    return a.shows.some(s => s.lat != null && s.lon != null && isInBounds(s.lat, s.lon, mapBounds))
   })
 
   const withShowsCount = artistList.filter(a => a.totalCount > 0).length
-  const totalShows     = tmConfigured
-    ? Object.values(tmArtistShows).reduce((n, arr) => n + arr.length, 0)
-    : allArtistShows.length
-  const newShowsCount  = (state?.artist_shows ? Object.values(state.artist_shows).flat() : []).filter(s => s.is_new).length
+  const totalShows     = Object.values(artistShows).reduce((n, arr) => n + arr.length, 0)
 
   return (
     <div className="space-y-8">
       {/* Meta */}
       <div className="card p-4 flex flex-wrap gap-4 text-sm text-slate-600">
         <div>
-          <span className="font-semibold text-slate-800">Last run: </span>
-          {state?.last_run || <span className="text-slate-400 italic">Never</span>}
-        </div>
-        <div>
           <span className="font-semibold text-slate-800">Home: </span>
-          {state?.center || config?.center_city || '\u2014'}
+          {config?.center_city || '\u2014'}
         </div>
         <div>
           <span className="font-semibold text-slate-800">Artists: </span>
@@ -410,10 +355,9 @@ export default function ArtistsSummaryTab() {
         <div>
           <span className="font-semibold text-slate-800">Total shows: </span>
           {totalShows}
-          {tmConfigured && <span className="ml-1 text-xs text-slate-400">(via TM)</span>}
         </div>
-        {newShowsCount > 0 && (
-          <div><span className="badge-new">{newShowsCount} new this week</span></div>
+        {shows?.stale && (
+          <div><span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">Data may be stale — click Refresh Data</span></div>
         )}
       </div>
 
@@ -437,9 +381,20 @@ export default function ArtistsSummaryTab() {
           <SectionHeading count={visibleArtists.length} total={artistList.length}>
             Artist Shows
           </SectionHeading>
-          {mapBounds && visibleArtists.length < artistList.length && (
-            <span className="text-xs text-slate-400 italic">Zoom out or pan to see more artists</span>
-          )}
+          <div className="flex items-center gap-3">
+            {mapBounds && visibleArtists.length < artistList.length && (
+              <span className="text-xs text-slate-400 italic">Zoom out or pan to see more artists</span>
+            )}
+            <label className="flex items-center gap-1.5 text-xs text-slate-500 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={hideNoShows}
+                onChange={e => setHideNoShows(e.target.checked)}
+                className="rounded border-slate-300"
+              />
+              Hide artists not on tour
+            </label>
+          </div>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-3">
@@ -447,7 +402,6 @@ export default function ArtistsSummaryTab() {
             <ArtistCard
               key={a.name}
               {...a}
-              tmConfigured={tmConfigured}
               isSelected={mapFilter?.type === 'artist' && mapFilter.name === a.name}
               onSelect={setMapFilter}
             />
