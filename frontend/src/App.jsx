@@ -1,26 +1,28 @@
 import { useState, useEffect } from 'react'
-import ArtistsSummaryTab from './components/ArtistsSummaryTab.jsx'
-import VenuesSummaryTab  from './components/VenuesSummaryTab.jsx'
-import ComingSoonTab     from './components/ComingSoonTab.jsx'
-import ConfigureTab      from './components/ConfigureTab.jsx'
-import SettingsTab       from './components/SettingsTab.jsx'
+import ArtistsSummaryTab   from './components/ArtistsSummaryTab.jsx'
+import FestivalsSummaryTab from './components/FestivalsSummaryTab.jsx'
+import VenuesSummaryTab    from './components/VenuesSummaryTab.jsx'
+import ComingSoonTab       from './components/ComingSoonTab.jsx'
+import ConfigureTab        from './components/ConfigureTab.jsx'
+import SettingsTab         from './components/SettingsTab.jsx'
 
 const DEMO = import.meta.env.VITE_DEMO_MODE === 'true'
 
 const ALL_TABS = [
-  { id: 'artists',     label: 'Artists',      icon: '🎤' },
-  { id: 'venues',      label: 'Venues',       icon: '🏟' },
-  { id: 'coming-soon', label: 'Coming Soon',  icon: '🎟' },
-  { id: 'configure',   label: 'Configure',    icon: '🔧' },
-  { id: 'settings',    label: 'Settings',     icon: '⚙️' },
+  { id: 'coming-soon', label: 'Coming Soon', icon: '🎟' },
+  { id: 'artists',     label: 'Artists',     icon: '🎤' },
+  { id: 'festivals',   label: 'Festivals',   icon: '🎪' },
+  { id: 'venues',      label: 'Venues',      icon: '🏟' },
+  { id: 'configure',   label: 'Configure',   icon: '🔧' },
+  { id: 'settings',    label: 'Settings',    icon: '⚙️' },
 ]
 
 const TABS = DEMO
-  ? ALL_TABS.filter(t => ['artists', 'venues', 'coming-soon'].includes(t.id))
+  ? ALL_TABS.filter(t => ['coming-soon', 'artists', 'festivals', 'venues'].includes(t.id))
   : ALL_TABS
 
 export default function App() {
-  const [active, setActive] = useState('artists')
+  const [active, setActive] = useState('coming-soon')
   const [pagesUrl, setPagesUrl] = useState('')
 
   useEffect(() => {
@@ -84,9 +86,10 @@ export default function App() {
 
       {/* ── Content ── */}
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6">
-        {active === 'artists'     && <ArtistsSummaryTab />}
-        {active === 'venues'      && <VenuesSummaryTab />}
         {active === 'coming-soon' && <ComingSoonTab />}
+        {active === 'artists'     && <ArtistsSummaryTab />}
+        {active === 'festivals'   && <FestivalsSummaryTab />}
+        {active === 'venues'      && <VenuesSummaryTab />}
         {active === 'configure'   && <ConfigureTab />}
         {active === 'settings'    && <SettingsTab />}
       </main>
