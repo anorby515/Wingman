@@ -14,3 +14,6 @@ ticketmaster_shows_cache.json
 
 # Generated PDFs (replaced by GitHub Pages summary)
 Concert_Changes_*.pdf
+
+# Temporary files from CI scripts
+.fetch_stats.json
