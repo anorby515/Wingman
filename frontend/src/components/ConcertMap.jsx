@@ -47,6 +47,15 @@ const VENUE_ICON = new L.Icon({
   shadowSize: [41, 41],
 })
 
+const COMING_SOON_ICON = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+})
+
 /**
  * Child component that tracks map viewport changes and reports bounds.
  */
@@ -162,9 +171,13 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
 
         {/* Artist show pins */}
         {artistPins.map((pin, i) => {
-          const hasNew = pin.shows.some(s => s.is_new)
-          const allSoldOut = pin.shows.every(s => s.status === 'sold_out')
-          const icon = hasNew ? NEW_ICON : allSoldOut ? SOLD_OUT_ICON : DEFAULT_ICON
+          const hasNew        = pin.shows.some(s => s.is_new)
+          const allSoldOut    = pin.shows.every(s => s.status === 'sold_out')
+          const allComingSoon = pin.shows.every(s => s.source === 'tm')
+          const icon = hasNew        ? NEW_ICON
+                     : allSoldOut   ? SOLD_OUT_ICON
+                     : allComingSoon ? COMING_SOON_ICON
+                     : DEFAULT_ICON
 
           return (
             <Marker key={`a-${i}`} position={[pin.lat, pin.lon]} icon={icon}>
@@ -175,7 +188,14 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
                       <strong>{s.artist}</strong>
                       {' \u00b7 '}{s.date}{' \u00b7 '}{s.venue}
                       {s.is_new && <span className="ml-1 text-emerald-600 font-semibold">NEW</span>}
-                      {s.status === 'sold_out' && <span className="ml-1 text-red-500 font-semibold">SOLD OUT</span>}
+                      {s.source === 'tm' && (
+                        <span className="ml-1 text-amber-600 font-semibold">
+                          {s.onsale_tbd ? 'On Sale TBD'
+                            : s.onsale_datetime
+                            ? `On Sale ${new Date(s.onsale_datetime).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}`
+                            : 'Coming Soon'}
+                        </span>
+                      )}
                     </div>
                   ))}
                 </div>

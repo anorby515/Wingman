@@ -3,6 +3,15 @@ import ConcertMap from './ConcertMap.jsx'
 
 const DEMO = import.meta.env.VITE_DEMO_MODE === 'true'
 
+function fmtOnsale(isoStr) {
+  if (!isoStr) return null
+  try {
+    return new Date(isoStr).toLocaleString(undefined, {
+      month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
+    })
+  } catch { return null }
+}
+
 const GENRE_COLORS = {
   'Country / Americana':  'bg-amber-100 text-amber-800',
   'Indie / Alt-Rock':     'bg-blue-100  text-blue-800',
@@ -22,7 +31,7 @@ function isInBounds(lat, lon, bounds) {
 }
 
 // ── Artist card ───────────────────────────────────────────────────────────────
-function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
+function ArtistCard({ name, url, genre, shows, comingSoonShows, paused, isSelected, onSelect }) {
   const [manualOpen, setManualOpen] = useState(false)
   const open = isSelected || manualOpen
 
@@ -35,8 +44,23 @@ function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
     }
   }
 
-  const hasShows = shows && shows.length > 0
-  const newCount = shows ? shows.filter(s => s.is_new).length : 0
+  const hasShows      = shows && shows.length > 0
+  const hasComingSoon = comingSoonShows && comingSoonShows.length > 0
+  const newCount      = shows ? shows.filter(s => s.is_new).length : 0
+
+  // Merge and sort all rows by show date
+  const mergedRows = useMemo(() => {
+    const rows = [
+      ...(shows || []).map(s => ({ ...s, _src: 'cowork' })),
+      ...(comingSoonShows || []).map(s => ({ ...s, _src: 'tm' })),
+    ]
+    rows.sort((a, b) => {
+      const da = new Date(a.date), db = new Date(b.date)
+      if (!isNaN(da) && !isNaN(db)) return da - db
+      return 0
+    })
+    return rows
+  }, [shows, comingSoonShows])
 
   return (
     <div className={`card transition-all ${paused ? 'opacity-50' : ''} ${isSelected ? 'ring-2 ring-indigo-400' : ''}`}>
@@ -63,9 +87,7 @@ function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
             <span className={`badge-genre ${genreColor(genre)}`}>{genre}</span>
             {paused && <span className="badge-paused">Paused</span>}
-            {newCount > 0 && (
-              <span className="badge-new">{newCount} new</span>
-            )}
+            {newCount > 0 && <span className="badge-new">{newCount} new</span>}
             {isSelected && (
               <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-medium">
                 Filtered
@@ -73,12 +95,23 @@ function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <span className={`text-sm font-semibold ${hasShows ? 'text-emerald-600' : 'text-slate-400'}`}>
-            {hasShows ? `${shows.length} show${shows.length !== 1 ? 's' : ''}` : 'No shows'}
-          </span>
+
+        {/* Count badges */}
+        <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
+          {hasShows ? (
+            <span className="text-sm font-semibold text-emerald-600">
+              {shows.length} show{shows.length !== 1 ? 's' : ''}
+            </span>
+          ) : !hasComingSoon ? (
+            <span className="text-sm font-semibold text-slate-400">No shows</span>
+          ) : null}
+          {hasComingSoon && (
+            <span className="text-xs font-semibold text-amber-600">
+              {comingSoonShows.length} coming soon
+            </span>
+          )}
           <svg
-            className={`w-4 h-4 text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`}
+            className={`w-4 h-4 text-slate-400 transition-transform mt-0.5 ${open ? 'rotate-180' : ''}`}
             fill="none" viewBox="0 0 24 24" stroke="currentColor"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -88,23 +121,72 @@ function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
 
       {open && (
         <div className="border-t border-slate-50 px-4 pb-4">
-          {hasShows ? (
+          {mergedRows.length > 0 ? (
             <ul className="mt-3 space-y-2">
-              {shows.map((show, i) => (
-                <li key={i} className={`flex items-start justify-between gap-2 text-sm ${show.is_new ? 'bg-emerald-50 -mx-2 px-2 py-1 rounded-lg' : ''}`}>
-                  <div>
-                    {show.is_new && <span className="badge-new mr-1.5">NEW</span>}
-                    <span className="font-medium text-slate-800">{show.date}</span>
-                    <span className="text-slate-400 mx-1">&middot;</span>
-                    <span className="text-slate-600">{show.venue}</span>
-                    <span className="text-slate-400 mx-1">&middot;</span>
-                    <span className="text-slate-500">{show.city}</span>
-                  </div>
-                  {show.status === 'sold_out' && (
-                    <span className="badge-sold-out flex-shrink-0">Sold Out</span>
-                  )}
-                </li>
-              ))}
+              {mergedRows.map((show, i) =>
+                show._src === 'cowork' ? (
+                  // ── On-sale show ──
+                  <li key={i} className={`flex items-start justify-between gap-2 text-sm ${show.is_new ? 'bg-emerald-50 -mx-2 px-2 py-1 rounded-lg' : ''}`}>
+                    <div>
+                      {show.is_new && <span className="badge-new mr-1.5">NEW</span>}
+                      <span className="font-medium text-slate-800">{show.date}</span>
+                      <span className="text-slate-400 mx-1">&middot;</span>
+                      <span className="text-slate-600">{show.venue}</span>
+                      <span className="text-slate-400 mx-1">&middot;</span>
+                      <span className="text-slate-500">{show.city}</span>
+                    </div>
+                  </li>
+                ) : (
+                  // ── Coming Soon show (from Ticketmaster) ──
+                  <li key={i} className="bg-amber-50 -mx-2 px-2 py-1.5 rounded-lg text-sm">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <span className="font-medium text-slate-800">{show.date}</span>
+                        <span className="text-slate-400 mx-1">&middot;</span>
+                        <span className="text-slate-600">{show.venue}</span>
+                        <span className="text-slate-400 mx-1">&middot;</span>
+                        <span className="text-slate-500">{show.city}</span>
+                      </div>
+                      {show.ticketmaster_url && (
+                        <a
+                          href={show.ticketmaster_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={e => e.stopPropagation()}
+                          className="flex-shrink-0 text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+                        >
+                          TM &rarr;
+                        </a>
+                      )}
+                    </div>
+                    {/* On-sale date */}
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
+                      <span className="text-xs text-amber-700 font-medium">
+                        {show.onsale_tbd
+                          ? 'On-sale date TBD'
+                          : show.onsale_datetime
+                          ? `On sale ${fmtOnsale(show.onsale_datetime)}`
+                          : 'On-sale date not announced'}
+                      </span>
+                    </div>
+                    {/* Presales */}
+                    {show.presales && show.presales.length > 0 && (
+                      <ul className="mt-1 space-y-0.5">
+                        {show.presales.map((p, pi) => (
+                          <li key={pi} className="flex items-center gap-1 text-xs text-slate-500">
+                            <span className="w-1.5 h-1.5 rounded-full bg-violet-400 flex-shrink-0" />
+                            <span className="font-medium text-slate-600">{p.name}</span>
+                            {p.start_datetime && (
+                              <span className="text-slate-400">— starts {fmtOnsale(p.start_datetime)}</span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                )
+              )}
             </ul>
           ) : (
             <p className="mt-3 text-sm text-slate-400 italic">No upcoming shows found.</p>
@@ -142,7 +224,7 @@ function MapLegend({ mapFilter, onClearFilter }) {
         <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" /> New This Week
       </span>
       <span className="flex items-center gap-1">
-        <span className="w-3 h-3 rounded-full bg-red-500 inline-block" /> Sold Out
+        <span className="w-3 h-3 rounded-full bg-orange-500 inline-block" /> Coming Soon
       </span>
       <span className="flex items-center gap-1">
         <span className="w-3 h-3 rounded-full bg-purple-500 inline-block" /> Venue
@@ -167,10 +249,11 @@ function MapLegend({ mapFilter, onClearFilter }) {
 
 // ── Main tab ──────────────────────────────────────────────────────────────────
 export default function ArtistsSummaryTab() {
-  const [state, setState]   = useState(null)
-  const [config, setConfig] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError]   = useState(null)
+  const [state, setState]       = useState(null)
+  const [config, setConfig]     = useState(null)
+  const [comingSoon, setComingSoon] = useState([])
+  const [loading, setLoading]   = useState(true)
+  const [error, setError]       = useState(null)
 
   const [mapFilter, setMapFilter] = useState(null)
   const [mapBounds, setMapBounds] = useState(null)
@@ -179,15 +262,24 @@ export default function ArtistsSummaryTab() {
     if (DEMO) {
       fetch(import.meta.env.BASE_URL + 'static-data.json')
         .then(r => r.json())
-        .then(data => { setState(data.state); setConfig(data.config) })
+        .then(data => {
+          setState(data.state)
+          setConfig(data.config)
+          setComingSoon(data.coming_soon || [])
+        })
         .catch(e => setError(e.message))
         .finally(() => setLoading(false))
     } else {
       Promise.all([
         fetch('/api/state').then(r => r.json()),
         fetch('/api/config').then(r => r.json()),
+        fetch('/api/coming-soon').then(r => r.json()).catch(() => ({ shows: [] })),
       ])
-        .then(([st, cfg]) => { setState(st); setConfig(cfg) })
+        .then(([st, cfg, tm]) => {
+          setState(st)
+          setConfig(cfg)
+          setComingSoon(tm.shows || [])
+        })
         .catch(e => setError(e.message))
         .finally(() => setLoading(false))
     }
@@ -197,16 +289,29 @@ export default function ArtistsSummaryTab() {
     setMapBounds(bounds)
   }, [])
 
+  // Index coming soon shows by artist name
+  const comingSoonByArtist = useMemo(() => {
+    const map = {}
+    for (const show of comingSoon) {
+      if (!map[show.artist]) map[show.artist] = []
+      map[show.artist].push(show)
+    }
+    return map
+  }, [comingSoon])
+
   const allArtistShows = useMemo(() => {
-    if (!state?.artist_shows) return []
     const shows = []
-    for (const [artist, artistShows] of Object.entries(state.artist_shows)) {
+    for (const [artist, artistShows] of Object.entries(state?.artist_shows || {})) {
       for (const show of artistShows) {
         shows.push({ ...show, artist })
       }
     }
+    // Coming Soon shows tagged with source: 'tm' for orange pin rendering
+    for (const show of comingSoon) {
+      shows.push({ ...show, source: 'tm' })
+    }
     return shows
-  }, [state])
+  }, [state, comingSoon])
 
   const allVenueShows = useMemo(() => {
     if (!state?.venue_shows || !config?.venues) return []
@@ -240,20 +345,26 @@ export default function ArtistsSummaryTab() {
     genre: info.genre || 'Other',
     paused: info.paused || false,
     shows: artistShows[name] || [],
+    comingSoonShows: comingSoonByArtist[name] || [],
   })).sort((a, b) => {
-    if (b.shows.length !== a.shows.length) return b.shows.length - a.shows.length
+    const totalA = a.shows.length + a.comingSoonShows.length
+    const totalB = b.shows.length + b.comingSoonShows.length
+    if (totalB !== totalA) return totalB - totalA
     return a.name.localeCompare(b.name)
   })
 
   const visibleArtists = artistList.filter(a => {
     if (mapFilter?.type === 'artist' && mapFilter.name === a.name) return true
     if (!mapBounds) return true
-    return a.shows.some(s => s.lat != null && s.lon != null && isInBounds(s.lat, s.lon, mapBounds))
+    const onSaleInBounds    = a.shows.some(s => s.lat != null && s.lon != null && isInBounds(s.lat, s.lon, mapBounds))
+    const comingSoonInBounds = a.comingSoonShows.some(s => s.lat != null && s.lon != null && isInBounds(s.lat, s.lon, mapBounds))
+    return onSaleInBounds || comingSoonInBounds
   })
 
-  const withShowsCount = artistList.filter(a => a.shows.length > 0).length
-  const totalShowCount = allArtistShows.length
-  const newShowsCount = allArtistShows.filter(s => s.is_new).length
+  const withShowsCount    = artistList.filter(a => a.shows.length > 0 || a.comingSoonShows.length > 0).length
+  const totalShowCount    = allArtistShows.filter(s => s.source !== 'tm').length
+  const totalComingSoon   = comingSoon.length
+  const newShowsCount     = allArtistShows.filter(s => s.is_new).length
 
   return (
     <div className="space-y-8">
@@ -275,6 +386,12 @@ export default function ArtistsSummaryTab() {
           <span className="font-semibold text-slate-800">Total shows: </span>
           {totalShowCount}
         </div>
+        {totalComingSoon > 0 && (
+          <div>
+            <span className="font-semibold text-slate-800">Coming soon: </span>
+            {totalComingSoon}
+          </div>
+        )}
         {newShowsCount > 0 && (
           <div>
             <span className="badge-new">{newShowsCount} new this week</span>
@@ -314,6 +431,7 @@ export default function ArtistsSummaryTab() {
             <ArtistCard
               key={a.name}
               {...a}
+              comingSoonShows={a.comingSoonShows}
               isSelected={mapFilter?.type === 'artist' && mapFilter.name === a.name}
               onSelect={setMapFilter}
             />
