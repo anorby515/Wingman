@@ -55,13 +55,12 @@ def main():
             except Exception as e:
                 print(f"Warning: could not read center coords from summary.json: {e}")
 
-    # Strip URLs from config — the demo frontend doesn't need them
-    # and they're not useful to expose publicly
     artists = {}
     for name, info in config.get("artists", {}).items():
         artists[name] = {
             "genre": info.get("genre", "Other"),
             "paused": info.get("paused", False),
+            "url": info.get("url", None),
         }
 
     # Include venue lat/lon from geocode cache for map rendering
