@@ -139,6 +139,16 @@ class VenuePatch(BaseModel):
     is_local: Optional[bool] = None
 
 
+class FestivalIn(BaseModel):
+    name: str
+    url: str
+
+
+class FestivalPatch(BaseModel):
+    paused: Optional[bool] = None
+    url: Optional[str] = None
+
+
 class SettingsPatch(BaseModel):
     center_city: Optional[str] = None
     radius_miles: Optional[int] = None
@@ -304,6 +314,53 @@ def patch_venue(name: str, body: VenuePatch) -> Any:
         info["city"] = body.city
     if body.is_local is not None:
         info["is_local"] = body.is_local
+    _write_config(cfg)
+    return {"name": name, **info}
+
+
+# ── Festivals ─────────────────────────────────────────────────────────────────
+@app.get("/api/festivals")
+def list_festivals() -> Any:
+    cfg = _read_config()
+    return [
+        {"name": name, **info}
+        for name, info in cfg.get("festivals", {}).items()
+    ]
+
+
+@app.post("/api/festivals", status_code=201)
+def add_festival(body: FestivalIn) -> Any:
+    cfg = _read_config()
+    if body.name in cfg.get("festivals", {}):
+        raise HTTPException(status_code=409, detail=f"Festival '{body.name}' already exists")
+    cfg.setdefault("festivals", {})[body.name] = {
+        "url": body.url,
+        "paused": False,
+    }
+    _write_config(cfg)
+    return {"name": body.name, "url": body.url, "paused": False}
+
+
+@app.delete("/api/festivals/{name}")
+def delete_festival(name: str) -> Any:
+    cfg = _read_config()
+    if name not in cfg.get("festivals", {}):
+        raise HTTPException(status_code=404, detail=f"Festival '{name}' not found")
+    del cfg["festivals"][name]
+    _write_config(cfg)
+    return {"ok": True}
+
+
+@app.patch("/api/festivals/{name}")
+def patch_festival(name: str, body: FestivalPatch) -> Any:
+    cfg = _read_config()
+    if name not in cfg.get("festivals", {}):
+        raise HTTPException(status_code=404, detail=f"Festival '{name}' not found")
+    info = cfg["festivals"][name]
+    if body.paused is not None:
+        info["paused"] = body.paused
+    if body.url is not None:
+        info["url"] = body.url
     _write_config(cfg)
     return {"name": name, **info}
 

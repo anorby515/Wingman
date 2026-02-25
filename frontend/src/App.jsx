@@ -1,24 +1,24 @@
 import { useState, useEffect } from 'react'
-import SummaryTab  from './components/SummaryTab.jsx'
-import ArtistsTab  from './components/ArtistsTab.jsx'
-import VenuesTab   from './components/VenuesTab.jsx'
-import SettingsTab from './components/SettingsTab.jsx'
+import ArtistsSummaryTab from './components/ArtistsSummaryTab.jsx'
+import VenuesSummaryTab  from './components/VenuesSummaryTab.jsx'
+import ConfigureTab      from './components/ConfigureTab.jsx'
+import SettingsTab       from './components/SettingsTab.jsx'
 
 const DEMO = import.meta.env.VITE_DEMO_MODE === 'true'
 
 const ALL_TABS = [
-  { id: 'summary',  label: 'Summary',  icon: '🎵' },
-  { id: 'artists',  label: 'Artists',  icon: '🎤' },
-  { id: 'venues',   label: 'Venues',   icon: '🏟' },
-  { id: 'settings', label: 'Settings', icon: '⚙️' },
+  { id: 'artists',   label: 'Artists',   icon: '🎤' },
+  { id: 'venues',    label: 'Venues',    icon: '🏟' },
+  { id: 'configure', label: 'Configure', icon: '🔧' },
+  { id: 'settings',  label: 'Settings',  icon: '⚙️' },
 ]
 
 const TABS = DEMO
-  ? ALL_TABS.filter(t => t.id === 'summary')
+  ? ALL_TABS.filter(t => t.id === 'artists' || t.id === 'venues')
   : ALL_TABS
 
 export default function App() {
-  const [active, setActive] = useState('summary')
+  const [active, setActive] = useState('artists')
   const [pagesUrl, setPagesUrl] = useState('')
 
   useEffect(() => {
@@ -82,10 +82,10 @@ export default function App() {
 
       {/* ── Content ── */}
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6">
-        {active === 'summary'  && <SummaryTab />}
-        {active === 'artists'  && <ArtistsTab />}
-        {active === 'venues'   && <VenuesTab />}
-        {active === 'settings' && <SettingsTab />}
+        {active === 'artists'   && <ArtistsSummaryTab />}
+        {active === 'venues'    && <VenuesSummaryTab />}
+        {active === 'configure' && <ConfigureTab />}
+        {active === 'settings'  && <SettingsTab />}
       </main>
     </div>
   )
