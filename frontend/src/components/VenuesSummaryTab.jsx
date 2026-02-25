@@ -2,20 +2,22 @@ import { useState, useEffect } from 'react'
 
 const DEMO = import.meta.env.VITE_DEMO_MODE === 'true'
 
+function fmtOnsale(isoStr) {
+  if (!isoStr) return null
+  try {
+    return new Date(isoStr).toLocaleString(undefined, {
+      month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
+    })
+  } catch { return null }
+}
+
 // ── Venue card ────────────────────────────────────────────────────────────────
-function VenueCard({ name, url, city, events, tmShows, tmConfigured, paused }) {
+function VenueCard({ name, url, city, shows, paused }) {
   const [open, setOpen] = useState(false)
+  const hasShows = shows && shows.length > 0
 
-  // TM is primary source when configured; scraped is fallback
-  const hasTm      = tmConfigured && tmShows && tmShows.length > 0
-  const hasScraped = events && events.length > 0
-  const tracked    = hasScraped ? events.filter(e => e.tracked) : []
-
-  // Count badge
-  const countLabel = hasTm
-    ? `${tmShows.length} event${tmShows.length !== 1 ? 's' : ''}`
-    : hasScraped
-    ? `${events.length} event${events.length !== 1 ? 's' : ''}`
+  const countLabel = hasShows
+    ? `${shows.length} event${shows.length !== 1 ? 's' : ''}`
     : '\u2014'
 
   return (
@@ -43,11 +45,6 @@ function VenueCard({ name, url, city, events, tmShows, tmConfigured, paused }) {
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
             <span className="text-xs text-slate-500">{city}</span>
             {paused && <span className="badge-paused">Paused</span>}
-            {!hasTm && tracked.length > 0 && (
-              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
-                {tracked.length} tracked
-              </span>
-            )}
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -61,11 +58,10 @@ function VenueCard({ name, url, city, events, tmShows, tmConfigured, paused }) {
         </div>
       </button>
 
-      {/* ── TM shows (primary) ── */}
-      {open && hasTm && (
+      {open && hasShows && (
         <div className="border-t border-slate-50 px-4 pb-4">
           <ul className="mt-3 space-y-1.5">
-            {tmShows.map((ev, i) => (
+            {shows.map((ev, i) => (
               <li key={i} className={`flex items-center justify-between gap-2 text-sm ${ev.not_yet_on_sale ? 'bg-amber-50 -mx-2 px-2 py-1 rounded-lg' : ''}`}>
                 <div className="flex items-center gap-2 min-w-0">
                   <span className={`w-2 h-2 rounded-full flex-shrink-0 ${ev.not_yet_on_sale ? 'bg-amber-400' : 'bg-slate-300'}`} />
@@ -86,39 +82,15 @@ function VenueCard({ name, url, city, events, tmShows, tmConfigured, paused }) {
               </li>
             ))}
           </ul>
-          <p className="mt-2 text-xs text-slate-400">
-            Amber = not yet on public sale
-          </p>
-        </div>
-      )}
-
-      {/* ── Scraped shows (fallback when TM not configured) ── */}
-      {open && !hasTm && hasScraped && (
-        <div className="border-t border-slate-50 px-4 pb-4">
-          <ul className="mt-3 space-y-1.5">
-            {events.map((ev, i) => (
-              <li key={i} className="flex items-center gap-2 text-sm">
-                {ev.tracked ? (
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0" title="Tracked artist" />
-                ) : (
-                  <span className="w-2 h-2 rounded-full bg-slate-200 flex-shrink-0" />
-                )}
-                <span className="font-medium text-slate-800">{ev.date}</span>
-                <span className="text-slate-400">&middot;</span>
-                <span className={ev.tracked ? 'text-slate-800 font-medium' : 'text-slate-500'}>
-                  {ev.artist}
-                </span>
-              </li>
-            ))}
-          </ul>
-          {tracked.length > 0 && (
-            <p className="mt-2 text-xs text-emerald-600">Green dot = tracked artist</p>
+          {shows.some(s => s.not_yet_on_sale) && (
+            <p className="mt-2 text-xs text-slate-400">
+              Amber = not yet on public sale
+            </p>
           )}
         </div>
       )}
 
-      {/* ── No data ── */}
-      {open && !hasTm && !hasScraped && (
+      {open && !hasShows && (
         <div className="border-t border-slate-50 px-4 pb-4">
           <p className="mt-3 text-sm text-slate-400 italic">No events data yet.</p>
         </div>
@@ -141,26 +113,27 @@ function SectionHeading({ children, count }) {
 
 // ── Main tab ──────────────────────────────────────────────────────────────────
 export default function VenuesSummaryTab() {
-  const [state, setState]     = useState(null)
-  const [config, setConfig]   = useState(null)
-  const [tmData, setTmData]   = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError]     = useState(null)
+  const [showsData, setShowsData] = useState(null)
+  const [config, setConfig]       = useState(null)
+  const [loading, setLoading]     = useState(true)
+  const [error, setError]         = useState(null)
 
   useEffect(() => {
     if (DEMO) {
       fetch(import.meta.env.BASE_URL + 'static-data.json')
         .then(r => r.json())
-        .then(data => { setState(data.state); setConfig(data.config) })
+        .then(data => {
+          setShowsData({ venue_shows: data.state?.venue_shows || {} })
+          setConfig(data.config)
+        })
         .catch(e => setError(e.message))
         .finally(() => setLoading(false))
     } else {
       Promise.all([
-        fetch('/api/state').then(r => r.json()),
+        fetch('/api/shows').then(r => r.json()),
         fetch('/api/config').then(r => r.json()),
-        fetch('/api/tm-shows').then(r => r.json()).catch(() => null),
       ])
-        .then(([st, cfg, tm]) => { setState(st); setConfig(cfg); setTmData(tm) })
+        .then(([s, cfg]) => { setShowsData(s); setConfig(cfg) })
         .catch(e => setError(e.message))
         .finally(() => setLoading(false))
     }
@@ -169,10 +142,8 @@ export default function VenuesSummaryTab() {
   if (loading) return <LoadingSpinner />
   if (error)   return <ErrorBox message={error} />
 
-  const venueShows    = state?.venue_shows    || {}
-  const configVenues  = config?.venues        || {}
-  const tmConfigured  = tmData?.api_configured ?? false
-  const tmVenueShows  = tmData?.venue_shows   || {}
+  const venueShows   = showsData?.venue_shows || {}
+  const configVenues = config?.venues || {}
 
   const localVenues  = Object.entries(configVenues).filter(([, v]) => v.is_local)
   const travelVenues = Object.entries(configVenues).filter(([, v]) => !v.is_local)
@@ -190,9 +161,7 @@ export default function VenuesSummaryTab() {
               url={info.url}
               city={info.city}
               paused={info.paused}
-              events={venueShows[name]}
-              tmShows={tmVenueShows[name] ?? (tmConfigured ? [] : null)}
-              tmConfigured={tmConfigured}
+              shows={venueShows[name] || []}
             />
           ))}
           {localVenues.length === 0 && (
@@ -214,9 +183,7 @@ export default function VenuesSummaryTab() {
               url={info.url}
               city={info.city}
               paused={info.paused}
-              events={venueShows[name]}
-              tmShows={tmVenueShows[name] ?? (tmConfigured ? [] : null)}
-              tmConfigured={tmConfigured}
+              shows={venueShows[name] || []}
             />
           ))}
           {travelVenues.length === 0 && (
