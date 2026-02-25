@@ -1,65 +1,304 @@
 {
   "center_city": "Des Moines, IA",
-  "radius_miles": 200,
+  "radius_miles": 250,
   "cities_in_range": [
-    "Des Moines", "Ames", "Iowa City", "Cedar Rapids", "Davenport",
-    "Sioux City", "Waterloo", "Dubuque",
-    "Omaha", "Lincoln",
-    "Kansas City", "St. Joseph", "Columbia"
+    "Des Moines",
+    "Ames",
+    "Iowa City",
+    "Cedar Rapids",
+    "Davenport",
+    "Sioux City",
+    "Waterloo",
+    "Dubuque",
+    "Omaha",
+    "Lincoln",
+    "Kansas City",
+    "St. Joseph",
+    "Columbia"
   ],
-  "states_in_range": ["IA", "NE"],
+  "states_in_range": [
+    "IA",
+    "NE"
+  ],
   "artists": {
-    "Luke Combs":          {"url": "https://www.lukecombs.com/tour-dates/", "genre": "Country / Americana", "paused": false},
-    "Morgan Wallen":       {"url": "https://morganwallen.com/", "genre": "Country / Americana", "paused": false},
-    "Eric Church":         {"url": "https://www.ericchurch.com/tours", "genre": "Country / Americana", "paused": false},
-    "Zach Bryan":          {"url": "https://www.zachbryan.com/tour", "genre": "Country / Americana", "paused": false},
-    "Zac Brown Band":      {"url": "https://zacbrownband.com/pages/tour", "genre": "Country / Americana", "paused": false},
-    "Jason Isbell":        {"url": "https://www.jasonisbell.com/shows", "genre": "Country / Americana", "paused": false},
-    "Sturgill Simpson":    {"url": "https://sturgillsimpson.com/", "genre": "Country / Americana", "paused": false},
-    "CAAMP":               {"url": "https://www.caamptheband.com/caamp-tour-dates", "genre": "Country / Americana", "paused": false},
-    "Tyler Childers":      {"url": "https://tylerchildersmusic.com/pages/tour-dates", "genre": "Country / Americana", "paused": false},
-    "Chris Stapleton":     {"url": "https://chrisstapleton.com/", "genre": "Country / Americana", "paused": false},
-    "Dierks Bentley":      {"url": "https://dierks.com/", "genre": "Country / Americana", "paused": false},
-    "Lainey Wilson":       {"url": "https://www.laineywilson.com/", "genre": "Country / Americana", "paused": false},
-    "Colter Wall":         {"url": "http://www.ColterWall.com", "genre": "Country / Americana", "paused": false},
-    "The Red Clay Strays": {"url": "https://musicrow.com/2026/02/the-red-clay-strays-add-additional-tour-dates/", "genre": "Country / Americana", "paused": false},
-    "Billy Strings":       {"url": "https://www.billystrings.com/", "genre": "Country / Americana", "paused": false},
-    "Wyatt Flores":        {"url": "https://www.wyattfloresmusic.com/", "genre": "Country / Americana", "paused": false},
-    "Dylan Gossett":       {"url": "https://www.dylangossett.com/", "genre": "Country / Americana", "paused": false},
-    "Johnny Blue Skies":   {"url": "https://liveforlivemusic.com/news/johnny-blue-skies-sturgill-simpson-refutes-dan-auerbach/", "genre": "Country / Americana", "paused": false},
-    "The Lumineers":       {"url": "https://www.thelumineers.com/tour", "genre": "Indie / Alt-Rock", "paused": false},
-    "American Mary":       {"url": "https://www.americanmary.com/#tour", "genre": "Indie / Alt-Rock", "paused": false},
-    "Bon Iver":            {"url": "https://boniver.org/tour/", "genre": "Indie / Alt-Rock", "paused": false},
-    "The War on Drugs":    {"url": "https://www.thewarondrugs.net/tour", "genre": "Indie / Alt-Rock", "paused": false},
-    "Vampire Weekend":     {"url": "https://www.vampireweekend.com/#tour", "genre": "Indie / Alt-Rock", "paused": false},
-    "Phoebe Bridgers":     {"url": "https://phoebefuckingbridgers.com/", "genre": "Indie / Alt-Rock", "paused": false},
-    "Rostam":              {"url": "https://officialrostam.com/#dates", "genre": "Indie / Alt-Rock", "paused": false},
-    "Pearl Jam":           {"url": "https://pearljam.com/tour", "genre": "Indie / Alt-Rock", "paused": false},
-    "The Black Keys":      {"url": "https://www.theblackkeys.com/", "genre": "Indie / Alt-Rock", "paused": false},
-    "Foo Fighters":        {"url": "https://www.foofighters.com/tour-dates", "genre": "Indie / Alt-Rock", "paused": false},
-    "Jack White":          {"url": "https://jackwhiteiii.com/tour-dates/", "genre": "Indie / Alt-Rock", "paused": false},
-    "LCD Soundsystem":     {"url": "https://lcdsoundsystem.com/", "genre": "Indie / Alt-Rock", "paused": false},
-    "The Strokes":         {"url": "https://www.thestrokes.com/", "genre": "Indie / Alt-Rock", "paused": false},
-    "The 1975":            {"url": "https://the1975.com/", "genre": "Indie / Alt-Rock", "paused": false},
-    "The Smile":           {"url": "https://www.thesmiletheband.com/", "genre": "Indie / Alt-Rock", "paused": false},
-    "Noah Kahan":          {"url": "https://noahkahan.com/", "genre": "Indie / Alt-Rock", "paused": false},
-    "Mt. Joy":             {"url": "https://www.mtjoyband.com/", "genre": "Indie / Alt-Rock", "paused": false},
-    "Lord Huron":          {"url": "https://www.lordhuron.com/", "genre": "Indie / Alt-Rock", "paused": false},
-    "Royel Otis":          {"url": "https://www.royelotis.com/", "genre": "Indie / Alt-Rock", "paused": false},
-    "Massive Attack":      {"url": "https://www.massiveattack.co.uk/", "genre": "Electronic / Art-Rock", "paused": false},
-    "Radiohead":           {"url": "https://www.radiohead.com/", "genre": "Electronic / Art-Rock", "paused": false},
-    "The XX":              {"url": "https://thexx.info/", "genre": "Electronic / Art-Rock", "paused": false},
-    "Alabama Shakes":      {"url": "https://www.alabamashakes.com/", "genre": "Electronic / Art-Rock", "paused": false},
-    "Tame Impala":         {"url": "https://interscope.com/products/tame-impala-the-complete-vinyl-collection", "genre": "Electronic / Art-Rock", "paused": false}
+    "Luke Combs": {
+      "url": "https://www.lukecombs.com/tour-dates/",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Morgan Wallen": {
+      "url": "https://morganwallen.com/",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Eric Church": {
+      "url": "https://www.ericchurch.com/tours",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Zach Bryan": {
+      "url": "https://www.zachbryan.com/tour",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Zac Brown Band": {
+      "url": "https://zacbrownband.com/pages/tour",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Jason Isbell": {
+      "url": "https://www.jasonisbell.com/shows",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Sturgill Simpson": {
+      "url": "https://sturgillsimpson.com/",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "CAAMP": {
+      "url": "https://www.caamptheband.com/caamp-tour-dates",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Tyler Childers": {
+      "url": "https://tylerchildersmusic.com/pages/tour-dates",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Chris Stapleton": {
+      "url": "https://chrisstapleton.com/",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Dierks Bentley": {
+      "url": "https://dierks.com/",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Lainey Wilson": {
+      "url": "https://www.laineywilson.com/",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Colter Wall": {
+      "url": "http://www.ColterWall.com",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "The Red Clay Strays": {
+      "url": "https://musicrow.com/2026/02/the-red-clay-strays-add-additional-tour-dates/",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Billy Strings": {
+      "url": "https://www.billystrings.com/",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Wyatt Flores": {
+      "url": "https://www.wyattfloresmusic.com/",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Dylan Gossett": {
+      "url": "https://www.dylangossett.com/",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "Johnny Blue Skies": {
+      "url": "https://liveforlivemusic.com/news/johnny-blue-skies-sturgill-simpson-refutes-dan-auerbach/",
+      "genre": "Country / Americana",
+      "paused": false
+    },
+    "The Lumineers": {
+      "url": "https://www.thelumineers.com/tour",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "American Mary": {
+      "url": "https://www.americanmary.com/#tour",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "Bon Iver": {
+      "url": "https://boniver.org/tour/",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "The War on Drugs": {
+      "url": "https://www.thewarondrugs.net/tour",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "Vampire Weekend": {
+      "url": "https://www.vampireweekend.com/#tour",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "Phoebe Bridgers": {
+      "url": "https://phoebefuckingbridgers.com/",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "Rostam": {
+      "url": "https://officialrostam.com/#dates",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "Pearl Jam": {
+      "url": "https://pearljam.com/tour",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "The Black Keys": {
+      "url": "https://www.theblackkeys.com/",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "Foo Fighters": {
+      "url": "https://www.foofighters.com/tour-dates",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "Jack White": {
+      "url": "https://jackwhiteiii.com/tour-dates/",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "LCD Soundsystem": {
+      "url": "https://lcdsoundsystem.com/",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "The Strokes": {
+      "url": "https://www.thestrokes.com/",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "The 1975": {
+      "url": "https://the1975.com/",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "The Smile": {
+      "url": "https://www.thesmiletheband.com/",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "Noah Kahan": {
+      "url": "https://noahkahan.com/",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "Mt. Joy": {
+      "url": "https://www.mtjoyband.com/",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "Lord Huron": {
+      "url": "https://www.lordhuron.com/",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "Royel Otis": {
+      "url": "https://www.royelotis.com/",
+      "genre": "Indie / Alt-Rock",
+      "paused": false
+    },
+    "Massive Attack": {
+      "url": "https://www.massiveattack.co.uk/",
+      "genre": "Electronic / Art-Rock",
+      "paused": false
+    },
+    "Radiohead": {
+      "url": "https://www.radiohead.com/",
+      "genre": "Electronic / Art-Rock",
+      "paused": false
+    },
+    "The XX": {
+      "url": "https://thexx.info/",
+      "genre": "Electronic / Art-Rock",
+      "paused": false
+    },
+    "Alabama Shakes": {
+      "url": "https://www.alabamashakes.com/",
+      "genre": "Electronic / Art-Rock",
+      "paused": false
+    },
+    "Tame Impala": {
+      "url": "https://interscope.com/products/tame-impala-the-complete-vinyl-collection",
+      "genre": "Electronic / Art-Rock",
+      "paused": false
+    }
   },
   "venues": {
-    "Hoyt Sherman Place":   {"url": "https://hoytsherman.org/events/", "city": "Des Moines, IA", "is_local": true, "paused": false},
-    "First Fleet Concerts": {"url": "https://www.firstfleetconcerts.com/events", "city": "Des Moines, IA", "is_local": true, "paused": false},
-    "Iowa Events Center":   {"url": "https://www.iowaeventscenter.com/events", "city": "Des Moines, IA", "is_local": true, "paused": false},
-    "Starlight Theatre":    {"url": "https://www.kcstarlight.com/events", "city": "Kansas City, MO", "is_local": false, "paused": false},
-    "The Waiting Room":     {"url": "https://waitingroomlounge.com/events/", "city": "Omaha, NE", "is_local": false, "paused": false},
-    "Ryman Auditorium":     {"url": "https://www.ryman.com/events", "city": "Nashville, TN", "is_local": false, "paused": false},
-    "ACL Live":             {"url": "https://www.acllive.com/calendar", "city": "Austin, TX", "is_local": false, "paused": false},
-    "The Salt Shed":        {"url": "https://www.saltshedchicago.com/home#shows", "city": "Chicago, IL", "is_local": false, "paused": false}
-  }
+    "Hoyt Sherman Place": {
+      "url": "https://hoytsherman.org/events/",
+      "city": "Des Moines, IA",
+      "is_local": true,
+      "paused": false
+    },
+    "First Fleet Concerts": {
+      "url": "https://www.firstfleetconcerts.com/events",
+      "city": "Des Moines, IA",
+      "is_local": true,
+      "paused": false
+    },
+    "Iowa Events Center": {
+      "url": "https://www.iowaeventscenter.com/events",
+      "city": "Des Moines, IA",
+      "is_local": true,
+      "paused": false
+    },
+    "Starlight Theatre": {
+      "url": "https://www.kcstarlight.com/events",
+      "city": "Kansas City, MO",
+      "is_local": false,
+      "paused": false
+    },
+    "The Waiting Room": {
+      "url": "https://waitingroomlounge.com/events/",
+      "city": "Omaha, NE",
+      "is_local": false,
+      "paused": false
+    },
+    "Ryman Auditorium": {
+      "url": "https://www.ryman.com/events",
+      "city": "Nashville, TN",
+      "is_local": false,
+      "paused": false
+    },
+    "ACL Live": {
+      "url": "https://www.acllive.com/calendar",
+      "city": "Austin, TX",
+      "is_local": false,
+      "paused": false
+    },
+    "The Salt Shed": {
+      "url": "https://www.saltshedchicago.com/home#shows",
+      "city": "Chicago, IL",
+      "is_local": false,
+      "paused": false
+    },
+    "Red Rocks": {
+      "url": "https://www.redrocksonline.com/events/?view=list",
+      "city": "Morrison, CO",
+      "is_local": false,
+      "paused": false
+    },
+    "Wrigley Field": {
+      "url": "https://www.mlb.com/cubs/tickets/concerts",
+      "city": "Chicago, IL",
+      "is_local": false,
+      "paused": false
+    },
+    "Fenway Park": {
+      "url": "https://www.mlb.com/redsox/tickets/concerts",
+      "city": "Boston, MA",
+      "is_local": false,
+      "paused": false
+    }
+  },
+  "github_pages_url": "https://anorby515.github.io/Wingman/"
 }
