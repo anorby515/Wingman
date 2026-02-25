@@ -5,6 +5,8 @@ __pycache__/
 .DS_Store
 
 # Local-only data files (never push to GitHub)
+wingman_config.json
+notification_state.json
 spotify_tokens.json
 geocode_cache.json
 dismissed_suggestions.json
