@@ -252,6 +252,18 @@ The public site is deployed from `frontend/dist` built in demo mode.
 - **Files committed by Cowork:** `concert_state.json`, `docs/summary.json`, `docs/history/*.json`
 - **Files NEVER committed:** `spotify_tokens.json`, `geocode_cache.json`, `dismissed_suggestions.json`, `flagged_items.json`
 
+## Frontend Build Requirement
+
+`frontend/dist` is gitignored and **never committed**. The local FastAPI server serves directly from this directory, so it must be rebuilt whenever frontend source files change.
+
+**Claude Code MUST run a local build after every PR that touches any file under `frontend/src/`, `frontend/index.html`, `frontend/vite.config.*`, or `frontend/tailwind.config.*`:**
+
+```bash
+cd /home/user/Wingman/frontend && npm install && npx vite build
+```
+
+This applies whether creating a new PR or pushing additional commits to an existing one. Do not skip this step — without it, the locally running server will serve stale code and the user will not see the changes.
+
 ---
 
 ## Development Status
