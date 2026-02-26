@@ -3523,7 +3523,7 @@
         "status": "on_sale",
         "lat": 34.0543533,
         "lon": -84.3063348,
-        "is_new": true
+        "is_new": false
       },
       {
         "date": "Sep 18, 2026",
@@ -3532,7 +3532,7 @@
         "status": "on_sale",
         "lat": 33.9947839,
         "lon": -81.0373546,
-        "is_new": true
+        "is_new": false
       },
       {
         "date": "Sep 24, 2026",
@@ -3541,7 +3541,7 @@
         "status": "on_sale",
         "lat": 37.4792672,
         "lon": -82.5187629,
-        "is_new": true
+        "is_new": false
       },
       {
         "date": "Sep 26, 2026",
@@ -3550,7 +3550,7 @@
         "status": "on_sale",
         "lat": 32.2731475,
         "lon": -89.9868058,
-        "is_new": true
+        "is_new": false
       }
     ],
     "Dylan Gossett": [
@@ -5804,6 +5804,15 @@
         "is_new": false
       },
       {
+        "date": "Apr 5, 2026",
+        "venue": "Pepsi Center WTC",
+        "city": "M\u00e9xico, MX",
+        "status": "on_sale",
+        "lat": 19.3944618,
+        "lon": -99.1747474,
+        "is_new": true
+      },
+      {
         "date": "Jul 31, 2026",
         "venue": "Parc Jean Drapeau",
         "city": "Montreal, QC, CA",
@@ -7704,6 +7713,258 @@
         "tracked": false
       }
     ],
+    "Ryman Auditorium": [
+      {
+        "date": "Feb 27, 2026",
+        "artist": "Aaron Lewis",
+        "tracked": false
+      },
+      {
+        "date": "Feb 28, 2026",
+        "artist": "Kenny Wayne Shepherd",
+        "tracked": false
+      },
+      {
+        "date": "Mar 3, 2026",
+        "artist": "HARDY",
+        "tracked": false
+      },
+      {
+        "date": "Mar 4, 2026",
+        "artist": "Priscilla Block",
+        "tracked": false
+      },
+      {
+        "date": "Mar 5, 2026",
+        "artist": "The Wood Brothers",
+        "tracked": false
+      },
+      {
+        "date": "Mar 6, 2026",
+        "artist": "KC & the Sunshine Band",
+        "tracked": false
+      },
+      {
+        "date": "Mar 20, 2026",
+        "artist": "Robert Earl Keen",
+        "tracked": false
+      },
+      {
+        "date": "Mar 21, 2026",
+        "artist": "Randy Rogers",
+        "tracked": false
+      },
+      {
+        "date": "Mar 22, 2026",
+        "artist": "Pat Metheny",
+        "tracked": false
+      },
+      {
+        "date": "Mar 23, 2026",
+        "artist": "Steven Curtis Chapman",
+        "tracked": false
+      },
+      {
+        "date": "Mar 26, 2026",
+        "artist": "Robert Plant",
+        "tracked": false
+      },
+      {
+        "date": "Mar 27, 2026",
+        "artist": "Trampled By Turtles",
+        "tracked": false
+      },
+      {
+        "date": "Mar 27, 2026",
+        "artist": "Trampled By Turtles",
+        "tracked": false
+      },
+      {
+        "date": "Mar 28, 2026",
+        "artist": "Cooper Alan",
+        "tracked": false
+      },
+      {
+        "date": "Mar 29, 2026",
+        "artist": "Boys Like Girls",
+        "tracked": false
+      },
+      {
+        "date": "Mar 29, 2026",
+        "artist": "Boys Like Girls",
+        "tracked": false
+      },
+      {
+        "date": "Mar 31, 2026",
+        "artist": "Herb Alpert",
+        "tracked": false
+      },
+      {
+        "date": "Mar 31, 2026",
+        "artist": "Herb Alpert",
+        "tracked": false
+      },
+      {
+        "date": "Apr 1, 2026",
+        "artist": "Max McNown",
+        "tracked": false
+      },
+      {
+        "date": "Apr 2, 2026",
+        "artist": "Max McNown",
+        "tracked": false
+      },
+      {
+        "date": "Apr 3, 2026",
+        "artist": "The Format",
+        "tracked": false
+      },
+      {
+        "date": "Apr 4, 2026",
+        "artist": "Patti LaBelle",
+        "tracked": false
+      },
+      {
+        "date": "Apr 4, 2026",
+        "artist": "Patti LaBelle",
+        "tracked": false
+      },
+      {
+        "date": "Apr 8, 2026",
+        "artist": "BRELAND",
+        "tracked": false
+      },
+      {
+        "date": "Apr 11, 2026",
+        "artist": "Morgan Jay",
+        "tracked": false
+      },
+      {
+        "date": "Apr 11, 2026",
+        "artist": "Morgan Jay",
+        "tracked": false
+      },
+      {
+        "date": "Apr 25, 2026",
+        "artist": "Hayley Williams",
+        "tracked": false
+      },
+      {
+        "date": "Apr 25, 2026",
+        "artist": "Hayley Williams",
+        "tracked": false
+      },
+      {
+        "date": "Apr 26, 2026",
+        "artist": "Snarky Puppy",
+        "tracked": false
+      },
+      {
+        "date": "Apr 27, 2026",
+        "artist": "Hayley Williams",
+        "tracked": false
+      },
+      {
+        "date": "Apr 27, 2026",
+        "artist": "Hayley Williams",
+        "tracked": false
+      },
+      {
+        "date": "Apr 28, 2026",
+        "artist": "Hayley Williams",
+        "tracked": false
+      },
+      {
+        "date": "Apr 28, 2026",
+        "artist": "Hayley Williams",
+        "tracked": false
+      },
+      {
+        "date": "Apr 29, 2026",
+        "artist": "RAYE",
+        "tracked": false
+      },
+      {
+        "date": "Apr 29, 2026",
+        "artist": "Raye",
+        "tracked": false
+      },
+      {
+        "date": "May 1, 2026",
+        "artist": "Ani DiFranco",
+        "tracked": false
+      },
+      {
+        "date": "May 1, 2026",
+        "artist": "Ani DiFranco",
+        "tracked": false
+      },
+      {
+        "date": "May 2, 2026",
+        "artist": "Josh Ritter",
+        "tracked": false
+      },
+      {
+        "date": "May 2, 2026",
+        "artist": "Josh Ritter",
+        "tracked": false
+      },
+      {
+        "date": "May 3, 2026",
+        "artist": "Tracy Lawrence",
+        "tracked": false
+      },
+      {
+        "date": "May 5, 2026",
+        "artist": "Courtney Barnett",
+        "tracked": false
+      },
+      {
+        "date": "May 5, 2026",
+        "artist": "Courtney Barnett",
+        "tracked": false
+      },
+      {
+        "date": "May 6, 2026",
+        "artist": "David Lee Roth",
+        "tracked": false
+      },
+      {
+        "date": "May 6, 2026",
+        "artist": "David Lee Roth",
+        "tracked": false
+      },
+      {
+        "date": "May 7, 2026",
+        "artist": "SatchVai Band featuring Joe Satriani and Steve Vai",
+        "tracked": false
+      },
+      {
+        "date": "May 7, 2026",
+        "artist": "SatchVai Band featuring Joe Satriani and Steve Vai",
+        "tracked": false
+      },
+      {
+        "date": "May 10, 2026",
+        "artist": "Ari Lennox",
+        "tracked": false
+      },
+      {
+        "date": "May 10, 2026",
+        "artist": "Ari Lennox",
+        "tracked": false
+      },
+      {
+        "date": "May 12, 2026",
+        "artist": "Mac DeMarco",
+        "tracked": false
+      },
+      {
+        "date": "May 12, 2026",
+        "artist": "Mac DeMarco",
+        "tracked": false
+      }
+    ],
     "The Salt Shed": [
       {
         "date": "Feb 27, 2026",
@@ -8234,11 +8495,6 @@
       {
         "date": "Jun 22, 2026",
         "artist": "Mumford & Sons",
-        "tracked": false
-      },
-      {
-        "date": "Jun 23, 2026",
-        "artist": "R\u00dcF\u00dcS DU SOL",
         "tracked": false
       },
       {
@@ -9015,42 +9271,15 @@
   },
   "changes": {
     "artists": {
-      "Wyatt Flores": {
+      "The XX": {
         "added": [
           {
-            "date": "Sep 17, 2026",
-            "venue": "Ameris Bank Amphitheatre",
-            "city": "Alpharetta, GA",
+            "date": "Apr 5, 2026",
+            "venue": "Pepsi Center WTC",
+            "city": "M\u00e9xico, MX",
             "status": "on_sale",
-            "lat": 34.0543533,
-            "lon": -84.3063348,
-            "is_new": true
-          },
-          {
-            "date": "Sep 18, 2026",
-            "venue": "Colonial Life Arena",
-            "city": "Columbia, SC",
-            "status": "on_sale",
-            "lat": 33.9947839,
-            "lon": -81.0373546,
-            "is_new": true
-          },
-          {
-            "date": "Sep 24, 2026",
-            "venue": "Appalachian Wireless Arena (Formerly Eastern Kentucky Expo Ctr)",
-            "city": "Pikeville, KY",
-            "status": "on_sale",
-            "lat": 37.4792672,
-            "lon": -82.5187629,
-            "is_new": true
-          },
-          {
-            "date": "Sep 26, 2026",
-            "venue": "Brandon Amphitheater",
-            "city": "Brandon, MS",
-            "status": "on_sale",
-            "lat": 32.2731475,
-            "lon": -89.9868058,
+            "lat": 19.3944618,
+            "lon": -99.1747474,
             "is_new": true
           }
         ],
@@ -9059,28 +9288,263 @@
       }
     },
     "venues": {
-      "Vibrant Music Hall": {
+      "Ryman Auditorium": {
         "added": [
           {
-            "date": "May 15, 2026",
-            "artist": "Cozy Worldwide",
+            "date": "Feb 27, 2026",
+            "artist": "Aaron Lewis",
             "tracked": false
-          }
-        ],
-        "removed": []
-      },
-      "The Salt Shed Outdoors": {
-        "added": [
+          },
           {
-            "date": "Oct 8, 2026",
-            "artist": "Koe Wetzel",
+            "date": "Feb 28, 2026",
+            "artist": "Kenny Wayne Shepherd",
+            "tracked": false
+          },
+          {
+            "date": "Mar 3, 2026",
+            "artist": "HARDY",
+            "tracked": false
+          },
+          {
+            "date": "Mar 4, 2026",
+            "artist": "Priscilla Block",
+            "tracked": false
+          },
+          {
+            "date": "Mar 5, 2026",
+            "artist": "The Wood Brothers",
+            "tracked": false
+          },
+          {
+            "date": "Mar 6, 2026",
+            "artist": "KC & the Sunshine Band",
+            "tracked": false
+          },
+          {
+            "date": "Mar 20, 2026",
+            "artist": "Robert Earl Keen",
+            "tracked": false
+          },
+          {
+            "date": "Mar 21, 2026",
+            "artist": "Randy Rogers",
+            "tracked": false
+          },
+          {
+            "date": "Mar 22, 2026",
+            "artist": "Pat Metheny",
+            "tracked": false
+          },
+          {
+            "date": "Mar 23, 2026",
+            "artist": "Steven Curtis Chapman",
+            "tracked": false
+          },
+          {
+            "date": "Mar 26, 2026",
+            "artist": "Robert Plant",
+            "tracked": false
+          },
+          {
+            "date": "Mar 27, 2026",
+            "artist": "Trampled By Turtles",
+            "tracked": false
+          },
+          {
+            "date": "Mar 27, 2026",
+            "artist": "Trampled By Turtles",
+            "tracked": false
+          },
+          {
+            "date": "Mar 28, 2026",
+            "artist": "Cooper Alan",
+            "tracked": false
+          },
+          {
+            "date": "Mar 29, 2026",
+            "artist": "Boys Like Girls",
+            "tracked": false
+          },
+          {
+            "date": "Mar 29, 2026",
+            "artist": "Boys Like Girls",
+            "tracked": false
+          },
+          {
+            "date": "Mar 31, 2026",
+            "artist": "Herb Alpert",
+            "tracked": false
+          },
+          {
+            "date": "Mar 31, 2026",
+            "artist": "Herb Alpert",
+            "tracked": false
+          },
+          {
+            "date": "Apr 1, 2026",
+            "artist": "Max McNown",
+            "tracked": false
+          },
+          {
+            "date": "Apr 2, 2026",
+            "artist": "Max McNown",
+            "tracked": false
+          },
+          {
+            "date": "Apr 3, 2026",
+            "artist": "The Format",
+            "tracked": false
+          },
+          {
+            "date": "Apr 4, 2026",
+            "artist": "Patti LaBelle",
+            "tracked": false
+          },
+          {
+            "date": "Apr 4, 2026",
+            "artist": "Patti LaBelle",
+            "tracked": false
+          },
+          {
+            "date": "Apr 8, 2026",
+            "artist": "BRELAND",
+            "tracked": false
+          },
+          {
+            "date": "Apr 11, 2026",
+            "artist": "Morgan Jay",
+            "tracked": false
+          },
+          {
+            "date": "Apr 11, 2026",
+            "artist": "Morgan Jay",
+            "tracked": false
+          },
+          {
+            "date": "Apr 25, 2026",
+            "artist": "Hayley Williams",
+            "tracked": false
+          },
+          {
+            "date": "Apr 25, 2026",
+            "artist": "Hayley Williams",
+            "tracked": false
+          },
+          {
+            "date": "Apr 26, 2026",
+            "artist": "Snarky Puppy",
+            "tracked": false
+          },
+          {
+            "date": "Apr 27, 2026",
+            "artist": "Hayley Williams",
+            "tracked": false
+          },
+          {
+            "date": "Apr 27, 2026",
+            "artist": "Hayley Williams",
+            "tracked": false
+          },
+          {
+            "date": "Apr 28, 2026",
+            "artist": "Hayley Williams",
+            "tracked": false
+          },
+          {
+            "date": "Apr 28, 2026",
+            "artist": "Hayley Williams",
+            "tracked": false
+          },
+          {
+            "date": "Apr 29, 2026",
+            "artist": "RAYE",
+            "tracked": false
+          },
+          {
+            "date": "Apr 29, 2026",
+            "artist": "Raye",
+            "tracked": false
+          },
+          {
+            "date": "May 1, 2026",
+            "artist": "Ani DiFranco",
+            "tracked": false
+          },
+          {
+            "date": "May 1, 2026",
+            "artist": "Ani DiFranco",
+            "tracked": false
+          },
+          {
+            "date": "May 2, 2026",
+            "artist": "Josh Ritter",
+            "tracked": false
+          },
+          {
+            "date": "May 2, 2026",
+            "artist": "Josh Ritter",
+            "tracked": false
+          },
+          {
+            "date": "May 3, 2026",
+            "artist": "Tracy Lawrence",
+            "tracked": false
+          },
+          {
+            "date": "May 5, 2026",
+            "artist": "Courtney Barnett",
+            "tracked": false
+          },
+          {
+            "date": "May 5, 2026",
+            "artist": "Courtney Barnett",
+            "tracked": false
+          },
+          {
+            "date": "May 6, 2026",
+            "artist": "David Lee Roth",
+            "tracked": false
+          },
+          {
+            "date": "May 6, 2026",
+            "artist": "David Lee Roth",
+            "tracked": false
+          },
+          {
+            "date": "May 7, 2026",
+            "artist": "SatchVai Band featuring Joe Satriani and Steve Vai",
+            "tracked": false
+          },
+          {
+            "date": "May 7, 2026",
+            "artist": "SatchVai Band featuring Joe Satriani and Steve Vai",
+            "tracked": false
+          },
+          {
+            "date": "May 10, 2026",
+            "artist": "Ari Lennox",
+            "tracked": false
+          },
+          {
+            "date": "May 10, 2026",
+            "artist": "Ari Lennox",
+            "tracked": false
+          },
+          {
+            "date": "May 12, 2026",
+            "artist": "Mac DeMarco",
+            "tracked": false
+          },
+          {
+            "date": "May 12, 2026",
+            "artist": "Mac DeMarco",
             "tracked": false
           }
         ],
         "removed": []
       }
     },
-    "total_added": 4,
+    "total_added": 1,
     "total_removed": 0,
     "total_sold_out": 0
   },
@@ -10262,5 +10726,5 @@
       "lon": -99.1747474
     }
   ],
-  "coming_soon_fetched": "2026-02-26T16:24:20.273103+00:00"
+  "coming_soon_fetched": "2026-02-26T17:33:26.677336+00:00"
 }
