@@ -2,16 +2,6 @@ import { useState, useEffect } from 'react'
 
 const DEMO = import.meta.env.VITE_DEMO_MODE === 'true'
 
-const GENRE_COLORS = {
-  'Country / Americana':   'bg-amber-100 text-amber-800',
-  'Indie / Alt-Rock':      'bg-blue-100  text-blue-800',
-  'Electronic / Art-Rock': 'bg-purple-100 text-purple-800',
-  'Other':                 'bg-slate-100 text-slate-700',
-}
-
-function genreColor(genre) {
-  return GENRE_COLORS[genre] || GENRE_COLORS['Other']
-}
 
 // ── Format a UTC ISO datetime for display ─────────────────────────────────────
 function formatDatetime(isoStr) {
@@ -32,10 +22,10 @@ function PresaleList({ presales }) {
   return (
     <ul className="mt-1.5 space-y-1">
       {presales.map((p, i) => (
-        <li key={i} className="flex items-start gap-1.5 text-xs text-slate-500">
-          <span className="inline-block mt-0.5 w-1.5 h-1.5 rounded-full bg-violet-400 flex-shrink-0" />
+        <li key={i} className="flex items-start gap-1.5 text-xs text-neutral-400">
+          <span className="inline-block mt-0.5 w-1.5 h-1.5 rounded-full bg-neutral-300 flex-shrink-0" />
           <span>
-            <span className="font-medium text-slate-700">{p.name}</span>
+            <span className="font-medium text-neutral-500">{p.name}</span>
             {p.start_datetime && (
               <span className="ml-1">— starts {formatDatetime(p.start_datetime)}</span>
             )}
@@ -55,14 +45,14 @@ function ShowRow({ show }) {
     : 'On-sale date not announced'
 
   return (
-    <li className="text-sm border-t border-slate-50 pt-2 mt-2 first:border-0 first:pt-0 first:mt-0">
+    <li className="text-sm border-t border-neutral-100 pt-2 mt-2 first:border-0 first:pt-0 first:mt-0">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <span className="font-medium text-slate-800">{show.date}</span>
-          <span className="text-slate-400 mx-1">&middot;</span>
-          <span className="text-slate-600">{show.venue}</span>
-          <span className="text-slate-400 mx-1">&middot;</span>
-          <span className="text-slate-500">{show.city}</span>
+          <span className="font-medium text-neutral-800">{show.date}</span>
+          <span className="text-neutral-300 mx-1">&middot;</span>
+          <span className="text-neutral-600">{show.venue}</span>
+          <span className="text-neutral-300 mx-1">&middot;</span>
+          <span className="text-neutral-400">{show.city}</span>
         </div>
         {show.ticketmaster_url && (
           <a
@@ -70,17 +60,17 @@ function ShowRow({ show }) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={e => e.stopPropagation()}
-            className="flex-shrink-0 text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+            className="flex-shrink-0 text-xs text-neutral-500 hover:text-neutral-800 hover:underline"
           >
-            TM &rarr;
+            TM →
           </a>
         )}
       </div>
 
       {/* On-sale info */}
       <div className="mt-1 flex items-center gap-1.5">
-        <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
-        <span className="text-xs text-amber-700 font-medium">{onsaleLabel}</span>
+        <span className="inline-block w-1.5 h-1.5 rounded-full bg-neutral-400 flex-shrink-0" />
+        <span className="text-xs text-neutral-500 font-medium">{onsaleLabel}</span>
       </div>
 
       {/* Presales */}
@@ -98,14 +88,14 @@ function VenueEventRow({ event }) {
     : 'On-sale date not announced'
 
   return (
-    <li className="text-sm border-t border-slate-50 pt-2 mt-2 first:border-0 first:pt-0 first:mt-0">
+    <li className="text-sm border-t border-neutral-100 pt-2 mt-2 first:border-0 first:pt-0 first:mt-0">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <span className="font-medium text-slate-800">{event.artist || event.event_name || ''}</span>
-          <span className="text-slate-400 mx-1">&middot;</span>
-          <span className="text-slate-600">{event.date}</span>
-          <span className="text-slate-400 mx-1">&middot;</span>
-          <span className="text-slate-500">{event.city}</span>
+          <span className="font-medium text-neutral-800">{event.artist || event.event_name || ''}</span>
+          <span className="text-neutral-300 mx-1">&middot;</span>
+          <span className="text-neutral-600">{event.date}</span>
+          <span className="text-neutral-300 mx-1">&middot;</span>
+          <span className="text-neutral-400">{event.city}</span>
         </div>
         {event.ticketmaster_url && (
           <a
@@ -113,15 +103,15 @@ function VenueEventRow({ event }) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={e => e.stopPropagation()}
-            className="flex-shrink-0 text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+            className="flex-shrink-0 text-xs text-neutral-500 hover:text-neutral-800 hover:underline"
           >
-            TM &rarr;
+            TM →
           </a>
         )}
       </div>
       <div className="mt-1 flex items-center gap-1.5">
-        <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
-        <span className="text-xs text-amber-700 font-medium">{onsaleLabel}</span>
+        <span className="inline-block w-1.5 h-1.5 rounded-full bg-neutral-400 flex-shrink-0" />
+        <span className="text-xs text-neutral-500 font-medium">{onsaleLabel}</span>
       </div>
       <PresaleList presales={event.presales} />
     </li>
@@ -137,14 +127,14 @@ function FestivalEventRow({ event }) {
     : 'On-sale date not announced'
 
   return (
-    <li className="text-sm border-t border-slate-50 pt-2 mt-2 first:border-0 first:pt-0 first:mt-0">
+    <li className="text-sm border-t border-neutral-100 pt-2 mt-2 first:border-0 first:pt-0 first:mt-0">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <span className="font-medium text-slate-800">{event.date}</span>
-          <span className="text-slate-400 mx-1">&middot;</span>
-          <span className="text-slate-600">{event.venue}</span>
-          <span className="text-slate-400 mx-1">&middot;</span>
-          <span className="text-slate-500">{event.city}</span>
+          <span className="font-medium text-neutral-800">{event.date}</span>
+          <span className="text-neutral-300 mx-1">&middot;</span>
+          <span className="text-neutral-600">{event.venue}</span>
+          <span className="text-neutral-300 mx-1">&middot;</span>
+          <span className="text-neutral-400">{event.city}</span>
         </div>
         {event.ticketmaster_url && (
           <a
@@ -152,18 +142,18 @@ function FestivalEventRow({ event }) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={e => e.stopPropagation()}
-            className="flex-shrink-0 text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+            className="flex-shrink-0 text-xs text-neutral-500 hover:text-neutral-800 hover:underline"
           >
-            TM &rarr;
+            TM →
           </a>
         )}
       </div>
       {event.event_name && event.event_name !== event.tracked_festival && (
-        <p className="text-xs text-slate-400 mt-0.5 italic">{event.event_name}</p>
+        <p className="text-xs text-neutral-400 mt-0.5 italic">{event.event_name}</p>
       )}
       <div className="mt-1 flex items-center gap-1.5">
-        <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
-        <span className="text-xs text-amber-700 font-medium">{onsaleLabel}</span>
+        <span className="inline-block w-1.5 h-1.5 rounded-full bg-neutral-400 flex-shrink-0" />
+        <span className="text-xs text-neutral-500 font-medium">{onsaleLabel}</span>
       </div>
       <PresaleList presales={event.presales} />
     </li>
@@ -185,27 +175,23 @@ function VenueEventCard({ venueName, venueUrl, events }) {
             {venueUrl ? (
               <a href={venueUrl} target="_blank" rel="noopener noreferrer"
                 onClick={e => e.stopPropagation()}
-                className="font-semibold text-slate-900 hover:text-indigo-600 hover:underline truncate">
+                className="font-semibold text-neutral-900 hover:text-neutral-600 hover:underline truncate">
                 {venueName}
               </a>
             ) : (
-              <span className="font-semibold text-slate-900 truncate">{venueName}</span>
+              <span className="font-semibold text-neutral-900 truncate">{venueName}</span>
             )}
           </div>
           <div className="mt-1">
-            <span className="text-xs bg-violet-100 text-violet-800 px-2 py-0.5 rounded-full font-medium">
+            <span className="text-xs text-neutral-400">
               {events.length} coming soon
             </span>
           </div>
         </div>
-        <svg
-          className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`}
-          fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <span className="text-neutral-400 text-xs flex-shrink-0">{open ? '−' : '+'}</span>
       </button>
       {open && (
-        <div className="border-t border-slate-50 px-4 pb-4">
+        <div className="border-t border-neutral-100 px-4 pb-4">
           <ul className="mt-3">
             {events.map((ev, i) => <VenueEventRow key={i} event={ev} />)}
           </ul>
@@ -230,27 +216,23 @@ function FestivalEventCard({ festivalName, festivalUrl, events }) {
             {festivalUrl ? (
               <a href={festivalUrl} target="_blank" rel="noopener noreferrer"
                 onClick={e => e.stopPropagation()}
-                className="font-semibold text-slate-900 hover:text-indigo-600 hover:underline truncate">
+                className="font-semibold text-neutral-900 hover:text-neutral-600 hover:underline truncate">
                 {festivalName}
               </a>
             ) : (
-              <span className="font-semibold text-slate-900 truncate">{festivalName}</span>
+              <span className="font-semibold text-neutral-900 truncate">{festivalName}</span>
             )}
           </div>
           <div className="mt-1">
-            <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-medium">
+            <span className="text-xs text-neutral-400">
               {events.length} coming soon
             </span>
           </div>
         </div>
-        <svg
-          className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`}
-          fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <span className="text-neutral-400 text-xs flex-shrink-0">{open ? '−' : '+'}</span>
       </button>
       {open && (
-        <div className="border-t border-slate-50 px-4 pb-4">
+        <div className="border-t border-neutral-100 px-4 pb-4">
           <ul className="mt-3">
             {events.map((ev, i) => <FestivalEventRow key={i} event={ev} />)}
           </ul>
@@ -275,28 +257,24 @@ function ComingSoonCard({ artist, genre, url, shows }) {
             {url ? (
               <a href={url} target="_blank" rel="noopener noreferrer"
                 onClick={e => e.stopPropagation()}
-                className="font-semibold text-slate-900 hover:text-indigo-600 hover:underline truncate">
+                className="font-semibold text-neutral-900 hover:text-neutral-600 hover:underline truncate">
                 {artist}
               </a>
             ) : (
-              <span className="font-semibold text-slate-900 truncate">{artist}</span>
+              <span className="font-semibold text-neutral-900 truncate">{artist}</span>
             )}
           </div>
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-            <span className={`badge-genre ${genreColor(genre)}`}>{genre}</span>
-            <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-medium">
+            <span className="badge-genre">{genre}</span>
+            <span className="text-xs text-neutral-400">
               {shows.length} coming soon
             </span>
           </div>
         </div>
-        <svg
-          className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`}
-          fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <span className="text-neutral-400 text-xs flex-shrink-0">{open ? '−' : '+'}</span>
       </button>
       {open && (
-        <div className="border-t border-slate-50 px-4 pb-4">
+        <div className="border-t border-neutral-100 px-4 pb-4">
           <ul className="mt-3">
             {shows.map((show, i) => <ShowRow key={i} show={show} />)}
           </ul>
@@ -317,29 +295,23 @@ function NotFoundSection({ label, items, configItems, explanation }) {
         className="w-full p-4 text-left flex items-center justify-between gap-3"
       >
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-slate-500">
+          <span className="text-sm text-neutral-500">
             Not found on Ticketmaster — {label}
           </span>
-          <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium">
-            {items.length}
-          </span>
+          <span className="text-xs text-neutral-400">{items.length}</span>
         </div>
-        <svg
-          className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`}
-          fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <span className="text-neutral-400 text-xs flex-shrink-0">{open ? '−' : '+'}</span>
       </button>
       {open && (
-        <div className="border-t border-slate-50 px-4 pb-4">
-          <p className="text-xs text-slate-400 mt-3 mb-3">{explanation}</p>
+        <div className="border-t border-neutral-100 px-4 pb-4">
+          <p className="text-xs text-neutral-400 mt-3 mb-3">{explanation}</p>
           <ul className="space-y-1.5">
             {items.map(name => (
-              <li key={name} className="flex items-center gap-2 text-sm text-slate-600">
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-300 flex-shrink-0" />
+              <li key={name} className="flex items-center gap-2 text-sm text-neutral-600">
+                <span className="w-1.5 h-1.5 rounded-full bg-neutral-200 flex-shrink-0" />
                 {configItems[name]?.url ? (
                   <a href={configItems[name].url} target="_blank" rel="noopener noreferrer"
-                    className="hover:text-indigo-600 hover:underline">
+                    className="hover:text-neutral-900 hover:underline">
                     {name}
                   </a>
                 ) : name}
@@ -356,7 +328,7 @@ function NotFoundSection({ label, items, configItems, explanation }) {
 function LoadingSpinner() {
   return (
     <div className="flex items-center justify-center py-16">
-      <div className="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-neutral-200 border-t-neutral-700 rounded-full animate-spin" />
     </div>
   )
 }
@@ -364,8 +336,8 @@ function LoadingSpinner() {
 function ErrorBox({ message }) {
   return (
     <div className="card p-6 text-center">
-      <p className="text-red-600 font-medium">Failed to load data</p>
-      <p className="text-slate-500 text-sm mt-1">{message}</p>
+      <p className="text-neutral-800 font-medium">Failed to load data</p>
+      <p className="text-neutral-500 text-sm mt-1">{message}</p>
     </div>
   )
 }
@@ -412,15 +384,15 @@ export default function ComingSoonTab() {
   if (!showsData?.api_configured) {
     return (
       <div className="card p-8 text-center space-y-3">
-        <p className="font-semibold text-slate-800">Ticketmaster API not configured</p>
-        <p className="text-sm text-slate-500 max-w-xs mx-auto">
+        <p className="font-semibold text-neutral-800">Ticketmaster API not configured</p>
+        <p className="text-sm text-neutral-500 max-w-xs mx-auto">
           Add your free Discovery API key in the Settings tab to see upcoming on-sale dates and presale windows for your tracked artists, venues, and festivals.
         </p>
         <a
           href="https://developer.ticketmaster.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block text-sm text-indigo-600 hover:underline"
+          className="inline-block text-sm text-neutral-700 hover:underline"
         >
           Get a free API key &rarr;
         </a>
@@ -478,45 +450,45 @@ export default function ComingSoonTab() {
   return (
     <div className="space-y-6">
       {/* ── Meta bar ── */}
-      <div className="card p-4 flex flex-wrap gap-4 text-sm text-slate-600">
+      <div className="card p-4 flex flex-wrap gap-4 text-sm text-neutral-600">
         <div>
-          <span className="font-semibold text-slate-800">Not yet on sale: </span>
+          <span className="font-semibold text-neutral-800">Not yet on sale: </span>
           {totalNotYetOnSale} show{totalNotYetOnSale !== 1 ? 's' : ''}
         </div>
         <div>
-          <span className="font-semibold text-slate-800">Artists: </span>
+          <span className="font-semibold text-neutral-800">Artists: </span>
           {artistGroups.length}
         </div>
         {venueGroups.length > 0 && (
           <div>
-            <span className="font-semibold text-slate-800">Venues: </span>
+            <span className="font-semibold text-neutral-800">Venues: </span>
             {venueGroups.length}
           </div>
         )}
         {festivalGroups.length > 0 && (
           <div>
-            <span className="font-semibold text-slate-800">Festivals: </span>
+            <span className="font-semibold text-neutral-800">Festivals: </span>
             {festivalGroups.length}
           </div>
         )}
         {showsData?.stale && (
-          <div><span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">Data may be stale — click Refresh Data</span></div>
+          <div><span className="text-xs text-neutral-500 italic">Data may be stale — click Refresh</span></div>
         )}
       </div>
 
       {/* ── Explainer ── */}
-      <div className="flex items-start gap-2 text-xs text-slate-400 px-1">
-        <span className="inline-block mt-0.5 w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
+      <div className="flex items-start gap-2 text-xs text-neutral-400 px-1">
+        <span className="inline-block mt-0.5 w-1.5 h-1.5 rounded-full bg-neutral-400 flex-shrink-0" />
         <span>
-          Shows listed here are <strong className="text-slate-500">announced but not yet on public sale</strong>.
-          Presale windows (violet dots) may allow early access.
+          Shows listed here are <strong className="text-neutral-500">announced but not yet on public sale</strong>.
+          Presale windows (small dots) may allow early access.
         </span>
       </div>
 
       {/* ── Artists section ── */}
       {artistGroups.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-400 px-1">Artists</h3>
+          <h3 className="text-xs font-bold uppercase tracking-wide text-neutral-400 px-1">Artists</h3>
           <div className="grid sm:grid-cols-2 gap-3">
             {artistGroups.map(([artist, { genre, shows }]) => (
               <ComingSoonCard
@@ -532,7 +504,7 @@ export default function ComingSoonTab() {
       )}
 
       {artistGroups.length === 0 && venueGroups.length === 0 && festivalGroups.length === 0 && (
-        <div className="card p-8 text-center text-slate-400 text-sm italic">
+        <div className="card p-8 text-center text-neutral-400 text-sm italic">
           No upcoming shows with future on-sale dates found for your tracked artists, venues, or festivals.
         </div>
       )}
@@ -540,7 +512,7 @@ export default function ComingSoonTab() {
       {/* ── Venues section ── */}
       {venueGroups.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-400 px-1">Venues</h3>
+          <h3 className="text-xs font-bold uppercase tracking-wide text-neutral-400 px-1">Venues</h3>
           <div className="grid sm:grid-cols-2 gap-3">
             {venueGroups.map(([venueName, events]) => (
               <VenueEventCard
@@ -557,7 +529,7 @@ export default function ComingSoonTab() {
       {/* ── Festivals section ── */}
       {festivalGroups.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-400 px-1">Festivals</h3>
+          <h3 className="text-xs font-bold uppercase tracking-wide text-neutral-400 px-1">Festivals</h3>
           <div className="grid sm:grid-cols-2 gap-3">
             {festivalGroups.map(([festivalName, events]) => (
               <FestivalEventCard
