@@ -11,6 +11,7 @@ This module NEVER reads or writes cache files — callers handle persistence.
 from __future__ import annotations
 
 import json
+import re
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass, field
@@ -113,8 +114,34 @@ def _tm_request(url: str) -> dict:
         return {}
 
 
-def get_tm_venue_id(api_key: str, venue_name: str) -> str | None:
-    """Look up Ticketmaster venue ID for a given venue name."""
+def _normalize_venue_name(name: str) -> str:
+    """Strip punctuation and extra whitespace for fuzzy venue matching."""
+    return re.sub(r"[^\w\s]", "", name).lower().strip()
+
+
+def _venue_in_city(tm_venue: dict, target_city: str) -> bool:
+    """Check if a TM venue object is in the target city (city + state match)."""
+    if not target_city:
+        return False
+    parts = [p.strip() for p in target_city.split(",")]
+    city_name = parts[0].lower() if parts else ""
+    state_code = parts[1].strip().lower() if len(parts) > 1 else ""
+    tm_city = tm_venue.get("city", {}).get("name", "").lower()
+    tm_state = tm_venue.get("state", {}).get("stateCode", "").lower()
+    return bool(city_name and city_name == tm_city
+                and (not state_code or state_code == tm_state))
+
+
+def get_tm_venue_id(
+    api_key: str, venue_name: str, venue_city: str = "",
+) -> str | None:
+    """Look up Ticketmaster venue ID for a given venue name.
+
+    Uses a three-pass strategy:
+      1. Substring name match (existing behaviour)
+      2. Normalised name match (strip punctuation)
+      3. City-based fallback (first result in the same city)
+    """
     params = urllib.parse.urlencode({
         "apikey": api_key,
         "keyword": venue_name,
@@ -122,9 +149,26 @@ def get_tm_venue_id(api_key: str, venue_name: str) -> str | None:
     })
     url = f"https://app.ticketmaster.com/discovery/v2/venues.json?{params}"
     data = _tm_request(url)
-    for tv in data.get("_embedded", {}).get("venues", []):
+    venues = data.get("_embedded", {}).get("venues", [])
+
+    # Pass 1: substring match on raw names
+    for tv in venues:
         if name_matches(venue_name, [tv.get("name", "")]):
             return tv.get("id")
+
+    # Pass 2: substring match on normalised names (strips punctuation)
+    norm = _normalize_venue_name(venue_name)
+    for tv in venues:
+        tn = _normalize_venue_name(tv.get("name", ""))
+        if norm and tn and (norm in tn or tn in norm):
+            return tv.get("id")
+
+    # Pass 3: city-based fallback — first venue in the same city
+    if venue_city:
+        for tv in venues:
+            if _venue_in_city(tv, venue_city):
+                return tv.get("id")
+
     return None
 
 
@@ -270,7 +314,8 @@ def fetch_venue_shows(
         if venue_info.get("paused", False):
             continue
 
-        venue_id = get_tm_venue_id(api_key, venue_name)
+        venue_city = venue_info.get("city", "")
+        venue_id = get_tm_venue_id(api_key, venue_name, venue_city)
         if not venue_id:
             not_found.append(venue_name)
             if progress:

@@ -6,9 +6,13 @@ from unittest.mock import patch
 from backend.ticketmaster import (
     RefreshProgress,
     RefreshResult,
+    _normalize_venue_name,
+    _venue_in_city,
     build_show,
     detect_triggers,
     fetch_artist_shows,
+    fetch_venue_shows,
+    get_tm_venue_id,
     name_matches,
 )
 
@@ -218,3 +222,123 @@ class TestFetchArtistShows:
             shows, not_found = fetch_artist_shows("fake-key", artists)
         assert "Nobody" in not_found
         assert "Nobody" not in shows
+
+
+# ── Venue ID lookup tests ────────────────────────────────────────────────────
+
+class TestNormalizeVenueName:
+    def test_strips_apostrophe(self):
+        assert _normalize_venue_name("Wooly's") == "woolys"
+
+    def test_strips_parentheses(self):
+        assert _normalize_venue_name("The Salt Shed Indoors (Shed)") == "the salt shed indoors shed"
+
+    def test_lowercase(self):
+        assert _normalize_venue_name("Red Rocks") == "red rocks"
+
+    def test_empty(self):
+        assert _normalize_venue_name("") == ""
+
+
+class TestVenueInCity:
+    def test_match_us_city(self):
+        tm_venue = {
+            "city": {"name": "Des Moines"},
+            "state": {"stateCode": "IA"},
+        }
+        assert _venue_in_city(tm_venue, "Des Moines, IA") is True
+
+    def test_case_insensitive(self):
+        tm_venue = {
+            "city": {"name": "Austin"},
+            "state": {"stateCode": "TX"},
+        }
+        assert _venue_in_city(tm_venue, "Austin, Tx") is True
+
+    def test_wrong_city(self):
+        tm_venue = {
+            "city": {"name": "Chicago"},
+            "state": {"stateCode": "IL"},
+        }
+        assert _venue_in_city(tm_venue, "Des Moines, IA") is False
+
+    def test_empty_target(self):
+        tm_venue = {"city": {"name": "Chicago"}, "state": {"stateCode": "IL"}}
+        assert _venue_in_city(tm_venue, "") is False
+
+
+class TestGetTmVenueId:
+    def _make_venue_response(self, venues):
+        """Build a TM venues.json API response."""
+        return {"_embedded": {"venues": venues}}
+
+    def test_pass1_substring_match(self):
+        """Direct substring match should work (existing behaviour)."""
+        response = self._make_venue_response([
+            {"id": "V1", "name": "Red Rocks Amphitheatre"},
+        ])
+        with patch("backend.ticketmaster._tm_request", return_value=response):
+            assert get_tm_venue_id("key", "Red Rocks") == "V1"
+
+    def test_pass2_normalized_match(self):
+        """Punctuation-stripped matching: Wooly's → Woolys."""
+        response = self._make_venue_response([
+            {"id": "V2", "name": "Woolys"},
+        ])
+        with patch("backend.ticketmaster._tm_request", return_value=response):
+            # "Wooly's" normalises to "woolys", matching "Woolys" → "woolys"
+            assert get_tm_venue_id("key", "Wooly's") == "V2"
+
+    def test_pass3_city_fallback(self):
+        """City-based fallback when name doesn't match at all."""
+        response = self._make_venue_response([
+            {
+                "id": "V3",
+                "name": "ACL Live",
+                "city": {"name": "Austin"},
+                "state": {"stateCode": "TX"},
+            },
+        ])
+        with patch("backend.ticketmaster._tm_request", return_value=response):
+            result = get_tm_venue_id(
+                "key", "Austin City Limits Live at The Moody", "Austin, TX",
+            )
+            assert result == "V3"
+
+    def test_no_match_returns_none(self):
+        """No venues returned → None."""
+        with patch("backend.ticketmaster._tm_request", return_value={}):
+            assert get_tm_venue_id("key", "Nowhere Venue") is None
+
+    def test_city_fallback_wrong_city(self):
+        """City fallback shouldn't match a venue in a different city."""
+        response = self._make_venue_response([
+            {
+                "id": "V4",
+                "name": "Some Other Place",
+                "city": {"name": "Chicago"},
+                "state": {"stateCode": "IL"},
+            },
+        ])
+        with patch("backend.ticketmaster._tm_request", return_value=response):
+            result = get_tm_venue_id("key", "Test Venue", "Des Moines, IA")
+            assert result is None
+
+
+class TestFetchVenueShows:
+    def test_skips_paused_venues(self):
+        venues = {
+            "Active": {"paused": False, "city": "Des Moines, IA"},
+            "Paused": {"paused": True, "city": "Des Moines, IA"},
+        }
+        with patch("backend.ticketmaster._tm_request", return_value={}):
+            shows, not_found = fetch_venue_shows("fake-key", venues)
+        assert "Paused" not in shows
+        assert "Paused" not in not_found
+
+    def test_venue_not_found(self):
+        venues = {"Unknown Venue": {"paused": False, "city": "Nowhere, XX"}}
+        with patch("backend.ticketmaster._tm_request", return_value={}):
+            shows, not_found = fetch_venue_shows("fake-key", venues)
+        assert "Unknown Venue" in not_found
+        assert "Unknown Venue" not in shows
