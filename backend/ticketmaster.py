@@ -119,17 +119,37 @@ def _normalize_venue_name(name: str) -> str:
     return re.sub(r"[^\w\s]", "", name).lower().strip()
 
 
+def _parse_city_state(city_str: str) -> tuple[str, str]:
+    """Parse 'City, ST' into (city_lower, state_lower)."""
+    parts = [p.strip() for p in city_str.split(",")]
+    city = parts[0].lower() if parts else ""
+    state = parts[1].strip().lower() if len(parts) > 1 else ""
+    return city, state
+
+
 def _venue_in_city(tm_venue: dict, target_city: str) -> bool:
     """Check if a TM venue object is in the target city (city + state match)."""
     if not target_city:
         return False
-    parts = [p.strip() for p in target_city.split(",")]
-    city_name = parts[0].lower() if parts else ""
-    state_code = parts[1].strip().lower() if len(parts) > 1 else ""
+    city_name, state_code = _parse_city_state(target_city)
     tm_city = tm_venue.get("city", {}).get("name", "").lower()
     tm_state = tm_venue.get("state", {}).get("stateCode", "").lower()
     return bool(city_name and city_name == tm_city
                 and (not state_code or state_code == tm_state))
+
+
+def _venue_in_state(tm_venue: dict, target_city: str) -> bool:
+    """Check if a TM venue is in the same state (looser than city match).
+
+    Handles cases like Waukee, IA vs West Des Moines, IA.
+    """
+    if not target_city:
+        return False
+    _, state_code = _parse_city_state(target_city)
+    if not state_code:
+        return False
+    tm_state = tm_venue.get("state", {}).get("stateCode", "").lower()
+    return state_code == tm_state
 
 
 def get_tm_venue_id(
@@ -137,17 +157,30 @@ def get_tm_venue_id(
 ) -> str | None:
     """Look up Ticketmaster venue ID for a given venue name.
 
-    Uses a three-pass strategy:
+    Uses a four-pass strategy:
       1. Substring name match (existing behaviour)
       2. Normalised name match (strip punctuation)
       3. City-based fallback (first result in the same city)
+      4. State-based fallback (first result in the same state)
+
+    When venue_city is provided, stateCode is also sent to the API
+    to help TM return more relevant results.
     """
-    params = urllib.parse.urlencode({
+    search_params: dict[str, str] = {
         "apikey": api_key,
         "keyword": venue_name,
         "size": "10",
-    })
-    url = f"https://app.ticketmaster.com/discovery/v2/venues.json?{params}"
+    }
+    # Add stateCode when available — helps TM narrow venue search
+    if venue_city:
+        _, state = _parse_city_state(venue_city)
+        if state:
+            search_params["stateCode"] = state.upper()
+
+    url = (
+        "https://app.ticketmaster.com/discovery/v2/venues.json?"
+        + urllib.parse.urlencode(search_params)
+    )
     data = _tm_request(url)
     venues = data.get("_embedded", {}).get("venues", [])
 
@@ -167,6 +200,13 @@ def get_tm_venue_id(
     if venue_city:
         for tv in venues:
             if _venue_in_city(tv, venue_city):
+                return tv.get("id")
+
+    # Pass 4: state-based fallback — first venue in the same state
+    # Handles cases like Waukee, IA vs West Des Moines, IA
+    if venue_city:
+        for tv in venues:
+            if _venue_in_state(tv, venue_city):
                 return tv.get("id")
 
     return None
