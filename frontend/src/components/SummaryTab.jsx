@@ -339,6 +339,8 @@ export default function SummaryTab() {
     if (mapFilter?.type === 'artist' && mapFilter.name === a.name) return true
     // No bounds yet → show all
     if (!mapBounds) return true
+    // Artists with no shows are always visible (not filtered by map)
+    if (a.shows.length === 0) return true
     // Show if at least one show is in viewport
     return a.shows.some(s => s.lat != null && s.lon != null && isInBounds(s.lat, s.lon, mapBounds))
   })
