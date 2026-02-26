@@ -253,12 +253,16 @@ export default function ArtistsSummaryTab() {
   // Sort: 'date' (default) or 'artist' (grouped)
   const [sortMode, setSortMode] = useState('date')
 
-  // Multi-select filters
+  // Multi-select dropdown filters
   const [filterArtists, setFilterArtists] = useState([])
   const [filterCities, setFilterCities]   = useState([])
   const [filterStates, setFilterStates]   = useState([])
   const [filterVenues, setFilterVenues]   = useState([])
-  const [filterStatus, setFilterStatus]   = useState([])
+
+  // Quick filter toggles (AND logic when multiple active)
+  const [quickLocal, setQuickLocal]           = useState(false)
+  const [quickFavorite, setQuickFavorite]     = useState(false)
+  const [quickComingSoon, setQuickComingSoon] = useState(false)
 
   useEffect(() => {
     if (DEMO) {
@@ -268,6 +272,7 @@ export default function ArtistsSummaryTab() {
           setShows({
             api_configured: true,
             artist_shows: data.state?.artist_shows || {},
+            venue_shows: data.state?.venue_shows || {},
             last_refreshed: data.coming_soon_fetched || null,
           })
           setConfig({
@@ -290,47 +295,118 @@ export default function ArtistsSummaryTab() {
   }, [])
 
   const artistShows = shows?.artist_shows ?? {}
+  const venueShowsData = shows?.venue_shows ?? {}
   const configArtists = config?.artists || {}
+  const configVenues = config?.venues || {}
 
-  // ── Aggregate all artist shows into a flat list ──
+  // Build venue lookup: lowercase venue name → config
+  const venueLookup = useMemo(() => {
+    const map = {}
+    for (const [name, cfg] of Object.entries(configVenues)) {
+      if (cfg) map[name.toLowerCase()] = cfg
+    }
+    return map
+  }, [configVenues])
+
+  // ── Aggregate artist shows + venue shows into a flat list ──
   const allShows = useMemo(() => {
     const arr = []
+    const seen = new Set()
+
+    function venueFlags(venueName) {
+      const cfg = venueLookup[venueName?.toLowerCase()]
+      return {
+        _isLocalVenue: cfg?.is_local === true,
+        _isTravelVenue: cfg?.is_local === false,
+      }
+    }
+
+    // Artist shows
     for (const [artist, showList] of Object.entries(artistShows)) {
       const info = configArtists[artist] || {}
       for (const show of showList) {
+        const key = `${artist}|${show.raw_date}|${show.venue}`
+        seen.add(key)
         arr.push({
           ...show,
           _artist: artist,
           _artistUrl: info.url || null,
           _genre: info.genre || 'Other',
           _state: extractState(show.city),
-          _status: show.not_yet_on_sale ? 'Coming Soon' : 'On Sale',
+          ...venueFlags(show.venue),
         })
       }
     }
+
+    // Venue shows: merge in, dedup against artist shows
+    for (const [trackedVenue, showList] of Object.entries(venueShowsData)) {
+      for (const show of showList) {
+        const artist = show.artist || trackedVenue
+        const key = `${artist}|${show.raw_date}|${show.venue}`
+        if (seen.has(key)) continue
+        seen.add(key)
+        const info = configArtists[artist] || {}
+        arr.push({
+          ...show,
+          _artist: artist,
+          _artistUrl: info.url || null,
+          _genre: info.genre || 'Other',
+          _state: extractState(show.city),
+          _source: 'venue',
+          _trackedVenue: trackedVenue,
+          ...venueFlags(show.venue),
+        })
+      }
+    }
+
     return arr
-  }, [artistShows, configArtists])
+  }, [artistShows, venueShowsData, configArtists, venueLookup])
 
-  // ── Unique filter option values ──
-  const filterOptions = useMemo(() => ({
-    artists:  [...new Set(allShows.map(s => s._artist))].sort(),
-    cities:   [...new Set(allShows.map(s => s.city).filter(Boolean))].sort(),
-    states:   [...new Set(allShows.map(s => s._state).filter(Boolean))].sort(),
-    venues:   [...new Set(allShows.map(s => s.venue).filter(Boolean))].sort(),
-    statuses: ['On Sale', 'Coming Soon'],
-  }), [allShows])
+  // ── Cascading filter options ──
+  // Each dropdown's options are computed from shows that pass all OTHER active filters
+  const filterOptions = useMemo(() => {
+    function passes(show, skipDimension) {
+      if (skipDimension !== 'artists'  && filterArtists.length > 0 && !filterArtists.includes(show._artist)) return false
+      if (skipDimension !== 'cities'   && filterCities.length  > 0 && !filterCities.includes(show.city))     return false
+      if (skipDimension !== 'states'   && filterStates.length  > 0 && !filterStates.includes(show._state))   return false
+      if (skipDimension !== 'venues'   && filterVenues.length  > 0 && !filterVenues.includes(show.venue))    return false
+      if (skipDimension !== 'local'    && quickLocal    && !show._isLocalVenue)  return false
+      if (skipDimension !== 'favorite' && quickFavorite && !show._isTravelVenue) return false
+      if (skipDimension !== 'coming'   && quickComingSoon && !show.not_yet_on_sale) return false
+      return true
+    }
 
-  // ── Apply filters ──
+    function optionsFor(dimension, extract) {
+      const values = new Set()
+      for (const show of allShows) {
+        if (!passes(show, dimension)) continue
+        const val = extract(show)
+        if (val) values.add(val)
+      }
+      return [...values].sort()
+    }
+
+    return {
+      artists: optionsFor('artists', s => s._artist),
+      cities:  optionsFor('cities',  s => s.city),
+      states:  optionsFor('states',  s => s._state),
+      venues:  optionsFor('venues',  s => s.venue),
+    }
+  }, [allShows, filterArtists, filterCities, filterStates, filterVenues, quickLocal, quickFavorite, quickComingSoon])
+
+  // ── Apply all filters (dropdowns + quick toggles, AND logic) ──
   const filteredShows = useMemo(() => {
     return allShows.filter(show => {
       if (filterArtists.length > 0 && !filterArtists.includes(show._artist)) return false
       if (filterCities.length  > 0 && !filterCities.includes(show.city))     return false
       if (filterStates.length  > 0 && !filterStates.includes(show._state))   return false
       if (filterVenues.length  > 0 && !filterVenues.includes(show.venue))    return false
-      if (filterStatus.length  > 0 && !filterStatus.includes(show._status))  return false
+      if (quickLocal    && !show._isLocalVenue)  return false
+      if (quickFavorite && !show._isTravelVenue) return false
+      if (quickComingSoon && !show.not_yet_on_sale) return false
       return true
     })
-  }, [allShows, filterArtists, filterCities, filterStates, filterVenues, filterStatus])
+  }, [allShows, filterArtists, filterCities, filterStates, filterVenues, quickLocal, quickFavorite, quickComingSoon])
 
   // ── Sort ──
   const sortedShows = useMemo(() => {
@@ -387,14 +463,17 @@ export default function ArtistsSummaryTab() {
   const centerLat = config?.center_lat ?? null
   const centerLon = config?.center_lon ?? null
 
-  const hasActiveFilters = filterArtists.length + filterCities.length + filterStates.length + filterVenues.length + filterStatus.length > 0
+  const hasActiveFilters = filterArtists.length + filterCities.length + filterStates.length + filterVenues.length > 0
+    || quickLocal || quickFavorite || quickComingSoon
 
   const clearAllFilters = () => {
     setFilterArtists([])
     setFilterCities([])
     setFilterStates([])
     setFilterVenues([])
-    setFilterStatus([])
+    setQuickLocal(false)
+    setQuickFavorite(false)
+    setQuickComingSoon(false)
   }
 
   // Click row/header to toggle artist filter
@@ -446,16 +525,49 @@ export default function ArtistsSummaryTab() {
           <FilterDropdown label="City"    options={filterOptions.cities}   selected={filterCities}  onChange={setFilterCities} />
           <FilterDropdown label="State"   options={filterOptions.states}   selected={filterStates}  onChange={setFilterStates} />
           <FilterDropdown label="Venue"   options={filterOptions.venues}   selected={filterVenues}  onChange={setFilterVenues} />
-          <FilterDropdown label="Status"  options={filterOptions.statuses} selected={filterStatus}  onChange={setFilterStatus} />
         </div>
       </section>
 
-      {/* ── Sort toggle + count ── */}
+      {/* ── Quick filters + Sort toggle + count ── */}
       <div className="flex items-center justify-between px-1">
-        <span className="text-xs text-neutral-500">
-          {filteredShows.length} show{filteredShows.length !== 1 ? 's' : ''}
-          {hasActiveFilters && <span className="text-neutral-400"> of {allShows.length}</span>}
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-neutral-500">
+            {filteredShows.length} show{filteredShows.length !== 1 ? 's' : ''}
+            {hasActiveFilters && <span className="text-neutral-400"> of {allShows.length}</span>}
+          </span>
+          <div className="flex items-center gap-1 text-xs">
+            <button
+              onClick={() => setQuickLocal(v => !v)}
+              className={`px-2.5 py-1 rounded-full transition-colors ${
+                quickLocal
+                  ? 'bg-neutral-700 text-white'
+                  : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
+              }`}
+            >
+              Local
+            </button>
+            <button
+              onClick={() => setQuickFavorite(v => !v)}
+              className={`px-2.5 py-1 rounded-full transition-colors ${
+                quickFavorite
+                  ? 'bg-neutral-700 text-white'
+                  : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
+              }`}
+            >
+              Favorites
+            </button>
+            <button
+              onClick={() => setQuickComingSoon(v => !v)}
+              className={`px-2.5 py-1 rounded-full transition-colors ${
+                quickComingSoon
+                  ? 'bg-orange-600 text-white'
+                  : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
+              }`}
+            >
+              Coming Soon
+            </button>
+          </div>
+        </div>
         <div className="flex items-center gap-1 text-xs">
           <span className="text-neutral-400 mr-1">Sort:</span>
           <button
