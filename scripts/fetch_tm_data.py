@@ -410,6 +410,9 @@ def main():
     static_path.write_text(json.dumps(static_data, indent=2) + "\n")
     print(f"Wrote {static_path} ({static_path.stat().st_size:,} bytes)")
 
+    # Write marker so export_static_data.py knows to skip
+    (ROOT / ".static_data_fresh").write_text("")
+
     # Print summary stats
     print(f"\n--- Summary ---")
     print(f"Date: {today}")
