@@ -12136,6 +12136,22 @@
           "lon": -85.7485652,
           "genre": "Country / Americana"
         }
+      ],
+      "The National": [
+        {
+          "date": "Mar 15, 2026",
+          "raw_date": "2026-03-15",
+          "venue": "Mercury Lounge",
+          "city": "New York, NY",
+          "not_yet_on_sale": false,
+          "onsale_datetime": null,
+          "onsale_tbd": false,
+          "presales": [],
+          "ticketmaster_url": "https://www.ticketmaster.com/gavin-marengi-w-the-national-reserve-new-york-new-york-03-15-2026/event/00006388D51AB2A5",
+          "lat": 40.7221035,
+          "lon": -73.9867932,
+          "genre": "Indie / Alt-Rock"
+        }
       ]
     },
     "venue_shows": {
@@ -18426,7 +18442,7 @@
       "lon": -99.1747474
     }
   ],
-  "coming_soon_fetched": "2026-02-26T04:21:47.246348+00:00",
+  "coming_soon_fetched": "2026-02-26T12:15:16.205132+00:00",
   "config": {
     "center_city": "Des Moines, IA",
     "center_lat": 41.5868,
