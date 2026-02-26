@@ -55,11 +55,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/summary.json "docs/history/*.json"
+          git add docs/summary.json "docs/history/*.json" frontend/public/static-data.json
           if git diff --cached --quiet; then
             echo "No data changes to commit"
           else
             git commit -m "Data update: ${{ steps.stats.outputs.date }} - ${{ steps.stats.outputs.artists }} artists, ${{ steps.stats.outputs.shows }} shows"
+            git pull --rebase origin main
             git push
           fi
 
