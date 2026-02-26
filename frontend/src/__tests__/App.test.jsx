@@ -46,7 +46,7 @@ beforeEach(() => {
 describe('App', () => {
   it('renders the Wingman header', () => {
     render(<App />)
-    expect(screen.getByText('Wingman')).toBeInTheDocument()
+    expect(screen.getByText('WINGMAN')).toBeInTheDocument()
     expect(screen.getByText('Concert Tracker')).toBeInTheDocument()
   })
 
@@ -62,7 +62,7 @@ describe('App', () => {
 
   it('renders the Refresh Data button in local mode', () => {
     render(<App />)
-    expect(screen.getByText('Refresh Data')).toBeInTheDocument()
+    expect(screen.getByText('Refresh')).toBeInTheDocument()
   })
 
   it('defaults to Coming Soon tab as active', () => {

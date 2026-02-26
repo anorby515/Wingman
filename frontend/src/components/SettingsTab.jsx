@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 function Section({ title, children }) {
   return (
     <div className="card p-5 space-y-4">
-      <h2 className="font-bold text-slate-800 text-base border-b border-slate-100 pb-2">{title}</h2>
+      <h2 className="font-bold text-neutral-800 text-base border-b border-neutral-100 pb-2">{title}</h2>
       {children}
     </div>
   )
@@ -44,17 +44,17 @@ function MapHomeSettings({ config, onSave }) {
   return (
     <Section title="Map Home">
       <form onSubmit={handleSave} className="space-y-4">
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-neutral-800">{error}</p>}
 
         <div>
-          <label className="block text-xs font-medium text-slate-600 mb-1">Home City</label>
+          <label className="block text-xs font-medium text-neutral-600 mb-1">Home City</label>
           <input
             className="input"
             value={centerCity}
             onChange={e => setCenterCity(e.target.value)}
             placeholder="Des Moines, IA"
           />
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-neutral-400 mt-1">
             The map starts centered on this city. All artist shows across North America are displayed.
           </p>
         </div>
@@ -63,7 +63,7 @@ function MapHomeSettings({ config, onSave }) {
           <button type="submit" className="btn-primary" disabled={saving}>
             {saving ? 'Saving\u2026' : 'Save'}
           </button>
-          {saved && <span className="text-sm text-emerald-600 font-medium">Saved!</span>}
+          {saved && <span className="text-sm text-neutral-700 font-medium">Saved!</span>}
         </div>
       </form>
     </Section>
@@ -117,49 +117,49 @@ function ScheduleSettings() {
     }
   }
 
-  if (loading) return <Section title="Schedule"><p className="text-slate-400 text-sm">Loading…</p></Section>
+  if (loading) return <Section title="Schedule"><p className="text-neutral-400 text-sm">Loading…</p></Section>
 
   return (
     <Section title="Scheduled Run">
       {schedule?._note && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-700">
+        <div className="bg-neutral-50 border border-neutral-200 rounded p-3 text-xs text-neutral-600">
           {schedule._note}
         </div>
       )}
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-neutral-800">{error}</p>}
 
       {!editing ? (
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-slate-600 w-24">Next run:</span>
-            <span className="text-sm text-slate-800 font-medium">
+            <span className="text-xs font-medium text-neutral-600 w-24">Next run:</span>
+            <span className="text-sm text-neutral-800 font-medium">
               {schedule?.next_run
                 ? new Date(schedule.next_run).toLocaleString()
-                : <span className="text-slate-400 italic">Unknown</span>
+                : <span className="text-neutral-400 italic">Unknown</span>
               }
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-slate-600 w-24">Schedule:</span>
-            <span className="text-sm text-slate-800 font-mono">{schedule?.cron || '—'}</span>
+            <span className="text-xs font-medium text-neutral-600 w-24">Schedule:</span>
+            <span className="text-sm text-neutral-800 font-mono">{schedule?.cron || '—'}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-slate-600 w-24">Enabled:</span>
-            <span className={`text-sm font-medium ${schedule?.enabled ? 'text-emerald-600' : 'text-amber-600'}`}>
+            <span className="text-xs font-medium text-neutral-600 w-24">Enabled:</span>
+            <span className="text-sm font-medium text-neutral-700">
               {schedule?.enabled === false ? 'Disabled' : 'Enabled'}
             </span>
           </div>
           <div className="flex items-center gap-3 pt-1">
-            <button onClick={() => setEditing(true)} className="btn-ghost border border-slate-200">
+            <button onClick={() => setEditing(true)} className="btn-ghost border border-neutral-200">
               Edit Schedule
             </button>
-            {saved && <span className="text-sm text-emerald-600 font-medium">Saved!</span>}
+            {saved && <span className="text-sm text-neutral-700 font-medium">Saved!</span>}
           </div>
         </div>
       ) : (
         <form onSubmit={handleSave} className="space-y-3">
           <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">
+            <label className="block text-xs font-medium text-neutral-600 mb-1">
               Next run (datetime-local)
             </label>
             <input
@@ -170,8 +170,8 @@ function ScheduleSettings() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">
-              Cron expression <span className="text-slate-400 font-normal">(e.g. <code>0 9 * * 6</code> = Saturdays 9 AM)</span>
+            <label className="block text-xs font-medium text-neutral-600 mb-1">
+              Cron expression <span className="text-neutral-400 font-normal">(e.g. <code>0 9 * * 6</code> = Saturdays 9 AM)</span>
             </label>
             <input
               className="input font-mono"
@@ -239,8 +239,8 @@ function RunNow() {
 
   return (
     <Section title="Manual Run">
-      <p className="text-sm text-slate-600">
-        Triggers <code className="bg-slate-100 px-1 rounded text-xs">concert_weekly.py</code> immediately.
+      <p className="text-sm text-neutral-600">
+        Triggers <code className="bg-neutral-100 px-1 rounded text-xs">concert_weekly.py</code> immediately.
         This scrapes all active artists and venues, diffs against last week's state, and generates a new PDF.
         Scraping takes several minutes.
       </p>
@@ -260,12 +260,12 @@ function RunNow() {
         </button>
 
         {status === 'done' && (
-          <span className="text-emerald-600 font-medium text-sm">
+          <span className="text-neutral-700 font-medium text-sm">
             Completed successfully
           </span>
         )}
         {status === 'error' && (
-          <span className="text-red-600 font-medium text-sm">
+          <span className="text-neutral-800 font-medium text-sm">
             Finished with errors (code {returncode})
           </span>
         )}
@@ -280,17 +280,17 @@ function RunNow() {
       {showLog && log.length > 0 && (
         <div
           ref={logRef}
-          className="bg-slate-900 text-slate-100 rounded-lg p-3 text-xs font-mono max-h-56 overflow-y-auto space-y-0.5"
+          className="bg-neutral-900 text-neutral-100 rounded p-3 text-xs font-mono max-h-56 overflow-y-auto space-y-0.5"
         >
           {log.map((line, i) => (
             <div key={i} className={
-              line.includes('ERROR') || line.includes('⚠') ? 'text-red-400' :
-              line.includes('✅') ? 'text-emerald-400' :
-              'text-slate-300'
+              line.includes('ERROR') || line.includes('⚠') ? 'text-neutral-400 font-medium' :
+              line.includes('✅') ? 'text-neutral-300' :
+              'text-neutral-400'
             }>{line || '\u00a0'}</div>
           ))}
           {status === 'running' && (
-            <div className="text-indigo-400 animate-pulse">▌</div>
+            <div className="text-neutral-500 animate-pulse">▌</div>
           )}
         </div>
       )}
@@ -329,9 +329,9 @@ function GitHubPagesSettings({ config, onSave }) {
   return (
     <Section title="GitHub Pages">
       <form onSubmit={handleSave} className="space-y-3">
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-neutral-800">{error}</p>}
         <div>
-          <label className="block text-xs font-medium text-slate-600 mb-1">
+          <label className="block text-xs font-medium text-neutral-600 mb-1">
             Public Report URL
           </label>
           <input
@@ -340,26 +340,23 @@ function GitHubPagesSettings({ config, onSave }) {
             onChange={e => setUrl(e.target.value)}
             placeholder="https://username.github.io/Wingman/"
           />
-          <p className="text-xs text-slate-400 mt-1">
-            The "Public Report" button in the header links here. Set this to your GitHub Pages URL.
+          <p className="text-xs text-neutral-400 mt-1">
+            The "Live →" button in the header links here. Set this to your GitHub Pages URL.
           </p>
         </div>
         <div className="flex items-center gap-3">
           <button type="submit" className="btn-primary" disabled={saving}>
             {saving ? 'Saving...' : 'Save'}
           </button>
-          {saved && <span className="text-sm text-emerald-600 font-medium">Saved!</span>}
+          {saved && <span className="text-sm text-neutral-700 font-medium">Saved!</span>}
           {url && (
             <a
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-ghost border border-slate-200 flex items-center gap-1"
+              className="btn-ghost border border-neutral-200"
             >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-              Open
+              Open →
             </a>
           )}
         </div>
@@ -401,16 +398,16 @@ function TicketmasterSettings({ config, onSave }) {
   return (
     <Section title="Ticketmaster Integration">
       <form onSubmit={handleSave} className="space-y-3">
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <p className="text-sm text-slate-600">
+        {error && <p className="text-sm text-neutral-800">{error}</p>}
+        <p className="text-sm text-neutral-600">
           Powers the <strong>Coming Soon</strong> tab — shows announced concerts not yet on public sale,
           plus any presale windows (fan club, credit card, etc.).
         </p>
         <div>
-          <label className="block text-xs font-medium text-slate-600 mb-1">
+          <label className="block text-xs font-medium text-neutral-600 mb-1">
             Discovery API Key{' '}
             {isConfigured && (
-              <span className="text-emerald-600 font-medium">(configured)</span>
+              <span className="text-neutral-700 font-medium">(configured)</span>
             )}
           </label>
           <input
@@ -420,13 +417,13 @@ function TicketmasterSettings({ config, onSave }) {
             onChange={e => setApiKey(e.target.value)}
             placeholder="Paste your TM Discovery API key"
           />
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-neutral-400 mt-1">
             Free tier at{' '}
             <a
               href="https://developer.ticketmaster.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-indigo-500 hover:underline"
+              className="text-neutral-500 underline hover:text-neutral-700"
             >
               developer.ticketmaster.com
             </a>
@@ -441,7 +438,7 @@ function TicketmasterSettings({ config, onSave }) {
           >
             {saving ? 'Saving…' : 'Save'}
           </button>
-          {saved && <span className="text-sm text-emerald-600 font-medium">Saved!</span>}
+          {saved && <span className="text-sm text-neutral-700 font-medium">Saved!</span>}
         </div>
       </form>
     </Section>
@@ -453,20 +450,17 @@ function SpotifySettings() {
   return (
     <Section title="Spotify Integration">
       <div className="space-y-3">
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-neutral-600">
           Connect Spotify to sync followed artists, discover new bands from your listening history,
           and keep your Wingman and Spotify libraries in sync.
         </p>
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-2">
-          <div className="flex items-center gap-2 text-sm text-slate-500">
-            <svg className="w-5 h-5 text-[#1DB954]" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-            </svg>
-            <span className="font-medium">Not connected</span>
+        <div className="bg-neutral-50 border border-neutral-200 rounded p-4 space-y-2">
+          <div className="flex items-center gap-2 text-sm text-neutral-500">
+            <span className="font-medium">Spotify — Not connected</span>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-neutral-400">
             Requires a Spotify Developer App. Set up at{' '}
-            <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline">
+            <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-neutral-500 underline hover:text-neutral-700">
               developer.spotify.com
             </a>, then configure your Client ID below.
           </p>
@@ -495,10 +489,10 @@ export default function SettingsTab() {
 
   if (loading) return (
     <div className="flex justify-center py-16">
-      <div className="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-neutral-200 border-t-neutral-700 rounded-full animate-spin" />
     </div>
   )
-  if (error) return <div className="card p-6 text-red-600 text-sm">{error}</div>
+  if (error) return <div className="card p-6 text-neutral-800 text-sm">{error}</div>
 
   return (
     <div className="space-y-5">
