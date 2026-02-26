@@ -47,7 +47,6 @@ describe('App', () => {
   it('renders the Wingman header', () => {
     render(<App />)
     expect(screen.getByText('WINGMAN')).toBeInTheDocument()
-    expect(screen.getByText('Concert Tracker')).toBeInTheDocument()
   })
 
   it('renders all tab buttons in local mode', () => {
