@@ -180,10 +180,10 @@ export default function App() {
                 aria-selected={active === tab.id}
                 onClick={() => setActive(tab.id)}
                 className={[
-                  'flex-1 py-2.5 text-sm transition-colors border-b-2',
+                  'flex-1 py-2.5 text-sm text-neutral-900 transition-colors border-b-2',
                   active === tab.id
-                    ? 'border-neutral-900 text-neutral-900 font-semibold'
-                    : 'border-transparent text-neutral-400 hover:text-neutral-700',
+                    ? 'border-neutral-900 font-semibold'
+                    : 'border-transparent',
                 ].join(' ')}
               >
                 {tab.label}
