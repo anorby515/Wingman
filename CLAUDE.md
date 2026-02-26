@@ -161,35 +161,55 @@ View full report: [GitHub Pages URL]
 
 **Trigger:** Manual only — user starts Cowork session and requests Spotify sync.
 
+**Architecture decision:** Spotify sync is **Cowork-driven, not UI-driven.** This is intentional:
+- Sync runs ~monthly, not often enough to justify a full OAuth UI and suggestion queue in the local site
+- Listening history analysis (Phase 3) is the core value — Cowork excels at explaining *why* an artist surfaced and providing context for decisions
+- Tour page URL auto-discovery requires web searching — Cowork handles this naturally via Chrome skills
+- Conversational approve/dismiss is the preferred interaction style
+- The backend provides supporting API endpoints, but Cowork orchestrates the workflow
+
 **Sequence:**
-1. Read `wingman_config.json` for current artist list
+1. Read `wingman_config.json` for current artist list via `GET /api/config`
 2. Authenticate with Spotify using locally stored OAuth tokens (`spotify_tokens.json`)
 3. **Phase 1 — Spotify follows not in Wingman:**
    - `GET /me/following?type=artist` to get followed artists
    - For each followed artist NOT in `wingman_config.json`:
      - Ask user interactively: "Add [Artist] to Wingman?"
      - If yes: Chrome skill searches Google for official website + tour/shows URL
-     - Add artist to `wingman_config.json` with discovered URL
+     - Add artist to `wingman_config.json` via backend API with discovered URL
 4. **Phase 2 — Wingman artists not followed on Spotify:**
    - For each artist in `wingman_config.json` NOT in Spotify follows:
      - Search Spotify for the artist
      - If found: ask user "Follow [Artist] on Spotify?"
        - If yes: `PUT /me/following?type=artist&ids=[id]`
-     - If NOT found on Spotify: flag in `flagged_items.json` for local UI display
+     - If NOT found on Spotify: flag in `flagged_items.json` via `POST /api/flagged-items`
 5. **Phase 3 — Listening history suggestions:**
    - `GET /me/top/artists` for time_range: short_term, medium_term, long_term
    - `GET /me/player/recently-played` for recent tracks (extract unique artists)
    - For each discovered artist not already followed or tracked:
-     - Check `dismissed_suggestions.json` — skip if dismissed < 6 months ago
+     - Check `dismissed_suggestions.json` via backend API — skip if dismissed < 6 months ago
+     - Provide context: explain listening frequency, time range, why the suggestion is relevant
      - Ask user: "[Artist] appears in your listening history. Track and follow?"
      - If yes: add to Wingman + follow on Spotify
-     - If dismissed: write to `dismissed_suggestions.json` with timestamp
+     - If dismissed: write to `dismissed_suggestions.json` with timestamp via backend API
 
 **Required Spotify OAuth scopes:**
 - `user-follow-read`
 - `user-follow-modify`
 - `user-top-read`
 - `user-read-recently-played`
+
+**Backend support needed for Cowork:**
+
+| Endpoint / File | Purpose | Status |
+|-----------------|---------|--------|
+| `spotify_tokens.json` | Cowork stores/reads OAuth tokens directly | File gitignored, no code yet |
+| `GET /api/dismissed-suggestions` | Cowork checks what's been dismissed | Not built |
+| `POST /api/dismissed-suggestions` | Cowork writes new dismissals | Not built |
+| `GET /api/flagged-items` | Cowork reads flagged items | Exists |
+| `POST /api/flagged-items` | Cowork writes Spotify flags | Exists |
+| `POST /api/artists` | Cowork adds new artists to config | Exists |
+| `GET /api/config` | Cowork reads current artist list | Exists |
 
 ---
 
@@ -425,7 +445,7 @@ Refactoring the data architecture to eliminate `concert_state.json` and web scra
 
 ### Future
 - **Bandsintown API** — supplemental data source for artists/venues not on Ticketmaster
-- **Spotify OAuth** — Connect flow in local UI for Cowork Spotify sync
+- **Spotify sync** — Cowork-driven (not local UI); backend needs dismissed-suggestions endpoints and OAuth token storage
 - **Filter/sort options** — Advanced filtering and sorting on the GitHub Pages site
 
 ---
@@ -476,7 +496,10 @@ Revisit how festivals are tracked, fetched, and displayed. The current festival 
 
 ### Step 8: Cowork Workflow Rewrite
 - Remove scraping workflows
-- Cowork = Spotify sync (manual) + notification delivery (email + SMS)
+- Cowork = Spotify sync (manual, conversational) + notification delivery (email + SMS)
+- Spotify sync is Cowork-driven: Cowork orchestrates all 3 phases, calls Spotify API directly, uses Chrome skills for URL discovery
+- Backend provides supporting endpoints: dismissed-suggestions CRUD, flagged-items, artist management
+- OAuth tokens stored in `spotify_tokens.json` (managed by Cowork, not the backend)
 
 ### Step 9: Bandsintown Integration (FUTURE)
 - Secondary/supplemental data source for artists/venues not on TM
