@@ -3333,6 +3333,8 @@
   },
   "config": {
     "center_city": "Des Moines, IA",
+    "center_lat": 41.5868,
+    "center_lon": -93.625,
     "artists": {
       "Luke Combs": {
         "genre": "Country / Americana",
@@ -3428,11 +3430,6 @@
         "genre": "Indie / Alt-Rock",
         "paused": false,
         "url": "https://www.thelumineers.com/tour"
-      },
-      "American Mary": {
-        "genre": "Indie / Alt-Rock",
-        "paused": false,
-        "url": "https://www.americanmary.com/#tour"
       },
       "Bon Iver": {
         "genre": "Indie / Alt-Rock",
@@ -3543,15 +3540,35 @@
         "genre": "Electronic / Art-Rock",
         "paused": false,
         "url": "https://interscope.com/products/tame-impala-the-complete-vinyl-collection"
+      },
+      "Riley Green": {
+        "genre": "Country / Americana",
+        "paused": false,
+        "url": "https://www.rileygreenmusic.com/tour/#/"
+      },
+      "Stephen Wilson Jr.": {
+        "genre": "Country / Americana",
+        "paused": false,
+        "url": "https://stephenwilsonjr.com/"
+      },
+      "Turnpike Troubadours": {
+        "genre": "Country / Americana",
+        "paused": false,
+        "url": "https://turnpiketroubadours.com/"
+      },
+      "Cameron Whitcomb": {
+        "genre": "Country / Americana",
+        "paused": false,
+        "url": "https://www.thecamwhitcomb.com/"
+      },
+      "The National": {
+        "genre": "Indie / Alt-Rock",
+        "paused": false,
+        "url": "https://www.americanmary.com/#tour"
       }
     },
     "venues": {
       "Hoyt Sherman Place": {
-        "city": "Des Moines, IA",
-        "is_local": true,
-        "paused": false
-      },
-      "First Fleet Concerts": {
         "city": "Des Moines, IA",
         "is_local": true,
         "paused": false
@@ -3576,11 +3593,6 @@
         "is_local": false,
         "paused": false
       },
-      "ACL Live": {
-        "city": "Austin, TX",
-        "is_local": false,
-        "paused": false
-      },
       "The Salt Shed": {
         "city": "Chicago, IL",
         "is_local": false,
@@ -3600,66 +3612,37 @@
         "city": "Boston, MA",
         "is_local": false,
         "paused": false
+      },
+      "Wooly's": {
+        "city": "Des Moines, IA",
+        "is_local": true,
+        "paused": false
+      },
+      "Vibrant Music Hall": {
+        "city": "West Des Moines, IA",
+        "is_local": true,
+        "paused": false
+      },
+      "Lauridsen Amphitheater": {
+        "city": "Des Moines, IA",
+        "is_local": true,
+        "paused": false
+      },
+      "Austin City Limits Live at The Moody": {
+        "city": "Austin, Tx",
+        "is_local": false,
+        "paused": false
+      },
+      "The Salt Shed Outdoors": {
+        "city": "Chicago, IL",
+        "is_local": false,
+        "paused": false
+      },
+      "The Salt Shed Indoors (Shed)": {
+        "city": "Chicago, IL",
+        "is_local": false,
+        "paused": false
       }
     }
-  },
-  "coming_soon": [
-    {
-      "artist": "Luke Combs",
-      "genre": "Country / Americana",
-      "date": "Aug 22, 2026",
-      "venue": "Kinnick Stadium",
-      "city": "Iowa City, IA",
-      "onsale_datetime": "2026-03-15T15:00:00Z",
-      "onsale_tbd": false,
-      "presales": [
-        {
-          "name": "Fan Club Presale",
-          "start_datetime": "2026-03-13T15:00:00Z",
-          "end_datetime": "2026-03-14T23:59:00Z"
-        },
-        {
-          "name": "Citi Cardmember Presale",
-          "start_datetime": "2026-03-13T15:00:00Z",
-          "end_datetime": "2026-03-14T23:59:00Z"
-        }
-      ],
-      "ticketmaster_url": "https://www.ticketmaster.com",
-      "lat": 41.6584,
-      "lon": -91.5508
-    },
-    {
-      "artist": "Zach Bryan",
-      "genre": "Country / Americana",
-      "date": "Jul 11, 2026",
-      "venue": "Busch Stadium",
-      "city": "St. Louis, MO",
-      "onsale_datetime": "2026-03-20T14:00:00Z",
-      "onsale_tbd": false,
-      "presales": [
-        {
-          "name": "Artist Presale",
-          "start_datetime": "2026-03-18T14:00:00Z",
-          "end_datetime": "2026-03-19T22:00:00Z"
-        }
-      ],
-      "ticketmaster_url": "https://www.ticketmaster.com",
-      "lat": 38.6226,
-      "lon": -90.1928
-    },
-    {
-      "artist": "The Lumineers",
-      "genre": "Indie / Alt-Rock",
-      "date": "Sep 5, 2026",
-      "venue": "Northwell Health at Jones Beach Theater",
-      "city": "Wantagh, NY",
-      "onsale_datetime": null,
-      "onsale_tbd": true,
-      "presales": [],
-      "ticketmaster_url": "https://www.ticketmaster.com",
-      "lat": 40.6076,
-      "lon": -73.5085
-    }
-  ],
-  "coming_soon_fetched": "2026-02-25T12:00:00Z"
+  }
 }
