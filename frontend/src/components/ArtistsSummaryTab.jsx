@@ -513,7 +513,13 @@ export default function ArtistsSummaryTab() {
       {/* ── Filter bar ── */}
       <section className="card px-3 py-3">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">Filters</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">Filters</h3>
+            <span className="text-xs text-neutral-500">
+              {filteredShows.length} show{filteredShows.length !== 1 ? 's' : ''}
+              {hasActiveFilters && <span className="text-neutral-400"> of {allShows.length}</span>}
+            </span>
+          </div>
           {hasActiveFilters && (
             <button onClick={clearAllFilters} className="text-xs text-neutral-500 hover:text-neutral-800 underline">
               Clear all
@@ -528,14 +534,21 @@ export default function ArtistsSummaryTab() {
         </div>
       </section>
 
-      {/* ── Quick filters + Sort toggle + count ── */}
+      {/* ── Quick filters + Sort ── */}
       <div className="flex items-center justify-between px-1">
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-neutral-500">
-            {filteredShows.length} show{filteredShows.length !== 1 ? 's' : ''}
-            {hasActiveFilters && <span className="text-neutral-400"> of {allShows.length}</span>}
-          </span>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">Quick Filters</span>
           <div className="flex items-center gap-1 text-xs">
+            <button
+              onClick={() => setQuickComingSoon(v => !v)}
+              className={`px-2.5 py-1 rounded-full transition-colors ${
+                quickComingSoon
+                  ? 'bg-orange-600 text-white'
+                  : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
+              }`}
+            >
+              On Sale Soon
+            </button>
             <button
               onClick={() => setQuickLocal(v => !v)}
               className={`px-2.5 py-1 rounded-full transition-colors ${
@@ -554,17 +567,7 @@ export default function ArtistsSummaryTab() {
                   : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
               }`}
             >
-              Favorites
-            </button>
-            <button
-              onClick={() => setQuickComingSoon(v => !v)}
-              className={`px-2.5 py-1 rounded-full transition-colors ${
-                quickComingSoon
-                  ? 'bg-orange-600 text-white'
-                  : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
-              }`}
-            >
-              Coming Soon
+              Travel Venues
             </button>
           </div>
         </div>

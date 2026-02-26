@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
 import ArtistsSummaryTab   from './components/ArtistsSummaryTab.jsx'
-import FestivalsSummaryTab from './components/FestivalsSummaryTab.jsx'
-import VenuesSummaryTab    from './components/VenuesSummaryTab.jsx'
 import ComingSoonTab       from './components/ComingSoonTab.jsx'
 import ConfigureTab        from './components/ConfigureTab.jsx'
 import SettingsTab         from './components/SettingsTab.jsx'
@@ -9,16 +7,14 @@ import SettingsTab         from './components/SettingsTab.jsx'
 const DEMO = import.meta.env.VITE_DEMO_MODE === 'true'
 
 const ALL_TABS = [
-  { id: 'coming-soon', label: 'Coming Soon' },
-  { id: 'artists',     label: 'Artists'     },
-  { id: 'festivals',   label: 'Festivals'   },
-  { id: 'venues',      label: 'Venues'      },
-  { id: 'configure',   label: 'Configure'   },
-  { id: 'settings',    label: 'Settings'    },
+  { id: 'concerts',    label: 'Concerts & Festivals' },
+  { id: 'on-sale-soon', label: 'On Sale Soon'        },
+  { id: 'configure',   label: 'Configure'            },
+  { id: 'settings',    label: 'Settings'             },
 ]
 
 const TABS = DEMO
-  ? ALL_TABS.filter(t => ['coming-soon', 'artists', 'festivals', 'venues'].includes(t.id))
+  ? ALL_TABS.filter(t => ['concerts', 'on-sale-soon'].includes(t.id))
   : ALL_TABS.filter(t => ['configure', 'settings'].includes(t.id))
 
 function timeAgo(isoStr) {
@@ -36,7 +32,7 @@ function timeAgo(isoStr) {
 }
 
 export default function App() {
-  const [active, setActive] = useState(DEMO ? 'coming-soon' : 'configure')
+  const [active, setActive] = useState(DEMO ? 'concerts' : 'configure')
   const [pagesUrl, setPagesUrl] = useState('')
   const [lastRefreshed, setLastRefreshed] = useState(null)
   const [refreshing, setRefreshing] = useState(false)
@@ -195,12 +191,10 @@ export default function App() {
 
       {/* ── Content ── */}
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6">
-        {active === 'coming-soon' && <ComingSoonTab key={refreshVersion} />}
-        {active === 'artists'     && <ArtistsSummaryTab key={refreshVersion} />}
-        {active === 'festivals'   && <FestivalsSummaryTab key={refreshVersion} />}
-        {active === 'venues'      && <VenuesSummaryTab key={refreshVersion} />}
-        {active === 'configure'   && <ConfigureTab />}
-        {active === 'settings'    && <SettingsTab />}
+        {active === 'concerts'      && <ArtistsSummaryTab key={refreshVersion} />}
+        {active === 'on-sale-soon'  && <ComingSoonTab key={refreshVersion} />}
+        {active === 'configure'     && <ConfigureTab />}
+        {active === 'settings'      && <SettingsTab />}
       </main>
     </div>
   )
