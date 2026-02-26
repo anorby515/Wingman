@@ -55,13 +55,18 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Fast-forward to latest origin/main BEFORE committing so our
+          # data commit sits on top and no rebase is needed.  The reset
+          # moves the branch pointer without touching the working tree,
+          # so the freshly generated data files are preserved.
+          git fetch origin main
+          git reset origin/main
           git add docs/summary.json "docs/history/*.json" frontend/public/static-data.json
           if git diff --cached --quiet; then
             echo "No data changes to commit"
           else
             git commit -m "Data update: ${{ steps.stats.outputs.date }} - ${{ steps.stats.outputs.artists }} artists, ${{ steps.stats.outputs.shows }} shows"
-            git pull --rebase origin main
-            git push
+            git push origin main
           fi
 
       # ── Node: build frontend ──
