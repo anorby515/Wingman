@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import ConcertMap from './ConcertMap.jsx'
 
 const DEMO = import.meta.env.VITE_DEMO_MODE === 'true'
@@ -12,174 +12,76 @@ function fmtOnsale(isoStr) {
   } catch { return null }
 }
 
-
-function isInBounds(lat, lon, bounds) {
-  if (!bounds) return true
-  const sw = bounds.getSouthWest()
-  const ne = bounds.getNorthEast()
-  return lat >= sw.lat && lat <= ne.lat && lon >= sw.lng && lon <= ne.lng
+function extractState(cityStr) {
+  if (!cityStr) return ''
+  const parts = cityStr.split(', ').map(s => s.trim())
+  if (parts.length >= 3) return parts[1]
+  if (parts.length === 2) return parts[1]
+  return ''
 }
 
-// ── Artist card ───────────────────────────────────────────────────────────────
-function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
-  const [manualOpen, setManualOpen] = useState(false)
-  const open = isSelected || manualOpen
+// ── Multi-select filter dropdown ─────────────────────────────────────────────
+function FilterDropdown({ label, options, selected, onChange }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
 
-  function handleClick() {
-    if (isSelected) {
-      onSelect(null)
-      setManualOpen(false)
+  useEffect(() => {
+    function handleClick(e) {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
+    }
+    if (open) document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [open])
+
+  const toggle = (val) => {
+    if (selected.includes(val)) {
+      onChange(selected.filter(s => s !== val))
     } else {
-      onSelect({ type: 'artist', name })
+      onChange([...selected, val])
     }
   }
 
-  const onSale   = shows.filter(s => !s.not_yet_on_sale)
-  const preSale  = shows.filter(s => s.not_yet_on_sale)
-
-  const mergedRows = useMemo(() => {
-    const rows = [
-      ...onSale.map(s => ({ ...s, _src: 'on-sale' })),
-      ...preSale.map(s => ({ ...s, _src: 'presale' })),
-    ]
-    rows.sort((a, b) => {
-      const da = new Date(a.date), db = new Date(b.date)
-      return (!isNaN(da) && !isNaN(db)) ? da - db : 0
-    })
-    return rows
-  }, [shows])
+  const activeCount = selected.length
 
   return (
-    <div className={`card transition-all ${paused ? 'opacity-50' : ''} ${isSelected ? 'ring-1 ring-neutral-600' : ''}`}>
+    <div ref={ref} className="relative">
       <button
-        onClick={handleClick}
-        className="w-full p-4 text-left flex items-center gap-3"
+        onClick={() => setOpen(!open)}
+        className={`px-3 py-1.5 text-xs rounded-full border transition-colors whitespace-nowrap
+          ${activeCount > 0
+            ? 'bg-neutral-800 text-white border-neutral-800'
+            : 'bg-white text-neutral-600 border-neutral-300 hover:border-neutral-400'
+          }`}
       >
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5 min-w-0">
-            {url ? (
-              <a
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={e => e.stopPropagation()}
-                className="font-semibold text-neutral-900 hover:text-neutral-600 hover:underline truncate"
-              >
-                {name}
-              </a>
-            ) : (
-              <span className="font-semibold text-neutral-900 truncate">{name}</span>
-            )}
-          </div>
-          <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-            <span className="badge-genre">{genre}</span>
-            {paused && <span className="badge-paused">Paused</span>}
-            {isSelected && (
-              <span className="text-xs text-neutral-500 font-medium">Filtered</span>
-            )}
-          </div>
-        </div>
-
-        {/* Count indicators */}
-        <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
-          {onSale.length > 0 && (
-            <span className="flex items-center gap-1 text-sm text-neutral-800">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-neutral-800 flex-shrink-0" />
-              {onSale.length} on sale
-            </span>
-          )}
-          {preSale.length > 0 && (
-            <span className="flex items-center gap-1 text-xs text-neutral-400">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-neutral-300 flex-shrink-0" />
-              {preSale.length} soon
-            </span>
-          )}
-          {shows.length === 0 && (
-            <span className="text-sm text-neutral-400">No shows</span>
-          )}
-          <span className="text-neutral-400 text-xs mt-0.5">{open ? '−' : '+'}</span>
-        </div>
+        {label}{activeCount > 0 ? ` (${activeCount})` : ''}
+        <span className="ml-1 text-[10px]">{open ? '\u25B4' : '\u25BE'}</span>
       </button>
-
       {open && (
-        <div className="border-t border-neutral-100 px-4 pb-4">
-          {mergedRows.length > 0 ? (
-            <ul className="mt-3 space-y-2">
-              {mergedRows.map((show, i) =>
-                show._src === 'presale' ? (
-                  // ── Not-yet-on-sale show ──
-                  <li key={i} className="bg-neutral-50 -mx-2 px-2 py-1.5 text-sm">
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <span className="font-medium text-slate-800">{show.date}</span>
-                        <span className="text-slate-400 mx-1">&middot;</span>
-                        <span className="text-slate-600">{show.venue}</span>
-                        <span className="text-slate-400 mx-1">&middot;</span>
-                        <span className="text-slate-500">{show.city}</span>
-                      </div>
-                      {show.ticketmaster_url && (
-                        <a
-                          href={show.ticketmaster_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={e => e.stopPropagation()}
-                          className="flex-shrink-0 text-xs text-neutral-500 hover:text-neutral-800 hover:underline"
-                        >
-                          TM →
-                        </a>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-1 mt-0.5">
-                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-neutral-400 flex-shrink-0" />
-                      <span className="text-xs text-neutral-500 font-medium">
-                        {show.onsale_tbd
-                          ? 'On-sale date TBD'
-                          : show.onsale_datetime
-                          ? `On sale ${fmtOnsale(show.onsale_datetime)}`
-                          : 'On-sale date not announced'}
-                      </span>
-                    </div>
-                    {show.presales && show.presales.length > 0 && (
-                      <ul className="mt-1 space-y-0.5">
-                        {show.presales.map((p, pi) => (
-                          <li key={pi} className="flex items-center gap-1 text-xs text-neutral-400">
-                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-300 flex-shrink-0" />
-                            <span className="font-medium text-neutral-500">{p.name}</span>
-                            {p.start_datetime && (
-                              <span className="text-neutral-400">— starts {fmtOnsale(p.start_datetime)}</span>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                ) : (
-                  // ── On-sale show ──
-                  <li key={i} className="flex items-start justify-between gap-2 text-sm">
-                    <div>
-                      <span className="font-medium text-neutral-800">{show.date}</span>
-                      <span className="text-neutral-300 mx-1">&middot;</span>
-                      <span className="text-neutral-600">{show.venue}</span>
-                      <span className="text-neutral-300 mx-1">&middot;</span>
-                      <span className="text-neutral-400">{show.city}</span>
-                    </div>
-                    {show.ticketmaster_url && (
-                      <a
-                        href={show.ticketmaster_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={e => e.stopPropagation()}
-                        className="flex-shrink-0 text-xs text-neutral-500 hover:text-neutral-800 hover:underline"
-                      >
-                        TM →
-                      </a>
-                    )}
-                  </li>
-                )
-              )}
-            </ul>
-          ) : (
-            <p className="mt-3 text-sm text-neutral-400 italic">No upcoming shows found.</p>
+        <div className="absolute top-full left-0 mt-1 bg-white border border-neutral-200 rounded-sm shadow-lg z-50 max-h-60 overflow-y-auto min-w-[200px]">
+          {selected.length > 0 && (
+            <button
+              onClick={() => onChange([])}
+              className="w-full px-3 py-1.5 text-xs text-neutral-500 hover:bg-neutral-50 text-left border-b border-neutral-100"
+            >
+              Clear {label.toLowerCase()}
+            </button>
+          )}
+          {options.map(opt => (
+            <label
+              key={opt}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-neutral-50 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                checked={selected.includes(opt)}
+                onChange={() => toggle(opt)}
+                className="rounded border-neutral-300 text-neutral-800 focus:ring-neutral-400"
+              />
+              <span className="truncate text-neutral-700">{opt}</span>
+            </label>
+          ))}
+          {options.length === 0 && (
+            <div className="px-3 py-2 text-xs text-neutral-400 italic">No options</div>
           )}
         </div>
       )}
@@ -187,22 +89,112 @@ function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
   )
 }
 
-// ── Section heading ───────────────────────────────────────────────────────────
-function SectionHeading({ children, count, total }) {
+// ── Show row (date-sorted flat list) ─────────────────────────────────────────
+function ShowRow({ show, showArtist = true }) {
+  const dateObj = new Date(show.raw_date || show.date)
+  const month = !isNaN(dateObj) ? dateObj.toLocaleString(undefined, { month: 'short' }).toUpperCase() : '???'
+  const day = !isNaN(dateObj) ? dateObj.getDate() : '--'
+  const isComingSoon = show.not_yet_on_sale
+  const artistUrl = show._artistUrl
+
   return (
-    <div className="flex items-center gap-2 mb-3">
-      <h2 className="text-base font-bold text-neutral-800">{children}</h2>
-      {count !== undefined && total !== undefined ? (
-        <span className="text-xs text-neutral-400">{count} / {total} in view</span>
-      ) : count !== undefined ? (
-        <span className="text-xs text-neutral-400">{count}</span>
-      ) : null}
+    <div className="flex items-center gap-3 px-3 py-2.5 border-b border-neutral-100 last:border-b-0 hover:bg-neutral-50/50 transition-colors">
+      {/* Date block */}
+      <div className="flex-shrink-0 w-11 text-center">
+        <div className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider leading-none">{month}</div>
+        <div className="text-xl font-bold text-neutral-800 leading-tight">{day}</div>
+      </div>
+
+      {/* Divider */}
+      <div className="w-px h-9 bg-neutral-200 flex-shrink-0" />
+
+      {/* Content */}
+      <div className="flex-1 min-w-0">
+        {showArtist && (
+          <div className="flex items-center gap-1.5">
+            {artistUrl ? (
+              <a
+                href={artistUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-sm text-neutral-900 hover:text-neutral-600 hover:underline truncate"
+              >
+                {show._artist}
+              </a>
+            ) : (
+              <span className="font-semibold text-sm text-neutral-900 truncate">{show._artist}</span>
+            )}
+          </div>
+        )}
+        <div className="text-xs text-neutral-500 truncate">
+          {show.venue}
+          <span className="text-neutral-300 mx-1">&middot;</span>
+          {show.city}
+        </div>
+        {isComingSoon && (
+          <div className="text-[10px] text-orange-600 mt-0.5">
+            {show.onsale_tbd
+              ? 'On-sale date TBD'
+              : show.onsale_datetime
+              ? `On sale ${fmtOnsale(show.onsale_datetime)}`
+              : 'On-sale date not announced'}
+          </div>
+        )}
+      </div>
+
+      {/* Status + TM link */}
+      <div className="flex items-center gap-2 flex-shrink-0">
+        <span className={`hidden sm:inline text-[10px] font-medium px-1.5 py-0.5 rounded-full ${
+          isComingSoon
+            ? 'bg-orange-50 text-orange-600 border border-orange-200'
+            : 'bg-blue-50 text-blue-600 border border-blue-200'
+        }`}>
+          {isComingSoon ? 'Soon' : 'On Sale'}
+        </span>
+        {/* Mobile status dot */}
+        <span className={`sm:hidden w-2 h-2 rounded-full flex-shrink-0 ${
+          isComingSoon ? 'bg-orange-400' : 'bg-blue-400'
+        }`} />
+        {show.ticketmaster_url && (
+          <a
+            href={show.ticketmaster_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-neutral-400 hover:text-neutral-700 transition-colors whitespace-nowrap"
+            title="Buy on Ticketmaster"
+          >
+            TM&nbsp;&rarr;
+          </a>
+        )}
+      </div>
     </div>
   )
 }
 
-// ── Map legend ────────────────────────────────────────────────────────────────
-function MapLegend({ mapFilter, onClearFilter }) {
+// ── Artist group header (for grouped-by-artist mode) ─────────────────────────
+function ArtistGroupHeader({ artist, url, genre, showCount }) {
+  return (
+    <div className="px-3 py-2 bg-neutral-50 border-b border-neutral-200 flex items-center gap-2 sticky top-0 z-10">
+      {url ? (
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold text-sm text-neutral-800 hover:text-neutral-600 hover:underline"
+        >
+          {artist}
+        </a>
+      ) : (
+        <span className="font-semibold text-sm text-neutral-800">{artist}</span>
+      )}
+      {genre && <span className="text-[10px] text-neutral-400">{genre}</span>}
+      <span className="text-xs text-neutral-400 ml-auto">{showCount}</span>
+    </div>
+  )
+}
+
+// ── Map legend ───────────────────────────────────────────────────────────────
+function MapLegend() {
   return (
     <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-400 mt-2 px-1">
       <span className="flex items-center gap-1">
@@ -217,27 +209,26 @@ function MapLegend({ mapFilter, onClearFilter }) {
       <span className="flex items-center gap-1">
         <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 inline-block" /> Home
       </span>
-      {mapFilter && (
-        <button
-          onClick={onClearFilter}
-          className="ml-auto text-xs text-neutral-500 hover:text-neutral-900 underline transition-colors"
-        >
-          Clear filter: {mapFilter.name}
-        </button>
-      )}
     </div>
   )
 }
 
-// ── Main tab ──────────────────────────────────────────────────────────────────
+// ── Main tab ─────────────────────────────────────────────────────────────────
 export default function ArtistsSummaryTab() {
-  const [shows, setShows]             = useState(null)
-  const [config, setConfig]           = useState(null)
-  const [loading, setLoading]         = useState(true)
-  const [error, setError]             = useState(null)
-  const [mapFilter, setMapFilter]     = useState(null)
-  const [mapBounds, setMapBounds]     = useState(null)
-  const [hideNoShows, setHideNoShows] = useState(false)
+  const [shows, setShows]       = useState(null)
+  const [config, setConfig]     = useState(null)
+  const [loading, setLoading]   = useState(true)
+  const [error, setError]       = useState(null)
+
+  // Sort: 'date' (default) or 'artist' (grouped)
+  const [sortMode, setSortMode] = useState('date')
+
+  // Multi-select filters
+  const [filterArtists, setFilterArtists] = useState([])
+  const [filterCities, setFilterCities]   = useState([])
+  const [filterStates, setFilterStates]   = useState([])
+  const [filterVenues, setFilterVenues]   = useState([])
+  const [filterStatus, setFilterStatus]   = useState([])
 
   useEffect(() => {
     if (DEMO) {
@@ -268,25 +259,90 @@ export default function ArtistsSummaryTab() {
     }
   }, [])
 
-  const handleBoundsChange = useCallback((bounds) => { setMapBounds(bounds) }, [])
-
   const artistShows = shows?.artist_shows ?? {}
+  const configArtists = config?.artists || {}
 
-  // Map pin data
-  const allArtistShows = useMemo(() => {
+  // ── Aggregate all artist shows into a flat list ──
+  const allShows = useMemo(() => {
     const arr = []
-    for (const [artist, artistShowList] of Object.entries(artistShows)) {
-      for (const show of artistShowList) {
+    for (const [artist, showList] of Object.entries(artistShows)) {
+      const info = configArtists[artist] || {}
+      for (const show of showList) {
         arr.push({
           ...show,
-          artist,
-          status: 'on_sale',
-          source: show.not_yet_on_sale ? 'tm' : undefined,
+          _artist: artist,
+          _artistUrl: info.url || null,
+          _genre: info.genre || 'Other',
+          _state: extractState(show.city),
+          _status: show.not_yet_on_sale ? 'Coming Soon' : 'On Sale',
         })
       }
     }
     return arr
-  }, [artistShows])
+  }, [artistShows, configArtists])
+
+  // ── Unique filter option values ──
+  const filterOptions = useMemo(() => ({
+    artists:  [...new Set(allShows.map(s => s._artist))].sort(),
+    cities:   [...new Set(allShows.map(s => s.city).filter(Boolean))].sort(),
+    states:   [...new Set(allShows.map(s => s._state).filter(Boolean))].sort(),
+    venues:   [...new Set(allShows.map(s => s.venue).filter(Boolean))].sort(),
+    statuses: ['On Sale', 'Coming Soon'],
+  }), [allShows])
+
+  // ── Apply filters ──
+  const filteredShows = useMemo(() => {
+    return allShows.filter(show => {
+      if (filterArtists.length > 0 && !filterArtists.includes(show._artist)) return false
+      if (filterCities.length  > 0 && !filterCities.includes(show.city))     return false
+      if (filterStates.length  > 0 && !filterStates.includes(show._state))   return false
+      if (filterVenues.length  > 0 && !filterVenues.includes(show.venue))    return false
+      if (filterStatus.length  > 0 && !filterStatus.includes(show._status))  return false
+      return true
+    })
+  }, [allShows, filterArtists, filterCities, filterStates, filterVenues, filterStatus])
+
+  // ── Sort ──
+  const sortedShows = useMemo(() => {
+    const sorted = [...filteredShows]
+    if (sortMode === 'date') {
+      sorted.sort((a, b) => {
+        const da = new Date(a.raw_date || a.date)
+        const db = new Date(b.raw_date || b.date)
+        return (!isNaN(da) && !isNaN(db)) ? da - db : 0
+      })
+    } else {
+      sorted.sort((a, b) => {
+        const cmp = a._artist.localeCompare(b._artist)
+        if (cmp !== 0) return cmp
+        const da = new Date(a.raw_date || a.date)
+        const db = new Date(b.raw_date || b.date)
+        return (!isNaN(da) && !isNaN(db)) ? da - db : 0
+      })
+    }
+    return sorted
+  }, [filteredShows, sortMode])
+
+  // ── Group by artist (for artist sort mode) ──
+  const groupedByArtist = useMemo(() => {
+    if (sortMode !== 'artist') return null
+    const groups = {}
+    for (const show of sortedShows) {
+      if (!groups[show._artist]) groups[show._artist] = []
+      groups[show._artist].push(show)
+    }
+    return Object.entries(groups).sort(([a], [b]) => a.localeCompare(b))
+  }, [sortedShows, sortMode])
+
+  // ── Map pin data (filtered) ──
+  const mapArtistShows = useMemo(() => {
+    return filteredShows.map(show => ({
+      ...show,
+      artist: show._artist,
+      status: 'on_sale',
+      source: show.not_yet_on_sale ? 'tm' : undefined,
+    }))
+  }, [filteredShows])
 
   const allVenueShows = useMemo(() => {
     if (!config?.venues) return []
@@ -301,32 +357,24 @@ export default function ArtistsSummaryTab() {
   const centerLat = config?.center_lat ?? null
   const centerLon = config?.center_lon ?? null
 
+  const hasActiveFilters = filterArtists.length + filterCities.length + filterStates.length + filterVenues.length + filterStatus.length > 0
+
+  const clearAllFilters = () => {
+    setFilterArtists([])
+    setFilterCities([])
+    setFilterStates([])
+    setFilterVenues([])
+    setFilterStatus([])
+  }
+
+  // no-op for map bounds (filters drive the view now, not map viewport)
+  const noop = useCallback(() => {}, [])
+
   if (loading) return <LoadingSpinner />
   if (error)   return <ErrorBox message={error} />
 
-  const configArtists = config?.artists || {}
-
-  const artistList = Object.entries(configArtists).map(([name, info]) => {
-    const showList = artistShows[name] || []
-    return { name, url: info.url || null, genre: info.genre || 'Other', paused: info.paused || false, shows: showList, totalCount: showList.length }
-  }).sort((a, b) => {
-    if (b.totalCount !== a.totalCount) return b.totalCount - a.totalCount
-    return a.name.localeCompare(b.name)
-  })
-
-  const visibleArtists = artistList.filter(a => {
-    if (hideNoShows && a.totalCount === 0) return false
-    if (mapFilter?.type === 'artist' && mapFilter.name === a.name) return true
-    if (!mapBounds) return true
-    if (a.shows.length === 0) return true
-    return a.shows.some(s => s.lat != null && s.lon != null && isInBounds(s.lat, s.lon, mapBounds))
-  })
-
-  const withShowsCount = artistList.filter(a => a.totalCount > 0).length
-  const totalShows     = Object.values(artistShows).reduce((n, arr) => n + arr.length, 0)
-
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {shows?.stale && (
         <div className="px-3 py-1.5 border border-neutral-200 text-xs text-neutral-500 italic rounded-sm">
           Data may be stale — click Refresh
@@ -335,55 +383,101 @@ export default function ArtistsSummaryTab() {
 
       {/* ── Map ── */}
       <section>
-        <SectionHeading>Concert Map</SectionHeading>
         <ConcertMap
           centerLat={centerLat}
           centerLon={centerLon}
-          artistShows={allArtistShows}
+          artistShows={mapArtistShows}
           venueShows={allVenueShows}
-          mapFilter={mapFilter}
-          onBoundsChange={handleBoundsChange}
+          mapFilter={null}
+          onBoundsChange={noop}
         />
-        <MapLegend mapFilter={mapFilter} onClearFilter={() => setMapFilter(null)} />
+        <MapLegend />
       </section>
 
-      {/* ── Artist Shows ── */}
-      <section>
-        <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-          <SectionHeading count={visibleArtists.length} total={artistList.length}>
-            Artist Shows
-          </SectionHeading>
-          <div className="flex items-center gap-3">
-            {mapBounds && visibleArtists.length < artistList.length && (
-              <span className="text-xs text-neutral-400 italic">Zoom out or pan to see more artists</span>
-            )}
-            <label className="flex items-center gap-1.5 text-xs text-slate-500 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={hideNoShows}
-                onChange={e => setHideNoShows(e.target.checked)}
-                className="rounded border-slate-300"
-              />
-              Hide artists not on tour
-            </label>
-          </div>
-        </div>
-
-        <div className="grid sm:grid-cols-2 gap-3">
-          {visibleArtists.map(a => (
-            <ArtistCard
-              key={a.name}
-              {...a}
-              isSelected={mapFilter?.type === 'artist' && mapFilter.name === a.name}
-              onSelect={setMapFilter}
-            />
-          ))}
-          {visibleArtists.length === 0 && (
-            <div className="col-span-2 card p-6 text-center text-neutral-400 text-sm italic">
-              No artists with shows in the current map view. Zoom out to see more.
-            </div>
+      {/* ── Filter bar ── */}
+      <section className="card px-3 py-3">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">Filters</h3>
+          {hasActiveFilters && (
+            <button onClick={clearAllFilters} className="text-xs text-neutral-500 hover:text-neutral-800 underline">
+              Clear all
+            </button>
           )}
         </div>
+        <div className="flex flex-wrap gap-2">
+          <FilterDropdown label="Artist"  options={filterOptions.artists}  selected={filterArtists} onChange={setFilterArtists} />
+          <FilterDropdown label="City"    options={filterOptions.cities}   selected={filterCities}  onChange={setFilterCities} />
+          <FilterDropdown label="State"   options={filterOptions.states}   selected={filterStates}  onChange={setFilterStates} />
+          <FilterDropdown label="Venue"   options={filterOptions.venues}   selected={filterVenues}  onChange={setFilterVenues} />
+          <FilterDropdown label="Status"  options={filterOptions.statuses} selected={filterStatus}  onChange={setFilterStatus} />
+        </div>
+      </section>
+
+      {/* ── Sort toggle + count ── */}
+      <div className="flex items-center justify-between px-1">
+        <span className="text-xs text-neutral-500">
+          {filteredShows.length} show{filteredShows.length !== 1 ? 's' : ''}
+          {hasActiveFilters && <span className="text-neutral-400"> of {allShows.length}</span>}
+        </span>
+        <div className="flex items-center gap-1 text-xs">
+          <span className="text-neutral-400 mr-1">Sort:</span>
+          <button
+            onClick={() => setSortMode('date')}
+            className={`px-2.5 py-1 rounded-full transition-colors ${
+              sortMode === 'date'
+                ? 'bg-neutral-800 text-white'
+                : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
+            }`}
+          >
+            Date
+          </button>
+          <button
+            onClick={() => setSortMode('artist')}
+            className={`px-2.5 py-1 rounded-full transition-colors ${
+              sortMode === 'artist'
+                ? 'bg-neutral-800 text-white'
+                : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
+            }`}
+          >
+            Artist
+          </button>
+        </div>
+      </div>
+
+      {/* ── Show list ── */}
+      <section className="card overflow-hidden">
+        {sortMode === 'artist' && groupedByArtist ? (
+          // ── Grouped by artist ──
+          groupedByArtist.length > 0 ? (
+            groupedByArtist.map(([artist, shows]) => {
+              const info = configArtists[artist] || {}
+              return (
+                <div key={artist}>
+                  <ArtistGroupHeader
+                    artist={artist}
+                    url={info.url || null}
+                    genre={info.genre}
+                    showCount={`${shows.length} show${shows.length !== 1 ? 's' : ''}`}
+                  />
+                  {shows.map((show, i) => (
+                    <ShowRow key={i} show={show} showArtist={false} />
+                  ))}
+                </div>
+              )
+            })
+          ) : (
+            <EmptyState hasFilters={hasActiveFilters} />
+          )
+        ) : (
+          // ── Flat date-sorted list ──
+          sortedShows.length > 0 ? (
+            sortedShows.map((show, i) => (
+              <ShowRow key={i} show={show} showArtist={true} />
+            ))
+          ) : (
+            <EmptyState hasFilters={hasActiveFilters} />
+          )
+        )}
       </section>
 
       {/* ── Flagged Items (local mode only) ── */}
@@ -392,7 +486,18 @@ export default function ArtistsSummaryTab() {
   )
 }
 
-// ── Flagged Items ─────────────────────────────────────────────────────────────
+// ── Empty state ──────────────────────────────────────────────────────────────
+function EmptyState({ hasFilters }) {
+  return (
+    <div className="p-8 text-center text-neutral-400 text-sm italic">
+      {hasFilters
+        ? 'No shows match the current filters.'
+        : 'No shows found. Click Refresh Data to fetch from Ticketmaster.'}
+    </div>
+  )
+}
+
+// ── Flagged Items ────────────────────────────────────────────────────────────
 function FlaggedItems() {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
@@ -464,3 +569,209 @@ function ErrorBox({ message }) {
     </div>
   )
 }
+
+/* =============================================================================
+ * DEPRECATED: Card-based artist layout (commented out, not deleted)
+ * =============================================================================
+ *
+ * function isInBounds(lat, lon, bounds) {
+ *   if (!bounds) return true
+ *   const sw = bounds.getSouthWest()
+ *   const ne = bounds.getNorthEast()
+ *   return lat >= sw.lat && lat <= ne.lat && lon >= sw.lng && lon <= ne.lng
+ * }
+ *
+ * function ArtistCard({ name, url, genre, shows, paused, isSelected, onSelect }) {
+ *   const [manualOpen, setManualOpen] = useState(false)
+ *   const open = isSelected || manualOpen
+ *
+ *   function handleClick() {
+ *     if (isSelected) {
+ *       onSelect(null)
+ *       setManualOpen(false)
+ *     } else {
+ *       onSelect({ type: 'artist', name })
+ *     }
+ *   }
+ *
+ *   const onSale   = shows.filter(s => !s.not_yet_on_sale)
+ *   const preSale  = shows.filter(s => s.not_yet_on_sale)
+ *
+ *   const mergedRows = useMemo(() => {
+ *     const rows = [
+ *       ...onSale.map(s => ({ ...s, _src: 'on-sale' })),
+ *       ...preSale.map(s => ({ ...s, _src: 'presale' })),
+ *     ]
+ *     rows.sort((a, b) => {
+ *       const da = new Date(a.date), db = new Date(b.date)
+ *       return (!isNaN(da) && !isNaN(db)) ? da - db : 0
+ *     })
+ *     return rows
+ *   }, [shows])
+ *
+ *   return (
+ *     <div className={`card transition-all ${paused ? 'opacity-50' : ''} ${isSelected ? 'ring-1 ring-neutral-600' : ''}`}>
+ *       <button
+ *         onClick={handleClick}
+ *         className="w-full p-4 text-left flex items-center gap-3"
+ *       >
+ *         <div className="flex-1 min-w-0">
+ *           <div className="flex items-center gap-1.5 min-w-0">
+ *             {url ? (
+ *               <a
+ *                 href={url}
+ *                 target="_blank"
+ *                 rel="noopener noreferrer"
+ *                 onClick={e => e.stopPropagation()}
+ *                 className="font-semibold text-neutral-900 hover:text-neutral-600 hover:underline truncate"
+ *               >
+ *                 {name}
+ *               </a>
+ *             ) : (
+ *               <span className="font-semibold text-neutral-900 truncate">{name}</span>
+ *             )}
+ *           </div>
+ *           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+ *             <span className="badge-genre">{genre}</span>
+ *             {paused && <span className="badge-paused">Paused</span>}
+ *             {isSelected && (
+ *               <span className="text-xs text-neutral-500 font-medium">Filtered</span>
+ *             )}
+ *           </div>
+ *         </div>
+ *
+ *         <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
+ *           {onSale.length > 0 && (
+ *             <span className="flex items-center gap-1 text-sm text-neutral-800">
+ *               <span className="inline-block w-1.5 h-1.5 rounded-full bg-neutral-800 flex-shrink-0" />
+ *               {onSale.length} on sale
+ *             </span>
+ *           )}
+ *           {preSale.length > 0 && (
+ *             <span className="flex items-center gap-1 text-xs text-neutral-400">
+ *               <span className="inline-block w-1.5 h-1.5 rounded-full bg-neutral-300 flex-shrink-0" />
+ *               {preSale.length} soon
+ *             </span>
+ *           )}
+ *           {shows.length === 0 && (
+ *             <span className="text-sm text-neutral-400">No shows</span>
+ *           )}
+ *           <span className="text-neutral-400 text-xs mt-0.5">{open ? '\u2212' : '+'}</span>
+ *         </div>
+ *       </button>
+ *
+ *       {open && (
+ *         <div className="border-t border-neutral-100 px-4 pb-4">
+ *           {mergedRows.length > 0 ? (
+ *             <ul className="mt-3 space-y-2">
+ *               {mergedRows.map((show, i) =>
+ *                 show._src === 'presale' ? (
+ *                   <li key={i} className="bg-neutral-50 -mx-2 px-2 py-1.5 text-sm">
+ *                     <div className="flex items-start justify-between gap-2">
+ *                       <div>
+ *                         <span className="font-medium text-slate-800">{show.date}</span>
+ *                         <span className="text-slate-400 mx-1">&middot;</span>
+ *                         <span className="text-slate-600">{show.venue}</span>
+ *                         <span className="text-slate-400 mx-1">&middot;</span>
+ *                         <span className="text-slate-500">{show.city}</span>
+ *                       </div>
+ *                       {show.ticketmaster_url && (
+ *                         <a
+ *                           href={show.ticketmaster_url}
+ *                           target="_blank"
+ *                           rel="noopener noreferrer"
+ *                           onClick={e => e.stopPropagation()}
+ *                           className="flex-shrink-0 text-xs text-neutral-500 hover:text-neutral-800 hover:underline"
+ *                         >
+ *                           TM &rarr;
+ *                         </a>
+ *                       )}
+ *                     </div>
+ *                     <div className="flex items-center gap-1 mt-0.5">
+ *                       <span className="inline-block w-1.5 h-1.5 rounded-full bg-neutral-400 flex-shrink-0" />
+ *                       <span className="text-xs text-neutral-500 font-medium">
+ *                         {show.onsale_tbd
+ *                           ? 'On-sale date TBD'
+ *                           : show.onsale_datetime
+ *                           ? `On sale ${fmtOnsale(show.onsale_datetime)}`
+ *                           : 'On-sale date not announced'}
+ *                       </span>
+ *                     </div>
+ *                     {show.presales && show.presales.length > 0 && (
+ *                       <ul className="mt-1 space-y-0.5">
+ *                         {show.presales.map((p, pi) => (
+ *                           <li key={pi} className="flex items-center gap-1 text-xs text-neutral-400">
+ *                             <span className="w-1.5 h-1.5 rounded-full bg-neutral-300 flex-shrink-0" />
+ *                             <span className="font-medium text-neutral-500">{p.name}</span>
+ *                             {p.start_datetime && (
+ *                               <span className="text-neutral-400">&mdash; starts {fmtOnsale(p.start_datetime)}</span>
+ *                             )}
+ *                           </li>
+ *                         ))}
+ *                       </ul>
+ *                     )}
+ *                   </li>
+ *                 ) : (
+ *                   <li key={i} className="flex items-start justify-between gap-2 text-sm">
+ *                     <div>
+ *                       <span className="font-medium text-neutral-800">{show.date}</span>
+ *                       <span className="text-neutral-300 mx-1">&middot;</span>
+ *                       <span className="text-neutral-600">{show.venue}</span>
+ *                       <span className="text-neutral-300 mx-1">&middot;</span>
+ *                       <span className="text-neutral-400">{show.city}</span>
+ *                     </div>
+ *                     {show.ticketmaster_url && (
+ *                       <a
+ *                         href={show.ticketmaster_url}
+ *                         target="_blank"
+ *                         rel="noopener noreferrer"
+ *                         onClick={e => e.stopPropagation()}
+ *                         className="flex-shrink-0 text-xs text-neutral-500 hover:text-neutral-800 hover:underline"
+ *                       >
+ *                         TM &rarr;
+ *                       </a>
+ *                     )}
+ *                   </li>
+ *                 )
+ *               )}
+ *             </ul>
+ *           ) : (
+ *             <p className="mt-3 text-sm text-neutral-400 italic">No upcoming shows found.</p>
+ *           )}
+ *         </div>
+ *       )}
+ *     </div>
+ *   )
+ * }
+ *
+ * function SectionHeading({ children, count, total }) {
+ *   return (
+ *     <div className="flex items-center gap-2 mb-3">
+ *       <h2 className="text-base font-bold text-neutral-800">{children}</h2>
+ *       {count !== undefined && total !== undefined ? (
+ *         <span className="text-xs text-neutral-400">{count} / {total} in view</span>
+ *       ) : count !== undefined ? (
+ *         <span className="text-xs text-neutral-400">{count}</span>
+ *       ) : null}
+ *     </div>
+ *   )
+ * }
+ *
+ * OLD MAIN TAB RENDER (card-based layout with map-viewport filtering):
+ *
+ * The old ArtistsSummaryTab used:
+ * - mapFilter state ({ type: 'artist', name }) for single-artist map filtering
+ * - mapBounds state for viewport-based card visibility
+ * - hideNoShows toggle for hiding artists without shows
+ * - ArtistCard grid (sm:grid-cols-2) below the map
+ * - Artist cards were clickable to filter map pins
+ * - Map bounds change filtered which artist cards were visible
+ *
+ * The new design replaces this with:
+ * - Aggregated flat show list (all artists merged)
+ * - Multi-select filter dropdowns (Artist, City, State, Venue, Status)
+ * - Filters affect both the list AND the map pins
+ * - Sort by Date (default) or grouped by Artist
+ * - No more map-viewport-based card filtering
+ *
+ * =========================================================================== */
