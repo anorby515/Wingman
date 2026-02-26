@@ -92,3 +92,39 @@ jobs:
 
       - uses: actions/deploy-pages@v4
         id: deployment
+
+  # ── Notify: SMS alerts for new shows (schedule-only) ──
+  notify:
+    needs: fetch-and-deploy
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Pull the latest main which includes the just-committed summary.json
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Check for changes and send SMS
+        env:
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_FROM_NUMBER: ${{ secrets.TWILIO_FROM_NUMBER }}
+          TWILIO_TO_NUMBER: ${{ secrets.TWILIO_TO_NUMBER }}
+        run: python scripts/notify_changes.py
+
+      - name: Commit updated baseline
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/notification_baseline.json
+          if git diff --cached --quiet; then
+            echo "No baseline changes to commit"
+          else
+            git commit -m "Update notification baseline"
+            git push origin main
+          fi

@@ -94,66 +94,69 @@ Ticketmaster Discovery API (5000 calls/day limit)
 
 ---
 
-## Workflow: Notifications
+## Workflow: Notifications (SMS via Twilio)
 
-**Detection:** Backend detects triggers during `POST /api/refresh` (local) or GitHub Action (CI).
+**Architecture:** A second GitHub Action job (`notify`) runs serially after the daily TM data fetch. It compares the fresh `docs/summary.json` against a committed baseline (`docs/notification_baseline.json`) to detect meaningful changes, then sends an SMS via Twilio.
 
-**Delivery:** Claude Cowork reads triggers and sends messages.
+**Schedule-only:** The notify job is gated with `if: github.event_name == 'schedule'`. Manual `workflow_dispatch` runs (used during development) never trigger SMS.
 
 ### Trigger Types
 
 | Trigger | Condition |
 |---------|-----------|
-| `new_event` | Show exists in new data but not in previous cache |
-| `onsale_7_days` | Show's `onsale_datetime` is within 7 days from now |
-| `onsale_48_hours` | Show's `onsale_datetime` is within 48 hours from now |
+| New artist show | Show key exists in fresh summary but not in baseline |
+| New venue event | Venue event key exists in fresh summary but not in baseline |
+| On-sale imminent | Show in `coming_soon` with `onsale_datetime` within 48 hours |
 
-### Storage
+### Past-Show Filtering
 
-Triggers are written to `notification_state.json`:
+Before comparing, both the baseline and fresh data drop any show whose date has already passed. This prevents "removed" alerts for shows that simply happened — only genuinely cancelled/delisted shows (future date, disappeared from TM) would appear as removals. Currently, removals do not trigger SMS (only new additions and on-sale-imminent do).
+
+### Baseline
+
+`docs/notification_baseline.json` is committed to the repo. It stores show keys (artist+date+venue tuples), not full show data:
+
 ```json
 {
-  "generated_at": "2026-02-25T10:00:00Z",
-  "triggers": [
-    {
-      "type": "new_event",
-      "artist": "Tyler Childers",
-      "date": "Aug 15, 2026",
-      "venue": "Kinnick Stadium",
-      "city": "Iowa City, IA"
-    },
-    {
-      "type": "onsale_48_hours",
-      "artist": "Zach Bryan",
-      "date": "Jun 20, 2026",
-      "venue": "Wells Fargo Arena",
-      "city": "Des Moines, IA",
-      "onsale_datetime": "2026-02-27T10:00:00Z"
-    }
-  ]
+  "updated_at": "2026-02-26T10:00:00Z",
+  "artist_show_keys": ["Luke Combs|Mar 21, 2026|Allegiant Stadium", "..."],
+  "venue_show_keys": ["Wells Fargo Arena|Jun 20, 2026|Zach Bryan", "..."]
 }
 ```
 
-### Delivery (Cowork)
+The baseline is updated after a successful SMS send (or when no changes are detected). If the SMS fails, the baseline is NOT updated — changes will be retried on the next scheduled run.
 
-1. Read `GET /api/notifications` from local backend
-2. Format email digest (Gmail Chrome skill)
-3. Send SMS via Twilio API (credentials in `wingman_config.json`)
-4. Call `POST /api/notifications/clear` to mark as sent
+### SMS Format
 
-### Email Format
 ```
-Subject: Wingman Alert — YYYY-MM-DD
+Wingman — Feb 26
 
-NEW EVENTS:
-- Tyler Childers @ Kinnick Stadium, Iowa City, IA — Aug 15, 2026
+NEW SHOWS:
+• Tyler Childers @ Kinnick Stadium, Iowa City — Aug 15
+• Zach Bryan @ Wells Fargo Arena, Des Moines — Jun 20
+
+NEW AT VENUES:
+• Hozier @ Wells Fargo Arena, Des Moines — Sep 12
 
 ON SALE SOON:
-- Zach Bryan @ Wells Fargo Arena, Des Moines, IA — Jun 20, 2026
-  On sale: Feb 27, 10:00 AM
-
-View full report: [GitHub Pages URL]
+• Luke Combs @ Stone Pony, Asbury Park — Jun 17
+  On sale: Feb 27, 10:00 AM CT
 ```
+
+Messages are truncated to ~1500 chars (Twilio long-SMS limit) with a "(+N more)" note if needed.
+
+### GitHub Secrets Required
+
+| Secret | Purpose |
+|--------|---------|
+| `TWILIO_ACCOUNT_SID` | Twilio account identifier |
+| `TWILIO_AUTH_TOKEN` | Twilio API auth token |
+| `TWILIO_FROM_NUMBER` | Sender phone number (e.g. +15551234567) |
+| `TWILIO_TO_NUMBER` | Recipient phone number (e.g. +15559876543) |
+
+### Script
+
+`scripts/notify_changes.py` — standalone script with no pip dependencies. Uses `urllib` for the Twilio REST API call (no Twilio SDK needed).
 
 ---
 
@@ -298,12 +301,13 @@ This ensures identical data processing regardless of where the fetch runs.
 | `tracked.json` | Backend (auto-generated from wingman_config.json) | GH Action script | **Yes** |
 | `ticketmaster_cache.json` | Backend (`POST /api/refresh`) | Backend (`GET /api/shows`) | **Never** (.gitignored) |
 | `geocode_cache.json` | Backend (geocoding after refresh) | Backend | No |
-| `notification_state.json` | Backend (during refresh) | Cowork (notification delivery) | No |
+| `notification_state.json` | Backend (during refresh) | Backend (local notifications) | No |
 | `dismissed_suggestions.json` | Cowork (Spotify sync) | Cowork, backend | No |
 | `flagged_items.json` | Cowork (Spotify sync) | Backend (local UI) | No |
 | `spotify_tokens.json` | Backend (OAuth flow) | Cowork | **Never** (.gitignored) |
-| `docs/summary.json` | GitHub Action | GitHub Pages frontend | **Yes** |
+| `docs/summary.json` | GitHub Action | GitHub Pages frontend, notify script | **Yes** |
 | `docs/history/YYYY-MM-DD.json` | GitHub Action | GitHub Pages frontend | **Yes** |
+| `docs/notification_baseline.json` | GitHub Action (notify job) | notify script | **Yes** |
 | `schemas/*.schema.json` | Claude Code | Backend (validation) | Yes |
 | `backend/models.py` | Claude Code | Backend (validation) | Yes |
 | `backend/ticketmaster.py` | Claude Code | Backend, GH Action script | Yes |
@@ -322,11 +326,6 @@ See `schemas/wingman_config.schema.json` for full definition. Key fields:
 - `venues` — map of venue name to `{url, city, is_local, paused}`
 - `festivals` — map of festival name to `{url, paused}`
 - `ticketmaster_api_key` — TM Discovery API key
-- `twilio_account_sid` — Twilio account SID (for SMS notifications)
-- `twilio_auth_token` — Twilio auth token
-- `twilio_from_number` — Twilio sender phone number
-- `twilio_to_number` — Recipient phone number
-- `notification_email` — Email address for digest notifications
 
 ### docs/summary.json
 
@@ -341,9 +340,9 @@ See `schemas/summary.schema.json` for full definition. Includes:
 
 Simple key-value: location string -> `{"lat": number, "lon": number}`
 
-### notification_state.json
+### docs/notification_baseline.json
 
-See Notifications section above for schema.
+Show keys used for SMS diff detection. See Notifications section above for schema.
 
 ### dismissed_suggestions.json
 
@@ -381,10 +380,10 @@ The public site is deployed from `frontend/dist` built in demo mode by the GitHu
 
 - **Branch:** GitHub Action pushes data to `main`; Claude Code pushes code to feature branches
 - **Data commit messages (GH Action):** `Data update: YYYY-MM-DD - X artists, Y shows`
-- **Files committed by GH Action:** `docs/summary.json`, `docs/history/*.json`
+- **Files committed by GH Action:** `docs/summary.json`, `docs/history/*.json`, `docs/notification_baseline.json`
 - **Files committed (tracking data):** `tracked.json` — sanitized subset of `wingman_config.json` (no API keys or credentials). Auto-generated by the backend whenever the config changes. The GH Action reads this file to know which artists/venues/festivals to query.
 - **Files NEVER committed:** `spotify_tokens.json`, `geocode_cache.json`, `ticketmaster_cache.json`, `notification_state.json`, `dismissed_suggestions.json`, `flagged_items.json`, `wingman_config.json`
-- **Files NEVER committed in feature branches:** `docs/summary.json`, `docs/history/*.json`, `frontend/public/static-data.json`. These are machine-generated data files owned exclusively by the GitHub Action. Committing them in a feature branch will overwrite the latest daily data when the PR is merged. `frontend/public/static-data.json` is gitignored; the deploy workflows regenerate it at build time from `docs/summary.json`.
+- **Files NEVER committed in feature branches:** `docs/summary.json`, `docs/history/*.json`, `docs/notification_baseline.json`, `frontend/public/static-data.json`. These are machine-generated data files owned exclusively by the GitHub Action. Committing them in a feature branch will overwrite the latest daily data when the PR is merged. `frontend/public/static-data.json` is gitignored; the deploy workflows regenerate it at build time from `docs/summary.json`.
 
 ## Frontend Build Requirement
 
@@ -487,12 +486,14 @@ Redesign the locally hosted site to focus exclusively on configuration, removing
 ### Step 6: Discuss a New Implementation Using Claude Cowork for Festivals
 Revisit how festivals are tracked, fetched, and displayed. The current festival data flow needs rethinking — discuss whether Cowork should handle festival lineup discovery, how festival shows integrate into the unified Concerts & Festivals view, and what the right data model looks like. This is a planning/discussion step before implementation.
 
-### Step 7: Notification System
-- Backend detects triggers during refresh (new events, on-sale-soon)
-- Writes to `notification_state.json`
-- `GET /api/notifications` + `POST /api/notifications/clear` endpoints
-- Twilio config in `wingman_config.json` + Settings UI
-- Cowork reads triggers, sends email + SMS
+### Step 7: Notification System (SMS via Twilio)
+- GitHub Action notify job runs after daily TM fetch (schedule-only, not manual dispatch)
+- Compares `docs/summary.json` against `docs/notification_baseline.json`
+- Filters out past shows before diffing (prevents false "removed" alerts)
+- Detects: new artist shows, new venue events, on-sale within 48 hours
+- Sends SMS via Twilio REST API (credentials in GitHub Secrets)
+- Updates baseline after successful send; retries on next run if send fails
+- Script: `scripts/notify_changes.py` (no pip dependencies)
 
 ### Step 8: Cowork Workflow Rewrite
 - Remove scraping workflows
