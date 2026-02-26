@@ -1,14 +1,14 @@
 name: Deploy to GitHub Pages
 
-# Scraping is now handled by Claude Cowork sessions (not CI).
-# This workflow only builds the frontend and deploys to GitHub Pages.
-# Triggered when Cowork pushes updated data (concert_state.json, docs/).
+# Builds the frontend and deploys to GitHub Pages.
+# Only deploys from main — feature branches must NOT deploy to Pages
+# because they carry a snapshot of docs/summary.json from their branch
+# point, which overwrites the latest Ticketmaster data on the live site.
 
 on:
   push:
     branches:
       - main
-      - 'claude/**'
   workflow_dispatch:
 
 permissions:
@@ -22,6 +22,11 @@ concurrency:
 
 jobs:
   build:
+    # Skip when the push was a data-update commit from the TM action —
+    # that workflow already builds and deploys to Pages itself.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      !startsWith(github.event.head_commit.message, 'Data update:')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
