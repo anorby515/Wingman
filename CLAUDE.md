@@ -10,7 +10,7 @@ This document defines the contract between **Claude Code** (codebase maintainer)
 | Actor | Responsibility |
 |-------|---------------|
 | **Claude Code** | Maintains codebase, schemas, models, frontend, backend. Commits and pushes code changes. |
-| **Claude Cowork** | Spotify sync (interactive, manual trigger), notification delivery (email via Gmail + SMS via Twilio). |
+| **Claude Cowork** | Spotify sync (interactive, manual trigger), notification delivery (email via Gmail + push via ntfy.sh). |
 | **GitHub Actions** | Daily TM data fetch, generates `docs/summary.json`, builds frontend, deploys to GitHub Pages. |
 | **Local UI** | FastAPI backend + React frontend. Configuration (artists, venues, festivals, settings). Manual "Refresh Data" button triggers TM API fetch. Displays all show data from TM cache. |
 | **GitHub Pages** | Public site. Full-featured viewer: Artists, Venues, Festivals, Map, Coming Soon. Updated daily by GitHub Action. |
@@ -94,66 +94,73 @@ Ticketmaster Discovery API (5000 calls/day limit)
 
 ---
 
-## Workflow: Notifications
+## Workflow: Notifications (Push via ntfy.sh)
 
-**Detection:** Backend detects triggers during `POST /api/refresh` (local) or GitHub Action (CI).
+**Architecture:** A second GitHub Action job (`notify`) runs serially after the daily TM data fetch. It compares the fresh `docs/summary.json` against a committed baseline (`docs/notification_baseline.json`) to detect meaningful changes, then sends a push notification via [ntfy.sh](https://ntfy.sh).
 
-**Delivery:** Claude Cowork reads triggers and sends messages.
+**Schedule-only:** The notify job is gated with `if: github.event_name == 'schedule'`. Manual `workflow_dispatch` runs (used during development) never trigger notifications.
 
 ### Trigger Types
 
 | Trigger | Condition |
 |---------|-----------|
-| `new_event` | Show exists in new data but not in previous cache |
-| `onsale_7_days` | Show's `onsale_datetime` is within 7 days from now |
-| `onsale_48_hours` | Show's `onsale_datetime` is within 48 hours from now |
+| New artist show | Show key exists in fresh summary but not in baseline |
+| New venue event | Venue event key exists in fresh summary but not in baseline |
+| On-sale imminent | Show in `coming_soon` with `onsale_datetime` within 48 hours |
 
-### Storage
+### Past-Show Filtering
 
-Triggers are written to `notification_state.json`:
+Before comparing, both the baseline and fresh data drop any show whose date has already passed. This prevents "removed" alerts for shows that simply happened — only genuinely cancelled/delisted shows (future date, disappeared from TM) would appear as removals. Currently, removals do not trigger notifications (only new additions and on-sale-imminent do).
+
+### Baseline
+
+`docs/notification_baseline.json` is committed to the repo. It stores show keys (artist+date+venue tuples), not full show data:
+
 ```json
 {
-  "generated_at": "2026-02-25T10:00:00Z",
-  "triggers": [
-    {
-      "type": "new_event",
-      "artist": "Tyler Childers",
-      "date": "Aug 15, 2026",
-      "venue": "Kinnick Stadium",
-      "city": "Iowa City, IA"
-    },
-    {
-      "type": "onsale_48_hours",
-      "artist": "Zach Bryan",
-      "date": "Jun 20, 2026",
-      "venue": "Wells Fargo Arena",
-      "city": "Des Moines, IA",
-      "onsale_datetime": "2026-02-27T10:00:00Z"
-    }
-  ]
+  "updated_at": "2026-02-26T10:00:00Z",
+  "artist_show_keys": ["Luke Combs|Mar 21, 2026|Allegiant Stadium", "..."],
+  "venue_show_keys": ["Wells Fargo Arena|Jun 20, 2026|Zach Bryan", "..."]
 }
 ```
 
-### Delivery (Cowork)
+The baseline is updated after a successful notification send (or when no changes are detected). If the send fails, the baseline is NOT updated — changes will be retried on the next scheduled run.
 
-1. Read `GET /api/notifications` from local backend
-2. Format email digest (Gmail Chrome skill)
-3. Send SMS via Twilio API (credentials in `wingman_config.json`)
-4. Call `POST /api/notifications/clear` to mark as sent
+### Notification Format
 
-### Email Format
 ```
-Subject: Wingman Alert — YYYY-MM-DD
+Wingman — Feb 26
 
-NEW EVENTS:
-- Tyler Childers @ Kinnick Stadium, Iowa City, IA — Aug 15, 2026
+NEW SHOWS:
+• Tyler Childers @ Kinnick Stadium, Iowa City — Aug 15
+• Zach Bryan @ Wells Fargo Arena, Des Moines — Jun 20
+
+NEW AT VENUES:
+• Hozier @ Wells Fargo Arena, Des Moines — Sep 12
 
 ON SALE SOON:
-- Zach Bryan @ Wells Fargo Arena, Des Moines, IA — Jun 20, 2026
-  On sale: Feb 27, 10:00 AM
-
-View full report: [GitHub Pages URL]
+• Luke Combs @ Stone Pony, Asbury Park — Jun 17
+  On sale: Feb 27, 10:00 AM CT
 ```
+
+Messages are truncated to ~3500 chars with a "(+N more)" note if needed. Notifications are sent with `Priority: high` and title set to the date header.
+
+### GitHub Secrets Required
+
+| Secret | Purpose |
+|--------|---------|
+| `NTFY_TOPIC` | ntfy.sh topic name (e.g. `wingman-alerts-a7f3x9k2m`) |
+
+### Setup
+
+1. Install the [ntfy app](https://ntfy.sh) on your phone (Android or iOS)
+2. Subscribe to a topic with a long, unguessable name (the topic is your secret — anyone who knows it can read messages)
+3. Add the topic as `NTFY_TOPIC` in your repo's GitHub Actions secrets
+4. No account, registration, or carrier compliance needed
+
+### Script
+
+`scripts/notify_changes.py` — standalone script with no pip dependencies. Uses `urllib` to POST to the ntfy.sh REST API.
 
 ---
 
@@ -161,35 +168,55 @@ View full report: [GitHub Pages URL]
 
 **Trigger:** Manual only — user starts Cowork session and requests Spotify sync.
 
+**Architecture decision:** Spotify sync is **Cowork-driven, not UI-driven.** This is intentional:
+- Sync runs ~monthly, not often enough to justify a full OAuth UI and suggestion queue in the local site
+- Listening history analysis (Phase 3) is the core value — Cowork excels at explaining *why* an artist surfaced and providing context for decisions
+- Tour page URL auto-discovery requires web searching — Cowork handles this naturally via Chrome skills
+- Conversational approve/dismiss is the preferred interaction style
+- The backend provides supporting API endpoints, but Cowork orchestrates the workflow
+
 **Sequence:**
-1. Read `wingman_config.json` for current artist list
+1. Read `wingman_config.json` for current artist list via `GET /api/config`
 2. Authenticate with Spotify using locally stored OAuth tokens (`spotify_tokens.json`)
 3. **Phase 1 — Spotify follows not in Wingman:**
    - `GET /me/following?type=artist` to get followed artists
    - For each followed artist NOT in `wingman_config.json`:
      - Ask user interactively: "Add [Artist] to Wingman?"
      - If yes: Chrome skill searches Google for official website + tour/shows URL
-     - Add artist to `wingman_config.json` with discovered URL
+     - Add artist to `wingman_config.json` via backend API with discovered URL
 4. **Phase 2 — Wingman artists not followed on Spotify:**
    - For each artist in `wingman_config.json` NOT in Spotify follows:
      - Search Spotify for the artist
      - If found: ask user "Follow [Artist] on Spotify?"
        - If yes: `PUT /me/following?type=artist&ids=[id]`
-     - If NOT found on Spotify: flag in `flagged_items.json` for local UI display
+     - If NOT found on Spotify: flag in `flagged_items.json` via `POST /api/flagged-items`
 5. **Phase 3 — Listening history suggestions:**
    - `GET /me/top/artists` for time_range: short_term, medium_term, long_term
    - `GET /me/player/recently-played` for recent tracks (extract unique artists)
    - For each discovered artist not already followed or tracked:
-     - Check `dismissed_suggestions.json` — skip if dismissed < 6 months ago
+     - Check `dismissed_suggestions.json` via backend API — skip if dismissed < 6 months ago
+     - Provide context: explain listening frequency, time range, why the suggestion is relevant
      - Ask user: "[Artist] appears in your listening history. Track and follow?"
      - If yes: add to Wingman + follow on Spotify
-     - If dismissed: write to `dismissed_suggestions.json` with timestamp
+     - If dismissed: write to `dismissed_suggestions.json` with timestamp via backend API
 
 **Required Spotify OAuth scopes:**
 - `user-follow-read`
 - `user-follow-modify`
 - `user-top-read`
 - `user-read-recently-played`
+
+**Backend support needed for Cowork:**
+
+| Endpoint / File | Purpose | Status |
+|-----------------|---------|--------|
+| `spotify_tokens.json` | Cowork stores/reads OAuth tokens directly | File gitignored, no code yet |
+| `GET /api/dismissed-suggestions` | Cowork checks what's been dismissed | Not built |
+| `POST /api/dismissed-suggestions` | Cowork writes new dismissals | Not built |
+| `GET /api/flagged-items` | Cowork reads flagged items | Exists |
+| `POST /api/flagged-items` | Cowork writes Spotify flags | Exists |
+| `POST /api/artists` | Cowork adds new artists to config | Exists |
+| `GET /api/config` | Cowork reads current artist list | Exists |
 
 ---
 
@@ -278,12 +305,13 @@ This ensures identical data processing regardless of where the fetch runs.
 | `tracked.json` | Backend (auto-generated from wingman_config.json) | GH Action script | **Yes** |
 | `ticketmaster_cache.json` | Backend (`POST /api/refresh`) | Backend (`GET /api/shows`) | **Never** (.gitignored) |
 | `geocode_cache.json` | Backend (geocoding after refresh) | Backend | No |
-| `notification_state.json` | Backend (during refresh) | Cowork (notification delivery) | No |
+| `notification_state.json` | Backend (during refresh) | Backend (local notifications) | No |
 | `dismissed_suggestions.json` | Cowork (Spotify sync) | Cowork, backend | No |
 | `flagged_items.json` | Cowork (Spotify sync) | Backend (local UI) | No |
 | `spotify_tokens.json` | Backend (OAuth flow) | Cowork | **Never** (.gitignored) |
-| `docs/summary.json` | GitHub Action | GitHub Pages frontend | **Yes** |
+| `docs/summary.json` | GitHub Action | GitHub Pages frontend, notify script | **Yes** |
 | `docs/history/YYYY-MM-DD.json` | GitHub Action | GitHub Pages frontend | **Yes** |
+| `docs/notification_baseline.json` | GitHub Action (notify job) | notify script | **Yes** |
 | `schemas/*.schema.json` | Claude Code | Backend (validation) | Yes |
 | `backend/models.py` | Claude Code | Backend (validation) | Yes |
 | `backend/ticketmaster.py` | Claude Code | Backend, GH Action script | Yes |
@@ -302,11 +330,6 @@ See `schemas/wingman_config.schema.json` for full definition. Key fields:
 - `venues` — map of venue name to `{url, city, is_local, paused}`
 - `festivals` — map of festival name to `{url, paused}`
 - `ticketmaster_api_key` — TM Discovery API key
-- `twilio_account_sid` — Twilio account SID (for SMS notifications)
-- `twilio_auth_token` — Twilio auth token
-- `twilio_from_number` — Twilio sender phone number
-- `twilio_to_number` — Recipient phone number
-- `notification_email` — Email address for digest notifications
 
 ### docs/summary.json
 
@@ -321,9 +344,9 @@ See `schemas/summary.schema.json` for full definition. Includes:
 
 Simple key-value: location string -> `{"lat": number, "lon": number}`
 
-### notification_state.json
+### docs/notification_baseline.json
 
-See Notifications section above for schema.
+Show keys used for notification diff detection. See Notifications section above for schema.
 
 ### dismissed_suggestions.json
 
@@ -361,10 +384,10 @@ The public site is deployed from `frontend/dist` built in demo mode by the GitHu
 
 - **Branch:** GitHub Action pushes data to `main`; Claude Code pushes code to feature branches
 - **Data commit messages (GH Action):** `Data update: YYYY-MM-DD - X artists, Y shows`
-- **Files committed by GH Action:** `docs/summary.json`, `docs/history/*.json`
+- **Files committed by GH Action:** `docs/summary.json`, `docs/history/*.json`, `docs/notification_baseline.json`
 - **Files committed (tracking data):** `tracked.json` — sanitized subset of `wingman_config.json` (no API keys or credentials). Auto-generated by the backend whenever the config changes. The GH Action reads this file to know which artists/venues/festivals to query.
 - **Files NEVER committed:** `spotify_tokens.json`, `geocode_cache.json`, `ticketmaster_cache.json`, `notification_state.json`, `dismissed_suggestions.json`, `flagged_items.json`, `wingman_config.json`
-- **Files NEVER committed in feature branches:** `docs/summary.json`, `docs/history/*.json`, `frontend/public/static-data.json`. These are machine-generated data files owned exclusively by the GitHub Action. Committing them in a feature branch will overwrite the latest daily data when the PR is merged. `frontend/public/static-data.json` is gitignored; the deploy workflows regenerate it at build time from `docs/summary.json`.
+- **Files NEVER committed in feature branches:** `docs/summary.json`, `docs/history/*.json`, `docs/notification_baseline.json`, `frontend/public/static-data.json`. These are machine-generated data files owned exclusively by the GitHub Action. Committing them in a feature branch will overwrite the latest daily data when the PR is merged. `frontend/public/static-data.json` is gitignored; the deploy workflows regenerate it at build time from `docs/summary.json`.
 
 ## Frontend Build Requirement
 
@@ -425,7 +448,7 @@ Refactoring the data architecture to eliminate `concert_state.json` and web scra
 
 ### Future
 - **Bandsintown API** — supplemental data source for artists/venues not on Ticketmaster
-- **Spotify OAuth** — Connect flow in local UI for Cowork Spotify sync
+- **Spotify sync** — Cowork-driven (not local UI); backend needs dismissed-suggestions endpoints and OAuth token storage
 - **Filter/sort options** — Advanced filtering and sorting on the GitHub Pages site
 
 ---
@@ -467,16 +490,21 @@ Redesign the locally hosted site to focus exclusively on configuration, removing
 ### Step 6: Discuss a New Implementation Using Claude Cowork for Festivals
 Revisit how festivals are tracked, fetched, and displayed. The current festival data flow needs rethinking — discuss whether Cowork should handle festival lineup discovery, how festival shows integrate into the unified Concerts & Festivals view, and what the right data model looks like. This is a planning/discussion step before implementation.
 
-### Step 7: Notification System
-- Backend detects triggers during refresh (new events, on-sale-soon)
-- Writes to `notification_state.json`
-- `GET /api/notifications` + `POST /api/notifications/clear` endpoints
-- Twilio config in `wingman_config.json` + Settings UI
-- Cowork reads triggers, sends email + SMS
+### Step 7: Notification System (Push via ntfy.sh)
+- GitHub Action notify job runs after daily TM fetch (schedule-only, not manual dispatch)
+- Compares `docs/summary.json` against `docs/notification_baseline.json`
+- Filters out past shows before diffing (prevents false "removed" alerts)
+- Detects: new artist shows, new venue events, on-sale within 48 hours
+- Sends push notification via ntfy.sh (topic name in GitHub Secrets)
+- Updates baseline after successful send; retries on next run if send fails
+- Script: `scripts/notify_changes.py` (no pip dependencies)
 
 ### Step 8: Cowork Workflow Rewrite
 - Remove scraping workflows
-- Cowork = Spotify sync (manual) + notification delivery (email + SMS)
+- Cowork = Spotify sync (manual, conversational) + notification delivery (email + push via ntfy.sh)
+- Spotify sync is Cowork-driven: Cowork orchestrates all 3 phases, calls Spotify API directly, uses Chrome skills for URL discovery
+- Backend provides supporting endpoints: dismissed-suggestions CRUD, flagged-items, artist management
+- OAuth tokens stored in `spotify_tokens.json` (managed by Cowork, not the backend)
 
 ### Step 9: Bandsintown Integration (FUTURE)
 - Secondary/supplemental data source for artists/venues not on TM
