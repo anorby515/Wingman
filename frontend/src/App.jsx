@@ -117,7 +117,7 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* ── Header ── */}
-      <header className="sticky top-0 z-[1000] bg-[#edebe8]">
+      <header className="sticky top-0 z-[1000] header-titanium">
         <div className="max-w-3xl mx-auto px-4 pt-4 pb-0">
           <div className="relative flex items-center justify-center mb-4 pt-2">
             <h1 className="text-5xl font-bold tracking-tight text-neutral-900">WINGMAN</h1>
