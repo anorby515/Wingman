@@ -61,7 +61,7 @@ jobs:
           # so the freshly generated data files are preserved.
           git fetch origin main
           git reset origin/main
-          git add docs/summary.json "docs/history/*.json" frontend/public/static-data.json
+          git add docs/summary.json "docs/history/*.json"
           if git diff --cached --quiet; then
             echo "No data changes to commit"
           else
