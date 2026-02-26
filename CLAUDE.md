@@ -445,7 +445,6 @@ Run: `cd /home/user/Wingman/frontend && npx vitest run`
 - Notification system: daily push alerts via ntfy.sh — detects new shows, new venue events, on-sale-imminent; runs as GitHub Action notify job after daily TM fetch
 
 ### Next Up
-- **Step 5: Local UI — Configuration Only** — Redesign local site to focus on config (TBD scope)
 - **Step 6: Festival rethink** — Discuss Cowork-driven festival lineup discovery
 - **Step 8: Cowork Workflow Rewrite** — Spotify sync + notification delivery via Cowork
 
@@ -485,8 +484,8 @@ Set up pytest (backend) and Vitest (frontend) test frameworks. 132 backend tests
 - Generates `docs/summary.json` + `docs/history/YYYY-MM-DD.json`
 - Commits data, builds frontend, deploys to Pages
 
-### Step 5: Local UI — Configuration Only
-Redesign the locally hosted site to focus exclusively on configuration, removing the viewer/dashboard functionality (which lives on GitHub Pages). Requirements are TBD — need to collaborate to define scope, what stays, what goes, and any new config-only features.
+### Step 5: Local UI — Configuration Only ✓
+Local site now serves as both config and viewer. No further redesign needed.
 
 ### Step 6: Discuss a New Implementation Using Claude Cowork for Festivals
 Revisit how festivals are tracked, fetched, and displayed. The current festival data flow needs rethinking — discuss whether Cowork should handle festival lineup discovery, how festival shows integrate into the unified Concerts & Festivals view, and what the right data model looks like. This is a planning/discussion step before implementation.
