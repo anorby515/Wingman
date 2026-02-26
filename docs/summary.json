@@ -55,8 +55,8 @@
         "venue": "Neyland Stadium",
         "city": "Knoxville, TN",
         "status": "on_sale",
-        "lat": 35.9550647,
-        "lon": -83.9259872,
+        "lat": 35.9550742,
+        "lon": -83.9250891,
         "is_new": false
       },
       {
@@ -1321,6 +1321,15 @@
         "is_new": false
       },
       {
+        "date": "May 20, 2026",
+        "venue": "Margot and Bill Winspear Opera House",
+        "city": "Dallas, TX",
+        "status": "on_sale",
+        "lat": 32.7762719,
+        "lon": -96.7968559,
+        "is_new": true
+      },
+      {
         "date": "May 21, 2026",
         "venue": "Margot and Bill Winspear Opera House",
         "city": "Dallas, TX",
@@ -2359,8 +2368,8 @@
         "venue": "Neyland Stadium",
         "city": "Knoxville, TN",
         "status": "on_sale",
-        "lat": 35.9550647,
-        "lon": -83.9259872,
+        "lat": 35.9550742,
+        "lon": -83.9250891,
         "is_new": false
       },
       {
@@ -4692,6 +4701,368 @@
         "lat": 33.7890478,
         "lon": -84.3718862,
         "is_new": false
+      }
+    ],
+    "Noah Kahan": [
+      {
+        "date": "Jun 11, 2026",
+        "venue": "Kia Center",
+        "city": "Orlando, FL",
+        "status": "on_sale",
+        "lat": 28.5392867,
+        "lon": -81.3838892,
+        "is_new": true
+      },
+      {
+        "date": "Jun 12, 2026",
+        "venue": "Kia Center",
+        "city": "Orlando, FL",
+        "status": "on_sale",
+        "lat": 28.5392867,
+        "lon": -81.3838892,
+        "is_new": true
+      },
+      {
+        "date": "Jun 14, 2026",
+        "venue": "Great Stage Park",
+        "city": "Manchester, TN",
+        "status": "on_sale",
+        "lat": 35.4832001,
+        "lon": -86.0887296,
+        "is_new": true
+      },
+      {
+        "date": "Jun 26, 2026",
+        "venue": "Citizens Bank Park",
+        "city": "Philadelphia, PA",
+        "status": "on_sale",
+        "lat": 39.9059221,
+        "lon": -75.1664804,
+        "is_new": true
+      },
+      {
+        "date": "Jun 28, 2026",
+        "venue": "Rogers Stadium",
+        "city": "Toronto, ON, CA",
+        "status": "on_sale",
+        "lat": 43.7461656,
+        "lon": -79.4692345,
+        "is_new": true
+      },
+      {
+        "date": "Jul 1, 2026",
+        "venue": "Great American Ball Park",
+        "city": "Cincinnati, OH",
+        "status": "on_sale",
+        "lat": 39.0972484,
+        "lon": -84.5066233,
+        "is_new": true
+      },
+      {
+        "date": "Jul 3, 2026",
+        "venue": "PNC Park",
+        "city": "Pittsburgh, PA",
+        "status": "on_sale",
+        "lat": 40.4469258,
+        "lon": -80.0056063,
+        "is_new": true
+      },
+      {
+        "date": "Jul 7, 2026",
+        "venue": "Fenway Park",
+        "city": "Boston, MA",
+        "status": "on_sale",
+        "lat": 42.3464614,
+        "lon": -71.0970999,
+        "is_new": true
+      },
+      {
+        "date": "Jul 7, 2026",
+        "venue": "Fenway Park",
+        "city": "Boston, MA",
+        "status": "on_sale",
+        "lat": 42.3464614,
+        "lon": -71.0970999,
+        "is_new": true
+      },
+      {
+        "date": "Jul 8, 2026",
+        "venue": "Fenway Park",
+        "city": "Boston, MA",
+        "status": "on_sale",
+        "lat": 42.3464614,
+        "lon": -71.0970999,
+        "is_new": true
+      },
+      {
+        "date": "Jul 10, 2026",
+        "venue": "Fenway Park",
+        "city": "Boston, MA",
+        "status": "on_sale",
+        "lat": 42.3464614,
+        "lon": -71.0970999,
+        "is_new": true
+      },
+      {
+        "date": "Jul 10, 2026",
+        "venue": "Fenway Park",
+        "city": "Boston, MA",
+        "status": "on_sale",
+        "lat": 42.3464614,
+        "lon": -71.0970999,
+        "is_new": true
+      },
+      {
+        "date": "Jul 10, 2026",
+        "venue": "Fenway Park",
+        "city": "Boston, MA",
+        "status": "on_sale",
+        "lat": 42.3464614,
+        "lon": -71.0970999,
+        "is_new": true
+      },
+      {
+        "date": "Jul 11, 2026",
+        "venue": "Fenway Park",
+        "city": "Boston, MA",
+        "status": "on_sale",
+        "lat": 42.3464614,
+        "lon": -71.0970999,
+        "is_new": true
+      },
+      {
+        "date": "Jul 11, 2026",
+        "venue": "Fenway Park",
+        "city": "Boston, MA",
+        "status": "on_sale",
+        "lat": 42.3464614,
+        "lon": -71.0970999,
+        "is_new": true
+      },
+      {
+        "date": "Jul 11, 2026",
+        "venue": "Fenway Park",
+        "city": "Boston, MA",
+        "status": "on_sale",
+        "lat": 42.3464614,
+        "lon": -71.0970999,
+        "is_new": true
+      },
+      {
+        "date": "Jul 14, 2026",
+        "venue": "Wrigley Field",
+        "city": "Chicago, IL",
+        "status": "on_sale",
+        "lat": 41.9481846,
+        "lon": -87.655559,
+        "is_new": true
+      },
+      {
+        "date": "Jul 14, 2026",
+        "venue": "Wrigley Field",
+        "city": "Chicago, IL",
+        "status": "on_sale",
+        "lat": 41.9481846,
+        "lon": -87.655559,
+        "is_new": true
+      },
+      {
+        "date": "Jul 14, 2026",
+        "venue": "Wrigley Field",
+        "city": "Chicago, IL",
+        "status": "on_sale",
+        "lat": 41.9481846,
+        "lon": -87.655559,
+        "is_new": true
+      },
+      {
+        "date": "Jul 15, 2026",
+        "venue": "Wrigley Field",
+        "city": "Chicago, IL",
+        "status": "on_sale",
+        "lat": 41.9481846,
+        "lon": -87.655559,
+        "is_new": true
+      },
+      {
+        "date": "Jul 15, 2026",
+        "venue": "Wrigley Field",
+        "city": "Chicago, IL",
+        "status": "on_sale",
+        "lat": 41.9481846,
+        "lon": -87.655559,
+        "is_new": true
+      },
+      {
+        "date": "Jul 18, 2026",
+        "venue": "Citi Field",
+        "city": "Queens, NY",
+        "status": "on_sale",
+        "lat": 40.7572778,
+        "lon": -73.8458788,
+        "is_new": true
+      },
+      {
+        "date": "Jul 19, 2026",
+        "venue": "Citi Field",
+        "city": "Queens, NY",
+        "status": "on_sale",
+        "lat": 40.7572778,
+        "lon": -73.8458788,
+        "is_new": true
+      },
+      {
+        "date": "Jul 22, 2026",
+        "venue": "Nationals Park",
+        "city": "Washington, DC",
+        "status": "on_sale",
+        "lat": 38.8727332,
+        "lon": -77.0074815,
+        "is_new": true
+      },
+      {
+        "date": "Jul 25, 2026",
+        "venue": "Carter Finley Stadium",
+        "city": "Raleigh, NC",
+        "status": "on_sale",
+        "lat": 35.8008464,
+        "lon": -78.7196045,
+        "is_new": true
+      },
+      {
+        "date": "Jul 27, 2026",
+        "venue": "Truist Park",
+        "city": "Atlanta, GA",
+        "status": "on_sale",
+        "lat": 33.890738,
+        "lon": -84.4676163,
+        "is_new": true
+      },
+      {
+        "date": "Jul 30, 2026",
+        "venue": "Globe Life Field",
+        "city": "Arlington, TX",
+        "status": "on_sale",
+        "lat": 32.747642,
+        "lon": -97.0841049,
+        "is_new": true
+      },
+      {
+        "date": "Aug 2, 2026",
+        "venue": "Busch Stadium",
+        "city": "Saint Louis, MO",
+        "status": "on_sale",
+        "lat": 38.6225054,
+        "lon": -90.1930037,
+        "is_new": true
+      },
+      {
+        "date": "Aug 5, 2026",
+        "venue": "Target Field",
+        "city": "Minneapolis, MN",
+        "status": "on_sale",
+        "lat": 44.9816845,
+        "lon": -93.2778643,
+        "is_new": true
+      },
+      {
+        "date": "Aug 8, 2026",
+        "venue": "Coors Field",
+        "city": "Denver, CO",
+        "status": "on_sale",
+        "lat": 39.7560314,
+        "lon": -104.9929286,
+        "is_new": true
+      },
+      {
+        "date": "Aug 9, 2026",
+        "venue": "Coors Field",
+        "city": "Denver, CO",
+        "status": "on_sale",
+        "lat": 39.7560314,
+        "lon": -104.9929286,
+        "is_new": true
+      },
+      {
+        "date": "Aug 15, 2026",
+        "venue": "Rose Bowl",
+        "city": "Pasadena, CA",
+        "status": "on_sale",
+        "lat": 34.1613492,
+        "lon": -118.1676674,
+        "is_new": true
+      },
+      {
+        "date": "Aug 17, 2026",
+        "venue": "Petco Park",
+        "city": "San Diego, CA",
+        "status": "on_sale",
+        "lat": 32.7071874,
+        "lon": -117.156913,
+        "is_new": true
+      },
+      {
+        "date": "Aug 19, 2026",
+        "venue": "Chase Field",
+        "city": "Phoenix, AZ",
+        "status": "on_sale",
+        "lat": 33.4454856,
+        "lon": -112.0666928,
+        "is_new": true
+      },
+      {
+        "date": "Aug 21, 2026",
+        "venue": "Oracle Park",
+        "city": "San Francisco, CA",
+        "status": "on_sale",
+        "lat": 37.7786059,
+        "lon": -122.3894716,
+        "is_new": true
+      },
+      {
+        "date": "Aug 25, 2026",
+        "venue": "America First Field",
+        "city": "Sandy, UT",
+        "status": "on_sale",
+        "lat": 40.5829533,
+        "lon": -111.893312,
+        "is_new": true
+      },
+      {
+        "date": "Aug 25, 2026",
+        "venue": "The Plaza at America First Field",
+        "city": "Sandy, UT",
+        "status": "on_sale",
+        "lat": 40.5710454,
+        "lon": -111.8953815,
+        "is_new": true
+      },
+      {
+        "date": "Aug 28, 2026",
+        "venue": "BC Place",
+        "city": "Vancouver, BC, CA",
+        "status": "on_sale",
+        "lat": 49.2766905,
+        "lon": -123.1120062,
+        "is_new": true
+      },
+      {
+        "date": "Aug 30, 2026",
+        "venue": "T-Mobile Park",
+        "city": "Seattle, WA",
+        "status": "on_sale",
+        "lat": 47.5913974,
+        "lon": -122.332507,
+        "is_new": true
+      },
+      {
+        "date": "Aug 31, 2026",
+        "venue": "T-Mobile Park",
+        "city": "Seattle, WA",
+        "status": "on_sale",
+        "lat": 47.5913974,
+        "lon": -122.332507,
+        "is_new": true
       }
     ],
     "Mt. Joy": [
@@ -8159,6 +8530,11 @@
         "tracked": false
       },
       {
+        "date": "Jun 23, 2026",
+        "artist": "R\u00dcF\u00dcS DU SOL",
+        "tracked": false
+      },
+      {
         "date": "Jul 7, 2026",
         "artist": "Noah Kahan",
         "tracked": true
@@ -8926,9 +9302,391 @@
     ]
   },
   "changes": {
-    "artists": {},
+    "artists": {
+      "Jason Isbell": {
+        "added": [
+          {
+            "date": "May 20, 2026",
+            "venue": "Margot and Bill Winspear Opera House",
+            "city": "Dallas, TX",
+            "status": "on_sale",
+            "lat": 32.7762719,
+            "lon": -96.7968559,
+            "is_new": true
+          }
+        ],
+        "removed": [],
+        "newly_sold": []
+      },
+      "Noah Kahan": {
+        "added": [
+          {
+            "date": "Jun 11, 2026",
+            "venue": "Kia Center",
+            "city": "Orlando, FL",
+            "status": "on_sale",
+            "lat": 28.5392867,
+            "lon": -81.3838892,
+            "is_new": true
+          },
+          {
+            "date": "Jun 12, 2026",
+            "venue": "Kia Center",
+            "city": "Orlando, FL",
+            "status": "on_sale",
+            "lat": 28.5392867,
+            "lon": -81.3838892,
+            "is_new": true
+          },
+          {
+            "date": "Jun 14, 2026",
+            "venue": "Great Stage Park",
+            "city": "Manchester, TN",
+            "status": "on_sale",
+            "lat": 35.4832001,
+            "lon": -86.0887296,
+            "is_new": true
+          },
+          {
+            "date": "Jun 26, 2026",
+            "venue": "Citizens Bank Park",
+            "city": "Philadelphia, PA",
+            "status": "on_sale",
+            "lat": 39.9059221,
+            "lon": -75.1664804,
+            "is_new": true
+          },
+          {
+            "date": "Jun 28, 2026",
+            "venue": "Rogers Stadium",
+            "city": "Toronto, ON, CA",
+            "status": "on_sale",
+            "lat": 43.7461656,
+            "lon": -79.4692345,
+            "is_new": true
+          },
+          {
+            "date": "Jul 1, 2026",
+            "venue": "Great American Ball Park",
+            "city": "Cincinnati, OH",
+            "status": "on_sale",
+            "lat": 39.0972484,
+            "lon": -84.5066233,
+            "is_new": true
+          },
+          {
+            "date": "Jul 3, 2026",
+            "venue": "PNC Park",
+            "city": "Pittsburgh, PA",
+            "status": "on_sale",
+            "lat": 40.4469258,
+            "lon": -80.0056063,
+            "is_new": true
+          },
+          {
+            "date": "Jul 7, 2026",
+            "venue": "Fenway Park",
+            "city": "Boston, MA",
+            "status": "on_sale",
+            "lat": 42.3464614,
+            "lon": -71.0970999,
+            "is_new": true
+          },
+          {
+            "date": "Jul 7, 2026",
+            "venue": "Fenway Park",
+            "city": "Boston, MA",
+            "status": "on_sale",
+            "lat": 42.3464614,
+            "lon": -71.0970999,
+            "is_new": true
+          },
+          {
+            "date": "Jul 8, 2026",
+            "venue": "Fenway Park",
+            "city": "Boston, MA",
+            "status": "on_sale",
+            "lat": 42.3464614,
+            "lon": -71.0970999,
+            "is_new": true
+          },
+          {
+            "date": "Jul 10, 2026",
+            "venue": "Fenway Park",
+            "city": "Boston, MA",
+            "status": "on_sale",
+            "lat": 42.3464614,
+            "lon": -71.0970999,
+            "is_new": true
+          },
+          {
+            "date": "Jul 10, 2026",
+            "venue": "Fenway Park",
+            "city": "Boston, MA",
+            "status": "on_sale",
+            "lat": 42.3464614,
+            "lon": -71.0970999,
+            "is_new": true
+          },
+          {
+            "date": "Jul 10, 2026",
+            "venue": "Fenway Park",
+            "city": "Boston, MA",
+            "status": "on_sale",
+            "lat": 42.3464614,
+            "lon": -71.0970999,
+            "is_new": true
+          },
+          {
+            "date": "Jul 11, 2026",
+            "venue": "Fenway Park",
+            "city": "Boston, MA",
+            "status": "on_sale",
+            "lat": 42.3464614,
+            "lon": -71.0970999,
+            "is_new": true
+          },
+          {
+            "date": "Jul 11, 2026",
+            "venue": "Fenway Park",
+            "city": "Boston, MA",
+            "status": "on_sale",
+            "lat": 42.3464614,
+            "lon": -71.0970999,
+            "is_new": true
+          },
+          {
+            "date": "Jul 11, 2026",
+            "venue": "Fenway Park",
+            "city": "Boston, MA",
+            "status": "on_sale",
+            "lat": 42.3464614,
+            "lon": -71.0970999,
+            "is_new": true
+          },
+          {
+            "date": "Jul 14, 2026",
+            "venue": "Wrigley Field",
+            "city": "Chicago, IL",
+            "status": "on_sale",
+            "lat": 41.9481846,
+            "lon": -87.655559,
+            "is_new": true
+          },
+          {
+            "date": "Jul 14, 2026",
+            "venue": "Wrigley Field",
+            "city": "Chicago, IL",
+            "status": "on_sale",
+            "lat": 41.9481846,
+            "lon": -87.655559,
+            "is_new": true
+          },
+          {
+            "date": "Jul 14, 2026",
+            "venue": "Wrigley Field",
+            "city": "Chicago, IL",
+            "status": "on_sale",
+            "lat": 41.9481846,
+            "lon": -87.655559,
+            "is_new": true
+          },
+          {
+            "date": "Jul 15, 2026",
+            "venue": "Wrigley Field",
+            "city": "Chicago, IL",
+            "status": "on_sale",
+            "lat": 41.9481846,
+            "lon": -87.655559,
+            "is_new": true
+          },
+          {
+            "date": "Jul 15, 2026",
+            "venue": "Wrigley Field",
+            "city": "Chicago, IL",
+            "status": "on_sale",
+            "lat": 41.9481846,
+            "lon": -87.655559,
+            "is_new": true
+          },
+          {
+            "date": "Jul 18, 2026",
+            "venue": "Citi Field",
+            "city": "Queens, NY",
+            "status": "on_sale",
+            "lat": 40.7572778,
+            "lon": -73.8458788,
+            "is_new": true
+          },
+          {
+            "date": "Jul 19, 2026",
+            "venue": "Citi Field",
+            "city": "Queens, NY",
+            "status": "on_sale",
+            "lat": 40.7572778,
+            "lon": -73.8458788,
+            "is_new": true
+          },
+          {
+            "date": "Jul 22, 2026",
+            "venue": "Nationals Park",
+            "city": "Washington, DC",
+            "status": "on_sale",
+            "lat": 38.8727332,
+            "lon": -77.0074815,
+            "is_new": true
+          },
+          {
+            "date": "Jul 25, 2026",
+            "venue": "Carter Finley Stadium",
+            "city": "Raleigh, NC",
+            "status": "on_sale",
+            "lat": 35.8008464,
+            "lon": -78.7196045,
+            "is_new": true
+          },
+          {
+            "date": "Jul 27, 2026",
+            "venue": "Truist Park",
+            "city": "Atlanta, GA",
+            "status": "on_sale",
+            "lat": 33.890738,
+            "lon": -84.4676163,
+            "is_new": true
+          },
+          {
+            "date": "Jul 30, 2026",
+            "venue": "Globe Life Field",
+            "city": "Arlington, TX",
+            "status": "on_sale",
+            "lat": 32.747642,
+            "lon": -97.0841049,
+            "is_new": true
+          },
+          {
+            "date": "Aug 2, 2026",
+            "venue": "Busch Stadium",
+            "city": "Saint Louis, MO",
+            "status": "on_sale",
+            "lat": 38.6225054,
+            "lon": -90.1930037,
+            "is_new": true
+          },
+          {
+            "date": "Aug 5, 2026",
+            "venue": "Target Field",
+            "city": "Minneapolis, MN",
+            "status": "on_sale",
+            "lat": 44.9816845,
+            "lon": -93.2778643,
+            "is_new": true
+          },
+          {
+            "date": "Aug 8, 2026",
+            "venue": "Coors Field",
+            "city": "Denver, CO",
+            "status": "on_sale",
+            "lat": 39.7560314,
+            "lon": -104.9929286,
+            "is_new": true
+          },
+          {
+            "date": "Aug 9, 2026",
+            "venue": "Coors Field",
+            "city": "Denver, CO",
+            "status": "on_sale",
+            "lat": 39.7560314,
+            "lon": -104.9929286,
+            "is_new": true
+          },
+          {
+            "date": "Aug 15, 2026",
+            "venue": "Rose Bowl",
+            "city": "Pasadena, CA",
+            "status": "on_sale",
+            "lat": 34.1613492,
+            "lon": -118.1676674,
+            "is_new": true
+          },
+          {
+            "date": "Aug 17, 2026",
+            "venue": "Petco Park",
+            "city": "San Diego, CA",
+            "status": "on_sale",
+            "lat": 32.7071874,
+            "lon": -117.156913,
+            "is_new": true
+          },
+          {
+            "date": "Aug 19, 2026",
+            "venue": "Chase Field",
+            "city": "Phoenix, AZ",
+            "status": "on_sale",
+            "lat": 33.4454856,
+            "lon": -112.0666928,
+            "is_new": true
+          },
+          {
+            "date": "Aug 21, 2026",
+            "venue": "Oracle Park",
+            "city": "San Francisco, CA",
+            "status": "on_sale",
+            "lat": 37.7786059,
+            "lon": -122.3894716,
+            "is_new": true
+          },
+          {
+            "date": "Aug 25, 2026",
+            "venue": "America First Field",
+            "city": "Sandy, UT",
+            "status": "on_sale",
+            "lat": 40.5829533,
+            "lon": -111.893312,
+            "is_new": true
+          },
+          {
+            "date": "Aug 25, 2026",
+            "venue": "The Plaza at America First Field",
+            "city": "Sandy, UT",
+            "status": "on_sale",
+            "lat": 40.5710454,
+            "lon": -111.8953815,
+            "is_new": true
+          },
+          {
+            "date": "Aug 28, 2026",
+            "venue": "BC Place",
+            "city": "Vancouver, BC, CA",
+            "status": "on_sale",
+            "lat": 49.2766905,
+            "lon": -123.1120062,
+            "is_new": true
+          },
+          {
+            "date": "Aug 30, 2026",
+            "venue": "T-Mobile Park",
+            "city": "Seattle, WA",
+            "status": "on_sale",
+            "lat": 47.5913974,
+            "lon": -122.332507,
+            "is_new": true
+          },
+          {
+            "date": "Aug 31, 2026",
+            "venue": "T-Mobile Park",
+            "city": "Seattle, WA",
+            "status": "on_sale",
+            "lat": 47.5913974,
+            "lon": -122.332507,
+            "is_new": true
+          }
+        ],
+        "removed": [],
+        "newly_sold": []
+      }
+    },
     "venues": {},
-    "total_added": 0,
+    "total_added": 41,
     "total_removed": 0,
     "total_sold_out": 0
   },
@@ -10110,5 +10868,5 @@
       "lon": -99.1747474
     }
   ],
-  "coming_soon_fetched": "2026-02-26T20:18:16.880179+00:00"
+  "coming_soon_fetched": "2026-02-26T21:25:07.542559+00:00"
 }
