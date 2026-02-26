@@ -19,7 +19,7 @@ const ALL_TABS = [
 
 const TABS = DEMO
   ? ALL_TABS.filter(t => ['coming-soon', 'artists', 'festivals', 'venues'].includes(t.id))
-  : ALL_TABS
+  : ALL_TABS.filter(t => ['configure', 'settings'].includes(t.id))
 
 function timeAgo(isoStr) {
   if (!isoStr) return null
@@ -36,7 +36,7 @@ function timeAgo(isoStr) {
 }
 
 export default function App() {
-  const [active, setActive] = useState('coming-soon')
+  const [active, setActive] = useState(DEMO ? 'coming-soon' : 'configure')
   const [pagesUrl, setPagesUrl] = useState('')
   const [lastRefreshed, setLastRefreshed] = useState(null)
   const [refreshing, setRefreshing] = useState(false)
