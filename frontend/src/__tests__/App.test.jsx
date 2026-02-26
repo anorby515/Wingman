@@ -49,14 +49,15 @@ describe('App', () => {
     expect(screen.getByText('WINGMAN')).toBeInTheDocument()
   })
 
-  it('renders all tab buttons in local mode', () => {
+  it('renders Configure and Settings tabs in local mode', () => {
     render(<App />)
-    expect(screen.getByRole('tab', { name: /Coming Soon/i })).toBeInTheDocument()
-    expect(screen.getByRole('tab', { name: /Artists/i })).toBeInTheDocument()
-    expect(screen.getByRole('tab', { name: /Festivals/i })).toBeInTheDocument()
-    expect(screen.getByRole('tab', { name: /Venues/i })).toBeInTheDocument()
     expect(screen.getByRole('tab', { name: /Configure/i })).toBeInTheDocument()
     expect(screen.getByRole('tab', { name: /Settings/i })).toBeInTheDocument()
+    // Viewer tabs are not shown in local mode
+    expect(screen.queryByRole('tab', { name: /Coming Soon/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('tab', { name: /^Artists$/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('tab', { name: /^Festivals$/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('tab', { name: /^Venues$/i })).not.toBeInTheDocument()
   })
 
   it('renders the Refresh Data button in local mode', () => {
@@ -64,21 +65,21 @@ describe('App', () => {
     expect(screen.getByText('Refresh')).toBeInTheDocument()
   })
 
-  it('defaults to Coming Soon tab as active', () => {
+  it('defaults to Configure tab as active in local mode', () => {
     render(<App />)
-    const comingSoonTab = screen.getByRole('tab', { name: /Coming Soon/i })
-    expect(comingSoonTab).toHaveAttribute('aria-selected', 'true')
+    const configureTab = screen.getByRole('tab', { name: /Configure/i })
+    expect(configureTab).toHaveAttribute('aria-selected', 'true')
   })
 
   it('switches tabs on click', async () => {
     const user = userEvent.setup()
     render(<App />)
 
-    const artistsTab = screen.getByRole('tab', { name: /Artists/i })
-    await user.click(artistsTab)
-    expect(artistsTab).toHaveAttribute('aria-selected', 'true')
+    const settingsTab = screen.getByRole('tab', { name: /Settings/i })
+    await user.click(settingsTab)
+    expect(settingsTab).toHaveAttribute('aria-selected', 'true')
 
-    const comingSoonTab = screen.getByRole('tab', { name: /Coming Soon/i })
-    expect(comingSoonTab).toHaveAttribute('aria-selected', 'false')
+    const configureTab = screen.getByRole('tab', { name: /Configure/i })
+    expect(configureTab).toHaveAttribute('aria-selected', 'false')
   })
 })
