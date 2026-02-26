@@ -54,10 +54,8 @@ describe('App', () => {
     expect(screen.getByRole('tab', { name: /Configure/i })).toBeInTheDocument()
     expect(screen.getByRole('tab', { name: /Settings/i })).toBeInTheDocument()
     // Viewer tabs are not shown in local mode
-    expect(screen.queryByRole('tab', { name: /Coming Soon/i })).not.toBeInTheDocument()
-    expect(screen.queryByRole('tab', { name: /^Artists$/i })).not.toBeInTheDocument()
-    expect(screen.queryByRole('tab', { name: /^Festivals$/i })).not.toBeInTheDocument()
-    expect(screen.queryByRole('tab', { name: /^Venues$/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('tab', { name: /Concerts & Festivals/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('tab', { name: /On Sale Soon/i })).not.toBeInTheDocument()
   })
 
   it('renders the Refresh Data button in local mode', () => {
