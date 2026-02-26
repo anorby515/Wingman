@@ -115,17 +115,14 @@ export default function App() {
   }, [])
 
   return (
-    <div className="min-h-screen flex flex-col bg-neutral-100">
+    <div className="min-h-screen flex flex-col bg-white">
       {/* ── Header ── */}
-      <header className="sticky top-0 z-20 bg-neutral-100">
+      <header className="sticky top-0 z-[1000] bg-white">
         <div className="max-w-3xl mx-auto px-4 pt-4 pb-0">
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight text-neutral-900">WINGMAN</h1>
-              <p className="text-xs text-neutral-400 tracking-wide">Concert Tracker</p>
-            </div>
+          <div className="relative flex items-center justify-center mb-4 pt-2">
+            <h1 className="text-5xl font-bold tracking-tight text-neutral-900">WINGMAN</h1>
 
-            <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="absolute right-0 flex items-center gap-2 flex-shrink-0">
               {/* Last refreshed */}
               {!DEMO && lastRefreshed && (
                 <span className="text-xs text-neutral-400" title={lastRefreshed}>
