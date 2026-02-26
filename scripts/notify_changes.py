@@ -1,24 +1,22 @@
 #!/usr/bin/env python3
 """
-Wingman SMS Notification Script
-================================
+Wingman Notification Script
+============================
 Compares docs/summary.json against docs/notification_baseline.json to detect:
   - New artist shows announced
   - New venue events
   - Shows with on-sale date within 48 hours
 
-Sends an SMS via Twilio when changes are found, then updates the baseline.
+Sends a push notification via ntfy.sh when changes are found, then updates
+the baseline.
 
 Designed to run as a GitHub Action job, gated to schedule-only triggers.
 
 Usage:
   python scripts/notify_changes.py
 
-Environment variables (all required):
-  TWILIO_ACCOUNT_SID  — Twilio account identifier
-  TWILIO_AUTH_TOKEN   — Twilio API auth token
-  TWILIO_FROM_NUMBER  — Sender phone number (e.g. +15551234567)
-  TWILIO_TO_NUMBER    — Recipient phone number (e.g. +15559876543)
+Environment variables (required):
+  NTFY_TOPIC  — ntfy.sh topic name (e.g. wingman-alerts-a7f3x9k2m)
 """
 
 from __future__ import annotations
@@ -27,17 +25,17 @@ import json
 import os
 import pathlib
 import sys
-import urllib.parse
 import urllib.request
-from base64 import b64encode
 from datetime import datetime, timedelta, timezone
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SUMMARY_PATH = ROOT / "docs" / "summary.json"
 BASELINE_PATH = ROOT / "docs" / "notification_baseline.json"
 
-# Twilio long-SMS limit (concatenated segments, up to ~1600 chars reliably)
-SMS_MAX_CHARS = 1500
+NTFY_BASE_URL = "https://ntfy.sh"
+
+# ntfy messages can be up to 4096 bytes; keep comfortable headroom
+MESSAGE_MAX_CHARS = 3500
 
 
 def parse_show_date(date_str: str) -> datetime | None:
@@ -120,13 +118,13 @@ def format_onsale_time(iso_str: str) -> str:
         return iso_str
 
 
-def format_sms(
+def format_message(
     new_artist_shows: list[str],
     new_venue_events: list[str],
     onsale_imminent: list[dict],
     today: datetime,
 ) -> str:
-    """Format the SMS body, truncating if necessary."""
+    """Format the notification body, truncating if necessary."""
     date_str = today.strftime("%b %d")
     lines: list[str] = [f"Wingman — {date_str}", ""]
 
@@ -156,7 +154,7 @@ def format_sms(
         lines.append(header)
         for item in items:
             candidate = "\n".join(lines + [item])
-            if len(candidate) > SMS_MAX_CHARS - 50:  # Reserve space for overflow note
+            if len(candidate) > MESSAGE_MAX_CHARS - 50:  # Reserve space for overflow note
                 remaining = sum(len(sect_items) for _, sect_items in sections) - len(
                     [l for l in lines if l.startswith("•")]
                 )
@@ -168,47 +166,38 @@ def format_sms(
     return "\n".join(lines).strip()
 
 
-def send_twilio_sms(body: str) -> bool:
-    """Send an SMS via Twilio REST API (no SDK dependency)."""
-    account_sid = os.environ.get("TWILIO_ACCOUNT_SID", "")
-    auth_token = os.environ.get("TWILIO_AUTH_TOKEN", "")
-    from_number = os.environ.get("TWILIO_FROM_NUMBER", "")
-    to_number = os.environ.get("TWILIO_TO_NUMBER", "")
+def send_ntfy(body: str, title: str = "Wingman Alert") -> bool:
+    """Send a push notification via ntfy.sh (no SDK dependency)."""
+    topic = os.environ.get("NTFY_TOPIC", "")
 
-    if not all([account_sid, auth_token, from_number, to_number]):
-        print("Error: Missing Twilio environment variables", file=sys.stderr)
+    if not topic:
+        print("Error: Missing NTFY_TOPIC environment variable", file=sys.stderr)
         return False
 
-    url = f"https://api.twilio.com/2010-04-01/Accounts/{account_sid}/Messages.json"
+    url = f"{NTFY_BASE_URL}/{topic}"
 
-    data = urllib.parse.urlencode({
-        "To": to_number,
-        "From": from_number,
-        "Body": body,
-    }).encode("utf-8")
-
-    credentials = b64encode(f"{account_sid}:{auth_token}".encode()).decode()
     req = urllib.request.Request(
         url,
-        data=data,
+        data=body.encode("utf-8"),
         method="POST",
         headers={
-            "Authorization": f"Basic {credentials}",
-            "Content-Type": "application/x-www-form-urlencoded",
+            "Title": title,
+            "Priority": "high",
+            "Tags": "guitar,ticket",
         },
     )
 
     try:
         with urllib.request.urlopen(req, timeout=30) as resp:
             result = json.loads(resp.read())
-            print(f"SMS sent: SID={result.get('sid', 'unknown')}")
+            print(f"Notification sent: id={result.get('id', 'unknown')}")
             return True
     except urllib.error.HTTPError as e:
         error_body = e.read().decode() if e.fp else ""
-        print(f"Twilio API error {e.code}: {error_body}", file=sys.stderr)
+        print(f"ntfy API error {e.code}: {error_body}", file=sys.stderr)
         return False
     except Exception as e:
-        print(f"Failed to send SMS: {e}", file=sys.stderr)
+        print(f"Failed to send notification: {e}", file=sys.stderr)
         return False
 
 
@@ -271,27 +260,28 @@ def main() -> None:
           f"{len(onsale_imminent)} on-sale imminent")
 
     if total_changes == 0:
-        print("No changes — skipping SMS")
+        print("No changes — skipping notification")
         # Still update baseline (keys may have shifted due to past-show filtering)
         save_baseline(current_artist_keys, current_venue_keys)
         return
 
-    # Format and send SMS
-    sms_body = format_sms(
+    # Format and send notification
+    message_body = format_message(
         sorted(new_artist_shows),
         sorted(new_venue_events),
         onsale_imminent,
         today,
     )
-    print(f"\n--- SMS Preview ({len(sms_body)} chars) ---")
-    print(sms_body)
+    title = f"Wingman — {today.strftime('%b %d')}"
+    print(f"\n--- Notification Preview ({len(message_body)} chars) ---")
+    print(message_body)
     print("---")
 
-    if send_twilio_sms(sms_body):
+    if send_ntfy(message_body, title=title):
         # Update baseline only after successful send
         save_baseline(current_artist_keys, current_venue_keys)
     else:
-        print("SMS failed — baseline NOT updated (will retry next run)")
+        print("Notification failed — baseline NOT updated (will retry next run)")
         sys.exit(1)
 
 
