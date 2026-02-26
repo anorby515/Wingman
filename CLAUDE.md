@@ -10,7 +10,7 @@ This document defines the contract between **Claude Code** (codebase maintainer)
 | Actor | Responsibility |
 |-------|---------------|
 | **Claude Code** | Maintains codebase, schemas, models, frontend, backend. Commits and pushes code changes. |
-| **Claude Cowork** | Spotify sync (interactive, manual trigger), notification delivery (email via Gmail + SMS via Twilio). |
+| **Claude Cowork** | Spotify sync (interactive, manual trigger), notification delivery (email via Gmail + push via ntfy.sh). |
 | **GitHub Actions** | Daily TM data fetch, generates `docs/summary.json`, builds frontend, deploys to GitHub Pages. |
 | **Local UI** | FastAPI backend + React frontend. Configuration (artists, venues, festivals, settings). Manual "Refresh Data" button triggers TM API fetch. Displays all show data from TM cache. |
 | **GitHub Pages** | Public site. Full-featured viewer: Artists, Venues, Festivals, Map, Coming Soon. Updated daily by GitHub Action. |
@@ -94,11 +94,11 @@ Ticketmaster Discovery API (5000 calls/day limit)
 
 ---
 
-## Workflow: Notifications (SMS via Twilio)
+## Workflow: Notifications (Push via ntfy.sh)
 
-**Architecture:** A second GitHub Action job (`notify`) runs serially after the daily TM data fetch. It compares the fresh `docs/summary.json` against a committed baseline (`docs/notification_baseline.json`) to detect meaningful changes, then sends an SMS via Twilio.
+**Architecture:** A second GitHub Action job (`notify`) runs serially after the daily TM data fetch. It compares the fresh `docs/summary.json` against a committed baseline (`docs/notification_baseline.json`) to detect meaningful changes, then sends a push notification via [ntfy.sh](https://ntfy.sh).
 
-**Schedule-only:** The notify job is gated with `if: github.event_name == 'schedule'`. Manual `workflow_dispatch` runs (used during development) never trigger SMS.
+**Schedule-only:** The notify job is gated with `if: github.event_name == 'schedule'`. Manual `workflow_dispatch` runs (used during development) never trigger notifications.
 
 ### Trigger Types
 
@@ -110,7 +110,7 @@ Ticketmaster Discovery API (5000 calls/day limit)
 
 ### Past-Show Filtering
 
-Before comparing, both the baseline and fresh data drop any show whose date has already passed. This prevents "removed" alerts for shows that simply happened — only genuinely cancelled/delisted shows (future date, disappeared from TM) would appear as removals. Currently, removals do not trigger SMS (only new additions and on-sale-imminent do).
+Before comparing, both the baseline and fresh data drop any show whose date has already passed. This prevents "removed" alerts for shows that simply happened — only genuinely cancelled/delisted shows (future date, disappeared from TM) would appear as removals. Currently, removals do not trigger notifications (only new additions and on-sale-imminent do).
 
 ### Baseline
 
@@ -124,9 +124,9 @@ Before comparing, both the baseline and fresh data drop any show whose date has 
 }
 ```
 
-The baseline is updated after a successful SMS send (or when no changes are detected). If the SMS fails, the baseline is NOT updated — changes will be retried on the next scheduled run.
+The baseline is updated after a successful notification send (or when no changes are detected). If the send fails, the baseline is NOT updated — changes will be retried on the next scheduled run.
 
-### SMS Format
+### Notification Format
 
 ```
 Wingman — Feb 26
@@ -143,20 +143,24 @@ ON SALE SOON:
   On sale: Feb 27, 10:00 AM CT
 ```
 
-Messages are truncated to ~1500 chars (Twilio long-SMS limit) with a "(+N more)" note if needed.
+Messages are truncated to ~3500 chars with a "(+N more)" note if needed. Notifications are sent with `Priority: high` and title set to the date header.
 
 ### GitHub Secrets Required
 
 | Secret | Purpose |
 |--------|---------|
-| `TWILIO_ACCOUNT_SID` | Twilio account identifier |
-| `TWILIO_AUTH_TOKEN` | Twilio API auth token |
-| `TWILIO_FROM_NUMBER` | Sender phone number (e.g. +15551234567) |
-| `TWILIO_TO_NUMBER` | Recipient phone number (e.g. +15559876543) |
+| `NTFY_TOPIC` | ntfy.sh topic name (e.g. `wingman-alerts-a7f3x9k2m`) |
+
+### Setup
+
+1. Install the [ntfy app](https://ntfy.sh) on your phone (Android or iOS)
+2. Subscribe to a topic with a long, unguessable name (the topic is your secret — anyone who knows it can read messages)
+3. Add the topic as `NTFY_TOPIC` in your repo's GitHub Actions secrets
+4. No account, registration, or carrier compliance needed
 
 ### Script
 
-`scripts/notify_changes.py` — standalone script with no pip dependencies. Uses `urllib` for the Twilio REST API call (no Twilio SDK needed).
+`scripts/notify_changes.py` — standalone script with no pip dependencies. Uses `urllib` to POST to the ntfy.sh REST API.
 
 ---
 
@@ -342,7 +346,7 @@ Simple key-value: location string -> `{"lat": number, "lon": number}`
 
 ### docs/notification_baseline.json
 
-Show keys used for SMS diff detection. See Notifications section above for schema.
+Show keys used for notification diff detection. See Notifications section above for schema.
 
 ### dismissed_suggestions.json
 
@@ -486,18 +490,18 @@ Redesign the locally hosted site to focus exclusively on configuration, removing
 ### Step 6: Discuss a New Implementation Using Claude Cowork for Festivals
 Revisit how festivals are tracked, fetched, and displayed. The current festival data flow needs rethinking — discuss whether Cowork should handle festival lineup discovery, how festival shows integrate into the unified Concerts & Festivals view, and what the right data model looks like. This is a planning/discussion step before implementation.
 
-### Step 7: Notification System (SMS via Twilio)
+### Step 7: Notification System (Push via ntfy.sh)
 - GitHub Action notify job runs after daily TM fetch (schedule-only, not manual dispatch)
 - Compares `docs/summary.json` against `docs/notification_baseline.json`
 - Filters out past shows before diffing (prevents false "removed" alerts)
 - Detects: new artist shows, new venue events, on-sale within 48 hours
-- Sends SMS via Twilio REST API (credentials in GitHub Secrets)
+- Sends push notification via ntfy.sh (topic name in GitHub Secrets)
 - Updates baseline after successful send; retries on next run if send fails
 - Script: `scripts/notify_changes.py` (no pip dependencies)
 
 ### Step 8: Cowork Workflow Rewrite
 - Remove scraping workflows
-- Cowork = Spotify sync (manual, conversational) + notification delivery (email + SMS)
+- Cowork = Spotify sync (manual, conversational) + notification delivery (email + push via ntfy.sh)
 - Spotify sync is Cowork-driven: Cowork orchestrates all 3 phases, calls Spotify API directly, uses Chrome skills for URL discovery
 - Backend provides supporting endpoints: dismissed-suggestions CRUD, flagged-items, artist management
 - OAuth tokens stored in `spotify_tokens.json` (managed by Cowork, not the backend)

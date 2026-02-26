@@ -93,7 +93,7 @@ jobs:
       - uses: actions/deploy-pages@v4
         id: deployment
 
-  # ── Notify: SMS alerts for new shows (schedule-only) ──
+  # ── Notify: push alerts for new shows (schedule-only) ──
   notify:
     needs: fetch-and-deploy
     if: github.event_name == 'schedule'
@@ -109,12 +109,9 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Check for changes and send SMS
+      - name: Check for changes and send notification
         env:
-          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
-          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
-          TWILIO_FROM_NUMBER: ${{ secrets.TWILIO_FROM_NUMBER }}
-          TWILIO_TO_NUMBER: ${{ secrets.TWILIO_TO_NUMBER }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
         run: python scripts/notify_changes.py
 
       - name: Commit updated baseline
