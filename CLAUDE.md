@@ -506,7 +506,15 @@ Revisit how festivals are tracked, fetched, and displayed. The current festival 
 - Backend provides supporting endpoints: dismissed-suggestions CRUD, flagged-items, artist management
 - OAuth tokens stored in `spotify_tokens.json` (managed by Cowork, not the backend)
 
-### Step 9: Bandsintown Integration (FUTURE)
+### Step 9: Codebase Cleanup + Documentation Refresh
+- Audit `backend/main.py` and `backend/ticketmaster.py` for dead code (unreachable paths, stale comments, unused helpers) accumulated from the refactor
+- Audit frontend components for any remaining references to removed endpoints (`/api/shows`, `/api/refresh`, `/api/notifications`) or stale state logic
+- Review and remove any frontend components no longer rendered in local mode
+- Update `CLAUDE.md` to accurately reflect the current architecture, endpoints, and file ownership table
+- Review `schemas/` for any schemas that no longer have a corresponding implementation
+- Verify `.gitignore` — remove entries for files that no longer exist (e.g. `ticketmaster_cache.json`, `notification_state.json`) and add any new ones that are missing
+
+### Step 10: Bandsintown Integration (FUTURE)
 - Secondary/supplemental data source for artists/venues not on TM
 - Deferred until TM-only gaps are assessed in practice
 
