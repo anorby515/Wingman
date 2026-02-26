@@ -326,24 +326,11 @@ export default function ArtistsSummaryTab() {
 
   return (
     <div className="space-y-8">
-      {/* Meta */}
-      <div className="card p-4 flex flex-wrap gap-4 text-sm text-neutral-500">
-        <div>
-          <span className="font-medium text-neutral-700">Home: </span>
-          {config?.center_city || '\u2014'}
+      {shows?.stale && (
+        <div className="px-3 py-1.5 border border-neutral-200 text-xs text-neutral-500 italic rounded-sm">
+          Data may be stale — click Refresh
         </div>
-        <div>
-          <span className="font-medium text-neutral-700">Artists: </span>
-          {withShowsCount} / {artistList.length} with shows
-        </div>
-        <div>
-          <span className="font-medium text-neutral-700">Total shows: </span>
-          {totalShows}
-        </div>
-        {shows?.stale && (
-          <div><span className="text-xs text-neutral-500 italic">Data may be stale — click Refresh</span></div>
-        )}
-      </div>
+      )}
 
       {/* ── Map ── */}
       <section>
