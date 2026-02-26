@@ -318,6 +318,7 @@ export default function ArtistsSummaryTab() {
     if (hideNoShows && a.totalCount === 0) return false
     if (mapFilter?.type === 'artist' && mapFilter.name === a.name) return true
     if (!mapBounds) return true
+    if (a.shows.length === 0) return true
     return a.shows.some(s => s.lat != null && s.lon != null && isInBounds(s.lat, s.lon, mapBounds))
   })
 
