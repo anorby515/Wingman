@@ -82,8 +82,8 @@
           "onsale_tbd": false,
           "presales": [],
           "ticketmaster_url": "https://www.ticketmaster.com/luke-combs-my-kinda-saturday-night-knoxville-tennessee-05-02-2026/event/1B00633ED8CD7A6F",
-          "lat": 35.9550742,
-          "lon": -83.9250891,
+          "lat": 35.9550647,
+          "lon": -83.9259872,
           "genre": "Country / Americana"
         },
         {
@@ -3744,8 +3744,8 @@
           "onsale_tbd": false,
           "presales": [],
           "ticketmaster_url": "https://www.ticketmaster.com/luke-combs-my-kinda-saturday-night-knoxville-tennessee-05-02-2026/event/1B00633ED8CD7A6F",
-          "lat": 35.9550742,
-          "lon": -83.9250891,
+          "lat": 35.9550647,
+          "lon": -83.9259872,
           "genre": "Country / Americana"
         },
         {
@@ -7624,8 +7624,8 @@
           "raw_date": "2026-09-20",
           "venue": "PIEDMONT PARK",
           "city": "Atlanta, GA",
-          "not_yet_on_sale": true,
-          "onsale_datetime": "2026-02-26T14:00:00Z",
+          "not_yet_on_sale": false,
+          "onsale_datetime": null,
           "onsale_tbd": false,
           "presales": [],
           "ticketmaster_url": "https://on.fgtix.com/trk/AuGK",
@@ -7806,8 +7806,8 @@
           "raw_date": "2026-09-18",
           "venue": "PIEDMONT PARK",
           "city": "Atlanta, GA",
-          "not_yet_on_sale": true,
-          "onsale_datetime": "2026-02-26T14:00:00Z",
+          "not_yet_on_sale": false,
+          "onsale_datetime": null,
           "onsale_tbd": false,
           "presales": [],
           "ticketmaster_url": "https://on.fgtix.com/trk/AuGK",
@@ -18256,19 +18256,6 @@
       "lon": -80.8450417
     },
     {
-      "artist": "LCD Soundsystem",
-      "genre": "Indie / Alt-Rock",
-      "date": "Sep 20, 2026",
-      "venue": "PIEDMONT PARK",
-      "city": "Atlanta, GA",
-      "onsale_datetime": "2026-02-26T14:00:00Z",
-      "onsale_tbd": false,
-      "presales": [],
-      "ticketmaster_url": "https://on.fgtix.com/trk/AuGK",
-      "lat": 33.7890478,
-      "lon": -84.3718862
-    },
-    {
       "artist": "The Strokes",
       "genre": "Indie / Alt-Rock",
       "date": "Apr 6, 2026",
@@ -18306,19 +18293,6 @@
       "ticketmaster_url": "https://www.ticketmaster.com/the-strokes-san-francisco-california-04-06-2026/event/1C006457AF3DE470",
       "lat": 37.7780501,
       "lon": -122.4173077
-    },
-    {
-      "artist": "The Strokes",
-      "genre": "Indie / Alt-Rock",
-      "date": "Sep 18, 2026",
-      "venue": "PIEDMONT PARK",
-      "city": "Atlanta, GA",
-      "onsale_datetime": "2026-02-26T14:00:00Z",
-      "onsale_tbd": false,
-      "presales": [],
-      "ticketmaster_url": "https://on.fgtix.com/trk/AuGK",
-      "lat": 33.7890478,
-      "lon": -84.3718862
     },
     {
       "artist": "Lord Huron",
@@ -18442,7 +18416,7 @@
       "lon": -99.1747474
     }
   ],
-  "coming_soon_fetched": "2026-02-26T12:15:16.205132+00:00",
+  "coming_soon_fetched": "2026-02-26T14:48:56.499131+00:00",
   "config": {
     "center_city": "Des Moines, IA",
     "center_lat": 41.5868,
