@@ -8,6 +8,7 @@ from backend.ticketmaster import (
     RefreshResult,
     _normalize_venue_name,
     _venue_in_city,
+    _venue_in_state,
     build_show,
     detect_triggers,
     fetch_artist_shows,
@@ -267,6 +268,30 @@ class TestVenueInCity:
         assert _venue_in_city(tm_venue, "") is False
 
 
+class TestVenueInState:
+    def test_same_state(self):
+        tm_venue = {
+            "city": {"name": "Waukee"},
+            "state": {"stateCode": "IA"},
+        }
+        assert _venue_in_state(tm_venue, "West Des Moines, IA") is True
+
+    def test_different_state(self):
+        tm_venue = {
+            "city": {"name": "Chicago"},
+            "state": {"stateCode": "IL"},
+        }
+        assert _venue_in_state(tm_venue, "Des Moines, IA") is False
+
+    def test_empty_target(self):
+        tm_venue = {"city": {"name": "Waukee"}, "state": {"stateCode": "IA"}}
+        assert _venue_in_state(tm_venue, "") is False
+
+    def test_no_state_in_target(self):
+        tm_venue = {"city": {"name": "Waukee"}, "state": {"stateCode": "IA"}}
+        assert _venue_in_state(tm_venue, "Waukee") is False
+
+
 class TestGetTmVenueId:
     def _make_venue_response(self, venues):
         """Build a TM venues.json API response."""
@@ -305,13 +330,42 @@ class TestGetTmVenueId:
             )
             assert result == "V3"
 
+    def test_pass4_state_fallback(self):
+        """State-based fallback: Vibrant Music Hall in Waukee vs West Des Moines."""
+        response = self._make_venue_response([
+            {
+                "id": "V5",
+                "name": "Vibrant Music Hall",
+                "city": {"name": "Waukee"},
+                "state": {"stateCode": "IA"},
+            },
+        ])
+        with patch("backend.ticketmaster._tm_request", return_value=response):
+            # Pass 1 matches by name, so this actually hits pass 1
+            result = get_tm_venue_id("key", "Vibrant Music Hall", "West Des Moines, IA")
+            assert result == "V5"
+
+    def test_state_fallback_different_name(self):
+        """State-based fallback with completely different name."""
+        response = self._make_venue_response([
+            {
+                "id": "V6",
+                "name": "Totally Different Name",
+                "city": {"name": "Waukee"},
+                "state": {"stateCode": "IA"},
+            },
+        ])
+        with patch("backend.ticketmaster._tm_request", return_value=response):
+            result = get_tm_venue_id("key", "Some Venue", "West Des Moines, IA")
+            assert result == "V6"
+
     def test_no_match_returns_none(self):
         """No venues returned → None."""
         with patch("backend.ticketmaster._tm_request", return_value={}):
             assert get_tm_venue_id("key", "Nowhere Venue") is None
 
-    def test_city_fallback_wrong_city(self):
-        """City fallback shouldn't match a venue in a different city."""
+    def test_city_fallback_wrong_state(self):
+        """Should not match a venue in a completely different state."""
         response = self._make_venue_response([
             {
                 "id": "V4",
@@ -323,6 +377,13 @@ class TestGetTmVenueId:
         with patch("backend.ticketmaster._tm_request", return_value=response):
             result = get_tm_venue_id("key", "Test Venue", "Des Moines, IA")
             assert result is None
+
+    def test_sends_state_code_in_api_call(self):
+        """When venue_city is provided, stateCode should be in the API URL."""
+        with patch("backend.ticketmaster._tm_request", return_value={}) as mock:
+            get_tm_venue_id("key", "Test", "Des Moines, IA")
+            url = mock.call_args[0][0]
+            assert "stateCode=IA" in url
 
 
 class TestFetchVenueShows:
