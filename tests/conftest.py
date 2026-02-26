@@ -42,15 +42,11 @@ def client(tmp_path: Path, monkeypatch):
     tracked_file = tmp_path / "tracked.json"
     flagged_file = tmp_path / "flagged_items.json"
     geocode_file = tmp_path / "geocode_cache.json"
-    tm_cache_file = tmp_path / "ticketmaster_cache.json"
-    notification_file = tmp_path / "notification_state.json"
 
     monkeypatch.setattr(main_mod, "CONFIG_FILE", config_file)
     monkeypatch.setattr(main_mod, "TRACKED_FILE", tracked_file)
     monkeypatch.setattr(main_mod, "FLAGGED_FILE", flagged_file)
     monkeypatch.setattr(main_mod, "GEOCODE_FILE", geocode_file)
-    monkeypatch.setattr(main_mod, "TM_CACHE_FILE", tm_cache_file)
-    monkeypatch.setattr(main_mod, "NOTIFICATION_FILE", notification_file)
 
     # Stub out geocoding so tests never hit the network
     monkeypatch.setattr(main_mod, "_geocode", lambda loc: None)
