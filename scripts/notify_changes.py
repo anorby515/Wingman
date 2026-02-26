@@ -176,12 +176,15 @@ def send_ntfy(body: str, title: str = "Wingman Alert") -> bool:
 
     url = f"{NTFY_BASE_URL}/{topic}"
 
+    # HTTP headers must be latin-1 safe; replace em dashes with hyphens in title
+    safe_title = title.replace("\u2014", "-").replace("\u2013", "-")
+
     req = urllib.request.Request(
         url,
         data=body.encode("utf-8"),
         method="POST",
         headers={
-            "Title": title,
+            "Title": safe_title,
             "Priority": "high",
             "Tags": "guitar,ticket",
         },
