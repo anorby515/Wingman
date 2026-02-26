@@ -55,8 +55,8 @@
         "venue": "Neyland Stadium",
         "city": "Knoxville, TN",
         "status": "on_sale",
-        "lat": 35.9550647,
-        "lon": -83.9259872,
+        "lat": 35.9550742,
+        "lon": -83.9250891,
         "is_new": false
       },
       {
@@ -2359,8 +2359,8 @@
         "venue": "Neyland Stadium",
         "city": "Knoxville, TN",
         "status": "on_sale",
-        "lat": 35.9550647,
-        "lon": -83.9259872,
+        "lat": 35.9550742,
+        "lon": -83.9250891,
         "is_new": false
       },
       {
@@ -3515,6 +3515,42 @@
         "lat": 41.2860699,
         "lon": -96.2346121,
         "is_new": false
+      },
+      {
+        "date": "Sep 17, 2026",
+        "venue": "Ameris Bank Amphitheatre",
+        "city": "Alpharetta, GA",
+        "status": "on_sale",
+        "lat": 34.0543533,
+        "lon": -84.3063348,
+        "is_new": true
+      },
+      {
+        "date": "Sep 18, 2026",
+        "venue": "Colonial Life Arena",
+        "city": "Columbia, SC",
+        "status": "on_sale",
+        "lat": 33.9947839,
+        "lon": -81.0373546,
+        "is_new": true
+      },
+      {
+        "date": "Sep 24, 2026",
+        "venue": "Appalachian Wireless Arena (Formerly Eastern Kentucky Expo Ctr)",
+        "city": "Pikeville, KY",
+        "status": "on_sale",
+        "lat": 37.4792672,
+        "lon": -82.5187629,
+        "is_new": true
+      },
+      {
+        "date": "Sep 26, 2026",
+        "venue": "Brandon Amphitheater",
+        "city": "Brandon, MS",
+        "status": "on_sale",
+        "lat": 32.2731475,
+        "lon": -89.9868058,
+        "is_new": true
       }
     ],
     "Dylan Gossett": [
@@ -7668,258 +7704,6 @@
         "tracked": false
       }
     ],
-    "Ryman Auditorium": [
-      {
-        "date": "Feb 27, 2026",
-        "artist": "Aaron Lewis",
-        "tracked": false
-      },
-      {
-        "date": "Feb 28, 2026",
-        "artist": "Kenny Wayne Shepherd",
-        "tracked": false
-      },
-      {
-        "date": "Mar 3, 2026",
-        "artist": "HARDY",
-        "tracked": false
-      },
-      {
-        "date": "Mar 4, 2026",
-        "artist": "Priscilla Block",
-        "tracked": false
-      },
-      {
-        "date": "Mar 5, 2026",
-        "artist": "The Wood Brothers",
-        "tracked": false
-      },
-      {
-        "date": "Mar 6, 2026",
-        "artist": "KC & the Sunshine Band",
-        "tracked": false
-      },
-      {
-        "date": "Mar 20, 2026",
-        "artist": "Robert Earl Keen",
-        "tracked": false
-      },
-      {
-        "date": "Mar 21, 2026",
-        "artist": "Randy Rogers",
-        "tracked": false
-      },
-      {
-        "date": "Mar 22, 2026",
-        "artist": "Pat Metheny",
-        "tracked": false
-      },
-      {
-        "date": "Mar 23, 2026",
-        "artist": "Steven Curtis Chapman",
-        "tracked": false
-      },
-      {
-        "date": "Mar 26, 2026",
-        "artist": "Robert Plant",
-        "tracked": false
-      },
-      {
-        "date": "Mar 27, 2026",
-        "artist": "Trampled By Turtles",
-        "tracked": false
-      },
-      {
-        "date": "Mar 27, 2026",
-        "artist": "Trampled By Turtles",
-        "tracked": false
-      },
-      {
-        "date": "Mar 28, 2026",
-        "artist": "Cooper Alan",
-        "tracked": false
-      },
-      {
-        "date": "Mar 29, 2026",
-        "artist": "Boys Like Girls",
-        "tracked": false
-      },
-      {
-        "date": "Mar 29, 2026",
-        "artist": "Boys Like Girls",
-        "tracked": false
-      },
-      {
-        "date": "Mar 31, 2026",
-        "artist": "Herb Alpert",
-        "tracked": false
-      },
-      {
-        "date": "Mar 31, 2026",
-        "artist": "Herb Alpert",
-        "tracked": false
-      },
-      {
-        "date": "Apr 1, 2026",
-        "artist": "Max McNown",
-        "tracked": false
-      },
-      {
-        "date": "Apr 2, 2026",
-        "artist": "Max McNown",
-        "tracked": false
-      },
-      {
-        "date": "Apr 3, 2026",
-        "artist": "The Format",
-        "tracked": false
-      },
-      {
-        "date": "Apr 4, 2026",
-        "artist": "Patti LaBelle",
-        "tracked": false
-      },
-      {
-        "date": "Apr 4, 2026",
-        "artist": "Patti LaBelle",
-        "tracked": false
-      },
-      {
-        "date": "Apr 8, 2026",
-        "artist": "BRELAND",
-        "tracked": false
-      },
-      {
-        "date": "Apr 11, 2026",
-        "artist": "Morgan Jay",
-        "tracked": false
-      },
-      {
-        "date": "Apr 11, 2026",
-        "artist": "Morgan Jay",
-        "tracked": false
-      },
-      {
-        "date": "Apr 25, 2026",
-        "artist": "Hayley Williams",
-        "tracked": false
-      },
-      {
-        "date": "Apr 25, 2026",
-        "artist": "Hayley Williams",
-        "tracked": false
-      },
-      {
-        "date": "Apr 26, 2026",
-        "artist": "Snarky Puppy",
-        "tracked": false
-      },
-      {
-        "date": "Apr 27, 2026",
-        "artist": "Hayley Williams",
-        "tracked": false
-      },
-      {
-        "date": "Apr 27, 2026",
-        "artist": "Hayley Williams",
-        "tracked": false
-      },
-      {
-        "date": "Apr 28, 2026",
-        "artist": "Hayley Williams",
-        "tracked": false
-      },
-      {
-        "date": "Apr 28, 2026",
-        "artist": "Hayley Williams",
-        "tracked": false
-      },
-      {
-        "date": "Apr 29, 2026",
-        "artist": "RAYE",
-        "tracked": false
-      },
-      {
-        "date": "Apr 29, 2026",
-        "artist": "Raye",
-        "tracked": false
-      },
-      {
-        "date": "May 1, 2026",
-        "artist": "Ani DiFranco",
-        "tracked": false
-      },
-      {
-        "date": "May 1, 2026",
-        "artist": "Ani DiFranco",
-        "tracked": false
-      },
-      {
-        "date": "May 2, 2026",
-        "artist": "Josh Ritter",
-        "tracked": false
-      },
-      {
-        "date": "May 2, 2026",
-        "artist": "Josh Ritter",
-        "tracked": false
-      },
-      {
-        "date": "May 3, 2026",
-        "artist": "Tracy Lawrence",
-        "tracked": false
-      },
-      {
-        "date": "May 5, 2026",
-        "artist": "Courtney Barnett",
-        "tracked": false
-      },
-      {
-        "date": "May 5, 2026",
-        "artist": "Courtney Barnett",
-        "tracked": false
-      },
-      {
-        "date": "May 6, 2026",
-        "artist": "David Lee Roth",
-        "tracked": false
-      },
-      {
-        "date": "May 6, 2026",
-        "artist": "David Lee Roth",
-        "tracked": false
-      },
-      {
-        "date": "May 7, 2026",
-        "artist": "SatchVai Band featuring Joe Satriani and Steve Vai",
-        "tracked": false
-      },
-      {
-        "date": "May 7, 2026",
-        "artist": "SatchVai Band featuring Joe Satriani and Steve Vai",
-        "tracked": false
-      },
-      {
-        "date": "May 10, 2026",
-        "artist": "Ari Lennox",
-        "tracked": false
-      },
-      {
-        "date": "May 10, 2026",
-        "artist": "Ari Lennox",
-        "tracked": false
-      },
-      {
-        "date": "May 12, 2026",
-        "artist": "Mac DeMarco",
-        "tracked": false
-      },
-      {
-        "date": "May 12, 2026",
-        "artist": "Mac DeMarco",
-        "tracked": false
-      }
-    ],
     "The Salt Shed": [
       {
         "date": "Feb 27, 2026",
@@ -8697,6 +8481,11 @@
         "tracked": false
       },
       {
+        "date": "May 15, 2026",
+        "artist": "Cozy Worldwide",
+        "tracked": false
+      },
+      {
         "date": "May 19, 2026",
         "artist": "George Thorogood & The Destroyers",
         "tracked": false
@@ -9004,6 +8793,11 @@
         "date": "Sep 26, 2026",
         "artist": "Thee Sacred Souls",
         "tracked": false
+      },
+      {
+        "date": "Oct 8, 2026",
+        "artist": "Koe Wetzel",
+        "tracked": false
       }
     ],
     "The Salt Shed Indoors (Shed)": [
@@ -9220,9 +9014,73 @@
     ]
   },
   "changes": {
-    "artists": {},
-    "venues": {},
-    "total_added": 0,
+    "artists": {
+      "Wyatt Flores": {
+        "added": [
+          {
+            "date": "Sep 17, 2026",
+            "venue": "Ameris Bank Amphitheatre",
+            "city": "Alpharetta, GA",
+            "status": "on_sale",
+            "lat": 34.0543533,
+            "lon": -84.3063348,
+            "is_new": true
+          },
+          {
+            "date": "Sep 18, 2026",
+            "venue": "Colonial Life Arena",
+            "city": "Columbia, SC",
+            "status": "on_sale",
+            "lat": 33.9947839,
+            "lon": -81.0373546,
+            "is_new": true
+          },
+          {
+            "date": "Sep 24, 2026",
+            "venue": "Appalachian Wireless Arena (Formerly Eastern Kentucky Expo Ctr)",
+            "city": "Pikeville, KY",
+            "status": "on_sale",
+            "lat": 37.4792672,
+            "lon": -82.5187629,
+            "is_new": true
+          },
+          {
+            "date": "Sep 26, 2026",
+            "venue": "Brandon Amphitheater",
+            "city": "Brandon, MS",
+            "status": "on_sale",
+            "lat": 32.2731475,
+            "lon": -89.9868058,
+            "is_new": true
+          }
+        ],
+        "removed": [],
+        "newly_sold": []
+      }
+    },
+    "venues": {
+      "Vibrant Music Hall": {
+        "added": [
+          {
+            "date": "May 15, 2026",
+            "artist": "Cozy Worldwide",
+            "tracked": false
+          }
+        ],
+        "removed": []
+      },
+      "The Salt Shed Outdoors": {
+        "added": [
+          {
+            "date": "Oct 8, 2026",
+            "artist": "Koe Wetzel",
+            "tracked": false
+          }
+        ],
+        "removed": []
+      }
+    },
+    "total_added": 4,
     "total_removed": 0,
     "total_sold_out": 0
   },
@@ -9561,6 +9419,147 @@
       "ticketmaster_url": "https://www.ticketmaster.com/the-red-clay-strays-atlanta-georgia-11-13-2026/event/0E00644BD38B9C21",
       "lat": 33.7573698,
       "lon": -84.3963848
+    },
+    {
+      "artist": "Wyatt Flores",
+      "genre": "Country / Americana",
+      "date": "Sep 17, 2026",
+      "venue": "Ameris Bank Amphitheatre",
+      "city": "Alpharetta, GA",
+      "onsale_datetime": "2026-03-13T14:00:00Z",
+      "onsale_tbd": false,
+      "presales": [
+        {
+          "name": "Koe Wetzel Artist Presale",
+          "start_datetime": "2026-03-10T14:00:00Z",
+          "end_datetime": "2026-03-13T02:00:00Z"
+        },
+        {
+          "name": "Spotify Presale",
+          "start_datetime": "2026-03-12T14:00:00Z",
+          "end_datetime": "2026-03-13T02:00:00Z"
+        },
+        {
+          "name": "Ameris Bank Sponsor Presale",
+          "start_datetime": "2026-03-12T14:00:00Z",
+          "end_datetime": "2026-03-13T02:00:00Z"
+        },
+        {
+          "name": "LIVE NATION PRESALE",
+          "start_datetime": "2026-03-11T14:00:00Z",
+          "end_datetime": "2026-03-13T02:00:00Z"
+        },
+        {
+          "name": "Support Presale",
+          "start_datetime": "2026-03-11T14:00:00Z",
+          "end_datetime": "2026-03-13T02:00:00Z"
+        }
+      ],
+      "ticketmaster_url": "https://www.ticketmaster.com/koe-wetzel-alpharetta-georgia-09-17-2026/event/0E006453C7CDD642",
+      "lat": 34.0543533,
+      "lon": -84.3063348
+    },
+    {
+      "artist": "Wyatt Flores",
+      "genre": "Country / Americana",
+      "date": "Sep 18, 2026",
+      "venue": "Colonial Life Arena",
+      "city": "Columbia, SC",
+      "onsale_datetime": "2026-03-13T14:00:00Z",
+      "onsale_tbd": false,
+      "presales": [
+        {
+          "name": "Support Presale",
+          "start_datetime": "2026-03-11T14:00:00Z",
+          "end_datetime": "2026-03-13T02:00:00Z"
+        },
+        {
+          "name": "Ticketmaster Presale",
+          "start_datetime": "2026-03-11T14:00:00Z",
+          "end_datetime": "2026-03-13T02:00:00Z"
+        },
+        {
+          "name": "Spotify & Local Presales",
+          "start_datetime": "2026-03-12T14:00:00Z",
+          "end_datetime": "2026-03-13T02:00:00Z"
+        },
+        {
+          "name": "Country Central Presale",
+          "start_datetime": "2026-03-11T14:00:00Z",
+          "end_datetime": "2026-03-13T02:00:00Z"
+        },
+        {
+          "name": "Artist Presale",
+          "start_datetime": "2026-03-10T14:00:00Z",
+          "end_datetime": "2026-03-13T02:00:00Z"
+        }
+      ],
+      "ticketmaster_url": "https://www.ticketmaster.com/koe-wetzel-the-night-champion-world-columbia-south-carolina-09-18-2026/event/2D006457DAAC6B32",
+      "lat": 33.9947839,
+      "lon": -81.0373546
+    },
+    {
+      "artist": "Wyatt Flores",
+      "genre": "Country / Americana",
+      "date": "Sep 24, 2026",
+      "venue": "Appalachian Wireless Arena (Formerly Eastern Kentucky Expo Ctr)",
+      "city": "Pikeville, KY",
+      "onsale_datetime": "2026-03-13T14:00:00Z",
+      "onsale_tbd": false,
+      "presales": [
+        {
+          "name": "Local Presale",
+          "start_datetime": "2026-03-12T14:00:00Z",
+          "end_datetime": "2026-03-13T02:00:00Z"
+        },
+        {
+          "name": "Ticketmaster Presale",
+          "start_datetime": "2026-03-11T14:00:00Z",
+          "end_datetime": "2026-03-13T02:00:00Z"
+        },
+        {
+          "name": "Radio Presale",
+          "start_datetime": "2026-03-12T14:00:00Z",
+          "end_datetime": "2026-03-13T02:00:00Z"
+        }
+      ],
+      "ticketmaster_url": "https://www.ticketmaster.com/koe-wetzel-pikeville-kentucky-09-24-2026/event/16006458C366ECE9",
+      "lat": 37.4792672,
+      "lon": -82.5187629
+    },
+    {
+      "artist": "Wyatt Flores",
+      "genre": "Country / Americana",
+      "date": "Sep 26, 2026",
+      "venue": "Brandon Amphitheater",
+      "city": "Brandon, MS",
+      "onsale_datetime": "2026-03-13T15:00:00Z",
+      "onsale_tbd": false,
+      "presales": [
+        {
+          "name": "Artist Presale",
+          "start_datetime": "2026-03-10T15:00:00Z",
+          "end_datetime": "2026-03-13T03:00:00Z"
+        },
+        {
+          "name": "Support Presale",
+          "start_datetime": "2026-03-11T15:00:00Z",
+          "end_datetime": "2026-03-13T03:00:00Z"
+        },
+        {
+          "name": "Live Nation Presale",
+          "start_datetime": "2026-03-11T15:00:00Z",
+          "end_datetime": "2026-03-13T03:00:00Z"
+        },
+        {
+          "name": "Spotify Presale",
+          "start_datetime": "2026-03-12T15:00:00Z",
+          "end_datetime": "2026-03-13T03:00:00Z"
+        }
+      ],
+      "ticketmaster_url": "https://www.ticketmaster.com/koe-wetzel-brandon-mississippi-09-26-2026/event/1B006457E898AE92",
+      "lat": 32.2731475,
+      "lon": -89.9868058
     },
     {
       "artist": "Dylan Gossett",
@@ -10263,5 +10262,5 @@
       "lon": -99.1747474
     }
   ],
-  "coming_soon_fetched": "2026-02-26T14:48:56.499131+00:00"
+  "coming_soon_fetched": "2026-02-26T16:24:20.273103+00:00"
 }
