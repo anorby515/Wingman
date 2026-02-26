@@ -90,15 +90,30 @@ function FilterDropdown({ label, options, selected, onChange }) {
 }
 
 // ── Show row (date-sorted flat list) ─────────────────────────────────────────
-function ShowRow({ show, showArtist = true }) {
+function ShowRow({ show, showArtist = true, isHighlighted = false, onArtistClick }) {
   const dateObj = new Date(show.raw_date || show.date)
   const month = !isNaN(dateObj) ? dateObj.toLocaleString(undefined, { month: 'short' }).toUpperCase() : '???'
   const day = !isNaN(dateObj) ? dateObj.getDate() : '--'
   const isComingSoon = show.not_yet_on_sale
   const artistUrl = show._artistUrl
 
+  function handleRowClick(e) {
+    if (!onArtistClick) return
+    // Don't intercept clicks on links
+    if (e.target.closest('a')) return
+    onArtistClick(show._artist)
+  }
+
   return (
-    <div className="flex items-center gap-3 px-3 py-2.5 border-b border-neutral-100 last:border-b-0 hover:bg-neutral-50/50 transition-colors">
+    <div
+      onClick={handleRowClick}
+      className={`flex items-center gap-3 px-3 py-2.5 border-b border-neutral-100 last:border-b-0 transition-colors
+        ${onArtistClick ? 'cursor-pointer' : ''}
+        ${isHighlighted
+          ? 'bg-neutral-100 border-l-2 border-l-neutral-700'
+          : 'hover:bg-neutral-50/50'
+        }`}
+    >
       {/* Date block */}
       <div className="flex-shrink-0 w-11 text-center">
         <div className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider leading-none">{month}</div>
@@ -172,9 +187,24 @@ function ShowRow({ show, showArtist = true }) {
 }
 
 // ── Artist group header (for grouped-by-artist mode) ─────────────────────────
-function ArtistGroupHeader({ artist, url, genre, showCount }) {
+function ArtistGroupHeader({ artist, url, genre, showCount, isSelected, onSelect }) {
+  function handleClick(e) {
+    if (!onSelect) return
+    // Don't intercept clicks on the artist URL link
+    if (e.target.closest('a')) return
+    onSelect(artist)
+  }
+
   return (
-    <div className="px-3 py-2 bg-neutral-50 border-b border-neutral-200 flex items-center gap-2 sticky top-0 z-10">
+    <div
+      onClick={handleClick}
+      className={`px-3 py-2 border-b border-neutral-200 flex items-center gap-2 sticky top-0 z-10 transition-colors
+        ${onSelect ? 'cursor-pointer' : ''}
+        ${isSelected
+          ? 'bg-neutral-200 border-l-2 border-l-neutral-700'
+          : 'bg-neutral-50 hover:bg-neutral-100'
+        }`}
+    >
       {url ? (
         <a
           href={url}
@@ -367,6 +397,13 @@ export default function ArtistsSummaryTab() {
     setFilterStatus([])
   }
 
+  // Click row/header to toggle artist filter
+  const handleArtistClick = useCallback((artist) => {
+    setFilterArtists(prev =>
+      prev.length === 1 && prev[0] === artist ? [] : [artist]
+    )
+  }, [])
+
   // no-op for map bounds (filters drive the view now, not map viewport)
   const noop = useCallback(() => {}, [])
 
@@ -451,6 +488,7 @@ export default function ArtistsSummaryTab() {
           groupedByArtist.length > 0 ? (
             groupedByArtist.map(([artist, shows]) => {
               const info = configArtists[artist] || {}
+              const selected = filterArtists.length === 1 && filterArtists[0] === artist
               return (
                 <div key={artist}>
                   <ArtistGroupHeader
@@ -458,6 +496,8 @@ export default function ArtistsSummaryTab() {
                     url={info.url || null}
                     genre={info.genre}
                     showCount={`${shows.length} show${shows.length !== 1 ? 's' : ''}`}
+                    isSelected={selected}
+                    onSelect={handleArtistClick}
                   />
                   {shows.map((show, i) => (
                     <ShowRow key={i} show={show} showArtist={false} />
@@ -472,7 +512,13 @@ export default function ArtistsSummaryTab() {
           // ── Flat date-sorted list ──
           sortedShows.length > 0 ? (
             sortedShows.map((show, i) => (
-              <ShowRow key={i} show={show} showArtist={true} />
+              <ShowRow
+                key={i}
+                show={show}
+                showArtist={true}
+                isHighlighted={filterArtists.length === 1 && filterArtists[0] === show._artist}
+                onArtistClick={handleArtistClick}
+              />
             ))
           ) : (
             <EmptyState hasFilters={hasActiveFilters} />
