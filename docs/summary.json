@@ -55,8 +55,8 @@
         "venue": "Neyland Stadium",
         "city": "Knoxville, TN",
         "status": "on_sale",
-        "lat": 35.9550742,
-        "lon": -83.9250891,
+        "lat": 35.9550647,
+        "lon": -83.9259872,
         "is_new": false
       },
       {
@@ -2359,8 +2359,8 @@
         "venue": "Neyland Stadium",
         "city": "Knoxville, TN",
         "status": "on_sale",
-        "lat": 35.9550742,
-        "lon": -83.9250891,
+        "lat": 35.9550647,
+        "lon": -83.9259872,
         "is_new": false
       },
       {
@@ -7399,7 +7399,7 @@
         "status": "on_sale",
         "lat": 40.7221035,
         "lon": -73.9867932,
-        "is_new": true
+        "is_new": false
       }
     ]
   },
@@ -9220,25 +9220,9 @@
     ]
   },
   "changes": {
-    "artists": {
-      "The National": {
-        "added": [
-          {
-            "date": "Mar 15, 2026",
-            "venue": "Mercury Lounge",
-            "city": "New York, NY",
-            "status": "on_sale",
-            "lat": 40.7221035,
-            "lon": -73.9867932,
-            "is_new": true
-          }
-        ],
-        "removed": [],
-        "newly_sold": []
-      }
-    },
+    "artists": {},
     "venues": {},
-    "total_added": 1,
+    "total_added": 0,
     "total_removed": 0,
     "total_sold_out": 0
   },
@@ -10119,19 +10103,6 @@
       "lon": -80.8450417
     },
     {
-      "artist": "LCD Soundsystem",
-      "genre": "Indie / Alt-Rock",
-      "date": "Sep 20, 2026",
-      "venue": "PIEDMONT PARK",
-      "city": "Atlanta, GA",
-      "onsale_datetime": "2026-02-26T14:00:00Z",
-      "onsale_tbd": false,
-      "presales": [],
-      "ticketmaster_url": "https://on.fgtix.com/trk/AuGK",
-      "lat": 33.7890478,
-      "lon": -84.3718862
-    },
-    {
       "artist": "The Strokes",
       "genre": "Indie / Alt-Rock",
       "date": "Apr 6, 2026",
@@ -10169,19 +10140,6 @@
       "ticketmaster_url": "https://www.ticketmaster.com/the-strokes-san-francisco-california-04-06-2026/event/1C006457AF3DE470",
       "lat": 37.7780501,
       "lon": -122.4173077
-    },
-    {
-      "artist": "The Strokes",
-      "genre": "Indie / Alt-Rock",
-      "date": "Sep 18, 2026",
-      "venue": "PIEDMONT PARK",
-      "city": "Atlanta, GA",
-      "onsale_datetime": "2026-02-26T14:00:00Z",
-      "onsale_tbd": false,
-      "presales": [],
-      "ticketmaster_url": "https://on.fgtix.com/trk/AuGK",
-      "lat": 33.7890478,
-      "lon": -84.3718862
     },
     {
       "artist": "Lord Huron",
@@ -10305,5 +10263,5 @@
       "lon": -99.1747474
     }
   ],
-  "coming_soon_fetched": "2026-02-26T12:15:16.205132+00:00"
+  "coming_soon_fetched": "2026-02-26T14:48:56.499131+00:00"
 }
