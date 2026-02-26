@@ -18,5 +18,10 @@ ticketmaster_shows_cache.json
 # Generated PDFs (replaced by GitHub Pages summary)
 Concert_Changes_*.pdf
 
+# Generated at build time by export_static_data.py / fetch_tm_data.py
+# Both deploy workflows regenerate this — never commit in feature branches
+frontend/public/static-data.json
+
 # Temporary files from CI scripts
 .fetch_stats.json
+.static_data_fresh
