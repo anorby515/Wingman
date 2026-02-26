@@ -442,9 +442,12 @@ Run: `cd /home/user/Wingman/frontend && npx vitest run`
 - GitHub Pages build (VITE_DEMO_MODE=true) + GitHub Actions deploy workflow
 - JSON schemas + Pydantic validation
 - TM integration: artist/venue/festival shows + coming soon with presale windows; merged into cards; orange map pins; "Not found on TM" lists; 6-hour cache
+- Notification system: daily push alerts via ntfy.sh — detects new shows, new venue events, on-sale-imminent; runs as GitHub Action notify job after daily TM fetch
 
-### In Progress: API Refactor (Sites + Data Architecture)
-Refactoring the data architecture to eliminate `concert_state.json` and web scraping. See Implementation Plan below.
+### Next Up
+- **Step 5: Local UI — Configuration Only** — Redesign local site to focus on config (TBD scope)
+- **Step 6: Festival rethink** — Discuss Cowork-driven festival lineup discovery
+- **Step 8: Cowork Workflow Rewrite** — Spotify sync + notification delivery via Cowork
 
 ### Future
 - **Bandsintown API** — supplemental data source for artists/venues not on Ticketmaster
@@ -455,31 +458,29 @@ Refactoring the data architecture to eliminate `concert_state.json` and web scra
 
 ## Implementation Plan
 
-### Step 0: Test Infrastructure Setup
-Set up pytest (backend) and Vitest (frontend) test frameworks. No existing tests exist.
+### Step 0: Test Infrastructure Setup ✓
+Set up pytest (backend) and Vitest (frontend) test frameworks. 132 backend tests, frontend tests via Vitest.
 
-### Step 1: Backend — Decouple Data Refresh from Page Load
-- Create unified `GET /api/shows` (cache-only, never calls TM API)
-- Create `POST /api/refresh` (explicit TM fetch trigger)
-- Create `GET /api/refresh/status` (progress polling)
-- Extract TM logic into `backend/ticketmaster.py` (shared module)
-- Merge `/api/coming-soon` and `/api/tm-shows` into single cache
-- Remove `/api/state` endpoint and `concert_state.json` dependency
+### Step 1: Backend — Decouple Data Refresh from Page Load ✓
+- Unified `GET /api/shows` (cache-only, never calls TM API)
+- `POST /api/refresh` (explicit TM fetch trigger)
+- `GET /api/refresh/status` (progress polling)
+- TM logic extracted into `backend/ticketmaster.py` (shared module)
+- Single TM cache replaces old `/api/state` + `concert_state.json`
 
-### Step 2: Frontend — Use TM Cache as Sole Data Source
-- Remove all `/api/state` fetches from components
+### Step 2: Frontend — Use TM Cache as Sole Data Source ✓
 - All components read from `GET /api/shows`
-- Add "Refresh Data" button to header (local mode only)
-- Add "Last refreshed: X ago" indicator
-- Add "Show/hide artists not on tour" toggle
+- "Refresh Data" button in header (local mode only)
+- "Last refreshed: X ago" indicator
+- "Show/hide artists not on tour" toggle
 
-### Step 3: Progressive Geocoding
+### Step 3: Progressive Geocoding ✓
 - Background geocoding after `POST /api/refresh` completes
 - `GET /api/geocode/progress` for frontend polling
 - Map pins appear progressively as venues are geocoded
 
-### Step 4: GitHub Action — Daily TM Data Fetch + Deploy
-- New workflow: `.github/workflows/update-data.yml`
+### Step 4: GitHub Action — Daily TM Data Fetch + Deploy ✓
+- Workflow: `.github/workflows/update-data.yml`
 - Script: `scripts/fetch_tm_data.py` (uses `backend/ticketmaster.py`)
 - Generates `docs/summary.json` + `docs/history/YYYY-MM-DD.json`
 - Commits data, builds frontend, deploys to Pages
@@ -490,7 +491,7 @@ Redesign the locally hosted site to focus exclusively on configuration, removing
 ### Step 6: Discuss a New Implementation Using Claude Cowork for Festivals
 Revisit how festivals are tracked, fetched, and displayed. The current festival data flow needs rethinking — discuss whether Cowork should handle festival lineup discovery, how festival shows integrate into the unified Concerts & Festivals view, and what the right data model looks like. This is a planning/discussion step before implementation.
 
-### Step 7: Notification System (Push via ntfy.sh)
+### Step 7: Notification System (Push via ntfy.sh) ✓
 - GitHub Action notify job runs after daily TM fetch (schedule-only, not manual dispatch)
 - Compares `docs/summary.json` against `docs/notification_baseline.json`
 - Filters out past shows before diffing (prevents false "removed" alerts)
