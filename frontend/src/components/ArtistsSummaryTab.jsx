@@ -20,6 +20,14 @@ function extractState(cityStr) {
   return ''
 }
 
+function isInBounds(lat, lon, bounds) {
+  if (!bounds) return true
+  if (lat == null || lon == null) return false
+  const sw = bounds.getSouthWest()
+  const ne = bounds.getNorthEast()
+  return lat >= sw.lat && lat <= ne.lat && lon >= sw.lng && lon <= ne.lng
+}
+
 // ── Multi-select filter dropdown ─────────────────────────────────────────────
 function FilterDropdown({ label, options, selected, onChange }) {
   const [open, setOpen] = useState(false)
@@ -263,6 +271,10 @@ export default function ArtistsSummaryTab() {
   const [quickLocal, setQuickLocal]           = useState(false)
   const [quickFavorite, setQuickFavorite]     = useState(false)
   const [quickComingSoon, setQuickComingSoon] = useState(false)
+  const [quickMapArea, setQuickMapArea]       = useState(false)
+
+  // Map viewport bounds (Leaflet LatLngBounds object)
+  const [mapBounds, setMapBounds] = useState(null)
 
   useEffect(() => {
     if (DEMO) {
@@ -373,6 +385,7 @@ export default function ArtistsSummaryTab() {
       if (skipDimension !== 'local'    && quickLocal    && !show._isLocalVenue)  return false
       if (skipDimension !== 'favorite' && quickFavorite && !show._isTravelVenue) return false
       if (skipDimension !== 'coming'   && quickComingSoon && !show.not_yet_on_sale) return false
+      if (skipDimension !== 'maparea' && quickMapArea && !isInBounds(show.lat, show.lon, mapBounds)) return false
       return true
     }
 
@@ -392,7 +405,7 @@ export default function ArtistsSummaryTab() {
       states:  optionsFor('states',  s => s._state),
       venues:  optionsFor('venues',  s => s.venue),
     }
-  }, [allShows, filterArtists, filterCities, filterStates, filterVenues, quickLocal, quickFavorite, quickComingSoon])
+  }, [allShows, filterArtists, filterCities, filterStates, filterVenues, quickLocal, quickFavorite, quickComingSoon, quickMapArea, mapBounds])
 
   // ── Apply all filters (dropdowns + quick toggles, AND logic) ──
   const filteredShows = useMemo(() => {
@@ -404,9 +417,10 @@ export default function ArtistsSummaryTab() {
       if (quickLocal    && !show._isLocalVenue)  return false
       if (quickFavorite && !show._isTravelVenue) return false
       if (quickComingSoon && !show.not_yet_on_sale) return false
+      if (quickMapArea && !isInBounds(show.lat, show.lon, mapBounds)) return false
       return true
     })
-  }, [allShows, filterArtists, filterCities, filterStates, filterVenues, quickLocal, quickFavorite, quickComingSoon])
+  }, [allShows, filterArtists, filterCities, filterStates, filterVenues, quickLocal, quickFavorite, quickComingSoon, quickMapArea, mapBounds])
 
   // ── Sort ──
   const sortedShows = useMemo(() => {
@@ -464,7 +478,7 @@ export default function ArtistsSummaryTab() {
   const centerLon = config?.center_lon ?? null
 
   const hasActiveFilters = filterArtists.length + filterCities.length + filterStates.length + filterVenues.length > 0
-    || quickLocal || quickFavorite || quickComingSoon
+    || quickLocal || quickFavorite || quickComingSoon || quickMapArea
 
   const clearAllFilters = () => {
     setFilterArtists([])
@@ -474,6 +488,7 @@ export default function ArtistsSummaryTab() {
     setQuickLocal(false)
     setQuickFavorite(false)
     setQuickComingSoon(false)
+    setQuickMapArea(false)
   }
 
   // Click row/header to toggle artist filter
@@ -483,8 +498,10 @@ export default function ArtistsSummaryTab() {
     )
   }, [])
 
-  // no-op for map bounds (filters drive the view now, not map viewport)
-  const noop = useCallback(() => {}, [])
+  // Track map viewport bounds for "Map Area" quick filter
+  const handleBoundsChange = useCallback((bounds) => {
+    setMapBounds(bounds)
+  }, [])
 
   if (loading) return <LoadingSpinner />
   if (error)   return <ErrorBox message={error} />
@@ -505,7 +522,7 @@ export default function ArtistsSummaryTab() {
           artistShows={mapArtistShows}
           venueShows={allVenueShows}
           mapFilter={null}
-          onBoundsChange={noop}
+          onBoundsChange={handleBoundsChange}
         />
         <MapLegend />
       </section>
@@ -539,6 +556,16 @@ export default function ArtistsSummaryTab() {
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">Quick Filters</span>
           <div className="flex items-center gap-1 text-xs">
+            <button
+              onClick={() => setQuickMapArea(v => !v)}
+              className={`px-2.5 py-1 rounded-full transition-colors ${
+                quickMapArea
+                  ? 'bg-indigo-600 text-white'
+                  : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
+              }`}
+            >
+              Map Area
+            </button>
             <button
               onClick={() => setQuickComingSoon(v => !v)}
               className={`px-2.5 py-1 rounded-full transition-colors ${
