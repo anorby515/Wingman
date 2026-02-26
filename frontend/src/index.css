@@ -53,6 +53,23 @@
   }
 }
 
+/* Titanium metallic header */
+.header-titanium {
+  background: linear-gradient(
+    180deg,
+    #d4d2cf 0%,
+    #c8c5c0 8%,
+    #b8b4ae 20%,
+    #c2bfb9 35%,
+    #d0cdc8 50%,
+    #bbb7b1 65%,
+    #b0aca5 80%,
+    #a8a49d 92%,
+    #9e9a93 100%
+  );
+  border-bottom: 1px solid #9e9a93;
+}
+
 /* Smooth expand animation */
 .expand-enter { max-height: 0; overflow: hidden; }
 .expand-enter-active { max-height: 2000px; transition: max-height 0.3s ease; }
