@@ -70,6 +70,12 @@
   border-bottom: 1px solid #9e9a93;
 }
 
+/* Leaflet tooltip — auto-fit to content */
+.leaflet-tooltip {
+  max-width: none !important;
+  white-space: nowrap;
+}
+
 /* Smooth expand animation */
 .expand-enter { max-height: 0; overflow: hidden; }
 .expand-enter-active { max-height: 2000px; transition: max-height 0.3s ease; }

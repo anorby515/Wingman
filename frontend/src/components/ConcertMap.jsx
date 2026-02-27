@@ -207,7 +207,7 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
           return (
             <Marker key={`a-${i}`} position={[pin.lat, pin.lon]} icon={icon}>
               <Tooltip direction="top" offset={[0, -30]} opacity={0.95}>
-                <div className="text-xs space-y-0.5" style={{ maxWidth: 260 }}>
+                <div className="text-xs space-y-0.5">
                   {pin.shows.map((s, j) => (
                     <div key={j}>
                       <strong>{s.artist}</strong>
@@ -236,7 +236,7 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
           return (
             <Marker key={`v-${i}`} position={[venue.lat, venue.lon]} icon={VENUE_ICON}>
               <Tooltip direction="top" offset={[0, -30]} opacity={0.95}>
-                <div className="text-xs space-y-0.5" style={{ maxWidth: 260 }}>
+                <div className="text-xs space-y-0.5">
                   <div className="font-bold text-sm">{venue.venueName}</div>
                   {events.map((e, j) => (
                     <div key={j}>
