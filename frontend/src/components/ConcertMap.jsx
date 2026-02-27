@@ -1,5 +1,5 @@
 import { useMemo, useEffect } from 'react'
-import { MapContainer, TileLayer, Circle, Marker, Tooltip, useMap, useMapEvents } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Tooltip, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -21,7 +21,7 @@ const NEW_ICON = new L.Icon({
 })
 
 const DEFAULT_ICON = new L.Icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
@@ -48,7 +48,7 @@ const VENUE_ICON = new L.Icon({
 })
 
 const COMING_SOON_ICON = new L.Icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
@@ -98,8 +98,7 @@ function MapEvents({ onBoundsChange }) {
 
 /**
  * Concert Map — shows a Leaflet map with:
- * - A small marker for the home city (Des Moines)
- * - Pins for artist shows (green=new, red=sold out, blue=on sale)
+ * - Pins for artist shows (green=on sale/new, blue=coming soon, red=sold out)
  * - Pins for tracked venues (violet)
  * - Hover tooltips showing event details
  * - Viewport-based filtering reported via onBoundsChange
@@ -190,18 +189,6 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
 
         {/* Track viewport changes */}
         <MapEvents onBoundsChange={onBoundsChange} />
-
-        {/* Home city marker */}
-        <Circle
-          center={[centerLat, centerLon]}
-          radius={5000}
-          pathOptions={{
-            color: '#6366f1',
-            fillColor: '#6366f1',
-            fillOpacity: 0.4,
-            weight: 2,
-          }}
-        />
 
         {/* Artist show pins */}
         {artistPins.map((pin, i) => {
