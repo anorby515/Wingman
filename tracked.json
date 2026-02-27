@@ -532,6 +532,12 @@
       "city": "Chicago, IL",
       "is_local": false,
       "paused": false
+    },
+    "The Lensic Performing Art Center": {
+      "url": "https://lensic.org/events/",
+      "city": "Sante Fe, NM",
+      "is_local": false,
+      "paused": false
     }
   },
   "festivals": {
