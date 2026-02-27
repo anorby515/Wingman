@@ -3,109 +3,109 @@
   "artists": {
     "Luke Combs": {
       "url": "https://www.lukecombs.com/tour-dates/",
-      "genre": "Country / Americana",
+      "genre": "Country",
       "paused": false,
       "favorite": true
     },
     "Morgan Wallen": {
       "url": "https://morganwallen.com/",
-      "genre": "Country / Americana",
+      "genre": "Country",
       "paused": false,
       "favorite": false
     },
     "Eric Church": {
       "url": "https://www.ericchurch.com/tours",
-      "genre": "Country / Americana",
+      "genre": "Country",
       "paused": false,
       "favorite": false
     },
     "Zach Bryan": {
       "url": "https://www.zachbryan.com/tour",
-      "genre": "Country / Americana",
+      "genre": "Country",
       "paused": false,
       "favorite": true
     },
     "Zac Brown Band": {
       "url": "https://zacbrownband.com/pages/tour",
-      "genre": "Country / Americana",
+      "genre": "Country",
       "paused": false,
       "favorite": false
     },
     "Jason Isbell": {
       "url": "https://www.jasonisbell.com/shows",
-      "genre": "Country / Americana",
+      "genre": "Americana",
       "paused": false,
       "favorite": false
     },
     "Sturgill Simpson": {
       "url": "https://sturgillsimpson.com/",
-      "genre": "Country / Americana",
+      "genre": "Americana",
       "paused": false,
       "favorite": true
     },
     "CAAMP": {
       "url": "https://www.caamptheband.com/caamp-tour-dates",
-      "genre": "Country / Americana",
+      "genre": "Americana",
       "paused": false,
       "favorite": false
     },
     "Tyler Childers": {
       "url": "https://tylerchildersmusic.com/pages/tour-dates",
-      "genre": "Country / Americana",
+      "genre": "Country",
       "paused": false,
       "favorite": true
     },
     "Chris Stapleton": {
       "url": "https://chrisstapleton.com/",
-      "genre": "Country / Americana",
+      "genre": "Country",
       "paused": false,
       "favorite": true
     },
     "Dierks Bentley": {
       "url": "https://dierks.com/",
-      "genre": "Country / Americana",
+      "genre": "Country",
       "paused": false,
       "favorite": false
     },
     "Lainey Wilson": {
       "url": "https://www.laineywilson.com/",
-      "genre": "Country / Americana",
+      "genre": "Country",
       "paused": false,
       "favorite": true
     },
     "Colter Wall": {
       "url": "http://www.ColterWall.com",
-      "genre": "Country / Americana",
+      "genre": "Country",
       "paused": false,
       "favorite": true
     },
     "The Red Clay Strays": {
       "url": "https://musicrow.com/2026/02/the-red-clay-strays-add-additional-tour-dates/",
-      "genre": "Country / Americana",
+      "genre": "Americana",
       "paused": false,
       "favorite": true
     },
     "Billy Strings": {
       "url": "https://www.billystrings.com/",
-      "genre": "Country / Americana",
+      "genre": "Americana",
       "paused": false,
       "favorite": true
     },
     "Wyatt Flores": {
       "url": "https://www.wyattfloresmusic.com/",
-      "genre": "Country / Americana",
+      "genre": "Country",
       "paused": false,
       "favorite": false
     },
     "Dylan Gossett": {
       "url": "https://www.dylangossett.com/",
-      "genre": "Country / Americana",
+      "genre": "Country",
       "paused": false,
       "favorite": false
     },
     "Johnny Blue Skies": {
       "url": "https://liveforlivemusic.com/news/johnny-blue-skies-sturgill-simpson-refutes-dan-auerbach/",
-      "genre": "Country / Americana",
+      "genre": "Americana",
       "paused": false,
       "favorite": true
     },
