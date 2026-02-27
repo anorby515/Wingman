@@ -236,6 +236,9 @@ function MapLegend() {
         <span className="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block" /> Coming Soon
       </span>
       <span className="flex items-center gap-1">
+        <span className="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block" /> Favorite
+      </span>
+      <span className="flex items-center gap-1">
         <span className="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block" /> Venue
       </span>
       <span className="flex items-center gap-1">

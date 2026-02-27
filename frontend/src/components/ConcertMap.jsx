@@ -56,6 +56,15 @@ const COMING_SOON_ICON = new L.Icon({
   shadowSize: [41, 41],
 })
 
+const FAVORITE_ICON = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+})
+
 const FESTIVAL_ICON = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
@@ -199,9 +208,11 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
           const hasNew        = pin.shows.some(s => s.is_new)
           const allSoldOut    = pin.shows.every(s => s.status === 'sold_out')
           const allComingSoon = pin.shows.every(s => s.source === 'tm')
+          const hasFavorite   = pin.shows.some(s => s._isFavorite)
           const icon = hasNew        ? NEW_ICON
                      : allSoldOut   ? SOLD_OUT_ICON
                      : allComingSoon ? COMING_SOON_ICON
+                     : hasFavorite  ? FAVORITE_ICON
                      : DEFAULT_ICON
 
           return (
