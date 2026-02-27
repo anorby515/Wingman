@@ -54,8 +54,8 @@ def is_future_show(date_str: str, today: datetime) -> bool:
     return dt.date() >= today.date()
 
 
-def build_show_keys(summary: dict, today: datetime) -> tuple[set[str], set[str]]:
-    """Extract artist and venue show keys from summary, filtering out past shows."""
+def build_show_keys(summary: dict, today: datetime) -> tuple[set[str], set[str], set[str]]:
+    """Extract artist, venue, and festival show keys from summary, filtering out past shows."""
     artist_keys: set[str] = set()
     for artist, shows in summary.get("artist_shows", {}).items():
         for show in shows:
@@ -70,7 +70,14 @@ def build_show_keys(summary: dict, today: datetime) -> tuple[set[str], set[str]]
                 key = f"{venue}|{show.get('date', '')}|{show.get('artist', '')}"
                 venue_keys.add(key)
 
-    return artist_keys, venue_keys
+    festival_keys: set[str] = set()
+    for festival, shows in summary.get("festival_shows", {}).items():
+        for show in shows:
+            if is_future_show(show.get("date", ""), today):
+                key = f"{festival}|{show.get('date', '')}|{show.get('venue', '')}"
+                festival_keys.add(key)
+
+    return artist_keys, venue_keys, festival_keys
 
 
 def find_onsale_imminent(summary: dict, now: datetime) -> list[dict]:
@@ -101,6 +108,9 @@ def key_to_display(key: str, key_type: str) -> str:
     if key_type == "artist":
         artist, date, venue = parts
         return f"{artist} @ {venue} — {date}"
+    elif key_type == "festival":
+        festival, date, venue = parts
+        return f"{festival} @ {venue} — {date}"
     else:
         venue, date, artist = parts
         return f"{artist} @ {venue} — {date}"
@@ -121,6 +131,7 @@ def format_onsale_time(iso_str: str) -> str:
 def format_message(
     new_artist_shows: list[str],
     new_venue_events: list[str],
+    new_festival_events: list[str],
     onsale_imminent: list[dict],
     today: datetime,
 ) -> str:
@@ -137,6 +148,10 @@ def format_message(
     if new_venue_events:
         items = [f"• {key_to_display(k, 'venue')}" for k in sorted(new_venue_events)]
         sections.append(("NEW AT VENUES:", items))
+
+    if new_festival_events:
+        items = [f"• {key_to_display(k, 'festival')}" for k in sorted(new_festival_events)]
+        sections.append(("NEW FESTIVAL EVENTS:", items))
 
     if onsale_imminent:
         items = []
@@ -204,15 +219,16 @@ def send_ntfy(body: str, title: str = "Wingman Alert") -> bool:
         return False
 
 
-def save_baseline(artist_keys: set[str], venue_keys: set[str]) -> None:
+def save_baseline(artist_keys: set[str], venue_keys: set[str], festival_keys: set[str]) -> None:
     """Write the notification baseline file."""
     baseline = {
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "artist_show_keys": sorted(artist_keys),
         "venue_show_keys": sorted(venue_keys),
+        "festival_show_keys": sorted(festival_keys),
     }
     BASELINE_PATH.write_text(json.dumps(baseline, indent=2) + "\n")
-    print(f"Updated baseline: {len(artist_keys)} artist keys, {len(venue_keys)} venue keys")
+    print(f"Updated baseline: {len(artist_keys)} artist keys, {len(venue_keys)} venue keys, {len(festival_keys)} festival keys")
 
 
 def main() -> None:
@@ -227,17 +243,19 @@ def main() -> None:
     summary = json.loads(SUMMARY_PATH.read_text())
 
     # Build current show keys (future only)
-    current_artist_keys, current_venue_keys = build_show_keys(summary, today)
+    current_artist_keys, current_venue_keys, current_festival_keys = build_show_keys(summary, today)
 
     # Load baseline (previous snapshot)
     prev_artist_keys: set[str] = set()
     prev_venue_keys: set[str] = set()
+    prev_festival_keys: set[str] = set()
 
     if BASELINE_PATH.exists():
         try:
             baseline = json.loads(BASELINE_PATH.read_text())
             prev_artist_keys = set(baseline.get("artist_show_keys", []))
             prev_venue_keys = set(baseline.get("venue_show_keys", []))
+            prev_festival_keys = set(baseline.get("festival_show_keys", []))
         except Exception as e:
             print(f"Warning: could not load baseline: {e}")
 
@@ -250,28 +268,35 @@ def main() -> None:
         k for k in prev_venue_keys
         if is_future_show(k.split("|", 2)[1] if "|" in k else "", today)
     }
+    prev_festival_keys = {
+        k for k in prev_festival_keys
+        if is_future_show(k.split("|", 2)[1] if "|" in k else "", today)
+    }
 
     # Detect changes
     new_artist_shows = current_artist_keys - prev_artist_keys
     new_venue_events = current_venue_keys - prev_venue_keys
+    new_festival_events = current_festival_keys - prev_festival_keys
     onsale_imminent = find_onsale_imminent(summary, now)
 
-    total_changes = len(new_artist_shows) + len(new_venue_events) + len(onsale_imminent)
+    total_changes = len(new_artist_shows) + len(new_venue_events) + len(new_festival_events) + len(onsale_imminent)
 
     print(f"Changes detected: {len(new_artist_shows)} new artist shows, "
           f"{len(new_venue_events)} new venue events, "
+          f"{len(new_festival_events)} new festival events, "
           f"{len(onsale_imminent)} on-sale imminent")
 
     if total_changes == 0:
         print("No changes — skipping notification")
         # Still update baseline (keys may have shifted due to past-show filtering)
-        save_baseline(current_artist_keys, current_venue_keys)
+        save_baseline(current_artist_keys, current_venue_keys, current_festival_keys)
         return
 
     # Format and send notification
     message_body = format_message(
         sorted(new_artist_shows),
         sorted(new_venue_events),
+        sorted(new_festival_events),
         onsale_imminent,
         today,
     )
@@ -282,7 +307,7 @@ def main() -> None:
 
     if send_ntfy(message_body, title=title):
         # Update baseline only after successful send
-        save_baseline(current_artist_keys, current_venue_keys)
+        save_baseline(current_artist_keys, current_venue_keys, current_festival_keys)
     else:
         print("Notification failed — baseline NOT updated (will retry next run)")
         sys.exit(1)

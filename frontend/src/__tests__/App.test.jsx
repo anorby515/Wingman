@@ -27,6 +27,7 @@ beforeEach(() => {
           venue_shows: {},
           festival_shows: {},
           coming_soon: [],
+          festival_coming_soon: [],
           artists_not_found: [],
           venues_not_found: [],
           festivals_not_found: [],

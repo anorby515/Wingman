@@ -1,20 +1,22 @@
 import { useState, useEffect } from 'react'
 import ArtistsSummaryTab   from './components/ArtistsSummaryTab.jsx'
 import ComingSoonTab       from './components/ComingSoonTab.jsx'
+import FestivalsTab        from './components/FestivalsTab.jsx'
 import ConfigureTab        from './components/ConfigureTab.jsx'
 import SettingsTab         from './components/SettingsTab.jsx'
 
 const DEMO = import.meta.env.VITE_DEMO_MODE === 'true'
 
 const ALL_TABS = [
-  { id: 'concerts',    label: 'Concerts & Festivals' },
-  { id: 'on-sale-soon', label: 'On Sale Soon'        },
-  { id: 'configure',   label: 'Configure'            },
-  { id: 'settings',    label: 'Settings'             },
+  { id: 'concerts',     label: 'Concerts & Festivals' },
+  { id: 'on-sale-soon', label: 'On Sale Soon'         },
+  { id: 'festivals',    label: 'Festivals'            },
+  { id: 'configure',    label: 'Configure'            },
+  { id: 'settings',     label: 'Settings'             },
 ]
 
 const TABS = DEMO
-  ? ALL_TABS.filter(t => ['concerts', 'on-sale-soon'].includes(t.id))
+  ? ALL_TABS.filter(t => ['concerts', 'on-sale-soon', 'festivals'].includes(t.id))
   : ALL_TABS.filter(t => ['configure', 'settings'].includes(t.id))
 
 export default function App() {
@@ -82,6 +84,7 @@ export default function App() {
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6">
         {active === 'concerts'      && <ArtistsSummaryTab />}
         {active === 'on-sale-soon'  && <ComingSoonTab />}
+        {active === 'festivals'     && <FestivalsTab />}
         {active === 'configure'     && <ConfigureTab />}
         {active === 'settings'      && <SettingsTab />}
       </main>

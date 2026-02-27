@@ -55,14 +55,24 @@ def _export_from_summary(summary: dict) -> dict:
             "paused": info.get("paused", False),
         }
 
+    festivals_cfg = {}
+    for name, info in tracked.get("festivals", {}).items():
+        festivals_cfg[name] = {
+            "url": info.get("url", ""),
+            "paused": info.get("paused", False),
+        }
+
     return {
         "state": {
             "artist_shows": summary.get("artist_shows", {}),
             "venue_shows": summary.get("venue_shows", {}),
+            "festival_shows": summary.get("festival_shows", {}),
+            "festivals_not_found": summary.get("festivals_not_found", []),
             "center_lat": summary.get("center_lat"),
             "center_lon": summary.get("center_lon"),
         },
         "coming_soon": summary.get("coming_soon", []),
+        "festival_coming_soon": summary.get("festival_coming_soon", []),
         "coming_soon_fetched": summary.get("coming_soon_fetched"),
         "config": {
             "center_city": tracked.get("center_city", summary.get("center", "")),
@@ -70,6 +80,7 @@ def _export_from_summary(summary: dict) -> dict:
             "center_lon": summary.get("center_lon"),
             "artists": artists_cfg,
             "venues": venues_cfg,
+            "festivals": festivals_cfg,
         },
     }
 

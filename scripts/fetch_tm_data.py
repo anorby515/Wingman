@@ -111,6 +111,12 @@ def build_summary(
         for show in shows:
             prev_venue_keys.add(f"{venue}|{show.get('date', '')}|{show.get('artist', '')}")
 
+    prev_festival_shows = prev_summary.get("festival_shows", {}) if prev_summary else {}
+    prev_festival_keys: set[str] = set()
+    for festival, shows in prev_festival_shows.items():
+        for show in shows:
+            prev_festival_keys.add(f"{festival}|{show.get('date', '')}|{show.get('venue', '')}")
+
     # Tracked artist names for venue show "tracked" flag
     tracked_artist_names = {a.lower() for a in config.get("artists", {})}
 
@@ -213,6 +219,48 @@ def build_summary(
         if v_added or v_removed:
             changes_venues[venue] = {"added": v_added, "removed": v_removed}
 
+    # ── Festival shows ──
+    summary_festival_shows: dict[str, list] = {}
+    festival_coming_soon: list[dict] = []
+
+    for festival, shows in result.festival_shows.items():
+        festival_summary = []
+
+        for show in shows:
+            key = f"{festival}|{show['date']}|{show['venue']}"
+            is_new = key not in prev_festival_keys
+
+            entry = {
+                "date": show["date"],
+                "venue": show["venue"],
+                "city": show["city"],
+                "event_name": show.get("event_name", festival),
+                "status": "on_sale",
+                "lat": show.get("lat"),
+                "lon": show.get("lon"),
+                "is_new": is_new,
+            }
+            festival_summary.append(entry)
+
+            # Collect festival coming-soon shows
+            if show.get("not_yet_on_sale"):
+                festival_coming_soon.append({
+                    "tracked_festival": festival,
+                    "event_name": show.get("event_name", festival),
+                    "date": show["date"],
+                    "venue": show["venue"],
+                    "city": show["city"],
+                    "onsale_datetime": show.get("onsale_datetime"),
+                    "onsale_tbd": show.get("onsale_tbd", False),
+                    "presales": show.get("presales", []),
+                    "ticketmaster_url": show.get("ticketmaster_url", ""),
+                    "lat": show.get("lat"),
+                    "lon": show.get("lon"),
+                })
+
+        if festival_summary:
+            summary_festival_shows[festival] = festival_summary
+
     return {
         "generated_at": today,
         "center": center_city,
@@ -220,6 +268,8 @@ def build_summary(
         "center_lon": center_lon,
         "artist_shows": summary_artist_shows,
         "venue_shows": summary_venue_shows,
+        "festival_shows": summary_festival_shows,
+        "festivals_not_found": result.festivals_not_found,
         "changes": {
             "artists": changes_artists,
             "venues": changes_venues,
@@ -228,6 +278,7 @@ def build_summary(
             "total_sold_out": 0,
         },
         "coming_soon": coming_soon,
+        "festival_coming_soon": festival_coming_soon,
         "coming_soon_fetched": datetime.now(timezone.utc).isoformat(),
     }
 
@@ -245,10 +296,12 @@ def build_static_data(
     The demo frontend expects:
       state.artist_shows — TM cache format (with not_yet_on_sale, ticketmaster_url, etc.)
       state.venue_shows  — TM cache venue format (with artist field)
+      state.festival_shows — summary format festival shows
       state.center_lat / state.center_lon
       coming_soon        — array of coming soon shows
+      festival_coming_soon — array of festival coming soon shows
       coming_soon_fetched — ISO 8601 timestamp
-      config.center_city / config.artists / config.venues
+      config.center_city / config.artists / config.venues / config.festivals
     """
     center_city = config.get("center_city", "")
     center_coords = geocode_cache.get(center_city, {})
@@ -277,14 +330,25 @@ def build_static_data(
             entry["lon"] = coords["lon"]
         venues_cfg[name] = entry
 
+    # Festival config
+    festivals_cfg = {}
+    for name, info in config.get("festivals", {}).items():
+        festivals_cfg[name] = {
+            "url": info.get("url", ""),
+            "paused": info.get("paused", False),
+        }
+
     return {
         "state": {
             "artist_shows": result.artist_shows,
             "venue_shows": result.venue_shows,
+            "festival_shows": summary.get("festival_shows", {}),
+            "festivals_not_found": summary.get("festivals_not_found", []),
             "center_lat": center_coords.get("lat"),
             "center_lon": center_coords.get("lon"),
         },
         "coming_soon": summary.get("coming_soon", []),
+        "festival_coming_soon": summary.get("festival_coming_soon", []),
         "coming_soon_fetched": summary.get("coming_soon_fetched"),
         "config": {
             "center_city": center_city,
@@ -292,6 +356,7 @@ def build_static_data(
             "center_lon": center_coords.get("lon"),
             "artists": artists_cfg,
             "venues": venues_cfg,
+            "festivals": festivals_cfg,
         },
     }
 

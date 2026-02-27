@@ -29,7 +29,9 @@ def sample_config():
         "venues": {
             "Wells Fargo Arena": {"url": "https://example.com", "city": "Des Moines, IA", "is_local": True, "paused": False},
         },
-        "festivals": {},
+        "festivals": {
+            "Hinterland Music Festival": {"url": "https://hinterland.com", "paused": False},
+        },
     }
 
 
@@ -86,7 +88,24 @@ def sample_result():
             },
         ],
     }
-    result.festival_shows = {}
+    result.festival_shows = {
+        "Hinterland Music Festival": [
+            {
+                "date": "Aug 1, 2026",
+                "raw_date": "2026-08-01",
+                "venue": "Avenue of the Saints Amphitheater",
+                "city": "Saint Charles, IA, US",
+                "not_yet_on_sale": False,
+                "onsale_datetime": None,
+                "onsale_tbd": False,
+                "presales": [],
+                "ticketmaster_url": "https://tm.com/4",
+                "lat": 41.28,
+                "lon": -93.05,
+                "event_name": "Hinterland Music Festival 2026",
+            },
+        ],
+    }
     result.artists_not_found = []
     result.venues_not_found = []
     result.festivals_not_found = []
@@ -113,8 +132,11 @@ class TestBuildSummary:
         assert summary["center_lon"] == -93.625
         assert "artist_shows" in summary
         assert "venue_shows" in summary
+        assert "festival_shows" in summary
+        assert "festivals_not_found" in summary
         assert "changes" in summary
         assert "coming_soon" in summary
+        assert "festival_coming_soon" in summary
         assert "coming_soon_fetched" in summary
 
     def test_artist_shows_converted(self, sample_result, sample_config, geocode_cache):
@@ -191,6 +213,53 @@ class TestBuildSummary:
         assert len(removed) == 1
         assert removed[0]["venue"] == "Somewhere"
 
+    def test_festival_shows_included(self, sample_result, sample_config, geocode_cache):
+        """Festival shows should appear in the summary."""
+        summary = build_summary(sample_result, sample_config, geocode_cache, None)
+
+        assert "Hinterland Music Festival" in summary["festival_shows"]
+        shows = summary["festival_shows"]["Hinterland Music Festival"]
+        assert len(shows) == 1
+        assert shows[0]["date"] == "Aug 1, 2026"
+        assert shows[0]["venue"] == "Avenue of the Saints Amphitheater"
+        assert shows[0]["event_name"] == "Hinterland Music Festival 2026"
+        assert shows[0]["is_new"] is True
+
+    def test_festival_shows_diff_detection(self, sample_result, sample_config, geocode_cache):
+        """Festival shows that existed in previous summary should not be marked as new."""
+        prev = {
+            "artist_shows": {},
+            "venue_shows": {},
+            "festival_shows": {
+                "Hinterland Music Festival": [
+                    {"date": "Aug 1, 2026", "venue": "Avenue of the Saints Amphitheater",
+                     "city": "Saint Charles, IA, US", "event_name": "Hinterland Music Festival 2026"},
+                ],
+            },
+        }
+        summary = build_summary(sample_result, sample_config, geocode_cache, prev)
+
+        shows = summary["festival_shows"]["Hinterland Music Festival"]
+        assert shows[0]["is_new"] is False
+
+    def test_festivals_not_found(self, sample_result, sample_config, geocode_cache):
+        """Festivals not found should be passed through."""
+        sample_result.festivals_not_found = ["Nonexistent Fest"]
+        summary = build_summary(sample_result, sample_config, geocode_cache, None)
+
+        assert summary["festivals_not_found"] == ["Nonexistent Fest"]
+
+    def test_festival_coming_soon(self, sample_result, sample_config, geocode_cache):
+        """Festival coming-soon shows should be collected."""
+        sample_result.festival_shows["Hinterland Music Festival"][0]["not_yet_on_sale"] = True
+        sample_result.festival_shows["Hinterland Music Festival"][0]["onsale_datetime"] = "2026-03-01T10:00:00Z"
+        summary = build_summary(sample_result, sample_config, geocode_cache, None)
+
+        assert len(summary["festival_coming_soon"]) == 1
+        fcs = summary["festival_coming_soon"][0]
+        assert fcs["tracked_festival"] == "Hinterland Music Festival"
+        assert fcs["onsale_datetime"] == "2026-03-01T10:00:00Z"
+
 
 # ── build_static_data tests ──────────────────────────────────────────────────
 
@@ -202,6 +271,7 @@ class TestBuildStaticData:
         assert "state" in static
         assert "config" in static
         assert "coming_soon" in static
+        assert "festival_coming_soon" in static
         assert "coming_soon_fetched" in static
 
     def test_state_contains_raw_shows(self, sample_result, sample_config, geocode_cache):
@@ -244,3 +314,20 @@ class TestBuildStaticData:
         venues = static["config"]["venues"]
         assert "Wells Fargo Arena" in venues
         assert venues["Wells Fargo Arena"]["lat"] == 41.5868
+
+    def test_festival_shows_in_static_data(self, sample_result, sample_config, geocode_cache):
+        """Static data should include festival shows from summary."""
+        summary = build_summary(sample_result, sample_config, geocode_cache, None)
+        static = build_static_data(sample_result, sample_config, geocode_cache, summary)
+
+        assert "festival_shows" in static["state"]
+        assert "Hinterland Music Festival" in static["state"]["festival_shows"]
+
+    def test_festival_config_in_static_data(self, sample_result, sample_config, geocode_cache):
+        """Static data config should include festival config."""
+        summary = build_summary(sample_result, sample_config, geocode_cache, None)
+        static = build_static_data(sample_result, sample_config, geocode_cache, summary)
+
+        assert "festivals" in static["config"]
+        assert "Hinterland Music Festival" in static["config"]["festivals"]
+        assert static["config"]["festivals"]["Hinterland Music Festival"]["url"] == "https://hinterland.com"

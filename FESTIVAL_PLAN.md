@@ -199,9 +199,24 @@ Tests to add/update:
 
 ---
 
-## Open Questions
+## Decisions Made
 
-1. **Green pins — right color?** Green is visually distinct from blue/orange/violet but might imply "go/good." Alternatives: teal, gold, magenta.
-2. **Should festival shows merge into the artist shows section or stay separate?** Current proposal keeps them separate (dedicated "Festivals" section below Artists and Venues). Merging would make sense if festivals are few; separating makes sense if the user tracks many.
-3. **Festival coming-soon: same tab or separate?** Current proposal puts them in the existing Coming Soon tab with a badge. Could also be a separate section within the Festivals area.
-4. **TM attraction ID pinning (Phase 4):** Worth doing now to avoid false positives, or wait until it's a real problem?
+1. **Green pins.** Green is the most visually distinct from the existing palette (blue, orange, violet, indigo). Adopted.
+2. **Festivals as their own top-level tab.** Instead of a section within "Concerts & Festivals," festivals get a dedicated "Festivals" tab placed to the right of "On Sale Soon." This gives more UX flexibility and keeps the Concerts tab focused on artist/venue shows.
+3. **Festival coming-soon inside the Festivals tab.** Festival coming-soon events live within each festival card on the Festivals tab, not in the shared "On Sale Soon" tab. This keeps all festival data in one place.
+4. **TM attraction ID pinning deferred.** Only 3 festivals tracked, all with distinctive names. Will implement when false positives become a real problem.
+
+## Implementation Status
+
+**Completed.** All phases implemented:
+
+- `build_summary()` now includes `festival_shows`, `festivals_not_found`, and `festival_coming_soon`
+- `build_static_data()` passes festival data through to the demo frontend
+- `schemas/summary.schema.json` updated with `SummaryFestivalShow` and `ComingSoonFestivalEvent` definitions
+- `backend/models.py` updated with `SummaryFestivalShow` model; `Summary` model includes festival fields
+- `scripts/export_static_data.py` includes festival data in static export
+- New `FestivalsTab.jsx` component with festival cards, coming-soon sections, map, and not-found list
+- `App.jsx` updated with Festivals tab (tab order: Concerts & Festivals > On Sale Soon > Festivals)
+- `ConcertMap.jsx` supports green festival pins via new `festivalShows` prop
+- `scripts/notify_changes.py` detects new festival events and includes them in push notifications
+- Tests: 5 new festival tests in `test_fetch_tm_data.py`, all 103 backend + 7 frontend tests passing
