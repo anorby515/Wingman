@@ -81,22 +81,18 @@ export const TOOLTIP_STYLE_NARROW = { maxWidth: 260, whiteSpace: 'normal', wordW
 
 /**
  * Determine the map pin icon for a group of artist shows at one location.
- * Priority: New > Sold Out > Coming Soon > Favorite > Default
- *
- * "Coming Soon" uses `some` (not `every`) so that any coming-soon show at a
- * location wins over Favorite — matching the rule: Favorite + Coming Soon → blue pin.
- * Favorite only wins when ALL shows at the pin are on-sale.
+ * Priority: Coming Soon (blue) > New (green) > Favorite (gold) > Sold Out (red) > Default (green)
  */
 export function getArtistPinIcon(shows) {
-  const hasNew        = shows.some(s => s.is_new)
-  const allSoldOut    = shows.every(s => s.status === 'sold_out')
   const hasComingSoon = shows.some(s => s.source === 'tm')
+  const hasNew        = shows.some(s => s.is_new)
   const hasFavorite   = shows.some(s => s._isFavorite)
+  const allSoldOut    = shows.every(s => s.status === 'sold_out')
 
-  if (hasNew)        return NEW_ICON
-  if (allSoldOut)    return SOLD_OUT_ICON
   if (hasComingSoon) return COMING_SOON_ICON
+  if (hasNew)        return NEW_ICON
   if (hasFavorite)   return FAVORITE_ICON
+  if (allSoldOut)    return SOLD_OUT_ICON
   return DEFAULT_ICON
 }
 

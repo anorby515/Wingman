@@ -141,11 +141,32 @@ describe('getArtistPinIcon', () => {
     expect(getArtistPinIcon(shows)).toBe(FAVORITE_ICON)
   })
 
-  it('new show overrides everything else', () => {
+  it('coming soon overrides new', () => {
+    const shows = [
+      { is_new: true, source: 'tm' },
+    ]
+    expect(getArtistPinIcon(shows)).toBe(COMING_SOON_ICON)
+  })
+
+  it('coming soon overrides everything (new + favorite + sold out)', () => {
     const shows = [
       { is_new: true, _isFavorite: true, source: 'tm', status: 'sold_out' },
     ]
+    expect(getArtistPinIcon(shows)).toBe(COMING_SOON_ICON)
+  })
+
+  it('new overrides favorite', () => {
+    const shows = [
+      { is_new: true, _isFavorite: true, status: 'on_sale' },
+    ]
     expect(getArtistPinIcon(shows)).toBe(NEW_ICON)
+  })
+
+  it('favorite overrides sold out', () => {
+    const shows = [
+      { _isFavorite: true, status: 'sold_out' },
+    ]
+    expect(getArtistPinIcon(shows)).toBe(FAVORITE_ICON)
   })
 
   it('sold out does not apply if any show is not sold out', () => {
@@ -153,7 +174,7 @@ describe('getArtistPinIcon', () => {
       { status: 'sold_out' },
       { status: 'on_sale' },
     ]
-    // allSoldOut = false, no coming soon, no favorite → DEFAULT
+    // allSoldOut = false, no coming soon, no new, no favorite → DEFAULT
     expect(getArtistPinIcon(shows)).toBe(DEFAULT_ICON)
   })
 
