@@ -11,7 +11,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 })
 
-const NEW_ICON = new L.Icon({
+export const NEW_ICON = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
   iconSize: [25, 41],
@@ -20,7 +20,7 @@ const NEW_ICON = new L.Icon({
   shadowSize: [41, 41],
 })
 
-const DEFAULT_ICON = new L.Icon({
+export const DEFAULT_ICON = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
   iconSize: [25, 41],
@@ -29,7 +29,7 @@ const DEFAULT_ICON = new L.Icon({
   shadowSize: [41, 41],
 })
 
-const SOLD_OUT_ICON = new L.Icon({
+export const SOLD_OUT_ICON = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
   iconSize: [25, 41],
@@ -47,7 +47,7 @@ const VENUE_ICON = new L.Icon({
   shadowSize: [41, 41],
 })
 
-const COMING_SOON_ICON = new L.Icon({
+export const COMING_SOON_ICON = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
   iconSize: [25, 41],
@@ -56,7 +56,7 @@ const COMING_SOON_ICON = new L.Icon({
   shadowSize: [41, 41],
 })
 
-const FAVORITE_ICON = new L.Icon({
+export const FAVORITE_ICON = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
   iconSize: [25, 41],
@@ -73,6 +73,28 @@ const FESTIVAL_ICON = new L.Icon({
   popupAnchor: [1, -34],
   shadowSize: [41, 41],
 })
+
+// Inline styles for tooltip content — defense-in-depth against Leaflet CSS
+// overriding our index.css rules due to bundler CSS injection order.
+export const TOOLTIP_STYLE = { maxWidth: 320, whiteSpace: 'normal', wordWrap: 'break-word' }
+export const TOOLTIP_STYLE_NARROW = { maxWidth: 260, whiteSpace: 'normal', wordWrap: 'break-word' }
+
+/**
+ * Determine the map pin icon for a group of artist shows at one location.
+ * Priority: Coming Soon (blue) > New (green) > Favorite (gold) > Sold Out (red) > Default (green)
+ */
+export function getArtistPinIcon(shows) {
+  const hasComingSoon = shows.some(s => s.source === 'tm')
+  const hasNew        = shows.some(s => s.is_new)
+  const hasFavorite   = shows.some(s => s._isFavorite)
+  const allSoldOut    = shows.every(s => s.status === 'sold_out')
+
+  if (hasComingSoon) return COMING_SOON_ICON
+  if (hasNew)        return NEW_ICON
+  if (hasFavorite)   return FAVORITE_ICON
+  if (allSoldOut)    return SOLD_OUT_ICON
+  return DEFAULT_ICON
+}
 
 /**
  * Child component that tracks map viewport changes and reports bounds.
@@ -192,20 +214,12 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
 
         {/* Artist show pins */}
         {artistPins.map((pin, i) => {
-          const hasNew        = pin.shows.some(s => s.is_new)
-          const allSoldOut    = pin.shows.every(s => s.status === 'sold_out')
-          const allComingSoon = pin.shows.every(s => s.source === 'tm')
-          const hasFavorite   = pin.shows.some(s => s._isFavorite)
-          const icon = hasNew        ? NEW_ICON
-                     : allSoldOut   ? SOLD_OUT_ICON
-                     : allComingSoon ? COMING_SOON_ICON
-                     : hasFavorite  ? FAVORITE_ICON
-                     : DEFAULT_ICON
+          const icon = getArtistPinIcon(pin.shows)
 
           return (
             <Marker key={`a-${i}`} position={[pin.lat, pin.lon]} icon={icon}>
               <Tooltip direction="top" offset={[0, -30]} opacity={0.95}>
-                <div className="text-xs space-y-0.5" style={{ maxWidth: 320 }}>
+                <div className="text-xs space-y-0.5" style={TOOLTIP_STYLE}>
                   {pin.shows.map((s, j) => (
                     <div key={j}>
                       <strong>{s.artist}</strong>
@@ -234,7 +248,7 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
           return (
             <Marker key={`v-${i}`} position={[venue.lat, venue.lon]} icon={VENUE_ICON}>
               <Tooltip direction="top" offset={[0, -30]} opacity={0.95}>
-                <div className="text-xs space-y-0.5">
+                <div className="text-xs space-y-0.5" style={TOOLTIP_STYLE}>
                   <div className="font-bold text-sm">{venue.venueName}</div>
                   {events.map((e, j) => (
                     <div key={j}>
@@ -255,7 +269,7 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
         {festivalPins.map((pin, i) => (
           <Marker key={`f-${i}`} position={[pin.lat, pin.lon]} icon={FESTIVAL_ICON}>
             <Tooltip direction="top" offset={[0, -30]} opacity={0.95}>
-              <div className="text-xs space-y-0.5" style={{ maxWidth: 260 }}>
+              <div className="text-xs space-y-0.5" style={TOOLTIP_STYLE_NARROW}>
                 {pin.shows.map((s, j) => (
                   <div key={j}>
                     <strong>{s.festivalName}</strong>

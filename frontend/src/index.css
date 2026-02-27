@@ -70,10 +70,15 @@
   border-bottom: 1px solid #9e9a93;
 }
 
-/* Leaflet tooltip — auto-fit to content */
+/* Leaflet tooltip — override Leaflet's default white-space:nowrap.
+   Uses !important on all properties because Leaflet's CSS (imported dynamically
+   in ConcertMap.jsx) can load AFTER this stylesheet depending on bundler
+   CSS injection order, which causes the tooltip overflow to regress. */
 .leaflet-tooltip {
   max-width: 400px !important;
-  white-space: normal;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
 }
 
 /* Smooth expand animation */
