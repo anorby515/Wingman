@@ -420,19 +420,20 @@ Run: `cd /home/user/Wingman/frontend && npx vitest run`
 - `/api/config` returns `center_lat`/`center_lon` for map + venue lat/lon for venue pins
 - GitHub Pages build (VITE_DEMO_MODE=true) + GitHub Actions deploy workflow
 - JSON schemas + Pydantic validation
-- TM integration: artist/venue/festival shows + coming soon with presale windows; merged into cards; orange map pins; "Not found on TM" lists; 6-hour cache
+- TM integration: artist/venue/festival shows + coming soon with presale windows; merged into cards; orange map pins; "Not found on TM" lists
 - Notification system: daily push alerts via ntfy.sh — detects new shows, new venue events, on-sale-imminent; runs as GitHub Action notify job after daily TM fetch
-- Codebase cleanup: removed dead files (old scraping workflow, unused geocoding module, concert_state schema/validator), unused frontend components, deprecated model fields, stale comments
+- Codebase cleanup: removed dead files, unused components, deprecated model fields, stale comments
+- Spotify OAuth integration: Settings UI, backend OAuth flow, `spotify_tokens.json` storage
+- Spotify sync script: `scripts/spotify_sync.py` — 3-phase standalone Mac script (Spotify follows, Wingman→Spotify, listening history suggestions)
+- Dismissed suggestions: backend endpoints + 6-month resurface logic
+- Filter/sort options on GitHub Pages site
 
 ### Next Up
-- **Step 6: Festival rethink** — Discuss Cowork-driven festival lineup discovery
-- **Step 8: Cowork Workflow Rewrite** — Spotify sync + notification delivery via Cowork
-- **Step 10: Bandsintown Integration** — supplemental data source (deferred)
+- **Step 6: Festival rethink** — Discuss how festivals are tracked and whether the current TM keyword search approach is sufficient, or whether lineup discovery needs a different approach
+- **Step 10: Bandsintown Integration** — supplemental data source for artists/venues not on Ticketmaster (deferred)
 
 ### Future
 - **Bandsintown API** — supplemental data source for artists/venues not on Ticketmaster
-- **Spotify sync** — Cowork-driven (not local UI); backend needs dismissed-suggestions endpoints and OAuth token storage
-- **Filter/sort options** — Advanced filtering and sorting on the GitHub Pages site
 
 ---
 
@@ -480,12 +481,14 @@ Revisit how festivals are tracked, fetched, and displayed. The current festival 
 - Updates baseline after successful send; retries on next run if send fails
 - Script: `scripts/notify_changes.py` (no pip dependencies)
 
-### Step 8: Cowork Workflow Rewrite
-- Remove scraping workflows
-- Cowork = Spotify sync (manual, conversational) + notification delivery (email + push via ntfy.sh)
-- Spotify sync is Cowork-driven: Cowork orchestrates all 3 phases, calls Spotify API directly, uses Chrome skills for URL discovery
-- Backend provides supporting endpoints: dismissed-suggestions CRUD, flagged-items, artist management
-- OAuth tokens stored in `spotify_tokens.json` (managed by Cowork, not the backend)
+### Step 8: Spotify Integration ✓
+- Spotify OAuth flow: Settings UI (Client ID/Secret input, Connect button), backend `/auth/spotify` + `/callback` routes, tokens in `spotify_tokens.json`
+- `scripts/spotify_sync.py`: standalone 3-phase Mac script — no pip dependencies, reads tokens/config directly from repo
+- Phase 1: Spotify follows not in Wingman (y/n/d/s prompts, opens Google search for tour URL)
+- Phase 2: Wingman artists not followed on Spotify (batch checklist, follows via API, flags not-found artists)
+- Phase 3: Listening history suggestions (top artists short/medium/long term + recently played, 6-month dismiss logic)
+- Dismissed suggestions: `GET/POST/DELETE /api/dismissed-suggestions` endpoints + `dismissed_suggestions.json`
+- VitePWA service worker fix: `navigateFallbackDenylist` so OAuth routes aren't intercepted
 
 ### Step 9: Codebase Cleanup + Documentation Refresh ✓
 - Deleted dead files: `concert_weekly.py` (old scraping workflow), `backend/geocoding.py` (unused Geocoder module), `scripts/validate_state.py` (validated non-existent concert_state.json), `schemas/concert_state.schema.json`
