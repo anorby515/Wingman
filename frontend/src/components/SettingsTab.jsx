@@ -217,6 +217,155 @@ function TicketmasterSettings({ config, onSave }) {
   )
 }
 
+// ── Spotify Integration ───────────────────────────────────────────────────────
+function SpotifySettings({ config, onSave }) {
+  const [clientId,     setClientId]     = useState(config.spotify_client_id || '')
+  const [clientSecret, setClientSecret] = useState(config.spotify_client_secret || '')
+  const [saving,       setSaving]       = useState(false)
+  const [saved,        setSaved]        = useState(false)
+  const [error,        setError]        = useState(null)
+  const [status,       setStatus]       = useState(null) // {connected, display_name}
+
+  useEffect(() => {
+    fetch('/api/spotify/status')
+      .then(r => r.json())
+      .then(setStatus)
+      .catch(() => {})
+  }, [])
+
+  // Handle redirect back from Spotify OAuth
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('spotify_connected')) {
+      setStatus({ connected: true })
+      // Re-fetch to get display name
+      fetch('/api/spotify/status').then(r => r.json()).then(setStatus).catch(() => {})
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+    if (params.get('spotify_error')) {
+      setError('Spotify auth failed: ' + params.get('spotify_error'))
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+  }, [])
+
+  async function handleSave(e) {
+    e.preventDefault()
+    setSaving(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          spotify_client_id: clientId.trim(),
+          spotify_client_secret: clientSecret.trim(),
+        }),
+      })
+      if (!res.ok) throw new Error((await res.json()).detail)
+      onSave({ spotify_client_id: clientId.trim() || null, spotify_client_secret: clientSecret.trim() || null })
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2500)
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function handleDisconnect() {
+    await fetch('/api/spotify/disconnect', { method: 'DELETE' })
+    setStatus({ connected: false, display_name: null })
+  }
+
+  const credentialsEntered = clientId.trim() && clientSecret.trim()
+  const isConfigured = !!(config.spotify_client_id && config.spotify_client_secret)
+
+  return (
+    <Section title="Spotify">
+      <form onSubmit={handleSave} className="space-y-3">
+        {error && <p className="text-sm text-red-600">{error}</p>}
+        <p className="text-sm text-neutral-600">
+          Used for Spotify sync — matching your followed artists with Wingman and discovering new ones from your listening history.
+        </p>
+
+        <div>
+          <label className="block text-xs font-medium text-neutral-600 mb-1">
+            Client ID{isConfigured && <span className="text-neutral-700 font-medium"> (configured)</span>}
+          </label>
+          <input
+            className="input font-mono text-sm"
+            value={clientId}
+            onChange={e => setClientId(e.target.value)}
+            placeholder="Paste your Spotify Client ID"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-medium text-neutral-600 mb-1">
+            Client Secret{isConfigured && <span className="text-neutral-700 font-medium"> (configured)</span>}
+          </label>
+          <input
+            className="input font-mono text-sm"
+            type="password"
+            value={clientSecret}
+            onChange={e => setClientSecret(e.target.value)}
+            placeholder="Paste your Spotify Client Secret"
+          />
+          <p className="text-xs text-neutral-400 mt-1">
+            Get these from{' '}
+            <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener noreferrer"
+               className="text-neutral-500 underline hover:text-neutral-700">
+              developer.spotify.com/dashboard
+            </a>
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3 flex-wrap">
+          <button type="submit" className="btn-primary" disabled={saving || !credentialsEntered}>
+            {saving ? 'Saving…' : 'Save'}
+          </button>
+          {saved && <span className="text-sm text-neutral-700 font-medium">Saved!</span>}
+        </div>
+      </form>
+
+      {/* Connection status + Connect button */}
+      <div className="pt-3 border-t border-neutral-100 mt-3">
+        {status?.connected ? (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
+              <span className="text-sm text-neutral-700 font-medium">
+                Connected{status.display_name ? ` as ${status.display_name}` : ''}
+              </span>
+            </div>
+            <button
+              onClick={handleDisconnect}
+              className="text-xs text-neutral-400 hover:text-neutral-600 underline"
+            >
+              Disconnect
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            <a
+              href={isConfigured ? '/auth/spotify' : undefined}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`btn-primary ${!isConfigured ? 'opacity-50 pointer-events-none cursor-not-allowed' : ''}`}
+              onClick={!isConfigured ? e => e.preventDefault() : undefined}
+            >
+              Connect Spotify →
+            </a>
+            {!isConfigured && (
+              <span className="text-xs text-neutral-400">Save credentials first</span>
+            )}
+          </div>
+        )}
+      </div>
+    </Section>
+  )
+}
+
 // ── Main tab ──────────────────────────────────────────────────────────────────
 export default function SettingsTab() {
   const [config, setConfig] = useState(null)
@@ -243,6 +392,7 @@ export default function SettingsTab() {
       <MapHomeSettings config={config} onSave={updated => setConfig(c => ({ ...c, ...updated }))} />
       <GitHubPagesSettings config={config} onSave={updated => setConfig(c => ({ ...c, ...updated }))} />
       <TicketmasterSettings config={config} onSave={updated => setConfig(c => ({ ...c, ...updated }))} />
+      <SpotifySettings config={config} onSave={updated => setConfig(c => ({ ...c, ...updated }))} />
     </div>
   )
 }

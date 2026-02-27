@@ -22,6 +22,14 @@
     "ticketmaster_api_key": {
       "type": ["string", "null"],
       "description": "Ticketmaster Discovery API key for the Coming Soon tab. Get a free key at developer.ticketmaster.com"
+    },
+    "spotify_client_id": {
+      "type": ["string", "null"],
+      "description": "Spotify app Client ID from developer.spotify.com/dashboard"
+    },
+    "spotify_client_secret": {
+      "type": ["string", "null"],
+      "description": "Spotify app Client Secret from developer.spotify.com/dashboard"
     }
   },
   "definitions": {
