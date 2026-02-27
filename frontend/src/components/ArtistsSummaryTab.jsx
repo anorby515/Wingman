@@ -680,7 +680,7 @@ function EmptyState({ hasFilters }) {
     <div className="p-8 text-center text-neutral-400 text-sm italic">
       {hasFilters
         ? 'No shows match the current filters.'
-        : 'No shows found. Click Refresh Data to fetch from Ticketmaster.'}
+        : 'No shows found. Data is updated daily via GitHub Actions.'}
     </div>
   )
 }

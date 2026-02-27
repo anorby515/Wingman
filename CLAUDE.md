@@ -12,7 +12,7 @@ This document defines the contract between **Claude Code** (codebase maintainer)
 | **Claude Code** | Maintains codebase, schemas, models, frontend, backend. Commits and pushes code changes. |
 | **Claude Cowork** | Spotify sync (interactive, manual trigger), notification delivery (email via Gmail + push via ntfy.sh). |
 | **GitHub Actions** | Daily TM data fetch, generates `docs/summary.json`, builds frontend, deploys to GitHub Pages. |
-| **Local UI** | FastAPI backend + React frontend. Configuration (artists, venues, festivals, settings). Manual "Refresh Data" button triggers TM API fetch. Displays all show data from TM cache. |
+| **Local UI** | FastAPI backend + React frontend. Configuration (artists, venues, festivals, settings). Displays all show data from `docs/summary.json` (updated by GitHub Action). |
 | **GitHub Pages** | Public site. Full-featured viewer: Artists, Venues, Festivals, Map, Coming Soon. Updated daily by GitHub Action. |
 
 ---
@@ -24,52 +24,25 @@ This document defines the contract between **Claude Code** (codebase maintainer)
 ```
 Ticketmaster Discovery API (5000 calls/day limit)
           |
-    +-----------+------------------+
-    |                              |
-  Local Backend                GitHub Action
-  (manual "Refresh" button)    (daily schedule or manual dispatch)
-    |                              |
-  ticketmaster_cache.json       docs/summary.json (committed)
-  (local, gitignored)          docs/history/YYYY-MM-DD.json
-    |                              |
-  Local Site                   GitHub Pages
-  (config + viewer)            (public viewer)
+    GitHub Action
+    (daily schedule or manual dispatch)
+          |
+    docs/summary.json (committed)
+    docs/history/YYYY-MM-DD.json
+          |
+    +-----------+-----------+
+    |                       |
+  Local Site            GitHub Pages
+  (config + viewer)     (public viewer)
 ```
 
 ### Key Principles
 
-1. **Browser refresh NEVER triggers TM API calls.** Data is always served from cache.
-2. **TM API is called only on explicit trigger:** manual "Refresh Data" button (local) or scheduled GitHub Action.
+1. **Browser refresh NEVER triggers TM API calls.** Data is always served from `docs/summary.json`.
+2. **TM API is called only by GitHub Actions** — on the daily schedule or via manual `workflow_dispatch`. There is no local "Refresh Data" button.
 3. **No web scraping.** Ticketmaster API is the sole data source. (Bandsintown API planned as supplemental source — future.)
-4. **No `concert_state.json`.** All event data comes from TM API, cached locally.
+4. **No `concert_state.json`.** All event data comes from TM API via `docs/summary.json`.
 5. **5000 calls/day budget.** ~90 calls per full refresh. Safe for ~55 refreshes/day.
-
----
-
-## Workflow: Data Refresh (Local Backend)
-
-**Trigger:** User clicks "Refresh Data" button in the local UI header.
-
-**Sequence:**
-1. Frontend calls `POST /api/refresh`
-2. Backend fetches from TM Discovery API for all active artists, venues, festivals:
-   - For each artist: `GET /discovery/v2/events.json?keyword=<artist>&classificationName=music&size=50&sort=date,asc`
-   - For each venue: look up venue ID via `GET /discovery/v2/venues.json`, then `GET /discovery/v2/events.json?venueId=<id>`
-   - For each festival: `GET /discovery/v2/events.json?keyword=<festival>&classificationName=music`
-3. Filter results to North America only (`countryCode` in `US`, `CA`, `MX`)
-4. Match events via attraction names (fuzzy substring match to avoid tribute bands)
-5. Classify each show: on-sale, coming-soon (public on-sale date in the future), or on-sale TBD
-6. Write unified cache to `ticketmaster_cache.json`
-7. Compare new data against previous cache to detect notification triggers:
-   - New events added since last refresh
-   - Events with on-sale date within 7 days
-   - Events with on-sale date within 48 hours
-8. Write triggers to `notification_state.json`
-9. Geocode uncached venues in background (progressive — does not block response)
-10. Return results immediately (shows may have `lat: null, lon: null` if not yet geocoded)
-
-**Frontend polls `GET /api/refresh/status`** for progress during refresh.
-**Frontend polls `GET /api/geocode/progress`** for map pin updates after refresh.
 
 ---
 
@@ -237,19 +210,7 @@ Returns:
 - `last_refreshed` — ISO 8601 timestamp of last TM fetch
 - `stale` — true if cache is expired or missing (prompt user to refresh)
 
-**This endpoint NEVER calls the TM API.** It only reads from `ticketmaster_cache.json`.
-
-### Refresh Endpoint
-
-**`POST /api/refresh`** — triggers a full TM API fetch cycle.
-
-- Fetches all artists, venues, festivals from TM
-- Writes results to `ticketmaster_cache.json`
-- Detects notification triggers (new events, on-sale-soon)
-- Starts background geocoding for uncached venues
-- Returns `202 Accepted` with a job ID for status polling
-
-**`GET /api/refresh/status`** — returns progress (`{running, artists_processed, venues_processed, total, ...}`).
+**This endpoint NEVER calls the TM API.** It reads from `docs/summary.json`, which is generated and committed by the GitHub Action.
 
 ### How TM Data is Processed
 
@@ -270,30 +231,28 @@ If an entity returns zero matching North America events on TM, it appears in the
 
 **Note:** A network/API error does NOT add an entity to `*_not_found` — only a genuine zero-results response does.
 
-### Cache Behavior
+### Data Freshness
 
-- Cache file: `ticketmaster_cache.json` (gitignored, local only)
-- Cache is refreshed ONLY when `POST /api/refresh` is called
-- Cache is cleared when the API key changes in Settings
-- `GET /api/shows` always returns whatever is in the cache (even if stale)
+- Show data comes from `docs/summary.json`, committed by the GitHub Action
+- Data is updated daily (or on manual `workflow_dispatch`)
+- `GET /api/shows` always returns whatever is in `docs/summary.json` (stale if Action hasn't run today)
 
 ### API Call Budget
 
 | Trigger | Calls per run | Frequency | Daily total |
 |---------|--------------|-----------|-------------|
-| Local "Refresh" button | ~90 (30 artists x2 + 10 venues x2 + 5 festivals x1) | 2-3x daily | ~270 |
-| GitHub Action daily run | ~90 | 1x daily | ~90 |
-| **Total** | | | **~360 / 5000** |
+| GitHub Action daily run | ~90 (per tracked entity) | 1x daily | ~90 |
+| GitHub Action manual dispatch | ~90 | as needed | varies |
+| **Typical total** | | | **~90–180 / 5000** |
 
 ---
 
 ## Shared TM Logic Module
 
-TM API fetch logic is extracted into `backend/ticketmaster.py`, shared by:
-- Local backend (`POST /api/refresh`)
+TM API fetch logic lives in `backend/ticketmaster.py` and is used by:
 - GitHub Action script (`scripts/fetch_tm_data.py`)
 
-This ensures identical data processing regardless of where the fetch runs.
+The local backend reads `docs/summary.json` directly — it does not call `ticketmaster.py` at runtime.
 
 ---
 
@@ -303,9 +262,7 @@ This ensures identical data processing regardless of where the fetch runs.
 |------|-----------|---------|-------------------|
 | `wingman_config.json` | Local UI (backend API) | Backend, Cowork | **Never** (.gitignored) |
 | `tracked.json` | Backend (auto-generated from wingman_config.json) | GH Action script | **Yes** |
-| `ticketmaster_cache.json` | Backend (`POST /api/refresh`) | Backend (`GET /api/shows`) | **Never** (.gitignored) |
-| `geocode_cache.json` | Backend (geocoding after refresh) | Backend | No |
-| `notification_state.json` | Backend (during refresh) | Backend (local notifications) | No |
+| `geocode_cache.json` | GitHub Action (geocoding during fetch) | Backend | No |
 | `dismissed_suggestions.json` | Cowork (Spotify sync) | Cowork, backend | No |
 | `flagged_items.json` | Cowork (Spotify sync) | Backend (local UI) | No |
 | `spotify_tokens.json` | Backend (OAuth flow) | Cowork | **Never** (.gitignored) |
