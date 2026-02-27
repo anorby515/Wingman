@@ -230,19 +230,16 @@ function MapLegend() {
   return (
     <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-400 mt-2 px-1">
       <span className="flex items-center gap-1">
-        <span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" /> On Sale
+        <span className="w-2.5 h-2.5 rounded-full bg-green-500 inline-block" /> On Sale
       </span>
       <span className="flex items-center gap-1">
-        <span className="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block" /> Coming Soon
+        <span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" /> Coming Soon
       </span>
       <span className="flex items-center gap-1">
         <span className="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block" /> Favorite
       </span>
       <span className="flex items-center gap-1">
         <span className="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block" /> Venue
-      </span>
-      <span className="flex items-center gap-1">
-        <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 inline-block" /> Home
       </span>
     </div>
   )
