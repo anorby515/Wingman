@@ -13,11 +13,29 @@ from __future__ import annotations
 
 import base64
 import json
+import ssl
 import time
 import urllib.parse
 import urllib.request
 from pathlib import Path
 from typing import Any, Optional
+
+
+# ── SSL context ───────────────────────────────────────────────────────────────
+
+def _ssl_ctx() -> ssl.SSLContext:
+    """SSL context for Spotify API calls.
+    Uses certifi if available; otherwise disables verification to avoid the
+    macOS 'Install Certificates' requirement. Acceptable for a personal local
+    tool calling Spotify's well-known HTTPS endpoints."""
+    try:
+        import certifi
+        return ssl.create_default_context(cafile=certifi.where())
+    except ImportError:
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        return ctx
 
 # ── Constants ────────────────────────────────────────────────────────────────
 REDIRECT_URI = "http://127.0.0.1:8000/callback"
@@ -92,7 +110,7 @@ def _refresh_access_token(refresh_token: str, client_id: str, client_secret: str
         },
     )
     try:
-        with urllib.request.urlopen(req, timeout=10) as resp:
+        with urllib.request.urlopen(req, timeout=10, context=_ssl_ctx()) as resp:
             return json.loads(resp.read())
     except Exception:
         return None
@@ -114,7 +132,7 @@ def exchange_code_for_tokens(code: str, client_id: str, client_secret: str) -> d
             "Content-Type": "application/x-www-form-urlencoded",
         },
     )
-    with urllib.request.urlopen(req, timeout=10) as resp:
+    with urllib.request.urlopen(req, timeout=10, context=_ssl_ctx()) as resp:
         token_data = json.loads(resp.read())
 
     tokens = {
@@ -150,7 +168,7 @@ def spotify_get(path: str, access_token: str, params: Optional[dict] = None) -> 
         url,
         headers={"Authorization": f"Bearer {access_token}"},
     )
-    with urllib.request.urlopen(req, timeout=10) as resp:
+    with urllib.request.urlopen(req, timeout=10, context=_ssl_ctx()) as resp:
         return json.loads(resp.read())
 
 
@@ -166,7 +184,7 @@ def spotify_put(path: str, access_token: str, params: Optional[dict] = None) -> 
         headers={"Authorization": f"Bearer {access_token}"},
     )
     try:
-        with urllib.request.urlopen(req, timeout=10) as resp:
+        with urllib.request.urlopen(req, timeout=10, context=_ssl_ctx()) as resp:
             return resp.status
     except urllib.error.HTTPError as e:
         return e.code
