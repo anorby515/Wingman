@@ -359,5 +359,7 @@
     }
   },
   "github_pages_url": "https://anorby515.github.io/Wingman/",
-  "ticketmaster_api_key": "7G9nDOANw6RmM0yjOXisiDfYfUY60utv"
+  "ticketmaster_api_key": "7G9nDOANw6RmM0yjOXisiDfYfUY60utv",
+  "spotify_client_id": "c5eff6fc6ccc4ec7bbe4def585f54abc",
+  "spotify_client_secret": "06a4391a606c4690ae14fbdf44a25fe4"
 }
