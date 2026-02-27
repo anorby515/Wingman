@@ -81,7 +81,7 @@ export default function App() {
       </header>
 
       {/* ── Content ── */}
-      <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6">
+      <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6 bg-[#edebe8] relative z-10">
         {active === 'concerts'      && <ArtistsSummaryTab />}
         {active === 'on-sale-soon'  && <ComingSoonTab />}
         {active === 'festivals'     && <FestivalsTab />}
