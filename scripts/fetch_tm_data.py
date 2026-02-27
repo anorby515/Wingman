@@ -135,18 +135,18 @@ def build_summary(
             key = f"{artist}|{show['date']}|{show['venue']}"
             is_new = key not in prev_show_keys
 
+            is_coming_soon = show.get("not_yet_on_sale", False)
             summary_show = {
                 "date": show["date"],
                 "raw_date": show.get("raw_date", show["date"]),
                 "venue": show["venue"],
                 "city": show["city"],
-                "status": "on_sale",
+                "status": "coming_soon" if is_coming_soon else "on_sale",
                 "lat": show.get("lat"),
                 "lon": show.get("lon"),
                 "is_new": is_new,
-                "not_yet_on_sale": show.get("not_yet_on_sale", False),
-                "onsale_datetime": show.get("onsale_datetime"),
-                "onsale_tbd": show.get("onsale_tbd", False),
+                "onsale_datetime": show.get("onsale_datetime") if is_coming_soon else None,
+                "onsale_tbd": show.get("onsale_tbd", False) if is_coming_soon else False,
                 "ticketmaster_url": show.get("ticketmaster_url", ""),
             }
             summary_shows.append(summary_show)
@@ -235,19 +235,19 @@ def build_summary(
             key = f"{festival}|{show['date']}|{show['venue']}"
             is_new = key not in prev_festival_keys
 
+            is_coming_soon = show.get("not_yet_on_sale", False)
             entry = {
                 "date": show["date"],
                 "raw_date": show.get("raw_date", show["date"]),
                 "venue": show["venue"],
                 "city": show["city"],
                 "event_name": show.get("event_name", festival),
-                "status": "on_sale",
+                "status": "coming_soon" if is_coming_soon else "on_sale",
                 "lat": show.get("lat"),
                 "lon": show.get("lon"),
                 "is_new": is_new,
-                "not_yet_on_sale": show.get("not_yet_on_sale", False),
-                "onsale_datetime": show.get("onsale_datetime"),
-                "onsale_tbd": show.get("onsale_tbd", False),
+                "onsale_datetime": show.get("onsale_datetime") if is_coming_soon else None,
+                "onsale_tbd": show.get("onsale_tbd", False) if is_coming_soon else False,
                 "ticketmaster_url": show.get("ticketmaster_url", ""),
             }
             festival_summary.append(entry)

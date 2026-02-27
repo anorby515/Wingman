@@ -94,7 +94,7 @@ function ShowRow({ show, showArtist = true, isHighlighted = false, onArtistClick
   const dateObj = new Date(show.raw_date || show.date)
   const month = !isNaN(dateObj) ? dateObj.toLocaleString(undefined, { month: 'short' }).toUpperCase() : '???'
   const day = !isNaN(dateObj) ? dateObj.getDate() : '--'
-  const isComingSoon = show.not_yet_on_sale
+  const isComingSoon = show.status === 'coming_soon'
   const artistUrl = show._artistUrl
 
   function handleRowClick(e) {
@@ -245,11 +245,10 @@ function MapLegend() {
 
 // ── Main tab ─────────────────────────────────────────────────────────────────
 export default function ArtistsSummaryTab() {
-  const [shows, setShows]             = useState(null)
-  const [config, setConfig]           = useState(null)
-  const [comingSoon, setComingSoon]   = useState([])
-  const [loading, setLoading]         = useState(true)
-  const [error, setError]             = useState(null)
+  const [shows, setShows]       = useState(null)
+  const [config, setConfig]     = useState(null)
+  const [loading, setLoading]   = useState(true)
+  const [error, setError]       = useState(null)
 
   // Sort: 'date' (default) or 'artist' (grouped)
   const [sortMode, setSortMode] = useState('date')
@@ -277,7 +276,6 @@ export default function ArtistsSummaryTab() {
             venue_shows: data.state?.venue_shows || {},
             last_refreshed: data.coming_soon_fetched || null,
           })
-          setComingSoon(data.coming_soon || [])
           setConfig({
             ...data.config,
             center_lat: data.config?.center_lat ?? data.state?.center_lat,
@@ -291,7 +289,7 @@ export default function ArtistsSummaryTab() {
         fetch('/api/shows').then(r => r.json()),
         fetch('/api/config').then(r => r.json()),
       ])
-        .then(([s, cfg]) => { setShows(s); setConfig(cfg); setComingSoon(s.coming_soon || []) })
+        .then(([s, cfg]) => { setShows(s); setConfig(cfg) })
         .catch(e => setError(e.message))
         .finally(() => setLoading(false))
     }
@@ -301,16 +299,6 @@ export default function ArtistsSummaryTab() {
   const venueShowsData = shows?.venue_shows ?? {}
   const configArtists = config?.artists || {}
   const configVenues = config?.venues || {}
-
-  // Build coming-soon lookup: artist|date|venue → coming_soon entry
-  const comingSoonLookup = useMemo(() => {
-    const map = {}
-    for (const cs of comingSoon) {
-      const key = `${cs.artist}|${cs.date}|${cs.venue}`
-      map[key] = cs
-    }
-    return map
-  }, [comingSoon])
 
   // Build venue lookup: lowercase venue name → config
   const venueLookup = useMemo(() => {
@@ -340,18 +328,11 @@ export default function ArtistsSummaryTab() {
       for (const show of showList) {
         const key = `${artist}|${show.raw_date}|${show.venue}`
         seen.add(key)
-        // Cross-reference coming_soon to tag not-yet-on-sale shows
-        const csKey = `${artist}|${show.date}|${show.venue}`
-        const cs = comingSoonLookup[csKey]
         arr.push({
           ...show,
           _artist: artist,
           _artistUrl: info.url || null,
           _genre: info.genre || 'Other',
-          not_yet_on_sale: show.not_yet_on_sale || !!cs,
-          onsale_datetime: show.onsale_datetime || cs?.onsale_datetime || null,
-          onsale_tbd: show.onsale_tbd || cs?.onsale_tbd || false,
-          ticketmaster_url: show.ticketmaster_url || cs?.ticketmaster_url || '',
           ...venueFlags(show.venue),
         })
       }
@@ -378,7 +359,7 @@ export default function ArtistsSummaryTab() {
     }
 
     return arr
-  }, [artistShows, venueShowsData, configArtists, venueLookup, comingSoonLookup])
+  }, [artistShows, venueShowsData, configArtists, venueLookup])
 
   // ── Artist filter options (tracked artists only, not venue-sourced) ──
   const artistFilterOptions = useMemo(() => {
@@ -388,7 +369,7 @@ export default function ArtistsSummaryTab() {
       if (!trackedNames.has(show._artist)) continue
       if (quickLocal && !show._isLocalVenue) continue
       if (quickFavorite && !show._isTravelVenue) continue
-      if (quickComingSoon && !show.not_yet_on_sale) continue
+      if (quickComingSoon && show.status !== 'coming_soon') continue
       if (quickMapArea && !isInBounds(show.lat, show.lon, mapBounds)) continue
       visible.add(show._artist)
     }
@@ -401,7 +382,7 @@ export default function ArtistsSummaryTab() {
       if (filterArtists.length > 0 && !filterArtists.includes(show._artist)) return false
       if (quickLocal    && !show._isLocalVenue)  return false
       if (quickFavorite && !show._isTravelVenue) return false
-      if (quickComingSoon && !show.not_yet_on_sale) return false
+      if (quickComingSoon && show.status !== 'coming_soon') return false
       if (quickMapArea && !isInBounds(show.lat, show.lon, mapBounds)) return false
       return true
     })
@@ -445,7 +426,7 @@ export default function ArtistsSummaryTab() {
       ...show,
       artist: show._artist,
       status: 'on_sale',
-      source: show.not_yet_on_sale ? 'tm' : undefined,
+      source: show.status === 'coming_soon' ? 'tm' : undefined,
     }))
   }, [filteredShows])
 
