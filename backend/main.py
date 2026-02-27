@@ -12,6 +12,7 @@ Start:  uvicorn backend.main:app --reload --port 8000
 from __future__ import annotations
 
 import json
+import secrets
 import time
 import urllib.parse
 import urllib.request
@@ -20,8 +21,11 @@ from typing import Any, Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+
+from . import spotify as spotify_mod
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 HERE               = Path(__file__).parent
@@ -30,6 +34,7 @@ CONFIG_FILE        = REPO / "wingman_config.json"
 TRACKED_FILE       = REPO / "tracked.json"
 FLAGGED_FILE       = REPO / "flagged_items.json"
 GEOCODE_FILE       = REPO / "geocode_cache.json"
+SPOTIFY_TOKENS_FILE = REPO / "spotify_tokens.json"
 
 # ── App ──────────────────────────────────────────────────────────────────────
 app = FastAPI(title="Wingman API")
@@ -174,6 +179,8 @@ class SettingsPatch(BaseModel):
     center_city: Optional[str] = None
     github_pages_url: Optional[str] = None
     ticketmaster_api_key: Optional[str] = None
+    spotify_client_id: Optional[str] = None
+    spotify_client_secret: Optional[str] = None
 
 
 # ── Config endpoint ──────────────────────────────────────────────────────────
@@ -205,11 +212,17 @@ def patch_settings(body: SettingsPatch) -> Any:
         cfg["github_pages_url"] = body.github_pages_url
     if body.ticketmaster_api_key is not None:
         cfg["ticketmaster_api_key"] = body.ticketmaster_api_key or None
+    if body.spotify_client_id is not None:
+        cfg["spotify_client_id"] = body.spotify_client_id or None
+    if body.spotify_client_secret is not None:
+        cfg["spotify_client_secret"] = body.spotify_client_secret or None
     _write_config(cfg)
     return {"ok": True, "settings": {
         "center_city": cfg["center_city"],
         "github_pages_url": cfg.get("github_pages_url", ""),
         "ticketmaster_api_key": cfg.get("ticketmaster_api_key") or "",
+        "spotify_client_id": cfg.get("spotify_client_id") or "",
+        "spotify_client_secret": cfg.get("spotify_client_secret") or "",
     }}
 
 
@@ -391,6 +404,71 @@ def dismiss_flagged_item(index: int) -> Any:
     removed = items.pop(index)
     _write_flagged(items)
     return {"ok": True, "removed": removed}
+
+
+# ── Spotify OAuth ────────────────────────────────────────────────────────────
+
+@app.get("/api/spotify/status")
+def spotify_status() -> Any:
+    """Return whether Spotify is connected."""
+    connected = spotify_mod.is_connected()
+    display_name = None
+    if connected:
+        try:
+            cfg = _read_config()
+            client_id = cfg.get("spotify_client_id")
+            client_secret = cfg.get("spotify_client_secret")
+            if client_id and client_secret:
+                token = spotify_mod.get_valid_access_token(client_id, client_secret)
+                if token:
+                    me = spotify_mod.spotify_get("/me", token)
+                    display_name = me.get("display_name") or me.get("id")
+        except Exception:
+            pass
+    return {"connected": connected, "display_name": display_name}
+
+
+@app.get("/auth/spotify")
+def auth_spotify() -> Any:
+    """Redirect user to Spotify authorization page."""
+    cfg = _read_config()
+    client_id = cfg.get("spotify_client_id")
+    if not client_id:
+        raise HTTPException(status_code=400, detail="Spotify Client ID not configured. Add it in Settings first.")
+    state = secrets.token_urlsafe(16)
+    auth_url = spotify_mod.build_auth_url(client_id, state)
+    return RedirectResponse(url=auth_url)
+
+
+@app.get("/callback")
+def spotify_callback(code: str = None, error: str = None, state: str = None) -> Any:
+    """Handle Spotify OAuth callback. Exchange code for tokens."""
+    if error:
+        # Redirect back to local UI with error
+        return RedirectResponse(url="/?spotify_error=" + urllib.parse.quote(error))
+    if not code:
+        raise HTTPException(status_code=400, detail="Missing authorization code")
+
+    cfg = _read_config()
+    client_id = cfg.get("spotify_client_id")
+    client_secret = cfg.get("spotify_client_secret")
+    if not client_id or not client_secret:
+        raise HTTPException(status_code=400, detail="Spotify credentials not configured")
+
+    try:
+        spotify_mod.exchange_code_for_tokens(code, client_id, client_secret)
+    except Exception as e:
+        return RedirectResponse(url="/?spotify_error=" + urllib.parse.quote(str(e)))
+
+    return RedirectResponse(url="/?spotify_connected=1")
+
+
+@app.delete("/api/spotify/disconnect")
+def spotify_disconnect() -> Any:
+    """Remove stored Spotify tokens."""
+    if SPOTIFY_TOKENS_FILE.exists():
+        SPOTIFY_TOKENS_FILE.unlink()
+    return {"ok": True}
 
 
 # ── Serve built frontend ────────────────────────────────────────────────────
