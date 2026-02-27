@@ -36,6 +36,8 @@ FLAGGED_FILE       = REPO / "flagged_items.json"
 DISMISSED_FILE     = REPO / "dismissed_suggestions.json"
 GEOCODE_FILE       = REPO / "geocode_cache.json"
 SPOTIFY_TOKENS_FILE = REPO / "spotify_tokens.json"
+LINEUPS_FILE       = REPO / "festival_lineups.json"
+SUMMARY_FILE       = REPO / "docs" / "summary.json"
 
 # ── App ──────────────────────────────────────────────────────────────────────
 app = FastAPI(title="Wingman API")
@@ -381,6 +383,40 @@ def patch_festival(name: str, body: FestivalPatch) -> Any:
         info["url"] = body.url
     _write_config(cfg)
     return {"name": name, **info}
+
+
+# ── Shows (read-only, from summary.json) ────────────────────────────────
+@app.get("/api/shows")
+def get_shows() -> Any:
+    """Return all cached TM show data from docs/summary.json.
+
+    Read-only — data is populated by the GitHub Action.
+    """
+    if not SUMMARY_FILE.exists():
+        return {
+            "artist_shows": {},
+            "venue_shows": {},
+            "festival_shows": {},
+            "coming_soon": [],
+            "festival_coming_soon": [],
+            "artists_not_found": [],
+            "venues_not_found": [],
+            "festivals_not_found": [],
+            "stale": True,
+        }
+    return json.loads(SUMMARY_FILE.read_text())
+
+
+# ── Festival Lineups ────────────────────────────────────────────────────
+@app.get("/api/festival-lineups")
+def get_festival_lineups() -> Any:
+    """Return festival lineup data from festival_lineups.json."""
+    if not LINEUPS_FILE.exists():
+        return {}
+    try:
+        return json.loads(LINEUPS_FILE.read_text())
+    except Exception:
+        return {}
 
 
 # ── Flagged Items ────────────────────────────────────────────────────────────
