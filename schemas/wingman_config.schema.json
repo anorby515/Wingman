@@ -43,11 +43,15 @@
         },
         "genre": {
           "type": "string",
-          "description": "Genre category, e.g. 'Country / Americana', 'Indie / Alt-Rock', 'Electronic / Art-Rock'"
+          "description": "Genre category, e.g. 'Indie', 'Rock/Alternative', 'Country/Americana', 'Hip-Hop', 'Electronic', 'Other'"
         },
         "paused": {
           "type": "boolean",
           "description": "If true, artist is not fetched from TM but still used for venue cross-reference"
+        },
+        "favorite": {
+          "type": "boolean",
+          "description": "If true, artist is a favorite (shown with gold star)"
         }
       }
     },
