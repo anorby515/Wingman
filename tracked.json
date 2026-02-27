@@ -435,6 +435,11 @@
       "url": "https://www.brooks-dunn.com/tour/",
       "genre": "Other",
       "paused": false
+    },
+    "Josiah Queen": {
+      "url": "https://www.josiahqueen.com/tour/",
+      "genre": "Other",
+      "paused": false
     }
   },
   "venues": {
