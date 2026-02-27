@@ -1,0 +1,207 @@
+# Festival Rethink — Implementation Plan
+
+**Status:** Proposal (Step 6 in the roadmap)
+**Date:** 2026-02-27
+
+---
+
+## Problem Statement
+
+Festivals are currently second-class citizens in Wingman. The full data pipeline exists for artists and venues — TM fetch → summary.json → frontend display → notifications — but festivals fall off the map after the fetch step. Specifically:
+
+1. **Festival shows are fetched but discarded.** `fetch_festival_shows()` runs as Phase 3 of every TM refresh, but `build_summary()` never writes `festival_shows` into `docs/summary.json`.
+2. **No frontend display.** There's no tab or card view showing festival events from TM. The "Festivals" sub-tab under Configure only manages the tracking list (add/pause/delete).
+3. **Keyword search is a blunt instrument.** Searching TM for "Hinterland Music Festival" returns any event with those words in the name. This works for uniquely-named festivals but can produce false positives for generic names.
+4. **No festival data in notifications.** The notify script compares artist and venue show keys against the baseline, but festivals are absent from both.
+5. **No festival shows on the map.** Artist shows get blue/orange pins, venue events get violet pins, but festival events have no map presence.
+
+---
+
+## Current Implementation (What Exists)
+
+| Layer | Status | Details |
+|-------|--------|---------|
+| **Config** | Complete | `FestivalConfig` model (url + paused), CRUD endpoints, Configure > Festivals sub-tab |
+| **tracked.json** | Complete | Festivals exported with name/url/paused for GH Action |
+| **TM fetch** | Complete | `fetch_festival_shows()` in `ticketmaster.py`, called in `run_full_refresh()` Phase 3 |
+| **summary.json** | Missing | `build_summary()` does not include `festival_shows` |
+| **Frontend display** | Missing | No festival show cards, no festival map pins |
+| **Notifications** | Missing | No festival show keys in baseline or diff logic |
+| **Schema** | Partial | `ComingSoonFestivalEvent` model defined but unused; no `SummaryFestivalShow` in summary schema |
+
+---
+
+## The Core Question: What Do We Actually Want From Festival Tracking?
+
+There are two fundamentally different things a user might mean by "track a festival":
+
+### Option A: Track the Festival as a TM Event
+- Search TM for events matching the festival name
+- Show dates, venues, on-sale status — same as any other show
+- Works well for festivals that list on Ticketmaster (Bonnaroo, Lollapalooza, etc.)
+- **This is what the current code does.** It just doesn't surface the results.
+
+### Option B: Track Which Tracked Artists Are Playing a Festival
+- The user cares about "which of MY artists are on the Hinterland lineup?"
+- This requires lineup data, which TM doesn't provide (TM lists the festival as one event, not per-artist)
+- Would need a different data source (manual entry, web scraping, or a lineup API)
+
+**Recommendation:** Option A is the pragmatic path. It completes the pipeline that's already 80% built. Option B is a future enhancement if/when a lineup data source becomes available.
+
+---
+
+## Proposed Implementation
+
+### Phase 1: Complete the Pipeline (Festival Shows in Summary)
+
+**Goal:** Festival shows flow through the full pipeline just like artist and venue shows.
+
+#### 1a. Update `build_summary()` in `scripts/fetch_tm_data.py`
+
+Add a `festival_shows` section to the summary output, structured as:
+
+```json
+{
+  "festival_shows": {
+    "Hinterland Music Festival": [
+      {
+        "date": "Aug 1, 2026",
+        "venue": "Avenue of the Saints Amphitheater",
+        "city": "Saint Charles, IA, US",
+        "event_name": "Hinterland Music Festival 2026",
+        "status": "on_sale",
+        "lat": 41.28,
+        "lon": -93.05,
+        "is_new": true
+      }
+    ]
+  },
+  "festivals_not_found": ["Some Obscure Fest"]
+}
+```
+
+Key fields:
+- `event_name` — the actual TM event name (may differ from the tracked festival name)
+- `status` — on_sale or coming_soon, same logic as artist shows
+- `is_new` — diff detection against previous summary, same as artist shows
+
+Also include festival coming-soon shows in the `coming_soon` array with a `"source": "festival"` field to distinguish them.
+
+#### 1b. Update `schemas/summary.schema.json`
+
+Add `festival_shows` and `festivals_not_found` to the schema with a new `SummaryFestivalShow` definition.
+
+#### 1c. Update `backend/models.py`
+
+Add a `SummaryFestivalShow` model if needed for validation. The existing `ComingSoonFestivalEvent` model can be cleaned up or replaced.
+
+#### 1d. Update `scripts/export_static_data.py`
+
+Ensure `festival_shows` and `festivals_not_found` are included when generating `static-data.json` for GitHub Pages.
+
+---
+
+### Phase 2: Frontend Display
+
+**Goal:** Festival events appear in the UI alongside artist and venue shows.
+
+#### 2a. Festival Cards in the "Concerts & Festivals" Tab
+
+The `ArtistsSummaryTab` already renders three sections: Artists, Venues, and a "Festivals" heading. Currently the Festivals section only shows a static list of tracked festival names with links to their URLs.
+
+**Change:** Replace the static list with TM-sourced festival show cards. Each card shows:
+- Festival name (links to the festival URL from config)
+- Event name (if different from festival name)
+- Date, venue, city
+- On-sale status badge (same styling as artist shows)
+
+Group cards by festival name, sorted by date.
+
+If a festival is in `festivals_not_found`, show it in a "Not found on TM" collapsed section (same pattern as artists not found).
+
+#### 2b. Festival Pins on the Map
+
+Add festival event pins to the Leaflet map:
+- **Color:** Green (distinct from blue=on-sale artist, orange=coming-soon, violet=venue)
+- **Tooltip:** Festival name, event name, date, venue
+- **Behavior:** Clicking a festival card filters the map to that festival's pins (same as clicking an artist card)
+
+#### 2c. Festival Shows in Coming Soon Tab
+
+Festival coming-soon shows should appear in the Coming Soon tab alongside artist coming-soon shows. Add a "Festival" badge or label to distinguish them.
+
+---
+
+### Phase 3: Notifications
+
+**Goal:** New festival events trigger push notifications.
+
+#### 3a. Add Festival Keys to Notification Baseline
+
+Extend `docs/notification_baseline.json`:
+
+```json
+{
+  "updated_at": "...",
+  "artist_show_keys": ["..."],
+  "venue_show_keys": ["..."],
+  "festival_show_keys": ["Hinterland Music Festival|Aug 1, 2026|Avenue of the Saints Amphitheater"]
+}
+```
+
+#### 3b. Update `scripts/notify_changes.py`
+
+Add festival diff detection:
+- Compare fresh festival show keys against baseline
+- New festival events appear in a "NEW FESTIVAL EVENTS:" section in the notification message
+
+---
+
+### Phase 4: Improve Festival Search Quality (Optional Enhancement)
+
+The current `name_matches()` function does fuzzy substring matching. For festivals, this could be tightened:
+
+- Require a higher match threshold for festival names (they tend to be more generic than artist names)
+- Consider matching on TM's `classificationId` for festivals/music-festivals specifically
+- Add a TM attraction ID field to `FestivalConfig` so the user can pin a festival to a specific TM entity (bypasses keyword search entirely)
+
+This phase is optional and can be deferred until false positives become a real problem.
+
+---
+
+## What This Plan Does NOT Cover
+
+- **Lineup discovery** — Determining which specific artists are playing a festival. TM lists festivals as single events, not per-artist lineups. This would require scraping festival websites or a dedicated lineup API, which conflicts with the "no web scraping" principle.
+- **Bandsintown integration** — Deferred to Step 10.
+- **Festival-specific artist cross-referencing** — e.g., "Highlight tracked artists who are playing Hinterland." This requires lineup data (see above).
+
+---
+
+## Implementation Order & Effort Estimates
+
+| Phase | Scope | Files Changed |
+|-------|-------|---------------|
+| 1a | `build_summary()` adds festival_shows | `scripts/fetch_tm_data.py` |
+| 1b | Schema update | `schemas/summary.schema.json` |
+| 1c | Model update | `backend/models.py` |
+| 1d | Static data export | `scripts/export_static_data.py` |
+| 2a | Festival cards in main tab | `frontend/src/components/ArtistsSummaryTab.jsx` |
+| 2b | Map pins | `frontend/src/components/ConcertMap.jsx` |
+| 2c | Coming Soon integration | `frontend/src/components/ComingSoonTab.jsx` |
+| 3a | Baseline schema | `docs/notification_baseline.json` |
+| 3b | Notification diff | `scripts/notify_changes.py` |
+| 4 | Search quality | `backend/ticketmaster.py` (optional) |
+
+Tests to add/update:
+- `tests/test_fetch_tm_data.py` — verify `build_summary()` includes `festival_shows`
+- `tests/test_ticketmaster.py` — already covers `fetch_festival_shows()`
+- `frontend/src/__tests__/` — test festival card rendering
+
+---
+
+## Open Questions
+
+1. **Green pins — right color?** Green is visually distinct from blue/orange/violet but might imply "go/good." Alternatives: teal, gold, magenta.
+2. **Should festival shows merge into the artist shows section or stay separate?** Current proposal keeps them separate (dedicated "Festivals" section below Artists and Venues). Merging would make sense if festivals are few; separating makes sense if the user tracks many.
+3. **Festival coming-soon: same tab or separate?** Current proposal puts them in the existing Coming Soon tab with a badge. Could also be a separate section within the Festivals area.
+4. **TM attraction ID pinning (Phase 4):** Worth doing now to avoid false positives, or wait until it's a real problem?
