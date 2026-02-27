@@ -526,71 +526,73 @@ export default function ArtistsSummaryTab() {
         <MapLegend />
       </section>
 
-      {/* ── Filters + Sort ── */}
-      <div className="flex items-center justify-between px-1 relative z-10">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">Filters</span>
-          <div className="flex items-center gap-1 text-xs flex-wrap">
-            <button
-              onClick={() => setQuickMapArea(v => !v)}
-              className={`px-2.5 py-1 rounded-full transition-colors ${
-                quickMapArea
-                  ? 'bg-indigo-600 text-white'
-                  : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
-              }`}
-            >
-              Map Area
-            </button>
-            <button
-              onClick={() => setQuickComingSoon(v => !v)}
-              className={`px-2.5 py-1 rounded-full transition-colors ${
-                quickComingSoon
-                  ? 'bg-blue-500 text-white'
-                  : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
-              }`}
-            >
-              On Sale Soon
-            </button>
-            <button
-              onClick={() => setQuickFavorite(v => !v)}
-              className={`px-2.5 py-1 rounded-full transition-colors ${
-                quickFavorite
-                  ? 'bg-amber-500 text-white'
-                  : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
-              }`}
-            >
-              {'\u2605'} Favorites
-            </button>
-            <button
-              onClick={() => { setQuickLocal(v => !v); setQuickTravel(false) }}
-              className={`px-2.5 py-1 rounded-full transition-colors ${
-                quickLocal
-                  ? 'bg-neutral-700 text-white'
-                  : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
-              }`}
-            >
-              Local
-            </button>
-            <button
-              onClick={() => { setQuickTravel(v => !v); setQuickLocal(false) }}
-              className={`px-2.5 py-1 rounded-full transition-colors ${
-                quickTravel
-                  ? 'bg-neutral-700 text-white'
-                  : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
-              }`}
-            >
-              Travel Venues
-            </button>
-            <FilterDropdown label="Genre" options={genreFilterOptions} selected={filterGenres} onChange={setFilterGenres} />
-            <FilterDropdown label="Artist" options={artistFilterOptions} selected={filterArtists} onChange={setFilterArtists} />
-          </div>
-          {hasActiveFilters && (
-            <button onClick={clearAllFilters} className="text-xs text-neutral-500 hover:text-neutral-800 underline">
-              Clear all
-            </button>
-          )}
+      {/* ── Filters ── */}
+      <div className="flex items-center gap-2 flex-wrap px-1 relative z-10">
+        <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">Filters</span>
+        <div className="flex items-center gap-1 text-xs flex-wrap">
+          <button
+            onClick={() => setQuickMapArea(v => !v)}
+            className={`px-2.5 py-1 rounded-full transition-colors ${
+              quickMapArea
+                ? 'bg-indigo-600 text-white'
+                : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
+            }`}
+          >
+            Map Area
+          </button>
+          <button
+            onClick={() => setQuickComingSoon(v => !v)}
+            className={`px-2.5 py-1 rounded-full transition-colors ${
+              quickComingSoon
+                ? 'bg-blue-500 text-white'
+                : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
+            }`}
+          >
+            On Sale Soon
+          </button>
+          <button
+            onClick={() => setQuickFavorite(v => !v)}
+            className={`px-2.5 py-1 rounded-full transition-colors ${
+              quickFavorite
+                ? 'bg-amber-500 text-white'
+                : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
+            }`}
+          >
+            {'\u2605'} Favorites
+          </button>
+          <button
+            onClick={() => { setQuickLocal(v => !v); setQuickTravel(false) }}
+            className={`px-2.5 py-1 rounded-full transition-colors ${
+              quickLocal
+                ? 'bg-neutral-700 text-white'
+                : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
+            }`}
+          >
+            Local
+          </button>
+          <button
+            onClick={() => { setQuickTravel(v => !v); setQuickLocal(false) }}
+            className={`px-2.5 py-1 rounded-full transition-colors ${
+              quickTravel
+                ? 'bg-neutral-700 text-white'
+                : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
+            }`}
+          >
+            Travel Venues
+          </button>
+          <FilterDropdown label="Genre" options={genreFilterOptions} selected={filterGenres} onChange={setFilterGenres} />
+          <FilterDropdown label="Artist" options={artistFilterOptions} selected={filterArtists} onChange={setFilterArtists} />
         </div>
-        <div className="flex items-center gap-1 text-xs flex-shrink-0">
+        {hasActiveFilters && (
+          <button onClick={clearAllFilters} className="text-xs text-neutral-500 hover:text-neutral-800 underline">
+            Clear all
+          </button>
+        )}
+      </div>
+
+      {/* ── Sort + Show count ── */}
+      <div className="flex items-center justify-between px-1">
+        <div className="flex items-center gap-1 text-xs">
           <span className="text-neutral-400 mr-1">Sort:</span>
           <button
             onClick={() => setSortMode('date')}
@@ -613,10 +615,6 @@ export default function ArtistsSummaryTab() {
             Artist
           </button>
         </div>
-      </div>
-
-      {/* ── Show count ── */}
-      <div className="px-1">
         <span className="text-xs text-neutral-500">
           {filteredShows.length} show{filteredShows.length !== 1 ? 's' : ''}
           {hasActiveFilters && <span className="text-neutral-400"> of {allShows.length}</span>}
