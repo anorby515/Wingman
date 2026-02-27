@@ -1,27 +1,13 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "WingmanConfig",
-  "description": "Configuration for artists, venues, and map settings. Written by local UI, read by Cowork.",
+  "description": "Configuration for artists, venues, and map settings. Written by local UI.",
   "type": "object",
   "required": ["center_city", "artists", "venues"],
   "properties": {
     "center_city": {
       "type": "string",
       "description": "Map home / default starting position, e.g. 'Des Moines, IA'"
-    },
-    "radius_miles": {
-      "type": ["number", "null"],
-      "description": "Deprecated — kept for backward compat"
-    },
-    "cities_in_range": {
-      "type": "array",
-      "items": { "type": "string" },
-      "description": "Deprecated — kept for backward compat"
-    },
-    "states_in_range": {
-      "type": "array",
-      "items": { "type": "string" },
-      "description": "Deprecated — kept for backward compat"
     },
     "artists": {
       "type": "object",
@@ -53,7 +39,7 @@
         },
         "paused": {
           "type": "boolean",
-          "description": "If true, artist is not scraped but still used for venue cross-reference"
+          "description": "If true, artist is not fetched from TM but still used for venue cross-reference"
         }
       }
     },
@@ -75,7 +61,7 @@
         },
         "paused": {
           "type": "boolean",
-          "description": "If true, venue is not scraped"
+          "description": "If true, venue is not fetched from TM"
         }
       }
     }

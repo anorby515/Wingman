@@ -443,10 +443,12 @@ Run: `cd /home/user/Wingman/frontend && npx vitest run`
 - JSON schemas + Pydantic validation
 - TM integration: artist/venue/festival shows + coming soon with presale windows; merged into cards; orange map pins; "Not found on TM" lists; 6-hour cache
 - Notification system: daily push alerts via ntfy.sh — detects new shows, new venue events, on-sale-imminent; runs as GitHub Action notify job after daily TM fetch
+- Codebase cleanup: removed dead files (old scraping workflow, unused geocoding module, concert_state schema/validator), unused frontend components, deprecated model fields, stale comments
 
 ### Next Up
 - **Step 6: Festival rethink** — Discuss Cowork-driven festival lineup discovery
 - **Step 8: Cowork Workflow Rewrite** — Spotify sync + notification delivery via Cowork
+- **Step 10: Bandsintown Integration** — supplemental data source (deferred)
 
 ### Future
 - **Bandsintown API** — supplemental data source for artists/venues not on Ticketmaster
@@ -506,13 +508,16 @@ Revisit how festivals are tracked, fetched, and displayed. The current festival 
 - Backend provides supporting endpoints: dismissed-suggestions CRUD, flagged-items, artist management
 - OAuth tokens stored in `spotify_tokens.json` (managed by Cowork, not the backend)
 
-### Step 9: Codebase Cleanup + Documentation Refresh
-- Audit `backend/main.py` and `backend/ticketmaster.py` for dead code (unreachable paths, stale comments, unused helpers) accumulated from the refactor
-- Audit frontend components for any remaining references to removed endpoints (`/api/shows`, `/api/refresh`, `/api/notifications`) or stale state logic
-- Review and remove any frontend components no longer rendered in local mode
-- Update `CLAUDE.md` to accurately reflect the current architecture, endpoints, and file ownership table
-- Review `schemas/` for any schemas that no longer have a corresponding implementation
-- Verify `.gitignore` — remove entries for files that no longer exist (e.g. `ticketmaster_cache.json`, `notification_state.json`) and add any new ones that are missing
+### Step 9: Codebase Cleanup + Documentation Refresh ✓
+- Deleted dead files: `concert_weekly.py` (old scraping workflow), `backend/geocoding.py` (unused Geocoder module), `scripts/validate_state.py` (validated non-existent concert_state.json), `schemas/concert_state.schema.json`
+- Deleted unused frontend components: `SummaryTab.jsx`, `VenuesSummaryTab.jsx`, `FestivalsSummaryTab.jsx` (never imported/rendered)
+- Removed dead models from `backend/models.py`: `ConcertState`, `Show`, `FestivalLineupEntry`
+- Removed deprecated settings fields: `radius_miles`, `cities_in_range`, `states_in_range` from API, models, and schemas
+- Cleaned up `scripts/export_static_data.py`: removed dead `concert_state.json` legacy path
+- Removed 200-line deprecated commented-out code block from `ArtistsSummaryTab.jsx`
+- Cleaned `.gitignore`: removed entries for `Concert_Changes_*.pdf` and `ticketmaster_shows_cache.json`
+- Updated schema descriptions to remove stale "scraping" references
+- Updated CLAUDE.md to reflect current architecture
 
 ### Step 10: Bandsintown Integration (FUTURE)
 - Secondary/supplemental data source for artists/venues not on TM

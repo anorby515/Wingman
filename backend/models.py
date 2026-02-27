@@ -15,51 +15,13 @@ from typing import Literal, Optional
 from pydantic import BaseModel, Field
 
 
-# ── Concert State (concert_state.json) ────────────────────────────────────────
-
-class Show(BaseModel):
-    """A single artist show (North America scope)."""
-    date: str = Field(description="Display date, e.g. 'Mar 15, 2026'")
-    venue: str = Field(description="Venue name")
-    city: str = Field(description="City and state, e.g. 'Kansas City, MO'")
-    status: Literal["on_sale", "sold_out"] = "on_sale"
-    lat: Optional[float] = Field(default=None, description="Venue latitude")
-    lon: Optional[float] = Field(default=None, description="Venue longitude")
-
+# ── Venue Show (used by Summary model) ────────────────────────────────────────
 
 class VenueShow(BaseModel):
     """A single event at a tracked venue."""
     date: str = Field(description="Display date")
     artist: str = Field(description="Artist or event name")
     tracked: bool = Field(description="True if artist is in the tracked artists list")
-
-
-class FestivalLineupEntry(BaseModel):
-    """A single artist entry on a festival lineup."""
-    artist: str = Field(description="Artist or act name as listed on the lineup page")
-    tracked: bool = Field(description="True if artist matches an entry in wingman_config.json artists")
-
-
-class ConcertState(BaseModel):
-    """Top-level concert state. Written by Cowork after each scrape run."""
-    last_run: str = Field(description="Date of last run, YYYY-MM-DD")
-    center: str = Field(description="Map home city, e.g. 'Des Moines, IA'")
-    radius_miles: Optional[float] = Field(
-        default=None,
-        description="Deprecated — kept for backward compat, no longer used for filtering",
-    )
-    artist_shows: dict[str, list[Show]] = Field(
-        default_factory=dict,
-        description="Map of artist name to all North America shows",
-    )
-    venue_shows: dict[str, list[VenueShow]] = Field(
-        default_factory=dict,
-        description="Map of venue name to events at that venue",
-    )
-    festival_shows: dict[str, list[FestivalLineupEntry]] = Field(
-        default_factory=dict,
-        description="Map of festival name to lineup entries",
-    )
 
 
 # ── Wingman Config (wingman_config.json) ──────────────────────────────────────
@@ -86,20 +48,8 @@ class FestivalConfig(BaseModel):
 
 
 class WingmanConfig(BaseModel):
-    """Top-level configuration. Written by local UI, read by Cowork."""
+    """Top-level configuration. Written by local UI."""
     center_city: str = Field(description="Map home / default starting position")
-    radius_miles: Optional[float] = Field(
-        default=None,
-        description="Deprecated — kept for backward compat",
-    )
-    cities_in_range: list[str] = Field(
-        default_factory=list,
-        description="Deprecated — kept for backward compat",
-    )
-    states_in_range: list[str] = Field(
-        default_factory=list,
-        description="Deprecated — kept for backward compat",
-    )
     artists: dict[str, ArtistConfig] = Field(default_factory=dict)
     venues: dict[str, VenueConfig] = Field(default_factory=dict)
     festivals: dict[str, FestivalConfig] = Field(default_factory=dict)
@@ -205,10 +155,6 @@ class Summary(BaseModel):
     """Public summary for GitHub Pages."""
     generated_at: str = Field(description="YYYY-MM-DD")
     center: str
-    radius_miles: Optional[float] = Field(
-        default=None,
-        description="Deprecated — kept for backward compat",
-    )
     center_lat: float = Field(description="Latitude of center city")
     center_lon: float = Field(description="Longitude of center city")
     artist_shows: dict[str, list[SummaryShow]] = Field(default_factory=dict)
