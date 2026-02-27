@@ -56,6 +56,15 @@ const COMING_SOON_ICON = new L.Icon({
   shadowSize: [41, 41],
 })
 
+const FESTIVAL_ICON = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+})
+
 /**
  * Child component that tracks map viewport changes and reports bounds.
  */
@@ -91,10 +100,11 @@ function MapEvents({ onBoundsChange }) {
  *   centerLat, centerLon — home city coordinates (map starting position)
  *   artistShows — array of { artist, date, venue, city, lat, lon, status, is_new }
  *   venueShows — array of { venueName, lat, lon, events: [{ date, artist, tracked }] }
+ *   festivalShows — array of { festivalName, date, venue, city, lat, lon, event_name, is_new }
  *   mapFilter — { type: 'artist'|'venue', name: string } | null
  *   onBoundsChange — callback(LatLngBounds) when the viewport changes
  */
-export default function ConcertMap({ centerLat, centerLon, artistShows, venueShows, mapFilter, onBoundsChange }) {
+export default function ConcertMap({ centerLat, centerLon, artistShows, venueShows, festivalShows, mapFilter, onBoundsChange }) {
   // Filter artist shows based on mapFilter
   const filteredArtistShows = useMemo(() => {
     if (!artistShows) return []
@@ -132,6 +142,21 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
     if (!filteredVenueShows) return []
     return filteredVenueShows.filter(v => v.lat != null && v.lon != null)
   }, [filteredVenueShows])
+
+  // Festival pins (group by lat/lon like artist pins)
+  const festivalPins = useMemo(() => {
+    if (!festivalShows || festivalShows.length === 0) return []
+    const byLocation = {}
+    for (const show of festivalShows) {
+      if (show.lat == null || show.lon == null) continue
+      const key = `${show.lat.toFixed(4)},${show.lon.toFixed(4)}`
+      if (!byLocation[key]) {
+        byLocation[key] = { lat: show.lat, lon: show.lon, shows: [] }
+      }
+      byLocation[key].shows.push(show)
+    }
+    return Object.values(byLocation)
+  }, [festivalShows])
 
   if (centerLat == null || centerLon == null) {
     return (
@@ -227,6 +252,23 @@ export default function ConcertMap({ centerLat, centerLon, artistShows, venueSho
             </Marker>
           )
         })}
+
+        {/* Festival pins */}
+        {festivalPins.map((pin, i) => (
+          <Marker key={`f-${i}`} position={[pin.lat, pin.lon]} icon={FESTIVAL_ICON}>
+            <Tooltip direction="top" offset={[0, -30]} opacity={0.95}>
+              <div className="text-xs space-y-0.5" style={{ maxWidth: 260 }}>
+                {pin.shows.map((s, j) => (
+                  <div key={j}>
+                    <strong>{s.festivalName}</strong>
+                    {' \u00b7 '}{s.date}{' \u00b7 '}{s.venue}
+                    {s.is_new && <span className="ml-1 text-emerald-600 font-semibold">NEW</span>}
+                  </div>
+                ))}
+              </div>
+            </Tooltip>
+          </Marker>
+        ))}
       </MapContainer>
     </div>
   )

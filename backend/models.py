@@ -126,6 +126,18 @@ class ComingSoonFestivalEvent(BaseModel):
 
 # ── Summary (docs/summary.json) ──────────────────────────────────────────────
 
+class SummaryFestivalShow(BaseModel):
+    """A festival event in the public summary."""
+    date: str
+    venue: str
+    city: str
+    event_name: str = Field(description="TM event name (may differ from tracked festival name)")
+    status: Literal["on_sale", "sold_out"] = "on_sale"
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+    is_new: bool = Field(default=False, description="True if added in latest run")
+
+
 class SummaryShow(BaseModel):
     """A show in the public summary, with optional 'new this week' flag."""
     date: str
@@ -167,10 +179,16 @@ class Summary(BaseModel):
     center_lon: float = Field(description="Longitude of center city")
     artist_shows: dict[str, list[SummaryShow]] = Field(default_factory=dict)
     venue_shows: dict[str, list[VenueShow]] = Field(default_factory=dict)
+    festival_shows: dict[str, list[SummaryFestivalShow]] = Field(default_factory=dict)
+    festivals_not_found: list[str] = Field(default_factory=list)
     changes: SummaryChanges = Field(default_factory=SummaryChanges)
     coming_soon: list[ComingSoonShow] = Field(
         default_factory=list,
         description="Shows not yet on public sale, sourced from Ticketmaster",
+    )
+    festival_coming_soon: list[ComingSoonFestivalEvent] = Field(
+        default_factory=list,
+        description="Festival events not yet on public sale",
     )
     coming_soon_fetched: Optional[str] = Field(
         default=None,
