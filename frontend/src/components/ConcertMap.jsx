@@ -76,8 +76,8 @@ const FESTIVAL_ICON = new L.Icon({
 
 // Inline styles for tooltip content — defense-in-depth against Leaflet CSS
 // overriding our index.css rules due to bundler CSS injection order.
-export const TOOLTIP_STYLE = { maxWidth: 320, whiteSpace: 'normal', wordWrap: 'break-word' }
-export const TOOLTIP_STYLE_NARROW = { maxWidth: 260, whiteSpace: 'normal', wordWrap: 'break-word' }
+export const TOOLTIP_STYLE = { minWidth: 280, maxWidth: 420, whiteSpace: 'normal', wordWrap: 'break-word' }
+export const TOOLTIP_STYLE_NARROW = { minWidth: 220, maxWidth: 320, whiteSpace: 'normal', wordWrap: 'break-word' }
 
 /**
  * Determine the map pin icon for a group of artist shows at one location.
