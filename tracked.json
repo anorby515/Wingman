@@ -71,7 +71,7 @@
       "url": "https://www.laineywilson.com/",
       "genre": "Country / Americana",
       "paused": false,
-      "favorite": false
+      "favorite": true
     },
     "Colter Wall": {
       "url": "http://www.ColterWall.com",
@@ -111,193 +111,193 @@
     },
     "The Lumineers": {
       "url": "https://www.thelumineers.com/tour",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Indie",
       "paused": false,
       "favorite": true
     },
     "Bon Iver": {
       "url": "https://boniver.org/tour/",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Indie",
       "paused": false,
       "favorite": true
     },
     "The War on Drugs": {
       "url": "https://www.thewarondrugs.net/tour",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Alternative",
       "paused": false,
       "favorite": false
     },
     "Vampire Weekend": {
       "url": "https://www.vampireweekend.com/#tour",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Indie",
       "paused": false,
       "favorite": true
     },
     "Phoebe Bridgers": {
       "url": "https://phoebefuckingbridgers.com/",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Rostam": {
       "url": "https://officialrostam.com/#dates",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Pearl Jam": {
       "url": "https://pearljam.com/tour",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Alternative",
       "paused": false,
       "favorite": true
     },
     "The Black Keys": {
       "url": "https://www.theblackkeys.com/",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Rock",
       "paused": false,
       "favorite": true
     },
     "Foo Fighters": {
       "url": "https://www.foofighters.com/tour-dates",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Alternative",
       "paused": false,
       "favorite": true
     },
     "Jack White": {
       "url": "https://jackwhiteiii.com/tour-dates/",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Rock",
       "paused": false,
       "favorite": true
     },
     "LCD Soundsystem": {
       "url": "https://lcdsoundsystem.com/",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Electronic",
       "paused": false,
-      "favorite": false
+      "favorite": true
     },
     "The Strokes": {
       "url": "https://www.thestrokes.com/",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Alternative",
       "paused": false,
       "favorite": false
     },
     "The 1975": {
       "url": "https://the1975.com/",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "The Smile": {
       "url": "https://www.thesmiletheband.com/",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Alternative",
       "paused": false,
       "favorite": true
     },
     "Noah Kahan": {
       "url": "https://noahkahan.com/",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Indie",
       "paused": false,
       "favorite": true
     },
     "Mt. Joy": {
       "url": "https://www.mtjoyband.com/",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Indie",
       "paused": false,
       "favorite": true
     },
     "Lord Huron": {
       "url": "https://www.lordhuron.com/",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Indie",
       "paused": false,
       "favorite": true
     },
     "Royel Otis": {
       "url": "https://www.royelotis.com/",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Alternative",
       "paused": false,
       "favorite": false
     },
     "Massive Attack": {
       "url": "https://www.massiveattack.co.uk/",
-      "genre": "Electronic / Art-Rock",
+      "genre": "Electronic",
       "paused": false,
       "favorite": true
     },
     "Radiohead": {
       "url": "https://www.radiohead.com/",
-      "genre": "Electronic / Art-Rock",
+      "genre": "Alternative",
       "paused": false,
       "favorite": true
     },
     "The XX": {
       "url": "https://thexx.info/",
-      "genre": "Electronic / Art-Rock",
+      "genre": "Indie",
       "paused": false,
       "favorite": true
     },
     "Alabama Shakes": {
       "url": "https://www.alabamashakes.com/",
-      "genre": "Electronic / Art-Rock",
+      "genre": "Indie",
       "paused": false,
       "favorite": true
     },
     "Tame Impala": {
       "url": "https://interscope.com/products/tame-impala-the-complete-vinyl-collection",
-      "genre": "Electronic / Art-Rock",
+      "genre": "Indie",
       "paused": false,
       "favorite": true
     },
     "Riley Green": {
       "url": "https://www.rileygreenmusic.com/tour/#/",
-      "genre": "Country / Americana",
+      "genre": "Country",
       "paused": false,
       "favorite": false
     },
     "Stephen Wilson Jr.": {
       "url": "https://stephenwilsonjr.com/",
-      "genre": "Country / Americana",
+      "genre": "Country",
       "paused": false,
       "favorite": false
     },
     "Turnpike Troubadours": {
       "url": "https://turnpiketroubadours.com/",
-      "genre": "Country / Americana",
+      "genre": "Americana",
       "paused": false,
       "favorite": false
     },
     "Cameron Whitcomb": {
       "url": "https://www.thecamwhitcomb.com/",
-      "genre": "Country / Americana",
+      "genre": "Country",
       "paused": false,
       "favorite": false
     },
     "The National": {
       "url": "https://www.americanmary.com/#tour",
-      "genre": "Indie / Alt-Rock",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Car Seat Headrest": {
       "url": "https://www.carseatheadrest.com/tour-dates",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Jamie xx": {
       "url": "https://www.jamiexx.com/tour",
-      "genre": "Other",
+      "genre": "Electronic",
       "paused": false,
       "favorite": false
     },
     "Margo Price": {
       "url": "https://www.margoprice.net/tour",
-      "genre": "Other",
+      "genre": "Americana",
       "paused": false,
       "favorite": false
     },
     "London Grammar": {
       "url": "https://www.londongrammar.com/events/",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
@@ -309,49 +309,49 @@
     },
     "Evan Honer": {
       "url": "https://www.evanhoner.com/tour-1",
-      "genre": "Other",
+      "genre": "Americana",
       "paused": false,
       "favorite": false
     },
     "Son Lux": {
       "url": "https://sonluxmusic.com/tour",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Portishead": {
       "url": "https://www.portishead.co.uk/",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "RY X": {
       "url": "https://www.ry-x.com/tour",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Sylvan Esso": {
       "url": "https://www.sylvanesso.com/tour",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Wye Oak": {
       "url": "https://www.wyeoakmusic.com/tour",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Daft Punk": {
       "url": "https://daftpunk.com/",
-      "genre": "Other",
+      "genre": "Electronic",
       "paused": false,
-      "favorite": false
+      "favorite": true
     },
     "alt-J": {
       "url": "https://altjband.com/pages/tour?srsltid=AfmBOoosbw6UteETqgEXOiCTfYDQCrfWgkCSI9bZZGnaEFnZ9Ee0ZXxj",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
@@ -363,169 +363,169 @@
     },
     "Florence + The Machine": {
       "url": "https://florenceandthemachine.net/tour/",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Dave Matthews Band": {
       "url": "https://florenceandthemachine.net/tour/",
-      "genre": "Other",
+      "genre": "Alternative",
       "paused": false,
       "favorite": false
     },
     "Mumford & Sons": {
       "url": "https://www.mumfordandsons.com/tour/",
-      "genre": "Other",
+      "genre": "Alternative",
       "paused": false,
       "favorite": false
     },
     "Kendrick Lamar": {
       "url": "https://oklama.com/tour",
-      "genre": "Other",
+      "genre": "Hip-Hop",
       "paused": false,
-      "favorite": false
+      "favorite": true
     },
     "TOOL": {
       "url": "https://www.toolband.com/feeds/tool-fall-tour?req_type=html&k=4d58aff6",
-      "genre": "Other",
+      "genre": "Rock",
       "paused": false,
       "favorite": false
     },
     "311": {
       "url": "https://311.com/pages/tour",
-      "genre": "Other",
+      "genre": "Alternative",
       "paused": false,
       "favorite": false
     },
     "Nine Inch Nails": {
       "url": "https://www.nin.com/",
-      "genre": "Other",
+      "genre": "Alternative",
       "paused": false,
       "favorite": false
     },
     "Dominic Fike": {
       "url": "https://www.dominicfike.com/tour",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Olivia Dean": {
       "url": "https://www.oliviadeano.com/#tour",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": true
     },
     "Kings of Leon": {
       "url": "https://www.kingsofleon.com/tour/",
-      "genre": "Other",
+      "genre": "Alternative",
       "paused": false,
       "favorite": false
     },
     "Waylon Wyatt": {
       "url": "https://www.waylonwyatt.com/#tourScrollTarget",
-      "genre": "Other",
+      "genre": "Americana",
       "paused": false,
       "favorite": false
     },
     "Sufjan Stevens": {
       "url": "https://sufjan.com/",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
-      "favorite": false
+      "favorite": true
     },
     "The Weeknd": {
       "url": "https://www.theweeknd.com/tour/",
-      "genre": "Other",
+      "genre": "Hip-Hop",
       "paused": false,
       "favorite": false
     },
     "Khruangbin": {
       "url": "https://www.theweeknd.com/tour/",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Richy Mitch & The Coal Miners": {
       "url": "https://www.rmcmband.com/",
-      "genre": "Other",
+      "genre": "Americana",
       "paused": false,
       "favorite": false
     },
     "Megan Moroney": {
       "url": "https://www.meganmoroney.com/#tour",
-      "genre": "Other",
+      "genre": "Country",
       "paused": false,
       "favorite": false
     },
     "Steve Lacy": {
       "url": "https://www.wearesteve.net/",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Local Natives": {
       "url": "https://localnatives.com/",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Gorillaz": {
       "url": "https://gorillaz.com/tour/",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Sam Barber": {
       "url": "https://sambarbermusic.com/pages/tour",
-      "genre": "Other",
+      "genre": "Country",
       "paused": false,
       "favorite": false
     },
     "Fontaines D.C.": {
       "url": "https://fontainesdc.com/pages/live-2025?srsltid=AfmBOopJPNk0if0y-ANtDpvuGCSixvaH0gT8ul19uAw8VWG115cb6WOi",
-      "genre": "Other",
+      "genre": "Alternative",
       "paused": false,
       "favorite": false
     },
     "Wilco": {
       "url": "https://wilcoworld.net/shows/",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Wilderado": {
       "url": "https://www.wilderado.co/tour",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Jordan Davis": {
       "url": "https://www.jordandavisofficial.com/tour/",
-      "genre": "Other",
+      "genre": "Country",
       "paused": false,
       "favorite": false
     },
     "Hippo Campus": {
       "url": "https://hippocampus.band/#tour",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Hozier": {
       "url": "https://usstore.hozier.com/pages/tour?srsltid=AfmBOor-GThRlFfywb0sTSJmVamND2NIhikMlve2HnlUZUdClQahs8e3",
-      "genre": "Other",
+      "genre": "Indie",
       "paused": false,
       "favorite": false
     },
     "Brooks & Dunn": {
       "url": "https://www.brooks-dunn.com/tour/",
-      "genre": "Other",
+      "genre": "Country",
       "paused": false,
       "favorite": false
     },
     "Josiah Queen": {
       "url": "https://www.josiahqueen.com/tour/",
-      "genre": "Other",
+      "genre": "Christian",
       "paused": false,
       "favorite": false
     }
