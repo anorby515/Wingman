@@ -183,9 +183,6 @@ function MapLegend() {
       <span className="flex items-center gap-1">
         <span className="w-2.5 h-2.5 rounded-full bg-green-500 inline-block" /> Festival
       </span>
-      <span className="flex items-center gap-1">
-        <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 inline-block" /> Home
-      </span>
     </div>
   )
 }
