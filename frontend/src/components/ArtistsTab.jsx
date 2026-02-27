@@ -27,7 +27,7 @@ function Toggle({ checked, onChange, disabled }) {
 }
 
 // ── Add artist form ───────────────────────────────────────────────────────────
-function AddArtistForm({ onAdd, onCancel }) {
+function AddArtistForm({ onAdd, onCancel, allGenres }) {
   const [name,  setName]  = useState('')
   const [url,   setUrl]   = useState('')
   const [genre, setGenre] = useState('Other')
@@ -75,13 +75,16 @@ function AddArtistForm({ onAdd, onCancel }) {
         </div>
         <div>
           <label className="block text-xs font-medium text-neutral-600 mb-1">Genre</label>
-          <select
+          <input
             className="input"
+            list="genre-options-add"
             value={genre}
             onChange={e => setGenre(e.target.value)}
-          >
-            {GENRES.map(g => <option key={g}>{g}</option>)}
-          </select>
+            placeholder="e.g. Indie"
+          />
+          <datalist id="genre-options-add">
+            {allGenres.map(g => <option key={g} value={g} />)}
+          </datalist>
         </div>
       </div>
       <div>
@@ -106,7 +109,7 @@ function AddArtistForm({ onAdd, onCancel }) {
 }
 
 // ── Artist row ────────────────────────────────────────────────────────────────
-function ArtistRow({ artist, onTogglePause, onDelete, onUpdate }) {
+function ArtistRow({ artist, onTogglePause, onDelete, onUpdate, allGenres }) {
   const [togglingPause, setTogglingPause] = useState(false)
   const [togglingFav, setTogglingFav] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -272,10 +275,16 @@ function ArtistRow({ artist, onTogglePause, onDelete, onUpdate }) {
           <div className="grid sm:grid-cols-2 gap-2">
             <div>
               <label className="block text-xs font-medium text-neutral-600 mb-1">Genre</label>
-              <select className="input text-sm" value={editGenre} onChange={e => setEditGenre(e.target.value)}>
-                {GENRES.map(g => <option key={g}>{g}</option>)}
-                {!GENRES.includes(editGenre) && <option key={editGenre}>{editGenre}</option>}
-              </select>
+              <input
+                className="input text-sm"
+                list={`genre-options-${artist.name}`}
+                value={editGenre}
+                onChange={e => setEditGenre(e.target.value)}
+                placeholder="e.g. Indie"
+              />
+              <datalist id={`genre-options-${artist.name}`}>
+                {allGenres.map(g => <option key={g} value={g} />)}
+              </datalist>
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-600 mb-1">Tour page URL</label>
@@ -295,7 +304,7 @@ function ArtistRow({ artist, onTogglePause, onDelete, onUpdate }) {
 }
 
 // ── Group section ─────────────────────────────────────────────────────────────
-function GenreGroup({ genre, artists, onTogglePause, onDelete, onUpdate }) {
+function GenreGroup({ genre, artists, onTogglePause, onDelete, onUpdate, allGenres }) {
   if (artists.length === 0) return null
   return (
     <div className="card overflow-hidden">
@@ -303,7 +312,7 @@ function GenreGroup({ genre, artists, onTogglePause, onDelete, onUpdate }) {
         {genre} ({artists.length})
       </div>
       {artists.map(a => (
-        <ArtistRow key={a.name} artist={a} onTogglePause={onTogglePause} onDelete={onDelete} onUpdate={onUpdate} />
+        <ArtistRow key={a.name} artist={a} onTogglePause={onTogglePause} onDelete={onDelete} onUpdate={onUpdate} allGenres={allGenres} />
       ))}
     </div>
   )
@@ -359,6 +368,9 @@ export default function ArtistsTab() {
   }
   const genreOrder = [...GENRES, ...Object.keys(byGenre).filter(g => !GENRES.includes(g))]
 
+  // Merge default genres with any in-use genres for datalist suggestions
+  const allGenres = [...new Set([...GENRES, ...artists.map(a => a.genre).filter(Boolean)])]
+
   const activeCount = artists.filter(a => !a.paused).length
 
   return (
@@ -380,7 +392,7 @@ export default function ArtistsTab() {
       </div>
 
       {/* Add form */}
-      {showAdd && <AddArtistForm onAdd={handleAdd} onCancel={() => setShowAdd(false)} />}
+      {showAdd && <AddArtistForm onAdd={handleAdd} onCancel={() => setShowAdd(false)} allGenres={allGenres} />}
 
       {/* Groups */}
       {genreOrder.map(g => (
@@ -391,6 +403,7 @@ export default function ArtistsTab() {
           onTogglePause={handleTogglePause}
           onDelete={handleDelete}
           onUpdate={handleUpdate}
+          allGenres={allGenres}
         />
       ))}
 
