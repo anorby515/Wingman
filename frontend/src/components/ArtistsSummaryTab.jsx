@@ -233,7 +233,7 @@ function MapLegend() {
         <span className="w-2.5 h-2.5 rounded-full bg-green-500 inline-block" /> On Sale
       </span>
       <span className="flex items-center gap-1">
-        <span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" /> Coming Soon
+        <span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" /> On Sale Soon
       </span>
       <span className="flex items-center gap-1">
         <span className="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block" /> Favorite
@@ -545,7 +545,7 @@ export default function ArtistsSummaryTab() {
               onClick={() => setQuickComingSoon(v => !v)}
               className={`px-2.5 py-1 rounded-full transition-colors ${
                 quickComingSoon
-                  ? 'bg-orange-600 text-white'
+                  ? 'bg-blue-500 text-white'
                   : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
               }`}
             >
