@@ -72,8 +72,8 @@
 
 /* Leaflet tooltip — auto-fit to content */
 .leaflet-tooltip {
-  max-width: none !important;
-  white-space: nowrap;
+  max-width: 400px !important;
+  white-space: normal;
 }
 
 /* Smooth expand animation */
