@@ -64,13 +64,26 @@ def _export_from_summary(summary: dict) -> dict:
             "paused": info.get("paused", False),
         }
 
-    # Load festival lineups if available
+    # Load festival lineups if available, enriched with geocode coords
     festival_lineups = {}
     if LINEUPS_FILE.exists():
         try:
             festival_lineups = json.loads(LINEUPS_FILE.read_text())
         except Exception:
             pass
+
+    # Enrich lineups with coordinates from summary festival_shows
+    # (so demo frontend can place map pins for lineup-only festivals)
+    fest_shows = summary.get("festival_shows", {})
+    for name, info in festival_lineups.items():
+        shows = fest_shows.get(name, [])
+        if shows:
+            # Use coordinates from the first show with coords
+            for s in shows:
+                if s.get("lat") is not None and s.get("lon") is not None:
+                    info["lat"] = s["lat"]
+                    info["lon"] = s["lon"]
+                    break
 
     return {
         "state": {

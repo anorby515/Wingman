@@ -412,13 +412,39 @@ def get_shows() -> Any:
 # ── Festival Lineups ────────────────────────────────────────────────────
 @app.get("/api/festival-lineups")
 def get_festival_lineups() -> Any:
-    """Return festival lineup data from festival_lineups.json."""
+    """Return festival lineup data from festival_lineups.json.
+
+    Enriches each festival with lat/lon from geocode_cache.json when
+    venue and city are present, so the frontend can place map pins for
+    festivals not found on Ticketmaster.
+    """
     if not LINEUPS_FILE.exists():
         return {}
     try:
-        return json.loads(LINEUPS_FILE.read_text())
+        lineups = json.loads(LINEUPS_FILE.read_text())
     except Exception:
         return {}
+
+    # Load geocode cache to enrich lineup data with coordinates
+    geo_cache: dict = {}
+    if GEOCODE_FILE.exists():
+        try:
+            geo_cache = json.loads(GEOCODE_FILE.read_text())
+        except Exception:
+            pass
+
+    for _name, info in lineups.items():
+        venue = info.get("venue", "")
+        city = info.get("city", "")
+        if not venue or not city:
+            continue
+        # Try "Venue, City" first, then just "City"
+        coords = geo_cache.get(f"{venue}, {city}") or geo_cache.get(city)
+        if coords:
+            info["lat"] = coords["lat"]
+            info["lon"] = coords["lon"]
+
+    return lineups
 
 
 @app.post("/api/festival-lineups/refresh")

@@ -2,6 +2,8 @@
   "Hinterland Music Festival": {
     "lineup_url": "https://www.hinterlandiowa.com/lineup",
     "image_url": null,
+    "venue": "Avenue of the Saints",
+    "city": "Saint Charles, IA",
     "last_updated": "2026-02-27",
     "days": [
       {
@@ -64,6 +66,8 @@
   "Minnesota Yacht Club Festival": {
     "lineup_url": "https://www.minnesotayachtclubfestival.com/lineup",
     "image_url": null,
+    "venue": "Harriet Island Regional Park",
+    "city": "Saint Paul, MN",
     "last_updated": "2026-02-27",
     "days": [
       {
@@ -116,6 +120,8 @@
   "Two Step Inn": {
     "lineup_url": "https://www.twostepinn.com/lineup",
     "image_url": null,
+    "venue": "San Gabriel Park",
+    "city": "Georgetown, TX",
     "last_updated": "2026-02-27",
     "days": [
       {
@@ -164,6 +170,8 @@
   "Minnesota Country Club Festival": {
     "lineup_url": "https://www.minnesotacountryclubfest.com/",
     "image_url": null,
+    "venue": "Harriet Island Regional Park",
+    "city": "Saint Paul, MN",
     "last_updated": "2026-02-27",
     "days": [
       {
