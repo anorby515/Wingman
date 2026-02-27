@@ -75,10 +75,12 @@ function FestivalCard({ festivalName, festivalUrl, shows, lineup, trackedArtists
     return `${fmt(dates[0])} – ${fmt(dates[dates.length - 1])}`
   }, [shows, lineup, hasLineup])
 
-  // Venue/city from first show
+  // Venue/city from first show, or from lineup data
   const location = shows[0]
     ? `${shows[0].venue}, ${shows[0].city}`
-    : null
+    : (lineup?.venue && lineup?.city)
+      ? `${lineup.venue}, ${lineup.city}`
+      : null
 
   function handleClick(e) {
     if (!onSelect) return
@@ -238,12 +240,17 @@ export default function FestivalsTab() {
   }, [festivalShows, lineups, configFestivals])
 
   // Build map pin data for festival shows
+  // Uses TM show coordinates when available, falls back to lineup venue/city coords
   const mapFestivalShows = useMemo(() => {
     const pins = []
     for (const festival of allFestivals) {
       if (selectedFestival && festival.name !== selectedFestival) continue
+
+      // If festival has TM shows with coordinates, use those
+      let hasShowPins = false
       for (const show of festival.shows) {
         if (show.lat != null && show.lon != null) {
+          hasShowPins = true
           pins.push({
             lat: show.lat,
             lon: show.lon,
@@ -255,6 +262,29 @@ export default function FestivalsTab() {
             is_new: show.is_new,
           })
         }
+      }
+
+      // Fallback: if no TM show pins, use lineup venue/city coordinates
+      if (!hasShowPins && festival.lineup?.lat != null && festival.lineup?.lon != null) {
+        const dates = (festival.lineup.days || [])
+          .filter(d => d.date)
+          .map(d => {
+            try {
+              return new Date(d.date + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+            } catch { return d.date }
+          })
+        const dateStr = dates.length > 1 ? `${dates[0]} – ${dates[dates.length - 1]}` : dates[0] || ''
+
+        pins.push({
+          lat: festival.lineup.lat,
+          lon: festival.lineup.lon,
+          festivalName: festival.name,
+          event_name: festival.name,
+          date: dateStr,
+          venue: festival.lineup.venue || '',
+          city: festival.lineup.city || '',
+          is_new: false,
+        })
       }
     }
     return pins

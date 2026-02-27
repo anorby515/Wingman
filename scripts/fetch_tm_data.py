@@ -25,7 +25,7 @@ import sys
 import time
 import urllib.parse
 import urllib.request
-from datetime import datetime, timezone
+from datetime import date as date_cls, datetime, timezone
 
 # Add repo root to path so we can import from backend
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -300,6 +300,7 @@ def build_static_data(
     config: dict,
     geocode_cache: dict,
     summary: dict,
+    lineups: dict | None = None,
 ) -> dict:
     """Build frontend/public/static-data.json for the demo-mode frontend.
 
@@ -311,6 +312,7 @@ def build_static_data(
       coming_soon        — array of coming soon shows
       festival_coming_soon — array of festival coming soon shows
       coming_soon_fetched — ISO 8601 timestamp
+      festival_lineups   — lineup data with lat/lon for map fallback
       config.center_city / config.artists / config.venues / config.festivals
     """
     center_city = config.get("center_city", "")
@@ -348,6 +350,18 @@ def build_static_data(
             "paused": info.get("paused", False),
         }
 
+    # Enrich lineup data with coordinates from geocode cache
+    enriched_lineups = dict(lineups) if lineups else {}
+    for name, info in enriched_lineups.items():
+        venue = info.get("venue", "")
+        city = info.get("city", "")
+        if not venue or not city:
+            continue
+        coords = geocode_cache.get(f"{venue}, {city}") or geocode_cache.get(city)
+        if coords:
+            info["lat"] = coords["lat"]
+            info["lon"] = coords["lon"]
+
     return {
         "state": {
             "artist_shows": result.artist_shows,
@@ -360,6 +374,7 @@ def build_static_data(
         "coming_soon": summary.get("coming_soon", []),
         "festival_coming_soon": summary.get("festival_coming_soon", []),
         "coming_soon_fetched": summary.get("coming_soon_fetched"),
+        "festival_lineups": enriched_lineups,
         "config": {
             "center_city": center_city,
             "center_lat": center_coords.get("lat"),
@@ -465,6 +480,67 @@ def main():
     # Build docs/summary.json
     summary = build_summary(result, config, geocode_cache, prev_summary)
 
+    # ── Load festival lineups (used for TM backfill + static data) ──
+    lineups_path = ROOT / "festival_lineups.json"
+    lineups: dict = {}
+    if lineups_path.exists():
+        try:
+            lineups = json.loads(lineups_path.read_text())
+        except Exception:
+            pass
+
+    # ── Backfill festivals not found on TM using lineup data ──
+    if lineups:
+        for fest_name in summary.get("festivals_not_found", []):
+            lineup = lineups.get(fest_name)
+            if not lineup or not lineup.get("days"):
+                continue
+            venue = lineup.get("venue", "")
+            city = lineup.get("city", "")
+            if not venue or not city:
+                continue
+
+            # Geocode the festival venue
+            location_key = f"{venue}, {city}"
+            coords = geocode(location_key, geocode_cache)
+            if not coords:
+                coords = geocode(city, geocode_cache)
+            lat = coords[0] if coords else None
+            lon = coords[1] if coords else None
+
+            # Build synthetic festival_shows entries from lineup days
+            fest_shows = []
+            for day in lineup["days"]:
+                date_str = day.get("date")
+                if not date_str:
+                    continue
+                try:
+                    d = date_cls.fromisoformat(date_str)
+                    display_date = d.strftime("%b %d, %Y").replace(" 0", " ")
+                except Exception:
+                    display_date = date_str
+
+                fest_shows.append({
+                    "date": display_date,
+                    "raw_date": date_str,
+                    "venue": venue,
+                    "city": city,
+                    "event_name": fest_name,
+                    "status": "on_sale",
+                    "lat": lat,
+                    "lon": lon,
+                    "is_new": False,
+                    "onsale_datetime": None,
+                    "onsale_tbd": False,
+                    "ticketmaster_url": "",
+                    "source": "lineup",
+                })
+
+            if fest_shows:
+                summary["festival_shows"][fest_name] = fest_shows
+                print(f"  Backfilled {fest_name} from lineup data: "
+                      f"{len(fest_shows)} day(s), coords={coords}")
+
     docs_dir = ROOT / "docs"
     docs_dir.mkdir(parents=True, exist_ok=True)
     summary_path.write_text(json.dumps(summary, indent=2) + "\n")
@@ -479,7 +555,7 @@ def main():
     print(f"Wrote {history_path}")
 
     # Build frontend/public/static-data.json for demo build
-    static_data = build_static_data(result, config, geocode_cache, summary)
+    static_data = build_static_data(result, config, geocode_cache, summary, lineups)
     static_path = ROOT / "frontend" / "public" / "static-data.json"
     static_path.parent.mkdir(parents=True, exist_ok=True)
     static_path.write_text(json.dumps(static_data, indent=2) + "\n")
