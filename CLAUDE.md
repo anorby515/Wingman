@@ -139,57 +139,79 @@ Messages are truncated to ~3500 chars with a "(+N more)" note if needed. Notific
 
 ## Workflow: Spotify Sync
 
-**Trigger:** Manual only — user starts Cowork session and requests Spotify sync.
+**Trigger:** Manual — run the script from your Mac terminal whenever you want to sync (~monthly is typical).
 
-**Architecture decision:** Spotify sync is **Cowork-driven, not UI-driven.** This is intentional:
-- Sync runs ~monthly, not often enough to justify a full OAuth UI and suggestion queue in the local site
-- Listening history analysis (Phase 3) is the core value — Cowork excels at explaining *why* an artist surfaced and providing context for decisions
-- Tour page URL auto-discovery requires web searching — Cowork handles this naturally via Chrome skills
-- Conversational approve/dismiss is the preferred interaction style
-- The backend provides supporting API endpoints, but Cowork orchestrates the workflow
+**Script:** `scripts/spotify_sync.py` — standalone Python script, no pip dependencies, runs directly on the Mac (not in the Cowork VM, which cannot reach the Spotify API due to network restrictions).
 
-**Sequence:**
-1. Read `wingman_config.json` for current artist list via `GET /api/config`
-2. Authenticate with Spotify using locally stored OAuth tokens (`spotify_tokens.json`)
-3. **Phase 1 — Spotify follows not in Wingman:**
-   - `GET /me/following?type=artist` to get followed artists
-   - For each followed artist NOT in `wingman_config.json`:
-     - Ask user interactively: "Add [Artist] to Wingman?"
-     - If yes: Chrome skill searches Google for official website + tour/shows URL
-     - Add artist to `wingman_config.json` via backend API with discovered URL
-4. **Phase 2 — Wingman artists not followed on Spotify:**
-   - For each artist in `wingman_config.json` NOT in Spotify follows:
-     - Search Spotify for the artist
-     - If found: ask user "Follow [Artist] on Spotify?"
-       - If yes: `PUT /me/following?type=artist&ids=[id]`
-     - If NOT found on Spotify: flag in `flagged_items.json` via `POST /api/flagged-items`
-5. **Phase 3 — Listening history suggestions:**
-   - `GET /me/top/artists` for time_range: short_term, medium_term, long_term
-   - `GET /me/player/recently-played` for recent tracks (extract unique artists)
-   - For each discovered artist not already followed or tracked:
-     - Check `dismissed_suggestions.json` via backend API — skip if dismissed < 6 months ago
-     - Provide context: explain listening frequency, time range, why the suggestion is relevant
-     - Ask user: "[Artist] appears in your listening history. Track and follow?"
-     - If yes: add to Wingman + follow on Spotify
-     - If dismissed: write to `dismissed_suggestions.json` with timestamp via backend API
+### How to Run
 
-**Required Spotify OAuth scopes:**
+```bash
+# Make sure the local backend is running first (needed for artist adds)
+# Then in a separate terminal:
+cd ~/Documents/github/wingman
+python3 scripts/spotify_sync.py
+```
+
+The script reads `spotify_tokens.json` and `wingman_config.json` directly from the repo directory. Tokens auto-refresh — no need to re-authenticate via the browser unless you explicitly disconnect from Settings or haven't synced in a very long time.
+
+### First-Time Setup (OAuth)
+
+Before running the script for the first time on a new machine:
+1. Open the local Wingman UI → Settings → Spotify
+2. Enter your Spotify Client ID and Secret (from [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard))
+3. Click **Connect Spotify →** — this opens Spotify's auth page and stores tokens in `spotify_tokens.json`
+
+### Three Phases
+
+**Phase 1 — Spotify follows not in Wingman:**
+- Fetches all followed artists from Spotify (`GET /me/following?type=artist`)
+- For each artist not already in `wingman_config.json`, prompts: `Add [Artist]? (y/n/d/s)`
+  - `y` — adds to Wingman via `POST /api/artists` and opens a Google search for their official tour page
+  - `n` — skips this run but will ask again next sync
+  - `d` — dismisses for 6 months (writes to `dismissed_suggestions.json`)
+  - `s` — stops Phase 1 early
+
+**Phase 2 — Wingman artists not followed on Spotify:**
+- For each artist in `wingman_config.json` not in Spotify follows, searches Spotify for the artist
+- Presents a numbered batch checklist — enter numbers to select which to follow, then confirm
+- Follows selected artists via `PUT /me/following?type=artist&ids=...`
+- Artists not found on Spotify are flagged in `flagged_items.json` and surfaced in the Flagged Items panel in the UI
+
+**Phase 3 — Listening history suggestions:**
+- Fetches top artists (short/medium/long term) + recently played tracks
+- For each discovered artist not already tracked or dismissed:
+  - Shows listening context (which time ranges they appear in)
+  - Prompts: `Track in Wingman + follow on Spotify? (y/n/d/s)`
+  - Dismissed artists are skipped for 6 months via `dismissed_suggestions.json`
+
+### After Sync
+
+After the script completes, new artists are live in `wingman_config.json` and `tracked.json` is auto-updated. To get Ticketmaster show data for the new artists, trigger the GitHub Action manually via `workflow_dispatch` — or wait for the next daily run.
+
+### Required Spotify OAuth Scopes
 - `user-follow-read`
 - `user-follow-modify`
 - `user-top-read`
 - `user-read-recently-played`
 
-**Backend support needed for Cowork:**
+### Backend Endpoints Used by Sync Script
 
-| Endpoint / File | Purpose | Status |
-|-----------------|---------|--------|
-| `spotify_tokens.json` | Cowork stores/reads OAuth tokens directly | File gitignored, no code yet |
-| `GET /api/dismissed-suggestions` | Cowork checks what's been dismissed | Not built |
-| `POST /api/dismissed-suggestions` | Cowork writes new dismissals | Not built |
-| `GET /api/flagged-items` | Cowork reads flagged items | Exists |
-| `POST /api/flagged-items` | Cowork writes Spotify flags | Exists |
-| `POST /api/artists` | Cowork adds new artists to config | Exists |
-| `GET /api/config` | Cowork reads current artist list | Exists |
+| Endpoint | Purpose | Status |
+|----------|---------|--------|
+| `GET /api/config` | Read current artist list | Exists |
+| `POST /api/artists` | Add new artist to Wingman | Exists |
+| `GET /api/dismissed-suggestions` | Check dismissed artists | Exists |
+| `POST /api/dismissed-suggestions` | Write new dismissal | Exists |
+| `GET /api/flagged-items` | Read flagged items | Exists |
+| `POST /api/flagged-items` | Flag artist not found on Spotify | Exists |
+
+### Key Files
+
+| File | Purpose | Committed? |
+|------|---------|-----------|
+| `spotify_tokens.json` | OAuth access + refresh tokens | **Never** (.gitignored) |
+| `dismissed_suggestions.json` | Artists dismissed with timestamp | No |
+| `flagged_items.json` | Artists not found on Spotify | No |
 
 ---
 
