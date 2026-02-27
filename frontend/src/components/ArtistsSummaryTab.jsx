@@ -245,10 +245,11 @@ function MapLegend() {
 
 // ── Main tab ─────────────────────────────────────────────────────────────────
 export default function ArtistsSummaryTab() {
-  const [shows, setShows]       = useState(null)
-  const [config, setConfig]     = useState(null)
-  const [loading, setLoading]   = useState(true)
-  const [error, setError]       = useState(null)
+  const [shows, setShows]             = useState(null)
+  const [config, setConfig]           = useState(null)
+  const [comingSoon, setComingSoon]   = useState([])
+  const [loading, setLoading]         = useState(true)
+  const [error, setError]             = useState(null)
 
   // Sort: 'date' (default) or 'artist' (grouped)
   const [sortMode, setSortMode] = useState('date')
@@ -276,6 +277,7 @@ export default function ArtistsSummaryTab() {
             venue_shows: data.state?.venue_shows || {},
             last_refreshed: data.coming_soon_fetched || null,
           })
+          setComingSoon(data.coming_soon || [])
           setConfig({
             ...data.config,
             center_lat: data.config?.center_lat ?? data.state?.center_lat,
@@ -289,7 +291,7 @@ export default function ArtistsSummaryTab() {
         fetch('/api/shows').then(r => r.json()),
         fetch('/api/config').then(r => r.json()),
       ])
-        .then(([s, cfg]) => { setShows(s); setConfig(cfg) })
+        .then(([s, cfg]) => { setShows(s); setConfig(cfg); setComingSoon(s.coming_soon || []) })
         .catch(e => setError(e.message))
         .finally(() => setLoading(false))
     }
@@ -299,6 +301,16 @@ export default function ArtistsSummaryTab() {
   const venueShowsData = shows?.venue_shows ?? {}
   const configArtists = config?.artists || {}
   const configVenues = config?.venues || {}
+
+  // Build coming-soon lookup: artist|date|venue → coming_soon entry
+  const comingSoonLookup = useMemo(() => {
+    const map = {}
+    for (const cs of comingSoon) {
+      const key = `${cs.artist}|${cs.date}|${cs.venue}`
+      map[key] = cs
+    }
+    return map
+  }, [comingSoon])
 
   // Build venue lookup: lowercase venue name → config
   const venueLookup = useMemo(() => {
@@ -328,11 +340,18 @@ export default function ArtistsSummaryTab() {
       for (const show of showList) {
         const key = `${artist}|${show.raw_date}|${show.venue}`
         seen.add(key)
+        // Cross-reference coming_soon to tag not-yet-on-sale shows
+        const csKey = `${artist}|${show.date}|${show.venue}`
+        const cs = comingSoonLookup[csKey]
         arr.push({
           ...show,
           _artist: artist,
           _artistUrl: info.url || null,
           _genre: info.genre || 'Other',
+          not_yet_on_sale: show.not_yet_on_sale || !!cs,
+          onsale_datetime: show.onsale_datetime || cs?.onsale_datetime || null,
+          onsale_tbd: show.onsale_tbd || cs?.onsale_tbd || false,
+          ticketmaster_url: show.ticketmaster_url || cs?.ticketmaster_url || '',
           ...venueFlags(show.venue),
         })
       }
@@ -359,7 +378,7 @@ export default function ArtistsSummaryTab() {
     }
 
     return arr
-  }, [artistShows, venueShowsData, configArtists, venueLookup])
+  }, [artistShows, venueShowsData, configArtists, venueLookup, comingSoonLookup])
 
   // ── Artist filter options (tracked artists only, not venue-sourced) ──
   const artistFilterOptions = useMemo(() => {
