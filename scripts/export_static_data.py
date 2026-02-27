@@ -14,6 +14,7 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 TRACKED_FILE = ROOT / "tracked.json"
 SUMMARY_FILE = ROOT / "docs" / "summary.json"
+LINEUPS_FILE = ROOT / "festival_lineups.json"
 OUT_FILE = ROOT / "frontend" / "public" / "static-data.json"
 
 
@@ -63,6 +64,14 @@ def _export_from_summary(summary: dict) -> dict:
             "paused": info.get("paused", False),
         }
 
+    # Load festival lineups if available
+    festival_lineups = {}
+    if LINEUPS_FILE.exists():
+        try:
+            festival_lineups = json.loads(LINEUPS_FILE.read_text())
+        except Exception:
+            pass
+
     return {
         "state": {
             "artist_shows": summary.get("artist_shows", {}),
@@ -74,6 +83,7 @@ def _export_from_summary(summary: dict) -> dict:
         },
         "coming_soon": summary.get("coming_soon", []),
         "festival_coming_soon": summary.get("festival_coming_soon", []),
+        "festival_lineups": festival_lineups,
         "coming_soon_fetched": summary.get("coming_soon_fetched"),
         "config": {
             "center_city": tracked.get("center_city", summary.get("center", "")),

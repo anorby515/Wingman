@@ -1,0 +1,164 @@
+{
+  "Hinterland Music Festival": {
+    "lineup_url": "https://www.hinterlandiowa.com/lineup",
+    "image_url": null,
+    "last_updated": "2026-02-27",
+    "days": [
+      {
+        "date": "2026-07-30",
+        "label": "Thursday, July 30",
+        "artists": [
+          {"name": "KATSEYE", "headliner": true},
+          {"name": "beabadoobee", "headliner": true},
+          {"name": "Ashnikko", "headliner": false},
+          {"name": "AUDREY NUNA", "headliner": false},
+          {"name": "Jane Remover", "headliner": false},
+          {"name": "Frost Children", "headliner": false},
+          {"name": "Porch Light", "headliner": false}
+        ]
+      },
+      {
+        "date": "2026-07-31",
+        "label": "Friday, July 31",
+        "artists": [
+          {"name": "Lorde", "headliner": true},
+          {"name": "MUNA", "headliner": true},
+          {"name": "Oklou", "headliner": false},
+          {"name": "Snow Strippers", "headliner": false},
+          {"name": "Paris Paloma", "headliner": false},
+          {"name": "SOFIA ISELLA", "headliner": false},
+          {"name": "Saint Avangeline", "headliner": false},
+          {"name": "Wisp", "headliner": false}
+        ]
+      },
+      {
+        "date": "2026-08-01",
+        "label": "Saturday, August 1",
+        "artists": [
+          {"name": "Mumford & Sons", "headliner": true},
+          {"name": "Jessie Murph", "headliner": true},
+          {"name": "The Format", "headliner": false},
+          {"name": "Santigold", "headliner": false},
+          {"name": "CMAT", "headliner": false},
+          {"name": "Waylon Wyatt", "headliner": false},
+          {"name": "Amble", "headliner": false},
+          {"name": "Julia Wolf", "headliner": false}
+        ]
+      },
+      {
+        "date": "2026-08-02",
+        "label": "Sunday, August 2",
+        "artists": [
+          {"name": "Kali Uchis", "headliner": true},
+          {"name": "Young Miko", "headliner": true},
+          {"name": "Geese", "headliner": false},
+          {"name": "Wet Leg", "headliner": false},
+          {"name": "Suki Waterhouse", "headliner": false},
+          {"name": "Audrey Hobert", "headliner": false},
+          {"name": "Samia", "headliner": false},
+          {"name": "Haute & Freddy", "headliner": false}
+        ]
+      }
+    ]
+  },
+  "Minnesota Yacht Club Festival": {
+    "lineup_url": "https://www.minnesotayachtclubfestival.com/lineup",
+    "image_url": null,
+    "last_updated": "2026-02-27",
+    "days": [
+      {
+        "date": "2026-07-17",
+        "label": "Friday, July 17",
+        "artists": [
+          {"name": "The Lumineers", "headliner": true},
+          {"name": "The Black Keys", "headliner": true},
+          {"name": "Dashboard Confessional", "headliner": false},
+          {"name": "Shakey Graves", "headliner": false},
+          {"name": "Dope Lemon", "headliner": false},
+          {"name": "Marcy Playground", "headliner": false},
+          {"name": "Night Moves", "headliner": false},
+          {"name": "Heart to Gold", "headliner": false},
+          {"name": "Yam Haus", "headliner": false},
+          {"name": "Prize Horse", "headliner": false}
+        ]
+      },
+      {
+        "date": "2026-07-18",
+        "label": "Saturday, July 18",
+        "artists": [
+          {"name": "Matchbox Twenty", "headliner": true},
+          {"name": "Cage The Elephant", "headliner": true},
+          {"name": "Lord Huron", "headliner": false},
+          {"name": "Geese", "headliner": false},
+          {"name": "Lucy Dacus", "headliner": false},
+          {"name": "Matt and Kim", "headliner": false},
+          {"name": "Devon Gilfillian", "headliner": false},
+          {"name": "Jensen McRae", "headliner": false},
+          {"name": "Mt. Joy", "headliner": false},
+          {"name": "Porch Light", "headliner": false}
+        ]
+      },
+      {
+        "date": "2026-07-19",
+        "label": "Sunday, July 19",
+        "artists": [
+          {"name": "The Strokes", "headliner": true},
+          {"name": "Atmosphere", "headliner": true},
+          {"name": "The All-American Rejects", "headliner": false},
+          {"name": "The Fray", "headliner": false},
+          {"name": "Passion Pit", "headliner": false},
+          {"name": "Semisonic", "headliner": false},
+          {"name": "Die Spitz", "headliner": false}
+        ]
+      }
+    ]
+  },
+  "Two Step Inn": {
+    "lineup_url": "https://www.twostepinn.com/lineup",
+    "image_url": null,
+    "last_updated": "2026-02-27",
+    "days": [
+      {
+        "date": "2026-04-18",
+        "label": "Saturday, April 18",
+        "artists": [
+          {"name": "Brooks & Dunn", "headliner": true},
+          {"name": "Goo Goo Dolls", "headliner": true},
+          {"name": "BigXthaPlug", "headliner": false},
+          {"name": "Tracy Lawrence", "headliner": false},
+          {"name": "Wyatt Flores", "headliner": false},
+          {"name": "Muscadine Bloodline", "headliner": false},
+          {"name": "Shenandoah", "headliner": false},
+          {"name": "Wade Bowen", "headliner": false},
+          {"name": "Evan Honer", "headliner": false},
+          {"name": "The Band Perry", "headliner": false},
+          {"name": "Brent Cobb", "headliner": false},
+          {"name": "Bayker Blankenship", "headliner": false},
+          {"name": "Elizabeth Nichols", "headliner": false},
+          {"name": "Tyce Delk", "headliner": false},
+          {"name": "Kaitlyn Butts", "headliner": false}
+        ]
+      },
+      {
+        "date": "2026-04-19",
+        "label": "Sunday, April 19",
+        "artists": [
+          {"name": "Chris Stapleton", "headliner": true},
+          {"name": "The Red Clay Strays", "headliner": true},
+          {"name": "Tedeschi Trucks Band", "headliner": false},
+          {"name": "Randy Travis", "headliner": false},
+          {"name": "Clay Walker", "headliner": false},
+          {"name": "Randy Rogers Band", "headliner": false},
+          {"name": "Cameron Whitcomb", "headliner": false},
+          {"name": "Anne Wilson", "headliner": false},
+          {"name": "The Castellows", "headliner": false},
+          {"name": "Avery Anna", "headliner": false},
+          {"name": "Wade Forster", "headliner": false},
+          {"name": "Gabriella Rose", "headliner": false},
+          {"name": "The Creekers", "headliner": false},
+          {"name": "Laci Kaye Booth", "headliner": false}
+        ]
+      }
+    ]
+  }
+}
