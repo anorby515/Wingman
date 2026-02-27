@@ -57,6 +57,14 @@ class WingmanConfig(BaseModel):
         default=None,
         description="Ticketmaster Discovery API key for Coming Soon tab",
     )
+    spotify_client_id: Optional[str] = Field(
+        default=None,
+        description="Spotify app Client ID",
+    )
+    spotify_client_secret: Optional[str] = Field(
+        default=None,
+        description="Spotify app Client Secret",
+    )
 
 
 # ── Coming Soon (Ticketmaster) ────────────────────────────────────────────────
