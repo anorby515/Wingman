@@ -256,8 +256,9 @@ export default function ArtistsSummaryTab() {
   // Sort: 'date' (default) or 'artist' (grouped)
   const [sortMode, setSortMode] = useState('date')
 
-  // Artist dropdown filter
+  // Dropdown filters
   const [filterArtists, setFilterArtists] = useState([])
+  const [filterGenres, setFilterGenres] = useState([])
 
   // Filter toggles (AND logic when multiple active)
   const [quickLocal, setQuickLocal]           = useState(false)
@@ -381,12 +382,22 @@ export default function ArtistsSummaryTab() {
     return arr
   }, [artistShows, venueShowsData, configArtists, venueLookup, comingSoonKeys])
 
+  // ── Genre filter options (from visible shows) ──
+  const genreFilterOptions = useMemo(() => {
+    const genres = new Set()
+    for (const show of allShows) {
+      if (show._genre) genres.add(show._genre)
+    }
+    return [...genres].sort()
+  }, [allShows])
+
   // ── Artist filter options (tracked artists only, not venue-sourced) ──
   const artistFilterOptions = useMemo(() => {
     const trackedNames = new Set(Object.keys(configArtists))
     const visible = new Set()
     for (const show of allShows) {
       if (!trackedNames.has(show._artist)) continue
+      if (filterGenres.length > 0 && !filterGenres.includes(show._genre)) continue
       if (quickLocal && !show._isLocalVenue) continue
       if (quickTravel && !show._isTravelVenue) continue
       if (quickFavorite && !show._isFavorite) continue
@@ -395,12 +406,13 @@ export default function ArtistsSummaryTab() {
       visible.add(show._artist)
     }
     return [...visible].sort()
-  }, [allShows, configArtists, quickLocal, quickTravel, quickFavorite, quickComingSoon, quickMapArea, mapBounds])
+  }, [allShows, configArtists, filterGenres, quickLocal, quickTravel, quickFavorite, quickComingSoon, quickMapArea, mapBounds])
 
   // ── Apply all filters (AND logic) ──
   const filteredShows = useMemo(() => {
     return allShows.filter(show => {
       if (filterArtists.length > 0 && !filterArtists.includes(show._artist)) return false
+      if (filterGenres.length > 0 && !filterGenres.includes(show._genre)) return false
       if (quickLocal    && !show._isLocalVenue)  return false
       if (quickTravel && !show._isTravelVenue) return false
       if (quickFavorite && !show._isFavorite) return false
@@ -408,7 +420,7 @@ export default function ArtistsSummaryTab() {
       if (quickMapArea && !isInBounds(show.lat, show.lon, mapBounds)) return false
       return true
     })
-  }, [allShows, filterArtists, quickLocal, quickTravel, quickFavorite, quickComingSoon, quickMapArea, mapBounds])
+  }, [allShows, filterArtists, filterGenres, quickLocal, quickTravel, quickFavorite, quickComingSoon, quickMapArea, mapBounds])
 
   // ── Sort ──
   const sortedShows = useMemo(() => {
@@ -465,11 +477,12 @@ export default function ArtistsSummaryTab() {
   const centerLat = config?.center_lat ?? null
   const centerLon = config?.center_lon ?? null
 
-  const hasActiveFilters = filterArtists.length > 0
+  const hasActiveFilters = filterArtists.length > 0 || filterGenres.length > 0
     || quickLocal || quickTravel || quickFavorite || quickComingSoon || quickMapArea
 
   const clearAllFilters = () => {
     setFilterArtists([])
+    setFilterGenres([])
     setQuickLocal(false)
     setQuickTravel(false)
     setQuickFavorite(false)
@@ -568,6 +581,7 @@ export default function ArtistsSummaryTab() {
             >
               Travel Venues
             </button>
+            <FilterDropdown label="Genre" options={genreFilterOptions} selected={filterGenres} onChange={setFilterGenres} />
             <FilterDropdown label="Artist" options={artistFilterOptions} selected={filterArtists} onChange={setFilterArtists} />
           </div>
           {hasActiveFilters && (

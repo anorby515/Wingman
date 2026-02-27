@@ -1,13 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const GENRES = ['Country / Americana', 'Indie / Alt-Rock', 'Electronic / Art-Rock', 'Other']
-
-const GENRE_COLORS = {
-  'Country / Americana':  '',
-  'Indie / Alt-Rock':     '',
-  'Electronic / Art-Rock':'',
-  'Other':                '',
-}
+const GENRES = ['Indie', 'Rock/Alternative', 'Country/Americana', 'Hip-Hop', 'Electronic', 'Other']
 
 // ── Toggle switch ─────────────────────────────────────────────────────────────
 function Toggle({ checked, onChange, disabled }) {
@@ -37,7 +30,7 @@ function Toggle({ checked, onChange, disabled }) {
 function AddArtistForm({ onAdd, onCancel }) {
   const [name,  setName]  = useState('')
   const [url,   setUrl]   = useState('')
-  const [genre, setGenre] = useState('Country / Americana')
+  const [genre, setGenre] = useState('Other')
   const [saving, setSaving] = useState(false)
   const [error,  setError]  = useState(null)
 
@@ -113,10 +106,15 @@ function AddArtistForm({ onAdd, onCancel }) {
 }
 
 // ── Artist row ────────────────────────────────────────────────────────────────
-function ArtistRow({ artist, onTogglePause, onDelete }) {
+function ArtistRow({ artist, onTogglePause, onDelete, onUpdate }) {
   const [togglingPause, setTogglingPause] = useState(false)
+  const [togglingFav, setTogglingFav] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [editing, setEditing] = useState(false)
+  const [editUrl, setEditUrl] = useState(artist.url)
+  const [editGenre, setEditGenre] = useState(artist.genre)
+  const [saving, setSaving] = useState(false)
 
   async function handlePause(val) {
     setTogglingPause(true)
@@ -134,6 +132,51 @@ function ArtistRow({ artist, onTogglePause, onDelete }) {
     }
   }
 
+  async function handleFavorite() {
+    setTogglingFav(true)
+    try {
+      const res = await fetch(`/api/artists/${encodeURIComponent(artist.name)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ favorite: !artist.favorite }),
+      })
+      if (res.ok) onUpdate(artist.name, { favorite: !artist.favorite })
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setTogglingFav(false)
+    }
+  }
+
+  async function handleSaveEdit() {
+    setSaving(true)
+    try {
+      const patch = {}
+      if (editUrl !== artist.url) patch.url = editUrl
+      if (editGenre !== artist.genre) patch.genre = editGenre
+      if (Object.keys(patch).length === 0) { setEditing(false); return }
+      const res = await fetch(`/api/artists/${encodeURIComponent(artist.name)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(patch),
+      })
+      if (res.ok) {
+        onUpdate(artist.name, patch)
+        setEditing(false)
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  function handleCancelEdit() {
+    setEditUrl(artist.url)
+    setEditGenre(artist.genre)
+    setEditing(false)
+  }
+
   async function handleDelete() {
     setDeleting(true)
     try {
@@ -146,69 +189,113 @@ function ArtistRow({ artist, onTogglePause, onDelete }) {
   }
 
   return (
-    <div className={`flex items-center gap-3 px-4 py-3 border-b border-neutral-50 last:border-0 transition-opacity ${artist.paused ? 'opacity-60' : ''}`}>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-medium text-neutral-900 text-sm">{artist.name}</span>
-          <span className="badge-genre">
-            {artist.genre}
-          </span>
-          {artist.paused && <span className="badge-paused">Paused</span>}
-        </div>
-        <a
-          href={artist.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-neutral-500 hover:underline truncate block mt-0.5 max-w-xs"
+    <div className={`px-4 py-3 border-b border-neutral-50 last:border-0 transition-opacity ${artist.paused ? 'opacity-60' : ''}`}>
+      <div className="flex items-center gap-3">
+        {/* Favorite star */}
+        <button
+          onClick={handleFavorite}
+          disabled={togglingFav}
+          className={`text-lg leading-none transition-colors flex-shrink-0 ${
+            artist.favorite ? 'text-amber-400' : 'text-neutral-200 hover:text-amber-300'
+          }`}
+          title={artist.favorite ? 'Remove from favorites' : 'Add to favorites'}
         >
-          {artist.url}
-        </a>
-      </div>
+          {artist.favorite ? '\u2605' : '\u2606'}
+        </button>
 
-      <div className="flex items-center gap-3 flex-shrink-0">
-        <div className="flex items-center gap-1.5">
-          <span className="text-xs text-neutral-500 hidden sm:inline">
-            {artist.paused ? 'Paused' : 'Active'}
-          </span>
-          <Toggle
-            checked={artist.paused}
-            onChange={handlePause}
-            disabled={togglingPause}
-          />
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-medium text-neutral-900 text-sm">{artist.name}</span>
+            <span className="badge-genre">{artist.genre}</span>
+            {artist.paused && <span className="badge-paused">Paused</span>}
+          </div>
+          <a
+            href={artist.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-neutral-500 hover:underline truncate block mt-0.5 max-w-xs"
+          >
+            {artist.url}
+          </a>
         </div>
 
-        {confirmDelete ? (
-          <div className="flex items-center gap-1">
-            <button
-              onClick={handleDelete}
-              disabled={deleting}
-              className="text-xs px-2 py-1 bg-neutral-900 text-white rounded hover:bg-neutral-700"
-            >
-              {deleting ? '…' : 'Confirm'}
-            </button>
-            <button
-              onClick={() => setConfirmDelete(false)}
-              className="text-xs px-2 py-1 bg-neutral-100 text-neutral-600 rounded"
-            >
-              Cancel
-            </button>
-          </div>
-        ) : (
+        <div className="flex items-center gap-3 flex-shrink-0">
           <button
-            onClick={() => setConfirmDelete(true)}
-            className="btn-danger"
-            title="Remove artist"
+            onClick={() => { setEditing(true); setEditUrl(artist.url); setEditGenre(artist.genre) }}
+            className="text-xs text-neutral-400 hover:text-neutral-700 transition-colors"
+            title="Edit artist"
           >
-            Remove
+            Edit
           </button>
-        )}
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs text-neutral-500 hidden sm:inline">
+              {artist.paused ? 'Paused' : 'Active'}
+            </span>
+            <Toggle
+              checked={artist.paused}
+              onChange={handlePause}
+              disabled={togglingPause}
+            />
+          </div>
+
+          {confirmDelete ? (
+            <div className="flex items-center gap-1">
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="text-xs px-2 py-1 bg-neutral-900 text-white rounded hover:bg-neutral-700"
+              >
+                {deleting ? '\u2026' : 'Confirm'}
+              </button>
+              <button
+                onClick={() => setConfirmDelete(false)}
+                className="text-xs px-2 py-1 bg-neutral-100 text-neutral-600 rounded"
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setConfirmDelete(true)}
+              className="btn-danger"
+              title="Remove artist"
+            >
+              Remove
+            </button>
+          )}
+        </div>
       </div>
+
+      {/* Inline edit panel */}
+      {editing && (
+        <div className="mt-2 ml-8 p-3 bg-neutral-50 rounded-sm space-y-2">
+          <div className="grid sm:grid-cols-2 gap-2">
+            <div>
+              <label className="block text-xs font-medium text-neutral-600 mb-1">Genre</label>
+              <select className="input text-sm" value={editGenre} onChange={e => setEditGenre(e.target.value)}>
+                {GENRES.map(g => <option key={g}>{g}</option>)}
+                {!GENRES.includes(editGenre) && <option key={editGenre}>{editGenre}</option>}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-neutral-600 mb-1">Tour page URL</label>
+              <input className="input text-sm" type="url" value={editUrl} onChange={e => setEditUrl(e.target.value)} />
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={handleSaveEdit} disabled={saving} className="btn-primary text-xs">
+              {saving ? 'Saving\u2026' : 'Save'}
+            </button>
+            <button onClick={handleCancelEdit} className="btn-ghost text-xs">Cancel</button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
 
 // ── Group section ─────────────────────────────────────────────────────────────
-function GenreGroup({ genre, artists, onTogglePause, onDelete }) {
+function GenreGroup({ genre, artists, onTogglePause, onDelete, onUpdate }) {
   if (artists.length === 0) return null
   return (
     <div className="card overflow-hidden">
@@ -216,7 +303,7 @@ function GenreGroup({ genre, artists, onTogglePause, onDelete }) {
         {genre} ({artists.length})
       </div>
       {artists.map(a => (
-        <ArtistRow key={a.name} artist={a} onTogglePause={onTogglePause} onDelete={onDelete} />
+        <ArtistRow key={a.name} artist={a} onTogglePause={onTogglePause} onDelete={onDelete} onUpdate={onUpdate} />
       ))}
     </div>
   )
@@ -246,6 +333,10 @@ export default function ArtistsTab() {
     setArtists(prev => prev.filter(a => a.name !== name))
   }
 
+  function handleUpdate(name, fields) {
+    setArtists(prev => prev.map(a => a.name === name ? { ...a, ...fields } : a))
+  }
+
   function handleAdd(artist) {
     setArtists(prev => [...prev, artist])
     setShowAdd(false)
@@ -259,10 +350,14 @@ export default function ArtistsTab() {
     ? artists.filter(a => a.name.toLowerCase().includes(q) || a.genre.toLowerCase().includes(q))
     : artists
 
-  const byGenre = GENRES.reduce((acc, g) => {
-    acc[g] = filtered.filter(a => a.genre === g)
-    return acc
-  }, {})
+  // Group by known genres first, then collect any legacy genres
+  const byGenre = {}
+  for (const g of GENRES) byGenre[g] = []
+  for (const a of filtered) {
+    if (!byGenre[a.genre]) byGenre[a.genre] = []
+    byGenre[a.genre].push(a)
+  }
+  const genreOrder = [...GENRES, ...Object.keys(byGenre).filter(g => !GENRES.includes(g))]
 
   const activeCount = artists.filter(a => !a.paused).length
 
@@ -288,13 +383,14 @@ export default function ArtistsTab() {
       {showAdd && <AddArtistForm onAdd={handleAdd} onCancel={() => setShowAdd(false)} />}
 
       {/* Groups */}
-      {GENRES.map(g => (
+      {genreOrder.map(g => (
         <GenreGroup
           key={g}
           genre={g}
           artists={byGenre[g] || []}
           onTogglePause={handleTogglePause}
           onDelete={handleDelete}
+          onUpdate={handleUpdate}
         />
       ))}
 

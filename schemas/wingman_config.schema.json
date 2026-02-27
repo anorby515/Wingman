@@ -43,7 +43,7 @@
         },
         "genre": {
           "type": "string",
-          "description": "Genre category, e.g. 'Country / Americana', 'Indie / Alt-Rock', 'Electronic / Art-Rock'"
+          "description": "Genre category, e.g. 'Indie', 'Rock/Alternative', 'Country/Americana', 'Hip-Hop', 'Electronic', 'Other'"
         },
         "paused": {
           "type": "boolean",
