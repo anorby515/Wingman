@@ -12,14 +12,6 @@ function fmtOnsale(isoStr) {
   } catch { return null }
 }
 
-function extractState(cityStr) {
-  if (!cityStr) return ''
-  const parts = cityStr.split(', ').map(s => s.trim())
-  if (parts.length >= 3) return parts[1]
-  if (parts.length === 2) return parts[1]
-  return ''
-}
-
 function isInBounds(lat, lon, bounds) {
   if (!bounds) return true
   if (lat == null || lon == null) return false
@@ -28,77 +20,18 @@ function isInBounds(lat, lon, bounds) {
   return lat >= sw.lat && lat <= ne.lat && lon >= sw.lng && lon <= ne.lng
 }
 
-// ── Filter modal ─────────────────────────────────────────────────────────────
-function FilterModal({ isOpen, onClose, filterOptions, filterArtists, setFilterArtists, filterCities, setFilterCities, filterStates, setFilterStates }) {
-  const overlayRef = useRef(null)
+// ── Multi-select filter dropdown ─────────────────────────────────────────────
+function FilterDropdown({ label, options, selected, onChange }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
 
   useEffect(() => {
-    if (!isOpen) return
-    function handleKey(e) {
-      if (e.key === 'Escape') onClose()
+    function handleClick(e) {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
     }
-    document.addEventListener('keydown', handleKey)
-    return () => document.removeEventListener('keydown', handleKey)
-  }, [isOpen, onClose])
-
-  if (!isOpen) return null
-
-  function handleOverlayClick(e) {
-    if (e.target === overlayRef.current) onClose()
-  }
-
-  const totalActive = filterArtists.length + filterCities.length + filterStates.length
-
-  return (
-    <div
-      ref={overlayRef}
-      onClick={handleOverlayClick}
-      className="fixed inset-0 bg-black/40 z-[1000] flex items-start justify-center pt-[10vh]"
-    >
-      <div className="bg-white rounded-sm shadow-xl w-full max-w-md mx-4 max-h-[75vh] flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-200">
-          <h2 className="text-sm font-semibold text-neutral-800">Filters</h2>
-          <div className="flex items-center gap-3">
-            {totalActive > 0 && (
-              <button
-                onClick={() => { setFilterArtists([]); setFilterCities([]); setFilterStates([]) }}
-                className="text-xs text-neutral-500 hover:text-neutral-800 underline"
-              >
-                Clear all
-              </button>
-            )}
-            <button onClick={onClose} className="text-neutral-400 hover:text-neutral-700">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Filter sections */}
-        <div className="overflow-y-auto flex-1 divide-y divide-neutral-100">
-          <FilterSection label="Artist" options={filterOptions.artists} selected={filterArtists} onChange={setFilterArtists} />
-          <FilterSection label="City" options={filterOptions.cities} selected={filterCities} onChange={setFilterCities} />
-          <FilterSection label="State" options={filterOptions.states} selected={filterStates} onChange={setFilterStates} />
-        </div>
-
-        {/* Footer */}
-        <div className="px-4 py-3 border-t border-neutral-200 flex items-center justify-between">
-          <span className="text-xs text-neutral-400">
-            {totalActive > 0 ? `${totalActive} filter${totalActive !== 1 ? 's' : ''} active` : 'No filters active'}
-          </span>
-          <button onClick={onClose} className="btn-primary text-xs px-4 py-1.5">
-            Done
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function FilterSection({ label, options, selected, onChange }) {
-  const [expanded, setExpanded] = useState(selected.length > 0)
+    if (open) document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [open])
 
   const toggle = (val) => {
     if (selected.includes(val)) {
@@ -108,26 +41,27 @@ function FilterSection({ label, options, selected, onChange }) {
     }
   }
 
+  const activeCount = selected.length
+
   return (
-    <div className="px-4 py-3">
+    <div ref={ref} className="relative">
       <button
-        onClick={() => setExpanded(v => !v)}
-        className="w-full flex items-center justify-between"
+        onClick={() => setOpen(!open)}
+        className={`px-2.5 py-1 text-xs rounded-full transition-colors whitespace-nowrap
+          ${activeCount > 0
+            ? 'bg-neutral-800 text-white'
+            : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
+          }`}
       >
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-neutral-700 uppercase tracking-wider">{label}</span>
-          {selected.length > 0 && (
-            <span className="text-[10px] bg-neutral-800 text-white px-1.5 py-0.5 rounded-full">{selected.length}</span>
-          )}
-        </div>
-        <span className="text-neutral-400 text-xs">{expanded ? '\u2212' : '+'}</span>
+        {label}{activeCount > 0 ? ` (${activeCount})` : ''}
+        <span className="ml-1 text-[10px]">{open ? '\u25B4' : '\u25BE'}</span>
       </button>
-      {expanded && (
-        <div className="mt-2 max-h-48 overflow-y-auto space-y-0.5">
+      {open && (
+        <div className="absolute top-full left-0 mt-1 bg-white border border-neutral-200 rounded-sm shadow-lg z-50 max-h-60 overflow-y-auto min-w-[200px]">
           {selected.length > 0 && (
             <button
               onClick={() => onChange([])}
-              className="text-xs text-neutral-500 hover:text-neutral-800 underline mb-1"
+              className="w-full px-3 py-1.5 text-xs text-neutral-500 hover:bg-neutral-50 text-left border-b border-neutral-100"
             >
               Clear {label.toLowerCase()}
             </button>
@@ -135,7 +69,7 @@ function FilterSection({ label, options, selected, onChange }) {
           {options.map(opt => (
             <label
               key={opt}
-              className="flex items-center gap-2 px-1 py-1 text-sm hover:bg-neutral-50 cursor-pointer rounded"
+              className="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-neutral-50 cursor-pointer"
             >
               <input
                 type="checkbox"
@@ -147,7 +81,7 @@ function FilterSection({ label, options, selected, onChange }) {
             </label>
           ))}
           {options.length === 0 && (
-            <div className="text-xs text-neutral-400 italic py-1">No options</div>
+            <div className="px-3 py-2 text-xs text-neutral-400 italic">No options</div>
           )}
         </div>
       )}
@@ -319,15 +253,10 @@ export default function ArtistsSummaryTab() {
   // Sort: 'date' (default) or 'artist' (grouped)
   const [sortMode, setSortMode] = useState('date')
 
-  // Multi-select modal filters
+  // Artist dropdown filter
   const [filterArtists, setFilterArtists] = useState([])
-  const [filterCities, setFilterCities]   = useState([])
-  const [filterStates, setFilterStates]   = useState([])
 
-  // Filter modal open state
-  const [filterModalOpen, setFilterModalOpen] = useState(false)
-
-  // Quick filter toggles (AND logic when multiple active)
+  // Filter toggles (AND logic when multiple active)
   const [quickLocal, setQuickLocal]           = useState(false)
   const [quickFavorite, setQuickFavorite]     = useState(false)
   const [quickComingSoon, setQuickComingSoon] = useState(false)
@@ -404,7 +333,6 @@ export default function ArtistsSummaryTab() {
           _artist: artist,
           _artistUrl: info.url || null,
           _genre: info.genre || 'Other',
-          _state: extractState(show.city),
           ...venueFlags(show.venue),
         })
       }
@@ -423,7 +351,6 @@ export default function ArtistsSummaryTab() {
           _artist: artist,
           _artistUrl: info.url || null,
           _genre: info.genre || 'Other',
-          _state: extractState(show.city),
           _source: 'venue',
           _trackedVenue: trackedVenue,
           ...venueFlags(show.venue),
@@ -434,57 +361,32 @@ export default function ArtistsSummaryTab() {
     return arr
   }, [artistShows, venueShowsData, configArtists, venueLookup])
 
-  // ── Tracked artist names (for populating artist filter — venue-only artists excluded) ──
-  const trackedArtistNames = useMemo(() => {
-    return new Set(Object.keys(configArtists))
-  }, [configArtists])
-
-  // ── Cascading filter options ──
-  // Each filter's options are computed from shows that pass all OTHER active filters
-  const filterOptions = useMemo(() => {
-    function passes(show, skipDimension) {
-      if (skipDimension !== 'artists'  && filterArtists.length > 0 && !filterArtists.includes(show._artist)) return false
-      if (skipDimension !== 'cities'   && filterCities.length  > 0 && !filterCities.includes(show.city))     return false
-      if (skipDimension !== 'states'   && filterStates.length  > 0 && !filterStates.includes(show._state))   return false
-      if (skipDimension !== 'local'    && quickLocal    && !show._isLocalVenue)  return false
-      if (skipDimension !== 'favorite' && quickFavorite && !show._isTravelVenue) return false
-      if (skipDimension !== 'coming'   && quickComingSoon && !show.not_yet_on_sale) return false
-      if (skipDimension !== 'maparea' && quickMapArea && !isInBounds(show.lat, show.lon, mapBounds)) return false
-      return true
+  // ── Artist filter options (tracked artists only, not venue-sourced) ──
+  const artistFilterOptions = useMemo(() => {
+    const trackedNames = new Set(Object.keys(configArtists))
+    const visible = new Set()
+    for (const show of allShows) {
+      if (!trackedNames.has(show._artist)) continue
+      if (quickLocal && !show._isLocalVenue) continue
+      if (quickFavorite && !show._isTravelVenue) continue
+      if (quickComingSoon && !show.not_yet_on_sale) continue
+      if (quickMapArea && !isInBounds(show.lat, show.lon, mapBounds)) continue
+      visible.add(show._artist)
     }
+    return [...visible].sort()
+  }, [allShows, configArtists, quickLocal, quickFavorite, quickComingSoon, quickMapArea, mapBounds])
 
-    function optionsFor(dimension, extract, filterFn) {
-      const values = new Set()
-      for (const show of allShows) {
-        if (!passes(show, dimension)) continue
-        if (filterFn && !filterFn(show)) continue
-        const val = extract(show)
-        if (val) values.add(val)
-      }
-      return [...values].sort()
-    }
-
-    return {
-      // Only show tracked artists in the artist filter (not venue-sourced artists)
-      artists: optionsFor('artists', s => s._artist, s => trackedArtistNames.has(s._artist)),
-      cities:  optionsFor('cities',  s => s.city),
-      states:  optionsFor('states',  s => s._state),
-    }
-  }, [allShows, filterArtists, filterCities, filterStates, trackedArtistNames, quickLocal, quickFavorite, quickComingSoon, quickMapArea, mapBounds])
-
-  // ── Apply all filters (modal + quick toggles, AND logic) ──
+  // ── Apply all filters (AND logic) ──
   const filteredShows = useMemo(() => {
     return allShows.filter(show => {
       if (filterArtists.length > 0 && !filterArtists.includes(show._artist)) return false
-      if (filterCities.length  > 0 && !filterCities.includes(show.city))     return false
-      if (filterStates.length  > 0 && !filterStates.includes(show._state))   return false
       if (quickLocal    && !show._isLocalVenue)  return false
       if (quickFavorite && !show._isTravelVenue) return false
       if (quickComingSoon && !show.not_yet_on_sale) return false
       if (quickMapArea && !isInBounds(show.lat, show.lon, mapBounds)) return false
       return true
     })
-  }, [allShows, filterArtists, filterCities, filterStates, quickLocal, quickFavorite, quickComingSoon, quickMapArea, mapBounds])
+  }, [allShows, filterArtists, quickLocal, quickFavorite, quickComingSoon, quickMapArea, mapBounds])
 
   // ── Sort ──
   const sortedShows = useMemo(() => {
@@ -541,14 +443,11 @@ export default function ArtistsSummaryTab() {
   const centerLat = config?.center_lat ?? null
   const centerLon = config?.center_lon ?? null
 
-  const modalFilterCount = filterArtists.length + filterCities.length + filterStates.length
-  const hasActiveFilters = modalFilterCount > 0
+  const hasActiveFilters = filterArtists.length > 0
     || quickLocal || quickFavorite || quickComingSoon || quickMapArea
 
   const clearAllFilters = () => {
     setFilterArtists([])
-    setFilterCities([])
-    setFilterStates([])
     setQuickLocal(false)
     setQuickFavorite(false)
     setQuickComingSoon(false)
@@ -591,10 +490,10 @@ export default function ArtistsSummaryTab() {
         <MapLegend />
       </section>
 
-      {/* ── Quick filters + Sort ── */}
+      {/* ── Filters + Sort ── */}
       <div className="flex items-center justify-between px-1 relative z-10">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">Quick Filters</span>
+          <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">Filters</span>
           <div className="flex items-center gap-1 text-xs flex-wrap">
             <button
               onClick={() => setQuickMapArea(v => !v)}
@@ -636,16 +535,7 @@ export default function ArtistsSummaryTab() {
             >
               Travel Venues
             </button>
-            <button
-              onClick={() => setFilterModalOpen(true)}
-              className={`px-2.5 py-1 rounded-full transition-colors ${
-                modalFilterCount > 0
-                  ? 'bg-neutral-800 text-white'
-                  : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
-              }`}
-            >
-              Filters{modalFilterCount > 0 ? ` (${modalFilterCount})` : ''}
-            </button>
+            <FilterDropdown label="Artist" options={artistFilterOptions} selected={filterArtists} onChange={setFilterArtists} />
           </div>
           {hasActiveFilters && (
             <button onClick={clearAllFilters} className="text-xs text-neutral-500 hover:text-neutral-800 underline">
@@ -685,19 +575,6 @@ export default function ArtistsSummaryTab() {
           {hasActiveFilters && <span className="text-neutral-400"> of {allShows.length}</span>}
         </span>
       </div>
-
-      {/* ── Filter Modal ── */}
-      <FilterModal
-        isOpen={filterModalOpen}
-        onClose={() => setFilterModalOpen(false)}
-        filterOptions={filterOptions}
-        filterArtists={filterArtists}
-        setFilterArtists={setFilterArtists}
-        filterCities={filterCities}
-        setFilterCities={setFilterCities}
-        filterStates={filterStates}
-        setFilterStates={setFilterStates}
-      />
 
       {/* ── Show list ── */}
       <section className="card overflow-hidden">
