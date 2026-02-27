@@ -640,6 +640,10 @@
     "Two Step Inn": {
       "url": "https://www.twostepinn.com/lineup",
       "paused": false
+    },
+    "Minnesota Country Club Festival": {
+      "url": "https://www.minnesotacountryclubfest.com/",
+      "paused": false
     }
   }
 }

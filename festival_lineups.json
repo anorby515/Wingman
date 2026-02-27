@@ -1,162 +1,765 @@
 {
   "Hinterland Music Festival": {
     "lineup_url": "https://www.hinterlandiowa.com/lineup",
-    "image_url": null,
+    "image_url": "https://cdn.prod.website-files.com/66747fd020e5a41628a4a11d/68f90599eb7a09d0ecca11c6_hinterland_preview-01.webp",
     "last_updated": "2026-02-27",
     "days": [
       {
-        "date": "2026-07-30",
-        "label": "Thursday, July 30",
+        "label": "Full Lineup",
         "artists": [
-          {"name": "KATSEYE", "headliner": true},
-          {"name": "beabadoobee", "headliner": true},
-          {"name": "Ashnikko", "headliner": false},
-          {"name": "AUDREY NUNA", "headliner": false},
-          {"name": "Jane Remover", "headliner": false},
-          {"name": "Frost Children", "headliner": false},
-          {"name": "Porch Light", "headliner": false}
+          {
+            "name": "Hinterland Music Festival",
+            "headliner": true
+          },
+          {
+            "name": "Hinterland",
+            "headliner": true
+          }
         ]
       },
       {
-        "date": "2026-07-31",
-        "label": "Friday, July 31",
+        "label": "July 30 - Aug. 2, 2026",
         "artists": [
-          {"name": "Lorde", "headliner": true},
-          {"name": "MUNA", "headliner": true},
-          {"name": "Oklou", "headliner": false},
-          {"name": "Snow Strippers", "headliner": false},
-          {"name": "Paris Paloma", "headliner": false},
-          {"name": "SOFIA ISELLA", "headliner": false},
-          {"name": "Saint Avangeline", "headliner": false},
-          {"name": "Wisp", "headliner": false}
+          {
+            "name": "Saint Charles, Iowa",
+            "headliner": true
+          },
+          {
+            "name": "2026 Lineup",
+            "headliner": true
+          }
         ]
       },
       {
-        "date": "2026-08-01",
-        "label": "Saturday, August 1",
+        "label": "Sunday",
         "artists": [
-          {"name": "Mumford & Sons", "headliner": true},
-          {"name": "Jessie Murph", "headliner": true},
-          {"name": "The Format", "headliner": false},
-          {"name": "Santigold", "headliner": false},
-          {"name": "CMAT", "headliner": false},
-          {"name": "Waylon Wyatt", "headliner": false},
-          {"name": "Amble", "headliner": false},
-          {"name": "Julia Wolf", "headliner": false}
-        ]
-      },
-      {
-        "date": "2026-08-02",
-        "label": "Sunday, August 2",
-        "artists": [
-          {"name": "Kali Uchis", "headliner": true},
-          {"name": "Young Miko", "headliner": true},
-          {"name": "Geese", "headliner": false},
-          {"name": "Wet Leg", "headliner": false},
-          {"name": "Suki Waterhouse", "headliner": false},
-          {"name": "Audrey Hobert", "headliner": false},
-          {"name": "Samia", "headliner": false},
-          {"name": "Haute & Freddy", "headliner": false}
+          {
+            "name": "KATSEYE",
+            "headliner": true
+          },
+          {
+            "name": "Lorde",
+            "headliner": true
+          },
+          {
+            "name": "Mumford & Sons",
+            "headliner": true
+          },
+          {
+            "name": "Kali Uchis",
+            "headliner": false
+          },
+          {
+            "name": "beabadoobee",
+            "headliner": false
+          },
+          {
+            "name": "Campfire Stage",
+            "headliner": false
+          },
+          {
+            "name": "MUNA",
+            "headliner": false
+          },
+          {
+            "name": "Jessie Murph",
+            "headliner": false
+          },
+          {
+            "name": "Young Miko",
+            "headliner": false
+          },
+          {
+            "name": "ASHNIKKO",
+            "headliner": false
+          },
+          {
+            "name": "Snow Strippers",
+            "headliner": false
+          },
+          {
+            "name": "The Format",
+            "headliner": false
+          },
+          {
+            "name": "Geese",
+            "headliner": false
+          },
+          {
+            "name": "AUDREY NUNA",
+            "headliner": false
+          },
+          {
+            "name": "Paris Paloma",
+            "headliner": false
+          },
+          {
+            "name": "Santigold",
+            "headliner": false
+          },
+          {
+            "name": "Wet Leg",
+            "headliner": false
+          },
+          {
+            "name": "Oklou",
+            "headliner": false
+          },
+          {
+            "name": "SOFIA ISELLA",
+            "headliner": false
+          },
+          {
+            "name": "CMAT",
+            "headliner": false
+          },
+          {
+            "name": "Suki Waterhouse",
+            "headliner": false
+          },
+          {
+            "name": "Jane Remover",
+            "headliner": false
+          },
+          {
+            "name": "Wisp",
+            "headliner": false
+          },
+          {
+            "name": "Waylon Wyatt",
+            "headliner": false
+          },
+          {
+            "name": "Audrey Hobert",
+            "headliner": false
+          },
+          {
+            "name": "Frost Children",
+            "headliner": false
+          },
+          {
+            "name": "Saint Avangeline",
+            "headliner": false
+          },
+          {
+            "name": "Amble",
+            "headliner": false
+          },
+          {
+            "name": "Samia",
+            "headliner": false
+          },
+          {
+            "name": "Porch Light",
+            "headliner": false
+          },
+          {
+            "name": "Julia Wolf",
+            "headliner": false
+          },
+          {
+            "name": "Haute & Freddy",
+            "headliner": false
+          },
+          {
+            "name": "Nourished by Time",
+            "headliner": false
+          },
+          {
+            "name": "Between Friends",
+            "headliner": false
+          },
+          {
+            "name": "The Brook & The Bluff",
+            "headliner": false
+          },
+          {
+            "name": "Die Spitz",
+            "headliner": false
+          },
+          {
+            "name": "Pixel Grip",
+            "headliner": false
+          },
+          {
+            "name": "Ninajirachi",
+            "headliner": false
+          },
+          {
+            "name": "Buffalo Traffic Jam",
+            "headliner": false
+          },
+          {
+            "name": "Gouge Away",
+            "headliner": false
+          },
+          {
+            "name": "No items found.",
+            "headliner": false
+          },
+          {
+            "name": "Past Lineups",
+            "headliner": false
+          },
+          {
+            "name": "Contact Us",
+            "headliner": false
+          },
+          {
+            "name": "Connect",
+            "headliner": false
+          },
+          {
+            "name": "Reddit",
+            "headliner": false
+          },
+          {
+            "name": "Be the first to know",
+            "headliner": false
+          },
+          {
+            "name": "Get Updates",
+            "headliner": false
+          },
+          {
+            "name": "Terms of Service",
+            "headliner": false
+          },
+          {
+            "name": "Privacy Policy",
+            "headliner": false
+          }
         ]
       }
     ]
   },
   "Minnesota Yacht Club Festival": {
     "lineup_url": "https://www.minnesotayachtclubfestival.com/lineup",
-    "image_url": null,
+    "image_url": "https://cdn.prod.website-files.com/677e8da8d83b93a64a43d4a5/6887c700804a289f56aa27c8_MYC%20OG%202026.png",
     "last_updated": "2026-02-27",
     "days": [
       {
-        "date": "2026-07-17",
-        "label": "Friday, July 17",
+        "label": "Full Lineup",
         "artists": [
-          {"name": "The Lumineers", "headliner": true},
-          {"name": "The Black Keys", "headliner": true},
-          {"name": "Dashboard Confessional", "headliner": false},
-          {"name": "Shakey Graves", "headliner": false},
-          {"name": "Dope Lemon", "headliner": false},
-          {"name": "Marcy Playground", "headliner": false},
-          {"name": "Night Moves", "headliner": false},
-          {"name": "Heart to Gold", "headliner": false},
-          {"name": "Yam Haus", "headliner": false},
-          {"name": "Prize Horse", "headliner": false}
+          {
+            "name": "Minnesota Yacht Club",
+            "headliner": true
+          },
+          {
+            "name": "ST. PAUL, MN",
+            "headliner": true
+          },
+          {
+            "name": "HARRIET ISLAND REGIONAL PARK",
+            "headliner": true
+          }
         ]
       },
       {
-        "date": "2026-07-18",
-        "label": "Saturday, July 18",
+        "label": "JULY 17-19, 2026",
         "artists": [
-          {"name": "Matchbox Twenty", "headliner": true},
-          {"name": "Cage The Elephant", "headliner": true},
-          {"name": "Lord Huron", "headliner": false},
-          {"name": "Geese", "headliner": false},
-          {"name": "Lucy Dacus", "headliner": false},
-          {"name": "Matt and Kim", "headliner": false},
-          {"name": "Devon Gilfillian", "headliner": false},
-          {"name": "Jensen McRae", "headliner": false},
-          {"name": "Mt. Joy", "headliner": false},
-          {"name": "Porch Light", "headliner": false}
-        ]
-      },
-      {
-        "date": "2026-07-19",
-        "label": "Sunday, July 19",
-        "artists": [
-          {"name": "The Strokes", "headliner": true},
-          {"name": "Atmosphere", "headliner": true},
-          {"name": "The All-American Rejects", "headliner": false},
-          {"name": "The Fray", "headliner": false},
-          {"name": "Passion Pit", "headliner": false},
-          {"name": "Semisonic", "headliner": false},
-          {"name": "Die Spitz", "headliner": false}
+          {
+            "name": "Browse FAQs",
+            "headliner": true
+          },
+          {
+            "name": "Search Help",
+            "headliner": true
+          },
+          {
+            "name": "Buy Merch",
+            "headliner": true
+          },
+          {
+            "name": "Book Hotel",
+            "headliner": false
+          },
+          {
+            "name": "Download App",
+            "headliner": false
+          },
+          {
+            "name": "Reserve Locker",
+            "headliner": false
+          },
+          {
+            "name": "2026 Lineup",
+            "headliner": false
+          },
+          {
+            "name": "OR SIGN UP VIA EMAIL",
+            "headliner": false
+          },
+          {
+            "name": "Share lineup",
+            "headliner": false
+          },
+          {
+            "name": "Beatbox",
+            "headliner": false
+          },
+          {
+            "name": "Allianz",
+            "headliner": false
+          },
+          {
+            "name": "Be Love",
+            "headliner": false
+          },
+          {
+            "name": "Chase",
+            "headliner": false
+          },
+          {
+            "name": "Ghost",
+            "headliner": false
+          },
+          {
+            "name": "Jersey Mike's",
+            "headliner": false
+          },
+          {
+            "name": "La Croix",
+            "headliner": false
+          },
+          {
+            "name": "Mamitas",
+            "headliner": false
+          },
+          {
+            "name": "Surfside",
+            "headliner": false
+          },
+          {
+            "name": "Whiteclaw",
+            "headliner": false
+          },
+          {
+            "name": "Our Other Festivals",
+            "headliner": false
+          },
+          {
+            "name": "Help",
+            "headliner": false
+          },
+          {
+            "name": "Contact Us",
+            "headliner": false
+          },
+          {
+            "name": "Help Center",
+            "headliner": false
+          },
+          {
+            "name": "Safety",
+            "headliner": false
+          },
+          {
+            "name": "Accessibility",
+            "headliner": false
+          },
+          {
+            "name": "Social",
+            "headliner": false
+          },
+          {
+            "name": "Discord",
+            "headliner": false
+          },
+          {
+            "name": "Be The First To KnowSIGN UP FOR UPDATES",
+            "headliner": false
+          },
+          {
+            "name": "Privacy Policy",
+            "headliner": false
+          },
+          {
+            "name": "Cookie Policy",
+            "headliner": false
+          },
+          {
+            "name": "Visitor Policy",
+            "headliner": false
+          },
+          {
+            "name": "Cookie Settings",
+            "headliner": false
+          },
+          {
+            "name": "Cookie Management",
+            "headliner": false
+          },
+          {
+            "name": "Terms Of Use",
+            "headliner": false
+          },
+          {
+            "name": "Do Not Sell or Share My Personal Information",
+            "headliner": false
+          }
         ]
       }
     ]
   },
   "Two Step Inn": {
     "lineup_url": "https://www.twostepinn.com/lineup",
-    "image_url": null,
+    "image_url": "https://cdn.prod.website-files.com/66f254e7d742a43aaab72a1a/68cc51425d6108438ec495fc_TSI26_Open.Graph_1200x630%20(1)%201.png",
     "last_updated": "2026-02-27",
     "days": [
       {
-        "date": "2026-04-18",
-        "label": "Saturday, April 18",
+        "label": "Full Lineup",
         "artists": [
-          {"name": "Brooks & Dunn", "headliner": true},
-          {"name": "Goo Goo Dolls", "headliner": true},
-          {"name": "BigXthaPlug", "headliner": false},
-          {"name": "Tracy Lawrence", "headliner": false},
-          {"name": "Wyatt Flores", "headliner": false},
-          {"name": "Muscadine Bloodline", "headliner": false},
-          {"name": "Shenandoah", "headliner": false},
-          {"name": "Wade Bowen", "headliner": false},
-          {"name": "Evan Honer", "headliner": false},
-          {"name": "The Band Perry", "headliner": false},
-          {"name": "Brent Cobb", "headliner": false},
-          {"name": "Bayker Blankenship", "headliner": false},
-          {"name": "Elizabeth Nichols", "headliner": false},
-          {"name": "Tyce Delk", "headliner": false},
-          {"name": "Kaitlyn Butts", "headliner": false}
+          {
+            "name": "Two Step Inn",
+            "headliner": true
+          },
+          {
+            "name": "2026 SCHEDULE: See when your favorite artists take the stage! CHECK IT OUT \u00bb",
+            "headliner": true
+          },
+          {
+            "name": "Georgetown, TX",
+            "headliner": true
+          },
+          {
+            "name": "San Gabriel Park",
+            "headliner": false
+          }
         ]
       },
       {
-        "date": "2026-04-19",
-        "label": "Sunday, April 19",
+        "label": "April 18-19, 2026",
         "artists": [
-          {"name": "Chris Stapleton", "headliner": true},
-          {"name": "The Red Clay Strays", "headliner": true},
-          {"name": "Tedeschi Trucks Band", "headliner": false},
-          {"name": "Randy Travis", "headliner": false},
-          {"name": "Clay Walker", "headliner": false},
-          {"name": "Randy Rogers Band", "headliner": false},
-          {"name": "Cameron Whitcomb", "headliner": false},
-          {"name": "Anne Wilson", "headliner": false},
-          {"name": "The Castellows", "headliner": false},
-          {"name": "Avery Anna", "headliner": false},
-          {"name": "Wade Forster", "headliner": false},
-          {"name": "Gabriella Rose", "headliner": false},
-          {"name": "The Creekers", "headliner": false},
-          {"name": "Laci Kaye Booth", "headliner": false}
+          {
+            "name": "Browse FAQs",
+            "headliner": true
+          },
+          {
+            "name": "Search Help",
+            "headliner": true
+          },
+          {
+            "name": "Book Hotel",
+            "headliner": true
+          },
+          {
+            "name": "Download App",
+            "headliner": false
+          },
+          {
+            "name": "Reserve Locker",
+            "headliner": false
+          },
+          {
+            "name": "2026 Lineup",
+            "headliner": false
+          },
+          {
+            "name": "Only Saturday VIP Tickets Remain!",
+            "headliner": false
+          },
+          {
+            "name": "2-Day & Sunday Tickets ON WAITLIST!",
+            "headliner": false
+          },
+          {
+            "name": "OR SIGN UP VIA EMAIL",
+            "headliner": false
+          },
+          {
+            "name": "Share lineup",
+            "headliner": false
+          },
+          {
+            "name": "Aguasol",
+            "headliner": false
+          },
+          {
+            "name": "Athletic Brewing",
+            "headliner": false
+          },
+          {
+            "name": "Bacardi",
+            "headliner": false
+          },
+          {
+            "name": "BeatBox",
+            "headliner": false
+          },
+          {
+            "name": "Busch Country",
+            "headliner": false
+          },
+          {
+            "name": "Chase",
+            "headliner": false
+          },
+          {
+            "name": "Wyndham",
+            "headliner": false
+          },
+          {
+            "name": "Covert Hutto",
+            "headliner": false
+          },
+          {
+            "name": "Dos Equis",
+            "headliner": false
+          },
+          {
+            "name": "Jack Daniel's",
+            "headliner": false
+          },
+          {
+            "name": "Lucky One",
+            "headliner": false
+          },
+          {
+            "name": "Owens",
+            "headliner": false
+          },
+          {
+            "name": "Tito's Handmade Vodka",
+            "headliner": false
+          },
+          {
+            "name": "Twisted Tea",
+            "headliner": false
+          },
+          {
+            "name": "White Claw",
+            "headliner": false
+          },
+          {
+            "name": "Our Other Festivals",
+            "headliner": false
+          },
+          {
+            "name": "Help",
+            "headliner": false
+          },
+          {
+            "name": "Contact Us",
+            "headliner": false
+          },
+          {
+            "name": "Help Center",
+            "headliner": false
+          },
+          {
+            "name": "Safety",
+            "headliner": false
+          },
+          {
+            "name": "Accessibility",
+            "headliner": false
+          },
+          {
+            "name": "Social",
+            "headliner": false
+          },
+          {
+            "name": "Twitter/X",
+            "headliner": false
+          },
+          {
+            "name": "Discord",
+            "headliner": false
+          },
+          {
+            "name": "Be The First To KnowSIGN UP FOR UPDATES",
+            "headliner": false
+          },
+          {
+            "name": "Privacy Policy",
+            "headliner": false
+          },
+          {
+            "name": "Cookie Policy",
+            "headliner": false
+          },
+          {
+            "name": "Visitor Policy",
+            "headliner": false
+          },
+          {
+            "name": "Cookie Settings",
+            "headliner": false
+          },
+          {
+            "name": "Cookie Management",
+            "headliner": false
+          },
+          {
+            "name": "Terms Of Use",
+            "headliner": false
+          },
+          {
+            "name": "Do Not Sell or Share My Personal Information",
+            "headliner": false
+          }
+        ]
+      }
+    ]
+  },
+  "Minnesota Country Club Festival": {
+    "lineup_url": "https://www.minnesotacountryclubfest.com/",
+    "image_url": "https://cdn.prod.website-files.com/690232caf79fb430d0fb3918/696534310024f789d3f9849f_MCC26_Website_Opengraph%201.jpg",
+    "last_updated": "2026-02-27",
+    "days": [
+      {
+        "label": "Full Lineup",
+        "artists": [
+          {
+            "name": "Minnesota Country Club Festival",
+            "headliner": true
+          },
+          {
+            "name": "St. Paul, MN",
+            "headliner": true
+          },
+          {
+            "name": "July 10-11, 2026",
+            "headliner": true
+          },
+          {
+            "name": "HARRIET ISLAND REGIONAL PARK",
+            "headliner": false
+          }
+        ]
+      },
+      {
+        "label": "July 10-11, 2026",
+        "artists": [
+          {
+            "name": "Browse FAQs",
+            "headliner": true
+          },
+          {
+            "name": "Search Help",
+            "headliner": true
+          },
+          {
+            "name": "Book Hotel",
+            "headliner": true
+          },
+          {
+            "name": "TICKETS ON SALE NOW",
+            "headliner": false
+          },
+          {
+            "name": "Layaway Plans Starting at $20 Down for a Limited Time",
+            "headliner": false
+          },
+          {
+            "name": "OR SIGN UP VIA EMAIL",
+            "headliner": false
+          },
+          {
+            "name": "View full lineup",
+            "headliner": false
+          },
+          {
+            "name": "Share lineup",
+            "headliner": false
+          },
+          {
+            "name": "Book at the best rates in St. Paul!",
+            "headliner": false
+          },
+          {
+            "name": "Help & Info",
+            "headliner": false
+          },
+          {
+            "name": "Find answers to your questions about the fest!",
+            "headliner": false
+          },
+          {
+            "name": "Help Center",
+            "headliner": false
+          },
+          {
+            "name": "picture perfect",
+            "headliner": false
+          },
+          {
+            "name": "roots & rhythm",
+            "headliner": false
+          },
+          {
+            "name": "elevated experience",
+            "headliner": false
+          },
+          {
+            "name": "VIEW PREMIUM TICKETS",
+            "headliner": false
+          },
+          {
+            "name": "No items found.",
+            "headliner": false
+          },
+          {
+            "name": "Our Other Festivals",
+            "headliner": false
+          },
+          {
+            "name": "Help",
+            "headliner": false
+          },
+          {
+            "name": "Contact Us",
+            "headliner": false
+          },
+          {
+            "name": "Safety",
+            "headliner": false
+          },
+          {
+            "name": "Accessibility",
+            "headliner": false
+          },
+          {
+            "name": "Social",
+            "headliner": false
+          },
+          {
+            "name": "Discord",
+            "headliner": false
+          },
+          {
+            "name": "Be The First To KnowSIGN UP FOR UPDATES",
+            "headliner": false
+          },
+          {
+            "name": "Privacy Policy",
+            "headliner": false
+          },
+          {
+            "name": "Cookie Policy",
+            "headliner": false
+          },
+          {
+            "name": "Visitor Policy",
+            "headliner": false
+          },
+          {
+            "name": "Cookie Settings",
+            "headliner": false
+          },
+          {
+            "name": "Cookie Management",
+            "headliner": false
+          },
+          {
+            "name": "Terms Of Use",
+            "headliner": false
+          },
+          {
+            "name": "Do Not Sell or Share My Personal Information",
+            "headliner": false
+          }
         ]
       }
     ]
