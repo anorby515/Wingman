@@ -33,6 +33,7 @@ REPO               = HERE.parent
 CONFIG_FILE        = REPO / "wingman_config.json"
 TRACKED_FILE       = REPO / "tracked.json"
 FLAGGED_FILE       = REPO / "flagged_items.json"
+DISMISSED_FILE     = REPO / "dismissed_suggestions.json"
 GEOCODE_FILE       = REPO / "geocode_cache.json"
 SPOTIFY_TOKENS_FILE = REPO / "spotify_tokens.json"
 
@@ -404,6 +405,61 @@ def dismiss_flagged_item(index: int) -> Any:
     removed = items.pop(index)
     _write_flagged(items)
     return {"ok": True, "removed": removed}
+
+
+# ── Dismissed Suggestions ────────────────────────────────────────────────────
+
+def _read_dismissed() -> dict:
+    if not DISMISSED_FILE.exists():
+        return {}
+    try:
+        return json.loads(DISMISSED_FILE.read_text())
+    except Exception:
+        return {}
+
+
+def _write_dismissed(data: dict) -> None:
+    DISMISSED_FILE.write_text(json.dumps(data, indent=2))
+
+
+@app.get("/api/dismissed-suggestions")
+def list_dismissed_suggestions() -> Any:
+    """Return all dismissed Spotify artist suggestions."""
+    return _read_dismissed()
+
+
+class DismissedSuggestionIn(BaseModel):
+    artist: str
+    reason: str = "user declined"
+    source: str = ""
+
+
+@app.post("/api/dismissed-suggestions", status_code=201)
+def add_dismissed_suggestion(body: DismissedSuggestionIn) -> Any:
+    """Record a dismissed Spotify suggestion. Resurfaces after 6 months."""
+    from datetime import date, timedelta
+    today = date.today()
+    resurface = today + timedelta(days=183)
+    data = _read_dismissed()
+    data[body.artist] = {
+        "dismissed_at": today.isoformat(),
+        "resurface_after": resurface.isoformat(),
+        "reason": body.reason,
+        "source": body.source,
+    }
+    _write_dismissed(data)
+    return {"ok": True, "artist": body.artist, "resurface_after": resurface.isoformat()}
+
+
+@app.delete("/api/dismissed-suggestions/{artist}")
+def remove_dismissed_suggestion(artist: str) -> Any:
+    """Remove a dismissal (e.g. user wants to reconsider)."""
+    data = _read_dismissed()
+    if artist not in data:
+        raise HTTPException(status_code=404, detail=f"No dismissal found for '{artist}'")
+    del data[artist]
+    _write_dismissed(data)
+    return {"ok": True}
 
 
 # ── Spotify OAuth ────────────────────────────────────────────────────────────
