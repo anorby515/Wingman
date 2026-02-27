@@ -177,6 +177,8 @@ function FestivalsSection() {
   const [loading,   setLoading]   = useState(true)
   const [error,     setError]     = useState(null)
   const [showAdd,   setShowAdd]   = useState(false)
+  const [scraping,  setScraping]  = useState(false)
+  const [scrapeMsg, setScrapeMsg] = useState(null)
 
   useEffect(() => {
     fetch('/api/festivals')
@@ -197,6 +199,25 @@ function FestivalsSection() {
     setShowAdd(false)
   }
 
+  async function handleRefreshLineups() {
+    setScraping(true)
+    setScrapeMsg(null)
+    try {
+      const res = await fetch('/api/festival-lineups/refresh', { method: 'POST' })
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.detail || 'Scraper failed')
+      }
+      const data = await res.json()
+      const count = Object.keys(data.lineups || {}).length
+      setScrapeMsg(`Updated lineups for ${count} festival${count !== 1 ? 's' : ''}`)
+    } catch (e) {
+      setScrapeMsg(`Error: ${e.message}`)
+    } finally {
+      setScraping(false)
+    }
+  }
+
   if (loading) return <Spinner />
   if (error)   return <ErrBox message={error} />
 
@@ -208,10 +229,23 @@ function FestivalsSection() {
         <div className="text-sm text-neutral-500 flex-1">
           {activeCount} active / {festivals.length} total
         </div>
+        <button
+          className="btn-ghost text-sm"
+          onClick={handleRefreshLineups}
+          disabled={scraping}
+        >
+          {scraping ? 'Scraping lineups…' : 'Refresh Lineups'}
+        </button>
         <button className="btn-primary" onClick={() => setShowAdd(s => !s)}>
           {showAdd ? 'Cancel' : '+ Add Festival'}
         </button>
       </div>
+
+      {scrapeMsg && (
+        <div className={`text-xs px-3 py-2 rounded ${scrapeMsg.startsWith('Error') ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-700'}`}>
+          {scrapeMsg}
+        </div>
+      )}
 
       {showAdd && <AddFestivalForm onAdd={handleAdd} onCancel={() => setShowAdd(false)} />}
 

@@ -13,6 +13,8 @@ from __future__ import annotations
 
 import json
 import secrets
+import subprocess
+import sys
 import time
 import urllib.parse
 import urllib.request
@@ -417,6 +419,28 @@ def get_festival_lineups() -> Any:
         return json.loads(LINEUPS_FILE.read_text())
     except Exception:
         return {}
+
+
+@app.post("/api/festival-lineups/refresh")
+def refresh_festival_lineups() -> Any:
+    """Run the festival lineup scraper and return updated data."""
+    script = REPO / "scripts" / "fetch_festival_lineups.py"
+    if not script.exists():
+        raise HTTPException(status_code=500, detail="Scraper script not found")
+    result = subprocess.run(
+        [sys.executable, str(script)],
+        capture_output=True, text=True, timeout=120,
+    )
+    if result.returncode != 0:
+        raise HTTPException(status_code=500, detail=result.stderr or "Scraper failed")
+    # Return the freshly-written lineup data
+    if not LINEUPS_FILE.exists():
+        return {"lineups": {}, "output": result.stdout}
+    try:
+        lineups = json.loads(LINEUPS_FILE.read_text())
+    except Exception:
+        lineups = {}
+    return {"lineups": lineups, "output": result.stdout}
 
 
 # ── Flagged Items ────────────────────────────────────────────────────────────
