@@ -31,6 +31,7 @@ class ArtistConfig(BaseModel):
     url: str = Field(description="URL to artist's tour/shows page")
     genre: str = Field(default="Other", description="Genre category")
     paused: bool = Field(default=False, description="If true, not scraped")
+    favorite: bool = Field(default=False, description="If true, artist is a favorite")
 
 
 class VenueConfig(BaseModel):

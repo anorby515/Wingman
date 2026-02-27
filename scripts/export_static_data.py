@@ -45,6 +45,7 @@ def _export_from_summary(summary: dict) -> dict:
             "genre": info.get("genre", "Other"),
             "paused": info.get("paused", False),
             "url": info.get("url", ""),
+            "favorite": info.get("favorite", False),
         }
 
     venues_cfg = {}

@@ -139,6 +139,7 @@ function ShowRow({ show, showArtist = true, isHighlighted = false, onArtistClick
             ) : (
               <span className="font-semibold text-sm text-neutral-900 truncate">{show._artist}</span>
             )}
+            {show._isFavorite && <span className="text-amber-400 text-xs" title="Favorite">{'\u2605'}</span>}
           </div>
         )}
         <div className="text-xs text-neutral-500 truncate">
@@ -187,7 +188,7 @@ function ShowRow({ show, showArtist = true, isHighlighted = false, onArtistClick
 }
 
 // ── Artist group header (for grouped-by-artist mode) ─────────────────────────
-function ArtistGroupHeader({ artist, url, genre, showCount, isSelected, onSelect }) {
+function ArtistGroupHeader({ artist, url, genre, isFavorite, showCount, isSelected, onSelect }) {
   function handleClick(e) {
     if (!onSelect) return
     // Don't intercept clicks on the artist URL link
@@ -217,6 +218,7 @@ function ArtistGroupHeader({ artist, url, genre, showCount, isSelected, onSelect
       ) : (
         <span className="font-semibold text-sm text-neutral-800">{artist}</span>
       )}
+      {isFavorite && <span className="text-amber-400 text-xs" title="Favorite">{'\u2605'}</span>}
       {genre && <span className="text-[10px] text-neutral-400">{genre}</span>}
       <span className="text-xs text-neutral-400 ml-auto">{showCount}</span>
     </div>
@@ -259,6 +261,7 @@ export default function ArtistsSummaryTab() {
 
   // Filter toggles (AND logic when multiple active)
   const [quickLocal, setQuickLocal]           = useState(false)
+  const [quickTravel, setQuickTravel]         = useState(false)
   const [quickFavorite, setQuickFavorite]     = useState(false)
   const [quickComingSoon, setQuickComingSoon] = useState(false)
   const [quickMapArea, setQuickMapArea]       = useState(true)
@@ -347,6 +350,7 @@ export default function ArtistsSummaryTab() {
           _artist: artist,
           _artistUrl: info.url || null,
           _genre: info.genre || 'Other',
+          _isFavorite: info.favorite === true,
           status: isCS ? 'coming_soon' : (show.status || 'on_sale'),
           ...venueFlags(show.venue),
         })
@@ -366,6 +370,7 @@ export default function ArtistsSummaryTab() {
           _artist: artist,
           _artistUrl: info.url || null,
           _genre: info.genre || 'Other',
+          _isFavorite: info.favorite === true,
           _source: 'venue',
           _trackedVenue: trackedVenue,
           ...venueFlags(show.venue),
@@ -383,25 +388,27 @@ export default function ArtistsSummaryTab() {
     for (const show of allShows) {
       if (!trackedNames.has(show._artist)) continue
       if (quickLocal && !show._isLocalVenue) continue
-      if (quickFavorite && !show._isTravelVenue) continue
+      if (quickTravel && !show._isTravelVenue) continue
+      if (quickFavorite && !show._isFavorite) continue
       if (quickComingSoon && show.status !== 'coming_soon') continue
       if (quickMapArea && !isInBounds(show.lat, show.lon, mapBounds)) continue
       visible.add(show._artist)
     }
     return [...visible].sort()
-  }, [allShows, configArtists, quickLocal, quickFavorite, quickComingSoon, quickMapArea, mapBounds])
+  }, [allShows, configArtists, quickLocal, quickTravel, quickFavorite, quickComingSoon, quickMapArea, mapBounds])
 
   // ── Apply all filters (AND logic) ──
   const filteredShows = useMemo(() => {
     return allShows.filter(show => {
       if (filterArtists.length > 0 && !filterArtists.includes(show._artist)) return false
       if (quickLocal    && !show._isLocalVenue)  return false
-      if (quickFavorite && !show._isTravelVenue) return false
+      if (quickTravel && !show._isTravelVenue) return false
+      if (quickFavorite && !show._isFavorite) return false
       if (quickComingSoon && show.status !== 'coming_soon') return false
       if (quickMapArea && !isInBounds(show.lat, show.lon, mapBounds)) return false
       return true
     })
-  }, [allShows, filterArtists, quickLocal, quickFavorite, quickComingSoon, quickMapArea, mapBounds])
+  }, [allShows, filterArtists, quickLocal, quickTravel, quickFavorite, quickComingSoon, quickMapArea, mapBounds])
 
   // ── Sort ──
   const sortedShows = useMemo(() => {
@@ -459,11 +466,12 @@ export default function ArtistsSummaryTab() {
   const centerLon = config?.center_lon ?? null
 
   const hasActiveFilters = filterArtists.length > 0
-    || quickLocal || quickFavorite || quickComingSoon || quickMapArea
+    || quickLocal || quickTravel || quickFavorite || quickComingSoon || quickMapArea
 
   const clearAllFilters = () => {
     setFilterArtists([])
     setQuickLocal(false)
+    setQuickTravel(false)
     setQuickFavorite(false)
     setQuickComingSoon(false)
     setQuickMapArea(false)
@@ -531,7 +539,17 @@ export default function ArtistsSummaryTab() {
               On Sale Soon
             </button>
             <button
-              onClick={() => { setQuickLocal(v => !v); setQuickFavorite(false) }}
+              onClick={() => setQuickFavorite(v => !v)}
+              className={`px-2.5 py-1 rounded-full transition-colors ${
+                quickFavorite
+                  ? 'bg-amber-500 text-white'
+                  : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
+              }`}
+            >
+              {'\u2605'} Favorites
+            </button>
+            <button
+              onClick={() => { setQuickLocal(v => !v); setQuickTravel(false) }}
               className={`px-2.5 py-1 rounded-full transition-colors ${
                 quickLocal
                   ? 'bg-neutral-700 text-white'
@@ -541,9 +559,9 @@ export default function ArtistsSummaryTab() {
               Local
             </button>
             <button
-              onClick={() => { setQuickFavorite(v => !v); setQuickLocal(false) }}
+              onClick={() => { setQuickTravel(v => !v); setQuickLocal(false) }}
               className={`px-2.5 py-1 rounded-full transition-colors ${
-                quickFavorite
+                quickTravel
                   ? 'bg-neutral-700 text-white'
                   : 'text-neutral-500 hover:bg-neutral-100 border border-neutral-200'
               }`}
@@ -605,6 +623,7 @@ export default function ArtistsSummaryTab() {
                     artist={artist}
                     url={info.url || null}
                     genre={info.genre}
+                    isFavorite={info.favorite === true}
                     showCount={`${shows.length} show${shows.length !== 1 ? 's' : ''}`}
                     isSelected={selected}
                     onSelect={handleArtistClick}

@@ -75,6 +75,7 @@ def _write_tracked(cfg: dict) -> None:
             "url": info.get("url", ""),
             "genre": info.get("genre", "Other"),
             "paused": info.get("paused", False),
+            "favorite": info.get("favorite", False),
         }
     for name, info in cfg.get("venues", {}).items():
         tracked["venues"][name] = {
@@ -150,6 +151,7 @@ class ArtistPatch(BaseModel):
     paused: Optional[bool] = None
     url: Optional[str] = None
     genre: Optional[str] = None
+    favorite: Optional[bool] = None
 
 
 class VenueIn(BaseModel):
@@ -246,9 +248,10 @@ def add_artist(body: ArtistIn) -> Any:
         "url": body.url,
         "genre": body.genre,
         "paused": False,
+        "favorite": False,
     }
     _write_config(cfg)
-    return {"name": body.name, "url": body.url, "genre": body.genre, "paused": False}
+    return {"name": body.name, "url": body.url, "genre": body.genre, "paused": False, "favorite": False}
 
 
 @app.delete("/api/artists/{name}")
@@ -273,6 +276,8 @@ def patch_artist(name: str, body: ArtistPatch) -> Any:
         info["url"] = body.url
     if body.genre is not None:
         info["genre"] = body.genre
+    if body.favorite is not None:
+        info["favorite"] = body.favorite
     _write_config(cfg)
     return {"name": name, **info}
 

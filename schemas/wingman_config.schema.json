@@ -48,6 +48,10 @@
         "paused": {
           "type": "boolean",
           "description": "If true, artist is not fetched from TM but still used for venue cross-reference"
+        },
+        "favorite": {
+          "type": "boolean",
+          "description": "If true, artist is a favorite (shown with gold star)"
         }
       }
     },
