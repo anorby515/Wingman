@@ -137,12 +137,17 @@ def build_summary(
 
             summary_show = {
                 "date": show["date"],
+                "raw_date": show.get("raw_date", show["date"]),
                 "venue": show["venue"],
                 "city": show["city"],
                 "status": "on_sale",
                 "lat": show.get("lat"),
                 "lon": show.get("lon"),
                 "is_new": is_new,
+                "not_yet_on_sale": show.get("not_yet_on_sale", False),
+                "onsale_datetime": show.get("onsale_datetime"),
+                "onsale_tbd": show.get("onsale_tbd", False),
+                "ticketmaster_url": show.get("ticketmaster_url", ""),
             }
             summary_shows.append(summary_show)
 
@@ -232,6 +237,7 @@ def build_summary(
 
             entry = {
                 "date": show["date"],
+                "raw_date": show.get("raw_date", show["date"]),
                 "venue": show["venue"],
                 "city": show["city"],
                 "event_name": show.get("event_name", festival),
@@ -239,6 +245,10 @@ def build_summary(
                 "lat": show.get("lat"),
                 "lon": show.get("lon"),
                 "is_new": is_new,
+                "not_yet_on_sale": show.get("not_yet_on_sale", False),
+                "onsale_datetime": show.get("onsale_datetime"),
+                "onsale_tbd": show.get("onsale_tbd", False),
+                "ticketmaster_url": show.get("ticketmaster_url", ""),
             }
             festival_summary.append(entry)
 
