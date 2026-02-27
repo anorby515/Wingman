@@ -349,8 +349,6 @@ function SpotifySettings({ config, onSave }) {
           <div className="flex items-center gap-3">
             <a
               href={isConfigured ? '/auth/spotify' : undefined}
-              target="_blank"
-              rel="noopener noreferrer"
               className={`btn-primary ${!isConfigured ? 'opacity-50 pointer-events-none cursor-not-allowed' : ''}`}
               onClick={!isConfigured ? e => e.preventDefault() : undefined}
             >
