@@ -546,8 +546,8 @@
         "venue": "Soldier Field",
         "city": "Chicago, IL",
         "status": "on_sale",
-        "lat": 41.8623356,
-        "lon": -87.6176477,
+        "lat": 41.8624515,
+        "lon": -87.6167151,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -559,8 +559,8 @@
         "venue": "Soldier Field",
         "city": "Chicago, IL",
         "status": "on_sale",
-        "lat": 41.8623356,
-        "lon": -87.6176477,
+        "lat": 41.8624515,
+        "lon": -87.6167151,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -4298,11 +4298,11 @@
         "raw_date": "2026-07-30",
         "venue": "Merriweather Post Pavilion",
         "city": "Columbia, MD",
-        "status": "coming_soon",
+        "status": "on_sale",
         "lat": 39.2088351,
         "lon": -76.8625061,
         "is_new": false,
-        "onsale_datetime": "2026-02-27T14:00:00Z",
+        "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/the-red-clay-strays-columbia-maryland-07-30-2026/event/1500644BC5C5B944"
       },
@@ -4311,11 +4311,11 @@
         "raw_date": "2026-08-01",
         "venue": "TD Garden",
         "city": "Boston, MA",
-        "status": "coming_soon",
+        "status": "on_sale",
         "lat": 42.3662986,
         "lon": -71.0621622,
         "is_new": false,
-        "onsale_datetime": "2026-02-27T14:00:00Z",
+        "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/the-red-clay-strays-boston-massachusetts-08-01-2026/event/0100644BF0D39141"
       },
@@ -4376,11 +4376,11 @@
         "raw_date": "2026-11-13",
         "venue": "State Farm Arena",
         "city": "Atlanta, GA",
-        "status": "coming_soon",
+        "status": "on_sale",
         "lat": 33.7573698,
         "lon": -84.3963848,
         "is_new": false,
-        "onsale_datetime": "2026-02-27T14:00:00Z",
+        "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/the-red-clay-strays-atlanta-georgia-11-13-2026/event/0E00644BD38B9C21"
       }
@@ -5285,6 +5285,19 @@
         "is_new": false,
         "onsale_datetime": "2026-02-27T15:00:00Z",
         "onsale_tbd": false,
+        "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-aO_"
+      },
+      {
+        "date": "Jun 22, 2026",
+        "raw_date": "2026-06-22",
+        "venue": "Fenway Park",
+        "city": "Boston, MA",
+        "status": "coming_soon",
+        "lat": 42.3464614,
+        "lon": -71.0970999,
+        "is_new": false,
+        "onsale_datetime": "2026-02-27T15:00:00Z",
+        "onsale_tbd": false,
         "ticketmaster_url": "http://www.redsox.com/mumfordandsons"
       },
       {
@@ -5483,21 +5496,6 @@
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://on.fgtix.com/trk/hduAb"
-      }
-    ],
-    "The War on Drugs": [
-      {
-        "date": "Sep 24, 2026",
-        "raw_date": "2026-09-24",
-        "venue": "Kentucky Expo Center",
-        "city": "Louisville, KY",
-        "status": "on_sale",
-        "lat": 38.1921737,
-        "lon": -85.7485652,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://on.fgtix.com/trk/Es3ec"
       }
     ],
     "Pearl Jam": [
@@ -6304,8 +6302,8 @@
         "venue": "Soldier Field",
         "city": "Chicago, IL",
         "status": "on_sale",
-        "lat": 41.8623356,
-        "lon": -87.6176477,
+        "lat": 41.8624515,
+        "lon": -87.6167151,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -6533,6 +6531,58 @@
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://on.fgtix.com/trk/bQrK"
+      },
+      {
+        "date": "Apr 30, 2026",
+        "raw_date": "2026-04-30",
+        "venue": "Roadrunner-Boston",
+        "city": "Boston, MA",
+        "status": "coming_soon",
+        "lat": 42.3566205,
+        "lon": -71.1438739,
+        "is_new": true,
+        "onsale_datetime": "2026-02-27T15:00:00Z",
+        "onsale_tbd": false,
+        "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-o4O"
+      },
+      {
+        "date": "May 1, 2026",
+        "raw_date": "2026-05-01",
+        "venue": "Roadrunner-Boston",
+        "city": "Boston, MA",
+        "status": "coming_soon",
+        "lat": 42.3566205,
+        "lon": -71.1438739,
+        "is_new": true,
+        "onsale_datetime": "2026-02-27T15:00:00Z",
+        "onsale_tbd": false,
+        "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-o4-"
+      },
+      {
+        "date": "May 2, 2026",
+        "raw_date": "2026-05-02",
+        "venue": "Roadrunner-Boston",
+        "city": "Boston, MA",
+        "status": "coming_soon",
+        "lat": 42.3566205,
+        "lon": -71.1438739,
+        "is_new": true,
+        "onsale_datetime": "2026-02-27T15:00:00Z",
+        "onsale_tbd": false,
+        "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-o4x"
+      },
+      {
+        "date": "May 3, 2026",
+        "raw_date": "2026-05-03",
+        "venue": "Roadrunner-Boston",
+        "city": "Boston, MA",
+        "status": "coming_soon",
+        "lat": 42.3566205,
+        "lon": -71.1438739,
+        "is_new": true,
+        "onsale_datetime": "2026-02-27T15:00:00Z",
+        "onsale_tbd": false,
+        "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-o4N"
       },
       {
         "date": "May 22, 2026",
@@ -8010,6 +8060,19 @@
         "onsale_datetime": "2026-02-27T15:00:00Z",
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/mumford-sons-prizefighter-tour-hershey-pennsylvania-06-20-2026/event/02006453E319F42F"
+      },
+      {
+        "date": "Jun 22, 2026",
+        "raw_date": "2026-06-22",
+        "venue": "Fenway Park",
+        "city": "Boston, MA",
+        "status": "coming_soon",
+        "lat": 42.3464614,
+        "lon": -71.0970999,
+        "is_new": false,
+        "onsale_datetime": "2026-02-27T15:00:00Z",
+        "onsale_tbd": false,
+        "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-aO_"
       },
       {
         "date": "Jun 22, 2026",
@@ -12215,346 +12278,6 @@
         "ticketmaster_url": "https://www.ticketmaster.com/daft-punk-night-fontana-california-05-23-2026/event/09006364079D0AF3"
       }
     ],
-    "Florence + The Machine": [
-      {
-        "date": "Apr 8, 2026",
-        "raw_date": "2026-04-08",
-        "venue": "Target Center",
-        "city": "Minneapolis, MN",
-        "status": "on_sale",
-        "lat": 44.9795917,
-        "lon": -93.2759828,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-minneapolis-minnesota-04-08-2026/event/060063561ACDD5A0"
-      },
-      {
-        "date": "Apr 10, 2026",
-        "raw_date": "2026-04-10",
-        "venue": "Allstate Arena",
-        "city": "Rosemont, IL",
-        "status": "on_sale",
-        "lat": 42.0052766,
-        "lon": -87.8877714,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-rosemont-illinois-04-10-2026/event/04006355D2F862CE"
-      },
-      {
-        "date": "Apr 11, 2026",
-        "raw_date": "2026-04-11",
-        "venue": "Allstate Arena",
-        "city": "Rosemont, IL",
-        "status": "on_sale",
-        "lat": 42.0052766,
-        "lon": -87.8877714,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-rosemont-illinois-04-11-2026/event/04006355D2CF62AF"
-      },
-      {
-        "date": "Apr 13, 2026",
-        "raw_date": "2026-04-13",
-        "venue": "Little Caesars Arena",
-        "city": "Detroit, MI",
-        "status": "on_sale",
-        "lat": 42.3409774,
-        "lon": -83.0549545,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-detroit-michigan-04-13-2026/event/08006357C8CB38EA"
-      },
-      {
-        "date": "Apr 15, 2026",
-        "raw_date": "2026-04-15",
-        "venue": "Centre Bell",
-        "city": "Montreal, QC, CA",
-        "status": "on_sale",
-        "lat": 45.4960358,
-        "lon": -73.5692029,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.ca/florence-the-machine-everybody-scream-tour-montreal-quebec-04-15-2026/event/31006357D48F962E"
-      },
-      {
-        "date": "Apr 16, 2026",
-        "raw_date": "2026-04-16",
-        "venue": "Scotiabank Arena",
-        "city": "Toronto, ON, CA",
-        "status": "on_sale",
-        "lat": 43.6434338,
-        "lon": -79.3790777,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.ca/florence-the-machine-everybody-scream-tour-toronto-ontario-04-16-2026/event/10006356994E887A"
-      },
-      {
-        "date": "Apr 18, 2026",
-        "raw_date": "2026-04-18",
-        "venue": "Capital One Arena",
-        "city": "Washington, DC",
-        "status": "on_sale",
-        "lat": 38.8981883,
-        "lon": -77.0209378,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-washington-district-of-columbia-04-18-2026/event/15006315D5C658AE"
-      },
-      {
-        "date": "Apr 19, 2026",
-        "raw_date": "2026-04-19",
-        "venue": "TD Garden",
-        "city": "Boston, MA",
-        "status": "on_sale",
-        "lat": 42.3662986,
-        "lon": -71.0621622,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-boston-massachusetts-04-19-2026/event/01006355079CA6A4"
-      },
-      {
-        "date": "Apr 21, 2026",
-        "raw_date": "2026-04-21",
-        "venue": "Madison Square Garden",
-        "city": "New York, NY",
-        "status": "on_sale",
-        "lat": 40.7505129,
-        "lon": -73.9935159,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-new-york-new-york-04-21-2026/event/3B006357CBE24E31"
-      },
-      {
-        "date": "Apr 22, 2026",
-        "raw_date": "2026-04-22",
-        "venue": "Madison Square Garden",
-        "city": "New York, NY",
-        "status": "on_sale",
-        "lat": 40.7505129,
-        "lon": -73.9935159,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-new-york-new-york-04-22-2026/event/3B006357CBEF4E33"
-      },
-      {
-        "date": "Apr 24, 2026",
-        "raw_date": "2026-04-24",
-        "venue": "Barclays Center",
-        "city": "Brooklyn, NY",
-        "status": "on_sale",
-        "lat": 40.6825106,
-        "lon": -73.9752519,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-brooklyn-new-york-04-24-2026/event/30006356AFE45663"
-      },
-      {
-        "date": "Apr 25, 2026",
-        "raw_date": "2026-04-25",
-        "venue": "Xfinity Mobile Arena",
-        "city": "Philadelphia, PA",
-        "status": "on_sale",
-        "lat": 39.9011004,
-        "lon": -75.1720165,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-philadelphia-pennsylvania-04-25-2026/event/30006356EAB56F66"
-      },
-      {
-        "date": "Apr 28, 2026",
-        "raw_date": "2026-04-28",
-        "venue": "Benchmark International Arena",
-        "city": "Tampa, FL",
-        "status": "on_sale",
-        "lat": 27.942704,
-        "lon": -82.4518903,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-tampa-florida-04-28-2026/event/0D006357B5334957"
-      },
-      {
-        "date": "Apr 29, 2026",
-        "raw_date": "2026-04-29",
-        "venue": "Kaseya Center",
-        "city": "Miami, FL",
-        "status": "on_sale",
-        "lat": 25.7813596,
-        "lon": -80.1879435,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-miami-florida-04-29-2026/event/0D00635424785C3B"
-      },
-      {
-        "date": "May 1, 2026",
-        "raw_date": "2026-05-01",
-        "venue": "State Farm Arena",
-        "city": "Atlanta, GA",
-        "status": "on_sale",
-        "lat": 33.7573698,
-        "lon": -84.3963848,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-atlanta-georgia-05-01-2026/event/0E006355BDF87F7D"
-      },
-      {
-        "date": "May 2, 2026",
-        "raw_date": "2026-05-02",
-        "venue": "Bridgestone Arena",
-        "city": "Nashville, TN",
-        "status": "on_sale",
-        "lat": 36.1589806,
-        "lon": -86.7783819,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-nashville-tennessee-05-02-2026/event/1B006357C22E748D"
-      },
-      {
-        "date": "May 4, 2026",
-        "raw_date": "2026-05-04",
-        "venue": "Moody Center ATX",
-        "city": "Austin, TX",
-        "status": "on_sale",
-        "lat": 30.2711286,
-        "lon": -97.7436995,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-austin-texas-05-04-2026/event/3A006355C3858A7F"
-      },
-      {
-        "date": "May 5, 2026",
-        "raw_date": "2026-05-05",
-        "venue": "Toyota Center",
-        "city": "Houston, TX",
-        "status": "on_sale",
-        "lat": 29.7507473,
-        "lon": -95.3622315,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.toyotacenter.com/events/detail/florence-and-the-machine"
-      },
-      {
-        "date": "May 5, 2026",
-        "raw_date": "2026-05-05",
-        "venue": "Toyota Center - TX",
-        "city": "Houston, TX",
-        "status": "on_sale",
-        "lat": 29.7507473,
-        "lon": -95.3622315,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7q-Ot"
-      },
-      {
-        "date": "May 7, 2026",
-        "raw_date": "2026-05-07",
-        "venue": "Dickies Arena",
-        "city": "Fort Worth, TX",
-        "status": "on_sale",
-        "lat": 32.7410656,
-        "lon": -97.3684832,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-fort-worth-texas-05-07-2026/event/0C00635525AE5647"
-      },
-      {
-        "date": "May 9, 2026",
-        "raw_date": "2026-05-09",
-        "venue": "Desert Diamond Arena",
-        "city": "Glendale, AZ",
-        "status": "on_sale",
-        "lat": 33.5319666,
-        "lon": -112.2613181,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-glendale-arizona-05-09-2026/event/19006355E97C5E23"
-      },
-      {
-        "date": "May 12, 2026",
-        "raw_date": "2026-05-12",
-        "venue": "Climate Pledge Arena",
-        "city": "Seattle, WA",
-        "status": "on_sale",
-        "lat": 47.6219014,
-        "lon": -122.3539905,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-seattle-washington-05-12-2026/event/0F006355C0FD4AAD"
-      },
-      {
-        "date": "May 13, 2026",
-        "raw_date": "2026-05-13",
-        "venue": "Moda Center",
-        "city": "Portland, OR",
-        "status": "on_sale",
-        "lat": 45.5315787,
-        "lon": -122.6668337,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-portland-oregon-05-13-2026/event/0F006355B79D45AD"
-      },
-      {
-        "date": "May 15, 2026",
-        "raw_date": "2026-05-15",
-        "venue": "Chase Center",
-        "city": "San Francisco, CA",
-        "status": "on_sale",
-        "lat": 37.7679001,
-        "lon": -122.3874223,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-san-francisco-california-05-15-2026/event/1C006352DFCFB22C"
-      },
-      {
-        "date": "May 19, 2026",
-        "raw_date": "2026-05-19",
-        "venue": "Kia Forum",
-        "city": "Inglewood, CA",
-        "status": "on_sale",
-        "lat": 33.9582157,
-        "lon": -118.341972,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-inglewood-california-05-19-2026/event/09006356E55275D5"
-      },
-      {
-        "date": "May 20, 2026",
-        "raw_date": "2026-05-20",
-        "venue": "Kia Forum",
-        "city": "Inglewood, CA",
-        "status": "on_sale",
-        "lat": 33.9582157,
-        "lon": -118.341972,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/florence-the-machine-everybody-scream-tour-inglewood-california-05-20-2026/event/09006356E55B75E3"
-      }
-    ],
     "Dave Matthews Band": [
       {
         "date": "Apr 24, 2026",
@@ -13194,6 +12917,19 @@
         "onsale_datetime": "2026-02-27T15:00:00Z",
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/mumford-sons-prizefighter-tour-hershey-pennsylvania-06-20-2026/event/02006453E319F42F"
+      },
+      {
+        "date": "Jun 22, 2026",
+        "raw_date": "2026-06-22",
+        "venue": "Fenway Park",
+        "city": "Boston, MA",
+        "status": "coming_soon",
+        "lat": 42.3464614,
+        "lon": -71.0970999,
+        "is_new": false,
+        "onsale_datetime": "2026-02-27T15:00:00Z",
+        "onsale_tbd": false,
+        "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-aO_"
       },
       {
         "date": "Jun 22, 2026",
@@ -16175,8 +15911,8 @@
         "venue": "Soldier Field",
         "city": "Chicago, IL",
         "status": "on_sale",
-        "lat": 41.8623356,
-        "lon": -87.6176477,
+        "lat": 41.8624515,
+        "lon": -87.6167151,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -16491,7 +16227,7 @@
         "status": "on_sale",
         "lat": 42.9636539,
         "lon": -85.6723898,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-grand-rapids-michigan-03-09-2026/event/0800631CB967248C"
@@ -16504,7 +16240,7 @@
         "status": "on_sale",
         "lat": 35.1402205,
         "lon": -90.055535,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-memphis-tennessee-03-11-2026/event/1B006319C7F53CAD"
@@ -16517,7 +16253,7 @@
         "status": "on_sale",
         "lat": 38.6556268,
         "lon": -90.2979423,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-saint-louis-missouri-03-12-2026/event/0600631CCAE87D7E"
@@ -16530,7 +16266,7 @@
         "status": "on_sale",
         "lat": 39.7745828,
         "lon": -86.1510753,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-indianapolis-indiana-03-16-2026/event/0500631BC2041851"
@@ -16543,7 +16279,7 @@
         "status": "on_sale",
         "lat": 35.2391789,
         "lon": -80.8450417,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-charlotte-north-carolina-03-19-2026/event/2D006323D03C8485"
@@ -16556,7 +16292,7 @@
         "status": "on_sale",
         "lat": 35.2391789,
         "lon": -80.8450417,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-charlotte-north-carolina-03-20-2026/event/2D00631AB8DF4493"
@@ -16569,7 +16305,7 @@
         "status": "on_sale",
         "lat": 33.4489301,
         "lon": -112.0796261,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-phoenix-arizona-04-09-2026/event/1900632A6A5C0E5F"
@@ -16582,7 +16318,7 @@
         "status": "on_sale",
         "lat": 33.4489301,
         "lon": -112.0796261,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-phoenix-arizona-04-10-2026/event/1900631BA6253923"
@@ -16595,7 +16331,7 @@
         "status": "on_sale",
         "lat": 32.9594891,
         "lon": -117.2653146,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-del-mar-california-04-11-2026/event/0A00631C9A411561"
@@ -16608,7 +16344,7 @@
         "status": "on_sale",
         "lat": 38.5789052,
         "lon": -121.4856233,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-sacramento-california-04-16-2026/event/1C00631CDD795116"
@@ -16621,7 +16357,7 @@
         "status": "on_sale",
         "lat": 49.2801483,
         "lon": -123.1203207,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.ca/josiah-queen-the-mt-zion-tour-vancouver-british-columbia-04-21-2026/event/1100631CE527595F"
@@ -16634,7 +16370,7 @@
         "status": "on_sale",
         "lat": 47.6569782,
         "lon": -117.4260005,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketweb.com/event/josiah-queen-the-knitting-factory-spokane-tickets/14522043"
@@ -16647,7 +16383,7 @@
         "status": "on_sale",
         "lat": 43.622111,
         "lon": -116.238178,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-garden-city-idaho-04-25-2026/event/1E00631BCF873AE9"
@@ -16660,7 +16396,7 @@
         "status": "on_sale",
         "lat": 39.7406349,
         "lon": -104.9771824,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-denver-colorado-04-28-2026/event/1E00631BDFC34766"
@@ -16673,7 +16409,7 @@
         "status": "on_sale",
         "lat": 44.5126379,
         "lon": -88.0125794,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketweb.com/event/sold-out-the-mt-zion-epic-event-center-tickets/14519793"
@@ -16686,7 +16422,7 @@
         "status": "on_sale",
         "lat": 41.9694312,
         "lon": -87.658026,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-chicago-illinois-05-02-2026/event/04006319E8FC2FE5"
@@ -16699,7 +16435,7 @@
         "status": "on_sale",
         "lat": 43.8532028,
         "lon": -78.9240013,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketweb.ca/event/sold-out-the-mt-zion-canada-event-centre-tickets/14522323"
@@ -16712,7 +16448,7 @@
         "status": "on_sale",
         "lat": 40.7127281,
         "lon": -74.0060152,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-new-york-city-new-york-05-06-2026/event/00006323D22055BD"
@@ -16725,7 +16461,7 @@
         "status": "on_sale",
         "lat": 40.7127281,
         "lon": -74.0060152,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-new-york-city-new-york-05-07-2026/event/0000631AA3A328E7"
@@ -16738,7 +16474,7 @@
         "status": "on_sale",
         "lat": 42.3588336,
         "lon": -71.0578303,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-boston-massachusetts-05-08-2026/event/0100631AC96E624D"
@@ -16751,7 +16487,7 @@
         "status": "on_sale",
         "lat": 46.8757043,
         "lon": -113.8615289,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-bonner-montana-07-30-2026/event/1E00642FBBA094A4"
@@ -17808,6 +17544,11 @@
         "tracked": true
       },
       {
+        "date": "Jun 22, 2026",
+        "artist": "Mumford & Sons",
+        "tracked": true
+      },
+      {
         "date": "Jun 23, 2026",
         "artist": "R\u00dcF\u00dcS DU SOL",
         "tracked": false
@@ -18690,299 +18431,67 @@
   ],
   "changes": {
     "artists": {
-      "Josiah Queen": {
+      "LCD Soundsystem": {
         "added": [
           {
-            "date": "Mar 9, 2026",
-            "raw_date": "2026-03-09",
-            "venue": "GLC Live at 20 Monroe",
-            "city": "Grand Rapids, MI",
-            "status": "on_sale",
-            "lat": 42.9636539,
-            "lon": -85.6723898,
+            "date": "Apr 30, 2026",
+            "raw_date": "2026-04-30",
+            "venue": "Roadrunner-Boston",
+            "city": "Boston, MA",
+            "status": "coming_soon",
+            "lat": 42.3566205,
+            "lon": -71.1438739,
             "is_new": true,
-            "onsale_datetime": null,
+            "onsale_datetime": "2026-02-27T15:00:00Z",
             "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-grand-rapids-michigan-03-09-2026/event/0800631CB967248C"
-          },
-          {
-            "date": "Mar 11, 2026",
-            "raw_date": "2026-03-11",
-            "venue": "The Orpheum Theatre Memphis",
-            "city": "Memphis, TN",
-            "status": "on_sale",
-            "lat": 35.1402205,
-            "lon": -90.055535,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-memphis-tennessee-03-11-2026/event/1B006319C7F53CAD"
-          },
-          {
-            "date": "Mar 12, 2026",
-            "raw_date": "2026-03-12",
-            "venue": "The Pageant",
-            "city": "Saint Louis, MO",
-            "status": "on_sale",
-            "lat": 38.6556268,
-            "lon": -90.2979423,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-saint-louis-missouri-03-12-2026/event/0600631CCAE87D7E"
-          },
-          {
-            "date": "Mar 16, 2026",
-            "raw_date": "2026-03-16",
-            "venue": "Old National Centre",
-            "city": "Indianapolis, IN",
-            "status": "on_sale",
-            "lat": 39.7745828,
-            "lon": -86.1510753,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-indianapolis-indiana-03-16-2026/event/0500631BC2041851"
-          },
-          {
-            "date": "Mar 19, 2026",
-            "raw_date": "2026-03-19",
-            "venue": "The Fillmore Charlotte",
-            "city": "Charlotte, NC",
-            "status": "on_sale",
-            "lat": 35.2391789,
-            "lon": -80.8450417,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-charlotte-north-carolina-03-19-2026/event/2D006323D03C8485"
-          },
-          {
-            "date": "Mar 20, 2026",
-            "raw_date": "2026-03-20",
-            "venue": "The Fillmore Charlotte",
-            "city": "Charlotte, NC",
-            "status": "on_sale",
-            "lat": 35.2391789,
-            "lon": -80.8450417,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-charlotte-north-carolina-03-20-2026/event/2D00631AB8DF4493"
-          },
-          {
-            "date": "Apr 9, 2026",
-            "raw_date": "2026-04-09",
-            "venue": "Arizona Financial Theatre",
-            "city": "Phoenix, AZ",
-            "status": "on_sale",
-            "lat": 33.4489301,
-            "lon": -112.0796261,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-phoenix-arizona-04-09-2026/event/1900632A6A5C0E5F"
-          },
-          {
-            "date": "Apr 10, 2026",
-            "raw_date": "2026-04-10",
-            "venue": "Arizona Financial Theatre",
-            "city": "Phoenix, AZ",
-            "status": "on_sale",
-            "lat": 33.4489301,
-            "lon": -112.0796261,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-phoenix-arizona-04-10-2026/event/1900631BA6253923"
-          },
-          {
-            "date": "Apr 11, 2026",
-            "raw_date": "2026-04-11",
-            "venue": "The Sound",
-            "city": "Del Mar, CA",
-            "status": "on_sale",
-            "lat": 32.9594891,
-            "lon": -117.2653146,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-del-mar-california-04-11-2026/event/0A00631C9A411561"
-          },
-          {
-            "date": "Apr 16, 2026",
-            "raw_date": "2026-04-16",
-            "venue": "SACRAMENTO MEMORIAL AUDITORIUM",
-            "city": "Sacramento, CA",
-            "status": "on_sale",
-            "lat": 38.5789052,
-            "lon": -121.4856233,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-sacramento-california-04-16-2026/event/1C00631CDD795116"
-          },
-          {
-            "date": "Apr 21, 2026",
-            "raw_date": "2026-04-21",
-            "venue": "Orpheum Theatre",
-            "city": "Vancouver, BC, CA",
-            "status": "on_sale",
-            "lat": 49.2801483,
-            "lon": -123.1203207,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.ca/josiah-queen-the-mt-zion-tour-vancouver-british-columbia-04-21-2026/event/1100631CE527595F"
-          },
-          {
-            "date": "Apr 24, 2026",
-            "raw_date": "2026-04-24",
-            "venue": "Knitting Factory - Spokane",
-            "city": "Spokane, WA",
-            "status": "on_sale",
-            "lat": 47.6569782,
-            "lon": -117.4260005,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketweb.com/event/josiah-queen-the-knitting-factory-spokane-tickets/14522043"
-          },
-          {
-            "date": "Apr 25, 2026",
-            "raw_date": "2026-04-25",
-            "venue": "Revolution Concert House & Event Center",
-            "city": "Garden City, ID",
-            "status": "on_sale",
-            "lat": 43.622111,
-            "lon": -116.238178,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-garden-city-idaho-04-25-2026/event/1E00631BCF873AE9"
-          },
-          {
-            "date": "Apr 28, 2026",
-            "raw_date": "2026-04-28",
-            "venue": "Fillmore Auditorium (Denver)",
-            "city": "Denver, CO",
-            "status": "on_sale",
-            "lat": 39.7406349,
-            "lon": -104.9771824,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-denver-colorado-04-28-2026/event/1E00631BDFC34766"
+            "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-o4O"
           },
           {
             "date": "May 1, 2026",
             "raw_date": "2026-05-01",
-            "venue": "Epic Event Center",
-            "city": "Green Bay, WI",
-            "status": "on_sale",
-            "lat": 44.5126379,
-            "lon": -88.0125794,
+            "venue": "Roadrunner-Boston",
+            "city": "Boston, MA",
+            "status": "coming_soon",
+            "lat": 42.3566205,
+            "lon": -71.1438739,
             "is_new": true,
-            "onsale_datetime": null,
+            "onsale_datetime": "2026-02-27T15:00:00Z",
             "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketweb.com/event/sold-out-the-mt-zion-epic-event-center-tickets/14519793"
+            "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-o4-"
           },
           {
             "date": "May 2, 2026",
             "raw_date": "2026-05-02",
-            "venue": "Aragon Ballroom",
-            "city": "Chicago, IL",
-            "status": "on_sale",
-            "lat": 41.9694312,
-            "lon": -87.658026,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-chicago-illinois-05-02-2026/event/04006319E8FC2FE5"
-          },
-          {
-            "date": "May 5, 2026",
-            "raw_date": "2026-05-05",
-            "venue": "Canada Event Centre",
-            "city": "Whitby, ON, CA",
-            "status": "on_sale",
-            "lat": 43.8532028,
-            "lon": -78.9240013,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketweb.ca/event/sold-out-the-mt-zion-canada-event-centre-tickets/14522323"
-          },
-          {
-            "date": "May 6, 2026",
-            "raw_date": "2026-05-06",
-            "venue": "Palladium Times Square ",
-            "city": "New York City, NY",
-            "status": "on_sale",
-            "lat": 40.7127281,
-            "lon": -74.0060152,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-new-york-city-new-york-05-06-2026/event/00006323D22055BD"
-          },
-          {
-            "date": "May 7, 2026",
-            "raw_date": "2026-05-07",
-            "venue": "Palladium Times Square ",
-            "city": "New York City, NY",
-            "status": "on_sale",
-            "lat": 40.7127281,
-            "lon": -74.0060152,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-new-york-city-new-york-05-07-2026/event/0000631AA3A328E7"
-          },
-          {
-            "date": "May 8, 2026",
-            "raw_date": "2026-05-08",
-            "venue": "Citizens House of Blues Boston",
+            "venue": "Roadrunner-Boston",
             "city": "Boston, MA",
-            "status": "on_sale",
-            "lat": 42.3588336,
-            "lon": -71.0578303,
+            "status": "coming_soon",
+            "lat": 42.3566205,
+            "lon": -71.1438739,
             "is_new": true,
-            "onsale_datetime": null,
+            "onsale_datetime": "2026-02-27T15:00:00Z",
             "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-the-mt-zion-tour-boston-massachusetts-05-08-2026/event/0100631AC96E624D"
+            "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-o4x"
           },
           {
-            "date": "Jul 30, 2026",
-            "raw_date": "2026-07-30",
-            "venue": "Kettlehouse Amphitheater",
-            "city": "Bonner, MT",
-            "status": "on_sale",
-            "lat": 46.8757043,
-            "lon": -113.8615289,
+            "date": "May 3, 2026",
+            "raw_date": "2026-05-03",
+            "venue": "Roadrunner-Boston",
+            "city": "Boston, MA",
+            "status": "coming_soon",
+            "lat": 42.3566205,
+            "lon": -71.1438739,
             "is_new": true,
-            "onsale_datetime": null,
+            "onsale_datetime": "2026-02-27T15:00:00Z",
             "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/josiah-queen-bonner-montana-07-30-2026/event/1E00642FBBA094A4"
+            "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-o4N"
           }
         ],
         "removed": [],
         "newly_sold": []
       }
     },
-    "venues": {
-      "The Lensic Performing Art Center": {
-        "added": [
-          {
-            "date": "Mar 23, 2026",
-            "artist": "Pink Martini",
-            "tracked": false
-          }
-        ],
-        "removed": []
-      }
-    },
-    "total_added": 21,
+    "venues": {},
+    "total_added": 4,
     "total_removed": 0,
     "total_sold_out": 0
   },
@@ -19141,188 +18650,6 @@
       "lon": -79.4692345
     },
     {
-      "artist": "The Red Clay Strays",
-      "genre": "Country / Americana",
-      "date": "Jul 30, 2026",
-      "venue": "Merriweather Post Pavilion",
-      "city": "Columbia, MD",
-      "onsale_datetime": "2026-02-27T14:00:00Z",
-      "onsale_tbd": false,
-      "presales": [
-        {
-          "name": "Verified Diehards Presale",
-          "start_datetime": "2026-02-25T14:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "Verified Strays Presale",
-          "start_datetime": "2026-02-25T17:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "Strays Fan Club Presale",
-          "start_datetime": "2026-02-26T14:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "Ticketmaster Presale",
-          "start_datetime": "2026-02-26T17:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "AEG Presale",
-          "start_datetime": "2026-02-26T17:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "I.M.P. Presale",
-          "start_datetime": "2026-02-26T17:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "Radio Presale",
-          "start_datetime": "2026-02-26T17:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "VIP Package Strays Presale",
-          "start_datetime": "2026-02-25T14:00:00Z",
-          "end_datetime": "2026-02-26T13:59:00Z"
-        },
-        {
-          "name": "Verified Strays Presale",
-          "start_datetime": "2026-02-25T17:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "VIP Package Presale",
-          "start_datetime": "2026-02-26T14:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "VIP Package Onsale",
-          "start_datetime": "2026-02-27T14:00:00Z",
-          "end_datetime": "2026-07-24T02:00:00Z"
-        },
-        {
-          "name": "The Revivalists Artist Presale",
-          "start_datetime": "2026-02-26T17:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        }
-      ],
-      "ticketmaster_url": "https://www.ticketmaster.com/the-red-clay-strays-columbia-maryland-07-30-2026/event/1500644BC5C5B944",
-      "lat": 39.2088351,
-      "lon": -76.8625061
-    },
-    {
-      "artist": "The Red Clay Strays",
-      "genre": "Country / Americana",
-      "date": "Aug 1, 2026",
-      "venue": "TD Garden",
-      "city": "Boston, MA",
-      "onsale_datetime": "2026-02-27T14:00:00Z",
-      "onsale_tbd": false,
-      "presales": [
-        {
-          "name": "Verified Diehards Presale",
-          "start_datetime": "2026-02-25T14:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "Verified Strays Presale",
-          "start_datetime": "2026-02-25T17:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "Strays Fan Club Presale",
-          "start_datetime": "2026-02-26T14:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "Local Presales",
-          "start_datetime": "2026-02-26T17:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "VIP Package Strays Presale",
-          "start_datetime": "2026-02-25T14:00:00Z",
-          "end_datetime": "2026-02-26T13:59:00Z"
-        },
-        {
-          "name": "VIP Package Presale",
-          "start_datetime": "2026-02-26T14:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "VIP Package Onsale",
-          "start_datetime": "2026-02-27T14:00:00Z",
-          "end_datetime": "2026-07-26T02:00:00Z"
-        },
-        {
-          "name": "Ticketmaster Presale",
-          "start_datetime": "2026-02-26T17:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        }
-      ],
-      "ticketmaster_url": "https://www.ticketmaster.com/the-red-clay-strays-boston-massachusetts-08-01-2026/event/0100644BF0D39141",
-      "lat": 42.3662986,
-      "lon": -71.0621622
-    },
-    {
-      "artist": "The Red Clay Strays",
-      "genre": "Country / Americana",
-      "date": "Nov 13, 2026",
-      "venue": "State Farm Arena",
-      "city": "Atlanta, GA",
-      "onsale_datetime": "2026-02-27T14:00:00Z",
-      "onsale_tbd": false,
-      "presales": [
-        {
-          "name": "Verified Diehards Presale",
-          "start_datetime": "2026-02-25T14:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "Verified Strays Presale",
-          "start_datetime": "2026-02-25T17:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "Strays Fan Club Presale",
-          "start_datetime": "2026-02-26T14:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "Local Presale",
-          "start_datetime": "2026-02-26T17:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "Ticketmaster Presale",
-          "start_datetime": "2026-02-26T17:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "VIP Package Strays Presale",
-          "start_datetime": "2026-02-25T14:00:00Z",
-          "end_datetime": "2026-02-26T13:59:00Z"
-        },
-        {
-          "name": "VIP Package Presale",
-          "start_datetime": "2026-02-26T14:00:00Z",
-          "end_datetime": "2026-02-27T03:00:00Z"
-        },
-        {
-          "name": "VIP Package Onsale",
-          "start_datetime": "2026-02-27T14:00:00Z",
-          "end_datetime": "2026-11-07T03:00:00Z"
-        }
-      ],
-      "ticketmaster_url": "https://www.ticketmaster.com/the-red-clay-strays-atlanta-georgia-11-13-2026/event/0E00644BD38B9C21",
-      "lat": 33.7573698,
-      "lon": -84.3963848
-    },
-    {
       "artist": "Wyatt Flores",
       "genre": "Country / Americana",
       "date": "Sep 17, 2026",
@@ -19353,6 +18680,11 @@
         },
         {
           "name": "Support Presale",
+          "start_datetime": "2026-03-11T14:00:00Z",
+          "end_datetime": "2026-03-13T02:00:00Z"
+        },
+        {
+          "name": "Country Central Presale",
           "start_datetime": "2026-03-11T14:00:00Z",
           "end_datetime": "2026-03-13T02:00:00Z"
         }
@@ -19920,6 +19252,19 @@
       "city": "Boston, MA",
       "onsale_datetime": "2026-02-27T15:00:00Z",
       "onsale_tbd": false,
+      "presales": [],
+      "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-aO_",
+      "lat": 42.3464614,
+      "lon": -71.0970999
+    },
+    {
+      "artist": "Dylan Gossett",
+      "genre": "Country / Americana",
+      "date": "Jun 22, 2026",
+      "venue": "Fenway Park",
+      "city": "Boston, MA",
+      "onsale_datetime": "2026-02-27T15:00:00Z",
+      "onsale_tbd": false,
       "presales": [
         {
           "name": "Agora Presale",
@@ -20002,6 +19347,58 @@
       "ticketmaster_url": "https://www.ticketmaster.com/grungefest-tribute-to-foo-fighters-ratm-charlotte-north-carolina-04-17-2026/event/2D006453C0E04583",
       "lat": 35.2391789,
       "lon": -80.8450417
+    },
+    {
+      "artist": "LCD Soundsystem",
+      "genre": "Indie / Alt-Rock",
+      "date": "Apr 30, 2026",
+      "venue": "Roadrunner-Boston",
+      "city": "Boston, MA",
+      "onsale_datetime": "2026-02-27T15:00:00Z",
+      "onsale_tbd": false,
+      "presales": [],
+      "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-o4O",
+      "lat": 42.3566205,
+      "lon": -71.1438739
+    },
+    {
+      "artist": "LCD Soundsystem",
+      "genre": "Indie / Alt-Rock",
+      "date": "May 1, 2026",
+      "venue": "Roadrunner-Boston",
+      "city": "Boston, MA",
+      "onsale_datetime": "2026-02-27T15:00:00Z",
+      "onsale_tbd": false,
+      "presales": [],
+      "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-o4-",
+      "lat": 42.3566205,
+      "lon": -71.1438739
+    },
+    {
+      "artist": "LCD Soundsystem",
+      "genre": "Indie / Alt-Rock",
+      "date": "May 2, 2026",
+      "venue": "Roadrunner-Boston",
+      "city": "Boston, MA",
+      "onsale_datetime": "2026-02-27T15:00:00Z",
+      "onsale_tbd": false,
+      "presales": [],
+      "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-o4x",
+      "lat": 42.3566205,
+      "lon": -71.1438739
+    },
+    {
+      "artist": "LCD Soundsystem",
+      "genre": "Indie / Alt-Rock",
+      "date": "May 3, 2026",
+      "venue": "Roadrunner-Boston",
+      "city": "Boston, MA",
+      "onsale_datetime": "2026-02-27T15:00:00Z",
+      "onsale_tbd": false,
+      "presales": [],
+      "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-o4N",
+      "lat": 42.3566205,
+      "lon": -71.1438739
     },
     {
       "artist": "The Strokes",
@@ -20090,6 +19487,19 @@
       "ticketmaster_url": "https://www.ticketmaster.com/mumford-sons-prizefighter-tour-hershey-pennsylvania-06-20-2026/event/02006453E319F42F",
       "lat": 40.2904492,
       "lon": -76.6590083
+    },
+    {
+      "artist": "Lord Huron",
+      "genre": "Indie / Alt-Rock",
+      "date": "Jun 22, 2026",
+      "venue": "Fenway Park",
+      "city": "Boston, MA",
+      "onsale_datetime": "2026-02-27T15:00:00Z",
+      "onsale_tbd": false,
+      "presales": [],
+      "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-aO_",
+      "lat": 42.3464614,
+      "lon": -71.0970999
     },
     {
       "artist": "Lord Huron",
@@ -20778,6 +20188,19 @@
       "ticketmaster_url": "https://www.ticketmaster.com/mumford-sons-prizefighter-tour-hershey-pennsylvania-06-20-2026/event/02006453E319F42F",
       "lat": 40.2904492,
       "lon": -76.6590083
+    },
+    {
+      "artist": "Mumford & Sons",
+      "genre": "Other",
+      "date": "Jun 22, 2026",
+      "venue": "Fenway Park",
+      "city": "Boston, MA",
+      "onsale_datetime": "2026-02-27T15:00:00Z",
+      "onsale_tbd": false,
+      "presales": [],
+      "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-aO_",
+      "lat": 42.3464614,
+      "lon": -71.0970999
     },
     {
       "artist": "Mumford & Sons",
@@ -22518,5 +21941,5 @@
     }
   ],
   "festival_coming_soon": [],
-  "coming_soon_fetched": "2026-02-27T12:10:07.080565+00:00"
+  "coming_soon_fetched": "2026-02-27T15:16:40.482963+00:00"
 }
