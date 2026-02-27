@@ -207,5 +207,12 @@
         ]
       }
     ]
+  },
+  "We Fest": {
+    "lineup_url": "https://wefest.com/",
+    "image_url": "https://wefest.com/wp-content/uploads/2023/09/WE-Fest-2023-Venue-Sunset-2000-091223.jpg",
+    "last_updated": "2026-02-27",
+    "days": [],
+    "extraction_note": "No artists extracted automatically. Edit manually."
   }
 }

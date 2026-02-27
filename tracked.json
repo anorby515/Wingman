@@ -644,6 +644,10 @@
     "Minnesota Country Club Festival": {
       "url": "https://www.minnesotacountryclubfest.com/",
       "paused": false
+    },
+    "We Fest": {
+      "url": "https://wefest.com/",
+      "paused": false
     }
   }
 }
