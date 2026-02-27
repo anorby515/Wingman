@@ -14,9 +14,6 @@ from fastapi.testclient import TestClient
 # Minimal valid config for tests
 MINIMAL_CONFIG = {
     "center_city": "Des Moines, IA",
-    "radius_miles": 200,
-    "cities_in_range": [],
-    "states_in_range": [],
     "artists": {},
     "venues": {},
     "festivals": {},
