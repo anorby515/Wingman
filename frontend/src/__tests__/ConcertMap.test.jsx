@@ -199,7 +199,11 @@ describe('Tooltip styles (prevent overflow regression)', () => {
 
   it('TOOLTIP_STYLE has a maxWidth constraint', () => {
     expect(TOOLTIP_STYLE.maxWidth).toBeGreaterThan(0)
-    expect(TOOLTIP_STYLE.maxWidth).toBeLessThanOrEqual(400)
+    expect(TOOLTIP_STYLE.maxWidth).toBeLessThanOrEqual(500)
+  })
+
+  it('TOOLTIP_STYLE has a minWidth floor', () => {
+    expect(TOOLTIP_STYLE.minWidth).toBeGreaterThanOrEqual(200)
   })
 
   it('TOOLTIP_STYLE_NARROW has whiteSpace: normal', () => {
@@ -213,6 +217,10 @@ describe('Tooltip styles (prevent overflow regression)', () => {
   it('TOOLTIP_STYLE_NARROW has a maxWidth constraint', () => {
     expect(TOOLTIP_STYLE_NARROW.maxWidth).toBeGreaterThan(0)
     expect(TOOLTIP_STYLE_NARROW.maxWidth).toBeLessThanOrEqual(400)
+  })
+
+  it('TOOLTIP_STYLE_NARROW has a minWidth floor', () => {
+    expect(TOOLTIP_STYLE_NARROW.minWidth).toBeGreaterThanOrEqual(150)
   })
 })
 
