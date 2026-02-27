@@ -8,7 +8,7 @@ import SettingsTab         from './components/SettingsTab.jsx'
 const DEMO = import.meta.env.VITE_DEMO_MODE === 'true'
 
 const ALL_TABS = [
-  { id: 'concerts',     label: 'Concerts & Festivals' },
+  { id: 'concerts',     label: 'Concerts' },
   { id: 'on-sale-soon', label: 'On Sale Soon'         },
   { id: 'festivals',    label: 'Festivals'            },
   { id: 'configure',    label: 'Configure'            },
