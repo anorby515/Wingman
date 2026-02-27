@@ -94,7 +94,7 @@ function FestivalCard({ festivalName, festivalUrl, shows, lineup, trackedArtists
           <img
             src={lineup.image_url}
             alt={`${festivalName} lineup`}
-            className="w-full h-48 object-cover object-top"
+            className="w-full"
           />
         </a>
       )}
