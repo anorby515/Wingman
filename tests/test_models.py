@@ -7,33 +7,13 @@ from backend.models import (
     ArtistConfig,
     ComingSoonPresale,
     ComingSoonShow,
-    ConcertState,
     DismissedSuggestion,
     FestivalConfig,
     GeoLocation,
-    Show,
-    Summary,
     VenueConfig,
     VenueShow,
     WingmanConfig,
 )
-
-
-# ── Show ────────────────────────────────────────────────────────────────────
-
-class TestShow:
-    def test_minimal(self):
-        s = Show(date="Mar 15, 2026", venue="Kinnick", city="Iowa City, IA")
-        assert s.status == "on_sale"
-        assert s.lat is None
-
-    def test_with_coords(self):
-        s = Show(date="Jun 1, 2026", venue="X", city="Y", lat=41.5, lon=-93.6)
-        assert s.lat == 41.5
-
-    def test_invalid_status(self):
-        with pytest.raises(ValidationError):
-            Show(date="X", venue="Y", city="Z", status="invalid")
 
 
 # ── VenueShow ───────────────────────────────────────────────────────────────
@@ -104,24 +84,6 @@ class TestComingSoonShow:
             ],
         )
         assert len(s.presales) == 1
-
-
-# ── ConcertState ────────────────────────────────────────────────────────────
-
-class TestConcertState:
-    def test_minimal(self):
-        cs = ConcertState(last_run="2026-02-25", center="Des Moines, IA")
-        assert cs.artist_shows == {}
-
-    def test_with_shows(self):
-        cs = ConcertState(
-            last_run="2026-02-25",
-            center="Des Moines, IA",
-            artist_shows={
-                "Caamp": [Show(date="Jun 1, 2026", venue="X", city="Y")]
-            },
-        )
-        assert len(cs.artist_shows["Caamp"]) == 1
 
 
 # ── DismissedSuggestion ────────────────────────────────────────────────────

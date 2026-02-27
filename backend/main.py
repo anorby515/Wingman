@@ -172,9 +172,6 @@ class FestivalPatch(BaseModel):
 
 class SettingsPatch(BaseModel):
     center_city: Optional[str] = None
-    radius_miles: Optional[int] = None
-    cities_in_range: Optional[list[str]] = None
-    states_in_range: Optional[list[str]] = None
     github_pages_url: Optional[str] = None
     ticketmaster_api_key: Optional[str] = None
 
@@ -204,12 +201,6 @@ def patch_settings(body: SettingsPatch) -> Any:
     cfg = _read_config()
     if body.center_city is not None:
         cfg["center_city"] = body.center_city
-    if body.radius_miles is not None:
-        cfg["radius_miles"] = body.radius_miles
-    if body.cities_in_range is not None:
-        cfg["cities_in_range"] = body.cities_in_range
-    if body.states_in_range is not None:
-        cfg["states_in_range"] = body.states_in_range
     if body.github_pages_url is not None:
         cfg["github_pages_url"] = body.github_pages_url
     if body.ticketmaster_api_key is not None:
@@ -217,9 +208,6 @@ def patch_settings(body: SettingsPatch) -> Any:
     _write_config(cfg)
     return {"ok": True, "settings": {
         "center_city": cfg["center_city"],
-        "radius_miles": cfg["radius_miles"],
-        "cities_in_range": cfg["cities_in_range"],
-        "states_in_range": cfg["states_in_range"],
         "github_pages_url": cfg.get("github_pages_url", ""),
         "ticketmaster_api_key": cfg.get("ticketmaster_api_key") or "",
     }}
