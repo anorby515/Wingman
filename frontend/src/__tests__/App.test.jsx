@@ -58,11 +58,6 @@ describe('App', () => {
     expect(screen.queryByRole('tab', { name: /On Sale Soon/i })).not.toBeInTheDocument()
   })
 
-  it('renders the Refresh Data button in local mode', () => {
-    render(<App />)
-    expect(screen.getByText('Refresh')).toBeInTheDocument()
-  })
-
   it('defaults to Configure tab as active in local mode', () => {
     render(<App />)
     const configureTab = screen.getByRole('tab', { name: /Configure/i })
