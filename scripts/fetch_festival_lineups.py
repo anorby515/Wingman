@@ -107,22 +107,38 @@ def _extract_text_and_image(html_content: str) -> tuple[str, str | None]:
 
 # Words that are NOT artist names (common on festival pages)
 NOISE_WORDS = {
+    # Festival page structure
     "lineup", "tickets", "festival", "music", "arts", "experience",
     "schedule", "info", "faq", "contact", "sponsors", "partners",
     "vip", "general admission", "ga", "camping", "parking", "map",
     "directions", "volunteer", "about", "news", "shop", "merch",
     "home", "buy tickets", "get tickets", "sold out", "on sale",
     "presented by", "powered by", "sponsored by", "in partnership",
+    # Navigation / UI
+    "menu", "close", "open", "back", "next", "previous",
+    "browse faqs", "search help", "help center", "help",
+    "contact us", "safety", "accessibility", "social",
+    "buy merch", "book hotel", "download app", "reserve locker",
+    "view full lineup", "share lineup", "view lineup",
+    # Legal / policy
     "terms", "privacy", "cookie", "copyright", "all rights reserved",
+    "privacy policy", "cookie policy", "cookie settings", "cookie management",
+    "visitor policy", "terms of use", "terms of service",
+    "do not sell or share my personal information",
+    # Social / marketing
     "follow us", "subscribe", "newsletter", "email", "sign up",
-    "facebook", "instagram", "twitter", "tiktok", "youtube", "spotify",
+    "facebook", "instagram", "twitter", "twitter/x", "tiktok",
+    "youtube", "spotify", "discord", "reddit",
+    "get updates", "connect",
+    # Day/date words
     "friday", "saturday", "sunday", "monday", "tuesday", "wednesday",
     "thursday", "january", "february", "march", "april", "may", "june",
     "july", "august", "september", "october", "november", "december",
     "day 1", "day 2", "day 3", "day 4", "stage", "main stage",
     "second stage", "tent", "more to come", "tba", "tbd",
-    "and more", "more artists", "full lineup", "view lineup",
-    "menu", "close", "open", "back", "next", "previous",
+    "and more", "more artists", "full lineup",
+    # Misc page junk
+    "no items found.", "our other festivals", "past lineups",
 }
 
 # Day header patterns
@@ -139,7 +155,7 @@ DATE_PATTERN = re.compile(
 )
 
 
-def _is_noise(text: str) -> bool:
+def _is_noise(text: str, festival_name: str = "") -> bool:
     """Return True if text is a common non-artist word."""
     lower = text.lower().strip()
     if lower in NOISE_WORDS:
@@ -159,10 +175,38 @@ def _is_noise(text: str) -> bool:
     # Copyright lines
     if "©" in lower or "copyright" in lower:
         return True
+    # Marketing CTAs and ticket language
+    if any(kw in lower for kw in (
+        "on sale", "buy now", "sold out", "waitlist", "tickets remain",
+        "sign up", "get updates", "limited time", "starting at $",
+        "check it out", "learn more", "view premium",
+    )):
+        return True
+    # Looks like a US state abbreviation + city (e.g. "Saint Charles, Iowa")
+    if re.match(r"^[a-z\s.]+,\s*[a-z\s]+$", lower) and len(lower) < 40:
+        return True
+    # All-caps location patterns (e.g. "HARRIET ISLAND REGIONAL PARK")
+    if text.isupper() and any(kw in lower for kw in ("park", "island", "center", "arena", "stadium")):
+        return True
+    # Date range patterns (e.g. "July 30 - Aug. 2, 2026", "April 18-19, 2026")
+    if re.match(r"^[a-z]+\.?\s+\d{1,2}\s*[-–]\s*", lower):
+        return True
+    if re.search(r"\b20\d{2}\b", lower) and re.search(r"(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)", lower):
+        return True
+    # Festival's own name appearing as an "artist"
+    if festival_name and (lower == festival_name.lower() or
+                          lower.replace(" festival", "") == festival_name.lower().replace(" festival", "")):
+        return True
+    # "or sign up via email" and similar patterns
+    if lower.startswith("or ") and len(lower) < 30:
+        return True
+    # "be the first to know" type marketing
+    if "first to know" in lower or "be the first" in lower:
+        return True
     return False
 
 
-def _extract_artists_from_text(text: str) -> dict[str, list[str]]:
+def _extract_artists_from_text(text: str, festival_name: str = "") -> dict[str, list[str]]:
     """Extract artist names from page text, grouped by day if possible.
 
     Returns a dict mapping day labels to artist lists.
@@ -183,7 +227,7 @@ def _extract_artists_from_text(text: str) -> dict[str, list[str]]:
             continue
 
         # Skip noise
-        if _is_noise(line):
+        if _is_noise(line, festival_name):
             continue
 
         # Some pages use bullet separators or pipes
@@ -200,7 +244,7 @@ def _extract_artists_from_text(text: str) -> dict[str, list[str]]:
 
         for candidate in candidates:
             candidate = candidate.strip(" \t\r\n•·|–—-*,")
-            if not candidate or _is_noise(candidate):
+            if not candidate or _is_noise(candidate, festival_name):
                 continue
 
             # Normalize whitespace
@@ -244,7 +288,7 @@ def scrape_festival(name: str, url: str, existing: dict | None = None) -> dict |
         return None
 
     text, og_image = _extract_text_and_image(html_content)
-    artist_days = _extract_artists_from_text(text)
+    artist_days = _extract_artists_from_text(text, festival_name=name)
 
     # Flatten to get total count
     total = sum(len(v) for v in artist_days.values())
