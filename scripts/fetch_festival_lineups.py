@@ -228,14 +228,19 @@ def _load_existing() -> dict:
     return {}
 
 
-def scrape_festival(name: str, url: str) -> dict | None:
+def scrape_festival(name: str, url: str, existing: dict | None = None) -> dict | None:
     """Scrape a single festival lineup page.
 
     Returns a lineup dict or None on failure.
+    If the scrape yields no artists but existing data has them, preserves
+    the existing data (only updating image_url if a new one was found).
     """
     print(f"\n  Fetching: {url}")
     html_content = _fetch_page(url)
     if not html_content:
+        if existing and existing.get("days"):
+            print(f"  Fetch failed — keeping existing lineup ({sum(len(d.get('artists', [])) for d in existing['days'])} artists)")
+            return existing
         return None
 
     text, og_image = _extract_text_and_image(html_content)
@@ -244,7 +249,22 @@ def scrape_festival(name: str, url: str) -> dict | None:
     # Flatten to get total count
     total = sum(len(v) for v in artist_days.values())
 
-    if total == 0:
+    existing_total = 0
+    if existing and existing.get("days"):
+        existing_total = sum(len(d.get("artists", [])) for d in existing["days"])
+
+    if total == 0 or total < existing_total // 2:
+        # Scrape yielded nothing useful (JS-rendered page, image-based lineup, etc.)
+        # Preserve existing data if we have it
+        if existing and existing_total > 0:
+            reason = "no artists found" if total == 0 else f"only {total} artists (existing has {existing_total})"
+            print(f"  Scrape yielded {reason} — keeping existing lineup")
+            # Still update image_url if we found one and existing doesn't have one
+            if og_image and not existing.get("image_url"):
+                existing["image_url"] = og_image
+                print(f"  Updated poster image: {og_image}")
+            return existing
+
         print(f"  WARNING: No artists extracted from {url}")
         print("  The page may use JavaScript rendering or image-based lineups.")
         print("  You can manually edit festival_lineups.json to add artists.")
@@ -311,7 +331,7 @@ def main():
         print(f"  {name}")
         print(f"{'='*60}")
 
-        result = scrape_festival(name, url)
+        result = scrape_festival(name, url, existing=existing.get(name))
         if result:
             updated[name] = result
 
