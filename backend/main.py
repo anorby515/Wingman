@@ -443,6 +443,14 @@ def get_festival_lineups() -> Any:
         if coords:
             info["lat"] = coords["lat"]
             info["lon"] = coords["lon"]
+        else:
+            # Geocode on first request — results are cached for next time
+            result = _geocode(f"{venue}, {city}")
+            if not result:
+                result = _geocode(city)
+            if result:
+                info["lat"] = result[0]
+                info["lon"] = result[1]
 
     return lineups
 
