@@ -21,7 +21,7 @@ from typing import Any, Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -528,6 +528,16 @@ def spotify_disconnect() -> Any:
 
 
 # ── Serve built frontend ────────────────────────────────────────────────────
+# NOTE: explicit catch-all instead of app.mount to avoid Starlette routing issues
 _dist = REPO / "frontend" / "dist"
-if _dist.exists():
-    app.mount("/", StaticFiles(directory=str(_dist), html=True), name="static")
+
+@app.get("/{path:path}", include_in_schema=False)
+async def serve_frontend(path: str) -> FileResponse:
+    if _dist.exists():
+        candidate = _dist / path
+        if candidate.is_file():
+            return FileResponse(candidate)
+        index = _dist / "index.html"
+        if index.exists():
+            return FileResponse(index)
+    raise HTTPException(status_code=404, detail="Not found")
