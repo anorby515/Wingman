@@ -28,6 +28,9 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
+        // Exclude Spotify OAuth routes from service worker navigation fallback
+        // so the browser hits the FastAPI server directly instead of getting the cached SPA
+        navigateFallbackDenylist: [/^\/auth\//, /^\/callback/],
         runtimeCaching: isDemo ? [] : [
           {
             urlPattern: /^\/api\//,
