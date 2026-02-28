@@ -546,8 +546,8 @@
         "venue": "Soldier Field",
         "city": "Chicago, IL",
         "status": "on_sale",
-        "lat": 41.8624515,
-        "lon": -87.6167151,
+        "lat": 41.8623356,
+        "lon": -87.6176477,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -559,8 +559,8 @@
         "venue": "Soldier Field",
         "city": "Chicago, IL",
         "status": "on_sale",
-        "lat": 41.8624515,
-        "lon": -87.6167151,
+        "lat": 41.8623356,
+        "lon": -87.6176477,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -730,8 +730,8 @@
         "venue": "North Charleston Coliseum",
         "city": "North Charleston, SC",
         "status": "on_sale",
-        "lat": 32.8546197,
-        "lon": -79.9748103,
+        "lat": 32.865567,
+        "lon": -80.0223423,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -1241,8 +1241,8 @@
         "venue": "Joe's on Weed Street",
         "city": "Chicago, IL",
         "status": "on_sale",
-        "lat": null,
-        "lon": null,
+        "lat": 41.8755616,
+        "lon": -87.6244212,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -1566,8 +1566,8 @@
         "venue": "Target Center",
         "city": "Minneapolis, MN",
         "status": "on_sale",
-        "lat": 44.9772995,
-        "lon": -93.2654692,
+        "lat": 44.9795917,
+        "lon": -93.2759828,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -1631,8 +1631,8 @@
         "venue": "Casey's Center",
         "city": "Des Moines, IA",
         "status": "on_sale",
-        "lat": 41.5868,
-        "lon": -93.625,
+        "lat": 41.5925082,
+        "lon": -93.6210723,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -6278,8 +6278,8 @@
         "venue": "Soldier Field",
         "city": "Chicago, IL",
         "status": "on_sale",
-        "lat": 41.8624515,
-        "lon": -87.6167151,
+        "lat": 41.8623356,
+        "lon": -87.6176477,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -11384,8 +11384,8 @@
         "venue": "McLane Stadium",
         "city": "Waco, TX",
         "status": "on_sale",
-        "lat": 31.5582247,
-        "lon": -97.1156821,
+        "lat": 31.558209,
+        "lon": -97.1164472,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -11397,8 +11397,8 @@
         "venue": "McLane Stadium",
         "city": "Waco, TX",
         "status": "on_sale",
-        "lat": 31.5582247,
-        "lon": -97.1156821,
+        "lat": 31.558209,
+        "lon": -97.1164472,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -13045,7 +13045,7 @@
         "status": "on_sale",
         "lat": 39.6004747,
         "lon": -104.8937836,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7OgZe"
@@ -16030,25 +16030,10 @@
         "status": "on_sale",
         "lat": 39.3600447,
         "lon": -84.3535234,
-        "is_new": true,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://on.fgtix.com/trk/UtcFb"
-      }
-    ],
-    "Hozier": [
-      {
-        "date": "Mar 5, 2026",
-        "raw_date": "2026-03-05",
-        "venue": "Beacon Theatre",
-        "city": "New York, NY",
-        "status": "on_sale",
-        "lat": 40.7804903,
-        "lon": -73.9811314,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
-        "ticketmaster_url": "https://veeps.com/loverocksnyc/7408afa4-dc49-4a43-b6e9-7a041f0aee67"
+        "ticketmaster_url": "https://on.fgtix.com/trk/UtcFb"
       }
     ],
     "Brooks & Dunn": [
@@ -16188,8 +16173,8 @@
         "venue": "Soldier Field",
         "city": "Chicago, IL",
         "status": "on_sale",
-        "lat": 41.8624515,
-        "lon": -87.6167151,
+        "lat": 41.8623356,
+        "lon": -87.6176477,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -17513,6 +17498,258 @@
         "tracked": false
       }
     ],
+    "Red Rocks": [
+      {
+        "date": "Mar 27, 2026",
+        "artist": "Crankdat",
+        "tracked": false
+      },
+      {
+        "date": "Mar 28, 2026",
+        "artist": "Ravenscoon",
+        "tracked": false
+      },
+      {
+        "date": "Apr 3, 2026",
+        "artist": "INZO",
+        "tracked": false
+      },
+      {
+        "date": "Apr 4, 2026",
+        "artist": "it's murph",
+        "tracked": false
+      },
+      {
+        "date": "Apr 10, 2026",
+        "artist": "Zingara",
+        "tracked": false
+      },
+      {
+        "date": "Apr 11, 2026",
+        "artist": "Liquid Stranger",
+        "tracked": false
+      },
+      {
+        "date": "Apr 16, 2026",
+        "artist": "bbno$",
+        "tracked": false
+      },
+      {
+        "date": "Apr 17, 2026",
+        "artist": "Sublime",
+        "tracked": false
+      },
+      {
+        "date": "Apr 18, 2026",
+        "artist": "Sublime",
+        "tracked": false
+      },
+      {
+        "date": "Apr 19, 2026",
+        "artist": "Wiz Khalifa",
+        "tracked": false
+      },
+      {
+        "date": "Apr 20, 2026",
+        "artist": "Ice Cube",
+        "tracked": false
+      },
+      {
+        "date": "Apr 21, 2026",
+        "artist": "Ethel Cain",
+        "tracked": false
+      },
+      {
+        "date": "Apr 22, 2026",
+        "artist": "Dustin Lynch",
+        "tracked": false
+      },
+      {
+        "date": "Apr 23, 2026",
+        "artist": "Subtronics",
+        "tracked": false
+      },
+      {
+        "date": "Apr 24, 2026",
+        "artist": "Subtronics",
+        "tracked": false
+      },
+      {
+        "date": "Apr 25, 2026",
+        "artist": "Alesso",
+        "tracked": false
+      },
+      {
+        "date": "Apr 25, 2026",
+        "artist": "Alesso",
+        "tracked": false
+      },
+      {
+        "date": "Apr 26, 2026",
+        "artist": "Bob Moses",
+        "tracked": false
+      },
+      {
+        "date": "Apr 28, 2026",
+        "artist": "Lewis Capaldi",
+        "tracked": false
+      },
+      {
+        "date": "Apr 29, 2026",
+        "artist": "Lewis Capaldi",
+        "tracked": false
+      },
+      {
+        "date": "Apr 30, 2026",
+        "artist": "Electric Callboy",
+        "tracked": false
+      },
+      {
+        "date": "Apr 30, 2026",
+        "artist": "Electric Callboy",
+        "tracked": false
+      },
+      {
+        "date": "May 1, 2026",
+        "artist": "Two Friends",
+        "tracked": false
+      },
+      {
+        "date": "May 1, 2026",
+        "artist": "Two Friends",
+        "tracked": false
+      },
+      {
+        "date": "May 2, 2026",
+        "artist": "Jason Isbell and the 400 Unit",
+        "tracked": false
+      },
+      {
+        "date": "May 3, 2026",
+        "artist": "Puscifer",
+        "tracked": false
+      },
+      {
+        "date": "May 5, 2026",
+        "artist": "David Guetta",
+        "tracked": false
+      },
+      {
+        "date": "May 6, 2026",
+        "artist": "Bright Eyes",
+        "tracked": false
+      },
+      {
+        "date": "May 7, 2026",
+        "artist": "Alejandro Fern\u00e1ndez",
+        "tracked": false
+      },
+      {
+        "date": "May 7, 2026",
+        "artist": "Alejandro Fern\u00e1ndez",
+        "tracked": false
+      },
+      {
+        "date": "May 8, 2026",
+        "artist": "ALLEYCVT",
+        "tracked": false
+      },
+      {
+        "date": "May 9, 2026",
+        "artist": "Cloonee",
+        "tracked": false
+      },
+      {
+        "date": "May 10, 2026",
+        "artist": "Hippie Sabotage",
+        "tracked": false
+      },
+      {
+        "date": "May 10, 2026",
+        "artist": "Hippie Sabotage",
+        "tracked": false
+      },
+      {
+        "date": "May 11, 2026",
+        "artist": "YUNGBLUD",
+        "tracked": false
+      },
+      {
+        "date": "May 11, 2026",
+        "artist": "YUNGBLUD",
+        "tracked": false
+      },
+      {
+        "date": "May 13, 2026",
+        "artist": "Russell Dickerson",
+        "tracked": false
+      },
+      {
+        "date": "May 16, 2026",
+        "artist": "LSDREAM",
+        "tracked": false
+      },
+      {
+        "date": "May 16, 2026",
+        "artist": "LSDREAM",
+        "tracked": false
+      },
+      {
+        "date": "May 17, 2026",
+        "artist": "The Elovaters",
+        "tracked": false
+      },
+      {
+        "date": "May 18, 2026",
+        "artist": "Khalid",
+        "tracked": false
+      },
+      {
+        "date": "May 18, 2026",
+        "artist": "Khalid",
+        "tracked": false
+      },
+      {
+        "date": "May 19, 2026",
+        "artist": "Kevin Gates",
+        "tracked": false
+      },
+      {
+        "date": "May 21, 2026",
+        "artist": "flipturn",
+        "tracked": false
+      },
+      {
+        "date": "May 22, 2026",
+        "artist": "Seven Lions",
+        "tracked": false
+      },
+      {
+        "date": "May 23, 2026",
+        "artist": "Fisher",
+        "tracked": false
+      },
+      {
+        "date": "May 24, 2026",
+        "artist": "Alabama Shakes",
+        "tracked": true
+      },
+      {
+        "date": "May 25, 2026",
+        "artist": "Alabama Shakes",
+        "tracked": true
+      },
+      {
+        "date": "May 27, 2026",
+        "artist": "Santana",
+        "tracked": false
+      },
+      {
+        "date": "May 27, 2026",
+        "artist": "Santana",
+        "tracked": false
+      }
+    ],
     "Wrigley Field": [
       {
         "date": "Jun 11, 2026",
@@ -18485,7 +18722,7 @@
         "status": "on_sale",
         "lat": 46.817181,
         "lon": -95.845325,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://on.fgtix.com/trk/T8AP"
@@ -18499,7 +18736,7 @@
         "status": "on_sale",
         "lat": 46.817181,
         "lon": -95.845325,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://on.fgtix.com/trk/T8AP"
@@ -18513,7 +18750,7 @@
         "status": "on_sale",
         "lat": 46.817181,
         "lon": -95.845325,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://on.fgtix.com/trk/T8AP"
@@ -18527,7 +18764,7 @@
         "status": "on_sale",
         "lat": 46.817181,
         "lon": -95.845325,
-        "is_new": true,
+        "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
         "ticketmaster_url": "https://on.fgtix.com/trk/T8AP"
@@ -18539,523 +18776,266 @@
     "Stage Coach Festival"
   ],
   "changes": {
-    "artists": {
-      "Eric Church": {
-        "added": [],
-        "removed": [
-          {
-            "date": "Feb 27, 2026",
-            "raw_date": "2026-02-27",
-            "venue": "Dickies Arena",
-            "city": "Fort Worth, TX",
-            "status": "on_sale",
-            "lat": 32.7410656,
-            "lon": -97.3684832,
-            "is_new": false,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/eric-church-free-the-machine-tour-fort-worth-texas-02-27-2026/event/0C006331AE0B3101"
-          }
-        ],
-        "newly_sold": []
-      },
-      "Jason Isbell": {
-        "added": [],
-        "removed": [
-          {
-            "date": "Feb 27, 2026",
-            "raw_date": "2026-02-27",
-            "venue": "Boch Center Wang Theatre",
-            "city": "Boston, MA",
-            "status": "on_sale",
-            "lat": 42.3588336,
-            "lon": -71.0578303,
-            "is_new": false,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/jason-isbell-and-the-400-unit-boston-massachusetts-02-27-2026/event/01006359E43AF6E4"
-          }
-        ],
-        "newly_sold": []
-      },
-      "Chris Stapleton": {
-        "added": [],
-        "removed": [
-          {
-            "date": "Feb 27, 2026",
-            "raw_date": "2026-02-27",
-            "venue": "Mohegan Sun Arena",
-            "city": "Uncasville, CT",
-            "status": "on_sale",
-            "lat": 41.4911078,
-            "lon": -72.0897434,
-            "is_new": false,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/an-evening-with-chris-stapleton-uncasville-connecticut-02-27-2026/event/1D00632ADF1D2357"
-          }
-        ],
-        "newly_sold": []
-      },
-      "Dierks Bentley": {
-        "added": [],
-        "removed": [
-          {
-            "date": "Feb 27, 2026",
-            "raw_date": "2026-02-27",
-            "venue": "Tempe Beach Park",
-            "city": "Tempe, AZ",
-            "status": "on_sale",
-            "lat": 33.4309226,
-            "lon": -111.9418067,
-            "is_new": false,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://on.fgtix.com/trk/6xEqb"
-          }
-        ],
-        "newly_sold": []
-      },
-      "Foo Fighters": {
-        "added": [],
-        "removed": [
-          {
-            "date": "Feb 27, 2026",
-            "raw_date": "2026-02-27",
-            "venue": "John, James and Clara Knight Stage",
-            "city": "Akron, OH",
-            "status": "on_sale",
-            "lat": 41.083064,
-            "lon": -81.518485,
-            "is_new": false,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/back-forth-foo-fighters-tribute-akron-ohio-02-27-2026/event/050063704C22F541"
-          }
-        ],
-        "newly_sold": []
-      },
-      "Stephen Wilson Jr.": {
-        "added": [],
-        "removed": [
-          {
-            "date": "Feb 27, 2026",
-            "raw_date": "2026-02-27",
-            "venue": "Dickies Arena",
-            "city": "Fort Worth, TX",
-            "status": "on_sale",
-            "lat": 32.7410656,
-            "lon": -97.3684832,
-            "is_new": false,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/eric-church-free-the-machine-tour-fort-worth-texas-02-27-2026/event/0C006331AE0B3101"
-          }
-        ],
-        "newly_sold": []
-      },
-      "Turnpike Troubadours": {
-        "added": [],
-        "removed": [
-          {
-            "date": "Feb 27, 2026",
-            "raw_date": "2026-02-27",
-            "venue": "Akins Arena at The Classic Center",
-            "city": "Athens, GA",
-            "status": "on_sale",
-            "lat": 33.9597677,
-            "lon": -83.376398,
-            "is_new": false,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7ONfI"
-          }
-        ],
-        "newly_sold": []
-      },
-      "Daft Punk": {
-        "added": [],
-        "removed": [
-          {
-            "date": "Feb 27, 2026",
-            "raw_date": "2026-02-27",
-            "venue": "Time Nightclub",
-            "city": "Costa Mesa, CA",
-            "status": "on_sale",
-            "lat": 33.6633386,
-            "lon": -117.903317,
-            "is_new": false,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketweb.com/event/one-more-time-a-daft-time-nightclub-tickets/14096004"
-          },
-          {
-            "date": "Feb 27, 2026",
-            "raw_date": "2026-02-27",
-            "venue": "Studio 919 (Previously known as Wicket Hall)",
-            "city": "Victoria, BC, CA",
-            "status": "on_sale",
-            "lat": 48.4283182,
-            "lon": -123.364953,
-            "is_new": false,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketweb.ca/event/daft-punk-night-studio-919-previously-known-as-tickets/14058204"
-          }
-        ],
-        "newly_sold": []
-      },
-      "Dave Matthews Band": {
-        "added": [
-          {
-            "date": "Aug 28, 2026",
-            "raw_date": "2026-08-28",
-            "venue": "Fiddlers Green Amphitheatre",
-            "city": "Englewood, CO",
-            "status": "on_sale",
-            "lat": 39.6004747,
-            "lon": -104.8937836,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7OgZe"
-          }
-        ],
-        "removed": [],
-        "newly_sold": []
-      },
-      "Nine Inch Nails": {
-        "added": [],
-        "removed": [
-          {
-            "date": "Feb 27, 2026",
-            "raw_date": "2026-02-27",
-            "venue": "BOK Center",
-            "city": "Tulsa, OK",
-            "status": "on_sale",
-            "lat": 36.1526653,
-            "lon": -95.9963745,
-            "is_new": false,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://www.ticketmaster.com/nine-inch-nails-peel-it-back-tulsa-oklahoma-02-27-2026/event/2000633DD4F02DA3"
-          }
-        ],
-        "newly_sold": []
-      },
-      "Jordan Davis": {
-        "added": [
-          {
-            "date": "Aug 9, 2026",
-            "raw_date": "2026-08-09",
-            "venue": "Voice of America MetroPark",
-            "city": "West Chester, OH",
-            "status": "on_sale",
-            "lat": 39.3600447,
-            "lon": -84.3535234,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://on.fgtix.com/trk/UtcFb"
-          }
-        ],
-        "removed": [
-          {
-            "date": "Aug 6, 2026",
-            "raw_date": "2026-08-06",
-            "venue": "Voice of America MetroPark",
-            "city": "West Chester, OH",
-            "status": "on_sale",
-            "lat": 39.3600447,
-            "lon": -84.3535234,
-            "is_new": true,
-            "onsale_datetime": null,
-            "onsale_tbd": false,
-            "ticketmaster_url": "https://on.fgtix.com/trk/UtcFb"
-          }
-        ],
-        "newly_sold": []
-      }
-    },
+    "artists": {},
     "venues": {
-      "Ryman Auditorium": {
+      "Red Rocks": {
         "added": [
           {
-            "date": "Feb 28, 2026",
-            "artist": "Kenny Wayne Shepherd",
-            "tracked": false
-          },
-          {
-            "date": "Mar 3, 2026",
-            "artist": "HARDY",
-            "tracked": false
-          },
-          {
-            "date": "Mar 4, 2026",
-            "artist": "Priscilla Block",
-            "tracked": false
-          },
-          {
-            "date": "Mar 5, 2026",
-            "artist": "The Wood Brothers",
-            "tracked": false
-          },
-          {
-            "date": "Mar 6, 2026",
-            "artist": "KC & the Sunshine Band",
-            "tracked": false
-          },
-          {
-            "date": "Mar 20, 2026",
-            "artist": "Robert Earl Keen",
-            "tracked": false
-          },
-          {
-            "date": "Mar 21, 2026",
-            "artist": "Randy Rogers",
-            "tracked": false
-          },
-          {
-            "date": "Mar 22, 2026",
-            "artist": "Pat Metheny",
-            "tracked": false
-          },
-          {
-            "date": "Mar 23, 2026",
-            "artist": "Steven Curtis Chapman",
-            "tracked": false
-          },
-          {
-            "date": "Mar 26, 2026",
-            "artist": "Robert Plant",
-            "tracked": false
-          },
-          {
             "date": "Mar 27, 2026",
-            "artist": "Trampled By Turtles",
-            "tracked": false
-          },
-          {
-            "date": "Mar 27, 2026",
-            "artist": "Trampled By Turtles",
+            "artist": "Crankdat",
             "tracked": false
           },
           {
             "date": "Mar 28, 2026",
-            "artist": "Cooper Alan",
-            "tracked": false
-          },
-          {
-            "date": "Mar 29, 2026",
-            "artist": "Boys Like Girls",
-            "tracked": false
-          },
-          {
-            "date": "Mar 29, 2026",
-            "artist": "Boys Like Girls",
-            "tracked": false
-          },
-          {
-            "date": "Mar 31, 2026",
-            "artist": "Herb Alpert",
-            "tracked": false
-          },
-          {
-            "date": "Mar 31, 2026",
-            "artist": "Herb Alpert",
-            "tracked": false
-          },
-          {
-            "date": "Apr 1, 2026",
-            "artist": "Max McNown",
-            "tracked": false
-          },
-          {
-            "date": "Apr 2, 2026",
-            "artist": "Max McNown",
+            "artist": "Ravenscoon",
             "tracked": false
           },
           {
             "date": "Apr 3, 2026",
-            "artist": "The Format",
+            "artist": "INZO",
             "tracked": false
           },
           {
             "date": "Apr 4, 2026",
-            "artist": "Patti LaBelle",
+            "artist": "it's murph",
             "tracked": false
           },
           {
-            "date": "Apr 4, 2026",
-            "artist": "Patti LaBelle",
-            "tracked": false
-          },
-          {
-            "date": "Apr 8, 2026",
-            "artist": "BRELAND",
+            "date": "Apr 10, 2026",
+            "artist": "Zingara",
             "tracked": false
           },
           {
             "date": "Apr 11, 2026",
-            "artist": "Morgan Jay",
+            "artist": "Liquid Stranger",
             "tracked": false
           },
           {
-            "date": "Apr 11, 2026",
-            "artist": "Morgan Jay",
+            "date": "Apr 16, 2026",
+            "artist": "bbno$",
+            "tracked": false
+          },
+          {
+            "date": "Apr 17, 2026",
+            "artist": "Sublime",
+            "tracked": false
+          },
+          {
+            "date": "Apr 18, 2026",
+            "artist": "Sublime",
+            "tracked": false
+          },
+          {
+            "date": "Apr 19, 2026",
+            "artist": "Wiz Khalifa",
+            "tracked": false
+          },
+          {
+            "date": "Apr 20, 2026",
+            "artist": "Ice Cube",
+            "tracked": false
+          },
+          {
+            "date": "Apr 21, 2026",
+            "artist": "Ethel Cain",
+            "tracked": false
+          },
+          {
+            "date": "Apr 22, 2026",
+            "artist": "Dustin Lynch",
+            "tracked": false
+          },
+          {
+            "date": "Apr 23, 2026",
+            "artist": "Subtronics",
+            "tracked": false
+          },
+          {
+            "date": "Apr 24, 2026",
+            "artist": "Subtronics",
             "tracked": false
           },
           {
             "date": "Apr 25, 2026",
-            "artist": "Hayley Williams",
+            "artist": "Alesso",
             "tracked": false
           },
           {
             "date": "Apr 25, 2026",
-            "artist": "Hayley Williams",
+            "artist": "Alesso",
             "tracked": false
           },
           {
             "date": "Apr 26, 2026",
-            "artist": "Snarky Puppy",
-            "tracked": false
-          },
-          {
-            "date": "Apr 27, 2026",
-            "artist": "Hayley Williams",
-            "tracked": false
-          },
-          {
-            "date": "Apr 27, 2026",
-            "artist": "Hayley Williams",
+            "artist": "Bob Moses",
             "tracked": false
           },
           {
             "date": "Apr 28, 2026",
-            "artist": "Hayley Williams",
-            "tracked": false
-          },
-          {
-            "date": "Apr 28, 2026",
-            "artist": "Hayley Williams",
+            "artist": "Lewis Capaldi",
             "tracked": false
           },
           {
             "date": "Apr 29, 2026",
-            "artist": "RAYE",
+            "artist": "Lewis Capaldi",
             "tracked": false
           },
           {
-            "date": "Apr 29, 2026",
-            "artist": "Raye",
+            "date": "Apr 30, 2026",
+            "artist": "Electric Callboy",
+            "tracked": false
+          },
+          {
+            "date": "Apr 30, 2026",
+            "artist": "Electric Callboy",
             "tracked": false
           },
           {
             "date": "May 1, 2026",
-            "artist": "Ani DiFranco",
+            "artist": "Two Friends",
             "tracked": false
           },
           {
             "date": "May 1, 2026",
-            "artist": "Ani DiFranco",
+            "artist": "Two Friends",
             "tracked": false
           },
           {
             "date": "May 2, 2026",
-            "artist": "Josh Ritter",
-            "tracked": false
-          },
-          {
-            "date": "May 2, 2026",
-            "artist": "Josh Ritter",
+            "artist": "Jason Isbell and the 400 Unit",
             "tracked": false
           },
           {
             "date": "May 3, 2026",
-            "artist": "Tracy Lawrence",
+            "artist": "Puscifer",
             "tracked": false
           },
           {
             "date": "May 5, 2026",
-            "artist": "Courtney Barnett",
-            "tracked": false
-          },
-          {
-            "date": "May 5, 2026",
-            "artist": "Courtney Barnett",
+            "artist": "David Guetta",
             "tracked": false
           },
           {
             "date": "May 6, 2026",
-            "artist": "David Lee Roth",
-            "tracked": false
-          },
-          {
-            "date": "May 6, 2026",
-            "artist": "David Lee Roth",
+            "artist": "Bright Eyes",
             "tracked": false
           },
           {
             "date": "May 7, 2026",
-            "artist": "SatchVai Band featuring Joe Satriani and Steve Vai",
+            "artist": "Alejandro Fern\u00e1ndez",
             "tracked": false
           },
           {
             "date": "May 7, 2026",
-            "artist": "SatchVai Band featuring Joe Satriani and Steve Vai",
+            "artist": "Alejandro Fern\u00e1ndez",
+            "tracked": false
+          },
+          {
+            "date": "May 8, 2026",
+            "artist": "ALLEYCVT",
+            "tracked": false
+          },
+          {
+            "date": "May 9, 2026",
+            "artist": "Cloonee",
             "tracked": false
           },
           {
             "date": "May 10, 2026",
-            "artist": "Ari Lennox",
+            "artist": "Hippie Sabotage",
             "tracked": false
           },
           {
             "date": "May 10, 2026",
-            "artist": "Ari Lennox",
+            "artist": "Hippie Sabotage",
             "tracked": false
           },
           {
-            "date": "May 12, 2026",
-            "artist": "Mac DeMarco",
+            "date": "May 11, 2026",
+            "artist": "YUNGBLUD",
             "tracked": false
           },
           {
-            "date": "May 12, 2026",
-            "artist": "Mac DeMarco",
+            "date": "May 11, 2026",
+            "artist": "YUNGBLUD",
             "tracked": false
           },
           {
             "date": "May 13, 2026",
-            "artist": "Herbie Hancock",
+            "artist": "Russell Dickerson",
+            "tracked": false
+          },
+          {
+            "date": "May 16, 2026",
+            "artist": "LSDREAM",
+            "tracked": false
+          },
+          {
+            "date": "May 16, 2026",
+            "artist": "LSDREAM",
+            "tracked": false
+          },
+          {
+            "date": "May 17, 2026",
+            "artist": "The Elovaters",
+            "tracked": false
+          },
+          {
+            "date": "May 18, 2026",
+            "artist": "Khalid",
+            "tracked": false
+          },
+          {
+            "date": "May 18, 2026",
+            "artist": "Khalid",
+            "tracked": false
+          },
+          {
+            "date": "May 19, 2026",
+            "artist": "Kevin Gates",
+            "tracked": false
+          },
+          {
+            "date": "May 21, 2026",
+            "artist": "flipturn",
+            "tracked": false
+          },
+          {
+            "date": "May 22, 2026",
+            "artist": "Seven Lions",
+            "tracked": false
+          },
+          {
+            "date": "May 23, 2026",
+            "artist": "Fisher",
+            "tracked": false
+          },
+          {
+            "date": "May 24, 2026",
+            "artist": "Alabama Shakes",
+            "tracked": true
+          },
+          {
+            "date": "May 25, 2026",
+            "artist": "Alabama Shakes",
+            "tracked": true
+          },
+          {
+            "date": "May 27, 2026",
+            "artist": "Santana",
+            "tracked": false
+          },
+          {
+            "date": "May 27, 2026",
+            "artist": "Santana",
             "tracked": false
           }
         ],
         "removed": []
-      },
-      "The Salt Shed": {
-        "added": [],
-        "removed": [
-          {
-            "date": "Feb 27, 2026",
-            "artist": "Crankdat",
-            "tracked": false
-          }
-        ]
-      },
-      "The Salt Shed Indoors (Shed)": {
-        "added": [],
-        "removed": [
-          {
-            "date": "Feb 27, 2026",
-            "artist": "Crankdat",
-            "tracked": false
-          }
-        ]
       }
     },
-    "total_added": 2,
-    "total_removed": 11,
+    "total_added": 0,
+    "total_removed": 0,
     "total_sold_out": 0
   },
   "coming_soon": [
@@ -19207,5 +19187,5 @@
     }
   ],
   "festival_coming_soon": [],
-  "coming_soon_fetched": "2026-02-28T02:23:35.814485+00:00"
+  "coming_soon_fetched": "2026-02-28T11:14:06.579786+00:00"
 }
