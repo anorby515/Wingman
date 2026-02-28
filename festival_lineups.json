@@ -6,6 +6,7 @@
     "days": [
       {
         "label": "Sunday",
+        "date": null,
         "artists": [
           {
             "name": "KATSEYE",
@@ -165,18 +166,17 @@
           }
         ]
       }
-    ]
+    ],
+    "city": "St. Charles, IA"
   },
   "Minnesota Yacht Club Festival": {
     "lineup_url": "https://www.minnesotayachtclubfestival.com/lineup",
-    "image_url": "https://cdn.prod.website-files.com/677e8da8d83b93a64a43d4a5/6887c700804a289f56aa27c8_MYC%20OG%202026.png",
-    "venue": "Harriet Island Regional Park",
-    "city": "Saint Paul, MN",
+    "image_url": "https://cdn.prod.website-files.com/677e8da8d83b93a64a43d517/693af92600c8aa93faec8dc5_MYC26_AdmatFinal_Social_1080x1350-GENERAL-p-2000.png",
     "last_updated": "2026-02-27",
     "days": [
       {
-        "date": "2026-07-17",
         "label": "Friday, July 17",
+        "date": "2026-07-17",
         "artists": [
           {
             "name": "The Lumineers",
@@ -221,8 +221,8 @@
         ]
       },
       {
-        "date": "2026-07-18",
         "label": "Saturday, July 18",
+        "date": "2026-07-18",
         "artists": [
           {
             "name": "Matchbox Twenty",
@@ -267,8 +267,8 @@
         ]
       },
       {
-        "date": "2026-07-19",
         "label": "Sunday, July 19",
+        "date": "2026-07-19",
         "artists": [
           {
             "name": "The Strokes",
@@ -300,26 +300,26 @@
           }
         ]
       }
-    ]
+    ],
+    "venue": "Harriet Island Regional Park",
+    "city": "Saint Paul, MN"
   },
   "Two Step Inn": {
     "lineup_url": "https://www.twostepinn.com/lineup",
-    "image_url": "https://cdn.prod.website-files.com/66f254e7d742a43aaab72a1a/68cc51425d6108438ec495fc_TSI26_Open.Graph_1200x630%20(1)%201.png",
+    "image_url": "https://cdn.prod.website-files.com/66f254e7d742a43aaab72a87/68e544ec85b79441d434afeb_20250924-TSI-Admat-4x5-WEB.png",
     "last_updated": "2026-02-27",
     "days": [],
-    "venue": "",
-    "city": ""
+    "venue": "San Gabriel Park",
+    "city": "Georgetown, Tx"
   },
   "Minnesota Country Club Festival": {
     "lineup_url": "https://www.minnesotacountryclubfest.com/",
-    "image_url": "https://cdn.prod.website-files.com/690232caf79fb430d0fb3918/696534310024f789d3f9849f_MCC26_Website_Opengraph%201.jpg",
-    "venue": "Harriet Island Regional Park",
-    "city": "Saint Paul, MN",
+    "image_url": "https://cdn.prod.website-files.com/677e8da8d83b93a64a43d517/693af92600c8aa93faec8dc5_MYC26_AdmatFinal_Social_1080x1350-GENERAL-p-2000.png",
     "last_updated": "2026-02-27",
     "days": [
       {
-        "date": "2026-07-10",
         "label": "Friday, July 10",
+        "date": "2026-07-10",
         "artists": [
           {
             "name": "Treaty Oak Revival",
@@ -364,8 +364,8 @@
         ]
       },
       {
-        "date": "2026-07-11",
         "label": "Saturday, July 11",
+        "date": "2026-07-11",
         "artists": [
           {
             "name": "The Red Clay Strays",
@@ -409,22 +409,23 @@
           }
         ]
       }
-    ]
+    ],
+    "venue": "Harriet Island Regional Park",
+    "city": "Saint Paul, MN"
   },
   "We Fest": {
     "lineup_url": "https://wefest.com/",
-    "image_url": "https://wefest.com/wp-content/uploads/2023/09/WE-Fest-2023-Venue-Sunset-2000-091223.jpg",
+    "image_url": "https://wefest.com/wp-content/uploads/2026/02/WE-Fest-lineup-website-1080x1700-020526.jpg",
     "last_updated": "2026-02-27",
     "days": [],
-    "venue": "",
-    "city": ""
+    "city": "Detroit Lakes, MN"
   },
   "Stage Coach Festival": {
     "lineup_url": "https://www.stagecoachfestival.com/",
-    "image_url": "https://aegwebprod.blob.core.windows.net/content/seo_images/716/fYEu7uSsOXzi04Wuf25eWYrBubYBKSMyeGU68btx.jpg",
+    "image_url": "https://www.stagecoachfestival.com/#lineup",
     "last_updated": "2026-02-27",
     "days": [],
-    "venue": "",
-    "city": ""
+    "venue": "Empire Polo Club",
+    "city": "Indio, CA"
   }
 }
