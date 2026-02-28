@@ -155,6 +155,16 @@ DATE_PATTERN = re.compile(
 )
 
 
+def _normalize_for_comparison(name: str) -> str:
+    """Strip common festival suffixes and non-alphanumeric chars for matching."""
+    s = name.lower().strip()
+    for suffix in ("music festival", "music fest", "festival", "fest"):
+        if s.endswith(suffix):
+            s = s[: -len(suffix)].strip()
+            break
+    return re.sub(r"[^a-z0-9]", "", s)
+
+
 def _is_noise(text: str, festival_name: str = "") -> bool:
     """Return True if text is a common non-artist word."""
     lower = text.lower().strip()
@@ -193,10 +203,15 @@ def _is_noise(text: str, festival_name: str = "") -> bool:
         return True
     if re.search(r"\b20\d{2}\b", lower) and re.search(r"(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)", lower):
         return True
-    # Festival's own name appearing as an "artist"
-    if festival_name and (lower == festival_name.lower() or
-                          lower.replace(" festival", "") == festival_name.lower().replace(" festival", "")):
-        return True
+    # Festival's own name appearing as an "artist" — uses normalised comparison
+    # so "Stagecoach Music Festival" is caught for config name "Stage Coach Festival"
+    if festival_name:
+        if lower == festival_name.lower():
+            return True
+        fn = _normalize_for_comparison(festival_name)
+        tn = _normalize_for_comparison(text)
+        if fn and tn and (fn == tn or fn in tn or tn in fn):
+            return True
     # "or sign up via email" and similar patterns
     if lower.startswith("or ") and len(lower) < 30:
         return True

@@ -35,6 +35,53 @@ def name_matches(entity_name: str, attraction_names: list[str]) -> bool:
     return False
 
 
+def _normalize_festival_name(name: str) -> str:
+    """Normalize a festival name for fuzzy matching.
+
+    Strips common suffixes (festival, music festival, fest), removes all
+    non-alphanumeric characters, and lowercases.  This lets
+    "Stage Coach Festival" match "Stagecoach" on Ticketmaster.
+    """
+    s = name.lower().strip()
+    # Strip common suffixes (order matters: longest first)
+    for suffix in ("music festival", "music fest", "festival", "fest"):
+        if s.endswith(suffix):
+            s = s[: -len(suffix)].strip()
+            break
+    # Remove all non-alphanumeric characters
+    s = re.sub(r"[^a-z0-9]", "", s)
+    return s
+
+
+def festival_name_matches(festival_name: str, event_name: str) -> bool:
+    """Return True if a TM event name plausibly matches a tracked festival.
+
+    First tries the normal substring match used for artists/venues.
+    Falls back to a normalised comparison that strips spaces, punctuation,
+    and common suffixes like "festival" / "fest".
+    """
+    # Fast path: exact substring match (existing behaviour)
+    fl = festival_name.lower()
+    el = event_name.lower()
+    if fl in el or el in fl:
+        return True
+
+    # Normalised match: "Stage Coach Festival" ↔ "Stagecoach"
+    fn = _normalize_festival_name(festival_name)
+    en = _normalize_festival_name(event_name)
+    if fn and en:
+        # For very short normalised names (< 4 chars), require exact match
+        # to avoid false positives like "acl" matching inside "oraclecloud"
+        shorter = min(len(fn), len(en))
+        if shorter < 4:
+            if fn == en:
+                return True
+        elif fn in en or en in fn:
+            return True
+
+    return False
+
+
 def format_show_date(local_date: str) -> str:
     """Convert '2026-07-15' to 'Jul 15, 2026'. Returns input on failure."""
     try:
@@ -408,6 +455,10 @@ def fetch_festival_shows(
     """Fetch all upcoming festival events on TM.
 
     Returns (festival_shows, festivals_not_found).
+    Uses festival-specific name matching that handles common variations
+    (e.g. "Stage Coach Festival" matching "Stagecoach" on TM).
+    Deduplicates shows by (date, venue) since TM often lists multiple
+    events per festival day.
     """
     now_utc = datetime.now(timezone.utc)
     results: dict[str, list[dict]] = {}
@@ -417,38 +468,59 @@ def fetch_festival_shows(
         if festival_info.get("paused", False):
             continue
 
-        params = urllib.parse.urlencode({
-            "apikey": api_key,
-            "keyword": festival_name,
-            "classificationName": "music",
-            "size": "50",
-            "sort": "date,asc",
-        })
-        url = f"https://app.ticketmaster.com/discovery/v2/events.json?{params}"
-        data = _tm_request(url)
+        # Try multiple keyword variations to increase hit rate
+        keywords_to_try = [festival_name]
+        normalized = _normalize_festival_name(festival_name)
+        # If normalizing changed the name meaningfully, also search with
+        # the raw normalized form (e.g. "Stagecoach" for "Stage Coach Festival")
+        if normalized and normalized != re.sub(r"[^a-z0-9]", "", festival_name.lower()):
+            keywords_to_try.append(normalized)
 
         shows: list[dict] = []
         matched_any = False
+        seen_date_venue: set[str] = set()
 
-        for event in data.get("_embedded", {}).get("events", []):
-            event_name = event.get("name", "")
-            if not name_matches(festival_name, [event_name]):
-                continue
+        for keyword in keywords_to_try:
+            params = urllib.parse.urlencode({
+                "apikey": api_key,
+                "keyword": keyword,
+                "classificationName": "music",
+                "size": "50",
+                "sort": "date,asc",
+            })
+            url = f"https://app.ticketmaster.com/discovery/v2/events.json?{params}"
+            data = _tm_request(url)
 
-            tm_venues = event.get("_embedded", {}).get("venues", [])
-            if tm_venues and _is_north_america(tm_venues[0]):
-                matched_any = True
+            for event in data.get("_embedded", {}).get("events", []):
+                event_name = event.get("name", "")
+                if not festival_name_matches(festival_name, event_name):
+                    continue
 
-            show = build_show(event, now_utc)
-            if show:
-                show["event_name"] = event_name
-                if geocode_fn:
-                    coords = geocode_fn(f"{show['venue']}, {show['city']}")
-                    if not coords:
-                        coords = geocode_fn(show["city"])
-                    if coords:
-                        show["lat"], show["lon"] = coords
-                shows.append(show)
+                tm_venues = event.get("_embedded", {}).get("venues", [])
+                if tm_venues and _is_north_america(tm_venues[0]):
+                    matched_any = True
+
+                show = build_show(event, now_utc)
+                if show:
+                    # Deduplicate by date + venue (festivals often have
+                    # multiple TM events per day for different stages/tickets)
+                    dedup_key = f"{show['date']}|{show['venue']}"
+                    if dedup_key in seen_date_venue:
+                        continue
+                    seen_date_venue.add(dedup_key)
+
+                    show["event_name"] = event_name
+                    if geocode_fn:
+                        coords = geocode_fn(f"{show['venue']}, {show['city']}")
+                        if not coords:
+                            coords = geocode_fn(show["city"])
+                        if coords:
+                            show["lat"], show["lon"] = coords
+                    shows.append(show)
+
+            # If we found matches with the first keyword, skip the rest
+            if matched_any:
+                break
 
         if shows:
             results[festival_name] = shows

@@ -490,6 +490,7 @@ def main():
             pass
 
     # ── Backfill festivals not found on TM using lineup data ──
+    backfilled: list[str] = []
     if lineups:
         for fest_name in summary.get("festivals_not_found", []):
             lineup = lineups.get(fest_name)
@@ -538,8 +539,17 @@ def main():
 
             if fest_shows:
                 summary["festival_shows"][fest_name] = fest_shows
+                backfilled.append(fest_name)
                 print(f"  Backfilled {fest_name} from lineup data: "
                       f"{len(fest_shows)} day(s), coords={coords}")
+
+    # Remove backfilled festivals from not-found list so the frontend
+    # doesn't show them as both "found" and "not found" simultaneously
+    if backfilled:
+        summary["festivals_not_found"] = [
+            f for f in summary.get("festivals_not_found", [])
+            if f not in backfilled
+        ]
 
     docs_dir = ROOT / "docs"
     docs_dir.mkdir(parents=True, exist_ok=True)

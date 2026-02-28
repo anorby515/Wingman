@@ -6,13 +6,16 @@ from unittest.mock import patch
 from backend.ticketmaster import (
     RefreshProgress,
     RefreshResult,
+    _normalize_festival_name,
     _normalize_venue_name,
     _venue_in_city,
     _venue_in_state,
     build_show,
     detect_triggers,
     fetch_artist_shows,
+    fetch_festival_shows,
     fetch_venue_shows,
+    festival_name_matches,
     get_tm_venue_id,
     name_matches,
 )
@@ -384,6 +387,107 @@ class TestGetTmVenueId:
             get_tm_venue_id("key", "Test", "Des Moines, IA")
             url = mock.call_args[0][0]
             assert "stateCode=IA" in url
+
+
+class TestNormalizeFestivalName:
+    def test_strips_festival_suffix(self):
+        assert _normalize_festival_name("Hinterland Music Festival") == "hinterland"
+
+    def test_strips_fest_suffix(self):
+        assert _normalize_festival_name("We Fest") == "we"
+
+    def test_removes_spaces_and_punctuation(self):
+        assert _normalize_festival_name("Stage Coach Festival") == "stagecoach"
+
+    def test_plain_name(self):
+        assert _normalize_festival_name("Stagecoach") == "stagecoach"
+
+    def test_music_fest_suffix(self):
+        assert _normalize_festival_name("Bonnaroo Music Fest") == "bonnaroo"
+
+    def test_no_suffix(self):
+        assert _normalize_festival_name("Two Step Inn") == "twostepinn"
+
+
+class TestFestivalNameMatches:
+    def test_exact_match(self):
+        assert festival_name_matches("Hinterland Music Festival", "Hinterland Music Festival") is True
+
+    def test_substring_match(self):
+        assert festival_name_matches("Hinterland Music Festival", "Hinterland Music Festival 2026") is True
+
+    def test_stagecoach_variation(self):
+        """'Stage Coach Festival' should match 'Stagecoach' on TM."""
+        assert festival_name_matches("Stage Coach Festival", "Stagecoach") is True
+
+    def test_stagecoach_full_event(self):
+        """'Stage Coach Festival' should match 'Stagecoach Music Festival 2026'."""
+        assert festival_name_matches("Stage Coach Festival", "Stagecoach Music Festival 2026") is True
+
+    def test_we_fest_match(self):
+        assert festival_name_matches("We Fest", "WE Fest 2026") is True
+
+    def test_no_match(self):
+        assert festival_name_matches("Bonnaroo", "Coachella") is False
+
+    def test_partial_word_no_false_positive(self):
+        """Should not match completely unrelated events."""
+        assert festival_name_matches("ACL Fest", "Oracle Cloud Festival") is False
+
+
+class TestFetchFestivalShows:
+    def test_skips_paused_festivals(self):
+        festivals = {
+            "Active Fest": {"paused": False},
+            "Paused Fest": {"paused": True},
+        }
+        with patch("backend.ticketmaster._tm_request", return_value={}):
+            shows, not_found = fetch_festival_shows("fake-key", festivals)
+        assert "Paused Fest" not in shows
+        assert "Paused Fest" not in not_found
+
+    def test_deduplicates_by_date_venue(self):
+        """Multiple TM events on same date+venue should be deduplicated."""
+        festivals = {"Test Fest": {"paused": False}}
+        # Two events on same date at same venue (e.g. different ticket types)
+        response = {
+            "_embedded": {
+                "events": [
+                    {
+                        "name": "Test Fest Day 1",
+                        "url": "https://tm.com/1",
+                        "dates": {"start": {"localDate": "2026-07-15"}},
+                        "sales": {"public": {"startDateTime": "2026-01-01T10:00:00Z"}},
+                        "_embedded": {
+                            "venues": [{
+                                "name": "Big Park",
+                                "city": {"name": "Austin"},
+                                "state": {"stateCode": "TX"},
+                                "country": {"countryCode": "US"},
+                            }],
+                        },
+                    },
+                    {
+                        "name": "Test Fest Day 1 - VIP",
+                        "url": "https://tm.com/2",
+                        "dates": {"start": {"localDate": "2026-07-15"}},
+                        "sales": {"public": {"startDateTime": "2026-01-01T10:00:00Z"}},
+                        "_embedded": {
+                            "venues": [{
+                                "name": "Big Park",
+                                "city": {"name": "Austin"},
+                                "state": {"stateCode": "TX"},
+                                "country": {"countryCode": "US"},
+                            }],
+                        },
+                    },
+                ],
+            },
+        }
+        with patch("backend.ticketmaster._tm_request", return_value=response):
+            shows, not_found = fetch_festival_shows("fake-key", festivals)
+        assert "Test Fest" in shows
+        assert len(shows["Test Fest"]) == 1  # Deduplicated
 
 
 class TestFetchVenueShows:
