@@ -351,28 +351,28 @@ def scrape_festival(name: str, url: str, existing: dict | None = None) -> dict |
     if existing and existing.get("days"):
         existing_total = sum(len(d.get("artists", [])) for d in existing["days"])
 
-    if total == 0 or total < existing_total // 2:
-        # Scrape yielded nothing useful (JS-rendered page, image-based lineup, etc.)
-        # Preserve existing data if we have it
-        if existing and existing_total > 0:
-            reason = "no artists found" if total == 0 else f"only {total} artists (existing has {existing_total})"
-            print(f"  Scrape yielded {reason} — keeping existing lineup")
-            # Still update image_url if we found one and existing doesn't have one
-            if og_image and not existing.get("image_url"):
-                existing["image_url"] = og_image
-                print(f"  Updated poster image: {og_image}")
-            return existing
-
-        print(f"  WARNING: No artists extracted from {url}")
-        print("  The page may use JavaScript rendering or image-based lineups.")
-        print("  You can manually edit festival_lineups.json to add artists.")
+    if total == 0:
+        # No artists extracted — JS-rendered page, image-based lineup, or all
+        # extracted text was correctly filtered as noise (sponsors, CTAs, etc.).
+        # Accept this clean result rather than preserving stale/bad existing data.
+        print(f"  No artists extracted — the poster image will be the primary display")
         return {
             "lineup_url": url,
-            "image_url": og_image,
+            "image_url": og_image or (existing.get("image_url") if existing else None),
             "last_updated": date.today().isoformat(),
             "days": [],
-            "extraction_note": "No artists extracted automatically. Edit manually.",
+            "venue": existing.get("venue", "") if existing else "",
+            "city": existing.get("city", "") if existing else "",
         }
+
+    if existing_total > 0 and total < existing_total // 2:
+        # Some artists found but suspiciously few compared to existing data —
+        # likely a partial page load. Preserve existing data.
+        print(f"  Only {total} artists (existing has {existing_total}) — keeping existing lineup")
+        # Still update image_url if we found a new one
+        if og_image:
+            existing["image_url"] = og_image
+        return existing
 
     # Build day structure
     days_list = []
