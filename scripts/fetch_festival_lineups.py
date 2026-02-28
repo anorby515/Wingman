@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""Fetch festival lineup data from festival websites.
+"""Fetch festival poster images from festival websites.
 
 Reads tracked festivals from tracked.json, fetches each festival's lineup URL,
-extracts artist names and poster images, and writes to festival_lineups.json.
+extracts the poster image (og:image), and writes to festival_lineups.json.
+
+Lineup artist data is managed manually via the Configure UI — this script
+never overwrites it. Only the poster image URL is updated.
 
 No pip dependencies — uses only Python stdlib.
 
@@ -15,10 +18,8 @@ from __future__ import annotations
 import html.parser
 import json
 import pathlib
-import re
 import ssl
 import sys
-import urllib.parse
 import urllib.request
 from datetime import date
 
@@ -26,27 +27,24 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 TRACKED_FILE = ROOT / "tracked.json"
 LINEUPS_FILE = ROOT / "festival_lineups.json"
 
-# ── HTML text extractor ────────────────────────────────────────────────────
+# ── HTML image extractor ──────────────────────────────────────────────────
 
-class _TextExtractor(html.parser.HTMLParser):
-    """Extract visible text from HTML, preserving structure hints."""
+class _ImageExtractor(html.parser.HTMLParser):
+    """Extract og:image (or twitter:image fallback) from HTML."""
 
-    SKIP_TAGS = {"script", "style", "noscript", "svg", "path", "meta", "link"}
+    SKIP_TAGS = {"script", "style", "noscript"}
 
     def __init__(self):
         super().__init__()
-        self.texts: list[str] = []
         self.og_image: str | None = None
-        self.meta_images: list[str] = []
         self._skip_depth = 0
 
     def handle_starttag(self, tag, attrs):
-        attr_dict = dict(attrs)
         if tag in self.SKIP_TAGS:
             self._skip_depth += 1
 
-        # Extract og:image and other meta images
-        if tag == "meta":
+        if tag == "meta" and self._skip_depth == 0:
+            attr_dict = dict(attrs)
             prop = attr_dict.get("property", "")
             name = attr_dict.get("name", "")
             content = attr_dict.get("content", "")
@@ -55,18 +53,9 @@ class _TextExtractor(html.parser.HTMLParser):
             elif name == "twitter:image" and content and not self.og_image:
                 self.og_image = content
 
-        # Block-level tags get newlines for structure
-        if tag in ("div", "p", "h1", "h2", "h3", "h4", "h5", "h6",
-                    "li", "tr", "br", "section", "article", "header"):
-            self.texts.append("\n")
-
     def handle_endtag(self, tag):
         if tag in self.SKIP_TAGS:
             self._skip_depth = max(0, self._skip_depth - 1)
-
-    def handle_data(self, data):
-        if self._skip_depth == 0:
-            self.texts.append(data)
 
 
 def _fetch_page(url: str) -> str | None:
@@ -92,226 +81,14 @@ def _fetch_page(url: str) -> str | None:
         return None
 
 
-def _extract_text_and_image(html_content: str) -> tuple[str, str | None]:
-    """Parse HTML and return (text_content, og_image_url)."""
-    extractor = _TextExtractor()
+def _extract_image(html_content: str) -> str | None:
+    """Parse HTML and return og:image URL."""
+    extractor = _ImageExtractor()
     try:
         extractor.feed(html_content)
     except Exception:
         pass
-    text = "".join(extractor.texts)
-    return text, extractor.og_image
-
-
-# ── Artist name extraction ──────────────────────────────────────────────────
-
-# Words that are NOT artist names (common on festival pages)
-NOISE_WORDS = {
-    # Festival page structure
-    "lineup", "tickets", "festival", "music", "arts", "experience",
-    "schedule", "info", "faq", "contact", "sponsors", "partners",
-    "vip", "general admission", "ga", "camping", "parking", "map",
-    "directions", "volunteer", "about", "news", "shop", "merch",
-    "home", "buy tickets", "get tickets", "sold out", "on sale",
-    "presented by", "powered by", "sponsored by", "in partnership",
-    "our sponsors", "our partners", "thank you to our sponsors",
-    # Navigation / UI
-    "menu", "close", "open", "back", "next", "previous",
-    "browse faqs", "search help", "help center", "help",
-    "contact us", "safety", "accessibility", "social",
-    "buy merch", "book hotel", "download app", "reserve locker",
-    "view full lineup", "share lineup", "view lineup",
-    # Legal / policy
-    "terms", "privacy", "cookie", "copyright", "all rights reserved",
-    "privacy policy", "cookie policy", "cookie settings", "cookie management",
-    "visitor policy", "terms of use", "terms of service",
-    "do not sell or share my personal information",
-    # Social / marketing
-    "follow us", "subscribe", "newsletter", "email", "sign up",
-    "facebook", "instagram", "twitter", "twitter/x", "tiktok",
-    "youtube", "spotify", "discord", "reddit",
-    "get updates", "connect",
-    # Day/date words
-    "friday", "saturday", "sunday", "monday", "tuesday", "wednesday",
-    "thursday", "january", "february", "march", "april", "may", "june",
-    "july", "august", "september", "october", "november", "december",
-    "day 1", "day 2", "day 3", "day 4", "stage", "main stage",
-    "second stage", "tent", "more to come", "tba", "tbd",
-    "and more", "more artists", "full lineup",
-    # Misc page junk
-    "no items found.", "our other festivals", "past lineups",
-    # Common sponsor / brand names that appear on festival pages
-    "bacardi", "beatbox", "budweiser", "bud light", "busch", "busch light",
-    "busch country", "chase", "coca-cola", "coors", "coors light",
-    "corona", "dos equis", "jack daniel's", "jack daniels",
-    "jim beam", "johnnie walker", "jose cuervo", "michelob ultra",
-    "miller lite", "modelo", "tito's handmade vodka", "tito's vodka",
-    "tito's", "twisted tea", "white claw", "wyndham", "truly",
-    "red bull", "celsius", "liquid death", "athletic brewing",
-    "fireball", "deep eddy", "smirnoff", "absolut", "grey goose",
-    "hendrick's", "maker's mark", "wild turkey", "bulleit",
-    "patrón", "patron", "casamigos", "don julio", "espolòn", "espolon",
-    "aguasol", "lucky one", "covert hutto", "owens",
-}
-
-# Day header patterns
-DAY_PATTERN = re.compile(
-    r"^(?:day\s*\d|(?:friday|saturday|sunday|monday|tuesday|wednesday|thursday)"
-    r"(?:\s*,?\s*(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)"
-    r"(?:\w*)\s*\d{1,2})?)",
-    re.IGNORECASE,
-)
-
-DATE_PATTERN = re.compile(
-    r"^(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\s+\d{1,2}",
-    re.IGNORECASE,
-)
-
-
-def _normalize_for_comparison(name: str) -> str:
-    """Strip common festival suffixes and non-alphanumeric chars for matching."""
-    s = name.lower().strip()
-    for suffix in ("music festival", "music fest", "festival", "fest"):
-        if s.endswith(suffix):
-            s = s[: -len(suffix)].strip()
-            break
-    return re.sub(r"[^a-z0-9]", "", s)
-
-
-def _is_noise(text: str, festival_name: str = "") -> bool:
-    """Return True if text is a common non-artist word."""
-    lower = text.lower().strip()
-    if lower in NOISE_WORDS:
-        return True
-    if len(lower) < 2:
-        return True
-    if len(lower) > 60:
-        # Long strings are almost never artist names
-        return True
-    # Pure numbers, dates, times
-    if re.match(r"^\d+$", lower):
-        return True
-    if re.match(r"^\d{1,2}:\d{2}", lower):
-        return True
-    # URLs
-    if lower.startswith(("http://", "https://", "www.")):
-        return True
-    # Copyright lines
-    if "©" in lower or "copyright" in lower:
-        return True
-    # Marketing CTAs and ticket language
-    if any(kw in lower for kw in (
-        "on sale", "buy now", "sold out", "waitlist", "tickets remain",
-        "sign up", "get updates", "limited time", "starting at $",
-        "check it out", "learn more", "view premium", "schedule:",
-        "take the stage", "favorite artists", "get your", "join us",
-        "don't miss", "see you", "stay tuned", "coming soon",
-    )):
-        return True
-    # Contains special characters unlikely in artist names: » « ® ™ →
-    if any(c in text for c in "»«®™→►▶"):
-        return True
-    # "YYYY Lineup", "YYYY Schedule", "YYYY Artists" etc.
-    if re.match(r"^20\d{2}\s+\w+", lower):
-        return True
-    # Stage names: "Campfire Stage", "Main Stage", "The Barn Stage", etc.
-    if re.match(r"^.+\b(stage|tent|field)\s*$", lower) and len(lower) < 40:
-        return True
-    # Location/venue names: contains "park", "arena", "stadium", "center",
-    # "amphitheatre", "fairground" etc. (any case, not just all-caps)
-    if re.match(
-        r"^[\w\s.''-]+\b(park|arena|stadium|center|centre|amphitheatre|amphitheater"
-        r"|fairground|fairgrounds|coliseum|pavilion|speedway|raceway)\s*$",
-        lower,
-    ) and len(lower) < 50:
-        return True
-    # Looks like a US state abbreviation + city (e.g. "Saint Charles, Iowa")
-    if re.match(r"^[a-z\s.]+,\s*[a-z\s]+$", lower) and len(lower) < 40:
-        return True
-    # All-caps location patterns (e.g. "HARRIET ISLAND REGIONAL PARK")
-    if text.isupper() and any(kw in lower for kw in ("park", "island", "center", "arena", "stadium")):
-        return True
-    # Date range patterns (e.g. "July 30 - Aug. 2, 2026", "April 18-19, 2026")
-    if re.match(r"^[a-z]+\.?\s+\d{1,2}\s*[-–]\s*", lower):
-        return True
-    if re.search(r"\b20\d{2}\b", lower) and re.search(r"(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)", lower):
-        return True
-    # Any text containing a 4-digit year followed by common festival words
-    if re.search(r"\b20\d{2}\b", lower) and any(kw in lower for kw in (
-        "lineup", "schedule", "artists", "headliners", "acts", "performers",
-        "festival", "edition", "tickets", "passes", "season",
-    )):
-        return True
-    # Festival's own name appearing as an "artist" — uses normalised comparison
-    # so "Stagecoach Music Festival" is caught for config name "Stage Coach Festival"
-    if festival_name:
-        if lower == festival_name.lower():
-            return True
-        fn = _normalize_for_comparison(festival_name)
-        tn = _normalize_for_comparison(text)
-        if fn and tn and (fn == tn or fn in tn or tn in fn):
-            return True
-    # "or sign up via email" and similar patterns
-    if lower.startswith("or ") and len(lower) < 30:
-        return True
-    # "be the first to know" type marketing
-    if "first to know" in lower or "be the first" in lower:
-        return True
-    return False
-
-
-def _extract_artists_from_text(text: str, festival_name: str = "") -> dict[str, list[str]]:
-    """Extract artist names from page text, grouped by day if possible.
-
-    Returns a dict mapping day labels to artist lists.
-    If no day structure is found, returns {"all": [artists]}.
-    """
-    lines = [line.strip() for line in text.split("\n") if line.strip()]
-
-    days: dict[str, list[str]] = {}
-    current_day = "all"
-    seen = set()
-
-    for line in lines:
-        # Check if this is a day header
-        if DAY_PATTERN.match(line) or DATE_PATTERN.match(line):
-            current_day = line.strip()
-            if current_day not in days:
-                days[current_day] = []
-            continue
-
-        # Skip noise
-        if _is_noise(line, festival_name):
-            continue
-
-        # Some pages use bullet separators or pipes
-        # Split on common delimiters if line has multiple artists
-        candidates = []
-        if " | " in line:
-            candidates = [s.strip() for s in line.split(" | ")]
-        elif " · " in line:
-            candidates = [s.strip() for s in line.split(" · ")]
-        elif "\u2022" in line:  # bullet
-            candidates = [s.strip() for s in line.split("\u2022")]
-        else:
-            candidates = [line]
-
-        for candidate in candidates:
-            candidate = candidate.strip(" \t\r\n•·|–—-*,")
-            if not candidate or _is_noise(candidate, festival_name):
-                continue
-
-            # Normalize whitespace
-            candidate = re.sub(r"\s+", " ", candidate)
-
-            key = candidate.lower()
-            if key not in seen:
-                seen.add(key)
-                if current_day not in days:
-                    days[current_day] = []
-                days[current_day].append(candidate)
-
-    return days
+    return extractor.og_image
 
 
 # ── Main logic ──────────────────────────────────────────────────────────────
@@ -326,80 +103,33 @@ def _load_existing() -> dict:
     return {}
 
 
-def scrape_festival(name: str, url: str, existing: dict | None = None) -> dict | None:
-    """Scrape a single festival lineup page.
+def fetch_poster(name: str, url: str, existing: dict | None = None) -> dict:
+    """Fetch poster image for a festival.
 
-    Returns a lineup dict or None on failure.
-    If the scrape yields no artists but existing data has them, preserves
-    the existing data (only updating image_url if a new one was found).
+    Only updates the image_url. All other data (days, artists, venue, city)
+    is preserved from existing data — lineup content is managed manually.
     """
     print(f"\n  Fetching: {url}")
+
+    # Start with existing data or empty structure
+    result = dict(existing) if existing else {}
+    result.setdefault("lineup_url", url)
+    result.setdefault("days", [])
+
     html_content = _fetch_page(url)
     if not html_content:
-        if existing and existing.get("days"):
-            print(f"  Fetch failed — keeping existing lineup ({sum(len(d.get('artists', [])) for d in existing['days'])} artists)")
-            return existing
-        return None
+        print("  Fetch failed — keeping existing data")
+        return result
 
-    text, og_image = _extract_text_and_image(html_content)
-    artist_days = _extract_artists_from_text(text, festival_name=name)
-
-    # Flatten to get total count
-    total = sum(len(v) for v in artist_days.values())
-
-    existing_total = 0
-    if existing and existing.get("days"):
-        existing_total = sum(len(d.get("artists", [])) for d in existing["days"])
-
-    if total == 0:
-        # No artists extracted — JS-rendered page, image-based lineup, or all
-        # extracted text was correctly filtered as noise (sponsors, CTAs, etc.).
-        # Accept this clean result rather than preserving stale/bad existing data.
-        print(f"  No artists extracted — the poster image will be the primary display")
-        return {
-            "lineup_url": url,
-            "image_url": og_image or (existing.get("image_url") if existing else None),
-            "last_updated": date.today().isoformat(),
-            "days": [],
-            "venue": existing.get("venue", "") if existing else "",
-            "city": existing.get("city", "") if existing else "",
-        }
-
-    if existing_total > 0 and total < existing_total // 2:
-        # Some artists found but suspiciously few compared to existing data —
-        # likely a partial page load. Preserve existing data.
-        print(f"  Only {total} artists (existing has {existing_total}) — keeping existing lineup")
-        # Still update image_url if we found a new one
-        if og_image:
-            existing["image_url"] = og_image
-        return existing
-
-    # Build day structure
-    days_list = []
-    for day_label, artists in artist_days.items():
-        if not artists:
-            continue
-        days_list.append({
-            "label": day_label if day_label != "all" else "Full Lineup",
-            "artists": [{"name": a, "headliner": i < 3} for i, a in enumerate(artists)],
-        })
-
-    print(f"  Found {total} artists across {len(days_list)} day(s)")
+    og_image = _extract_image(html_content)
     if og_image:
+        result["image_url"] = og_image
         print(f"  Poster image: {og_image}")
+    else:
+        print("  No poster image found on page")
 
-    result = {
-        "lineup_url": url,
-        "image_url": og_image,
-        "last_updated": date.today().isoformat(),
-        "days": days_list,
-    }
-
-    # Preserve manually-set metadata (venue, city) from existing data
-    if existing:
-        for key in ("venue", "city"):
-            if existing.get(key) and key not in result:
-                result[key] = existing[key]
+    result["lineup_url"] = url
+    result["last_updated"] = date.today().isoformat()
 
     return result
 
@@ -421,7 +151,7 @@ def main():
     existing = _load_existing()
     updated = dict(existing)
 
-    print(f"Fetching lineups for {len(festivals)} festival(s)...")
+    print(f"Fetching poster images for {len(festivals)} festival(s)...")
 
     for name, info in festivals.items():
         if info.get("paused", False):
@@ -437,9 +167,8 @@ def main():
         print(f"  {name}")
         print(f"{'='*60}")
 
-        result = scrape_festival(name, url, existing=existing.get(name))
-        if result:
-            updated[name] = result
+        result = fetch_poster(name, url, existing=existing.get(name))
+        updated[name] = result
 
     if dry_run:
         print("\n\nDRY RUN — would write:")
@@ -453,15 +182,13 @@ def main():
     print("\n--- Summary ---")
     for name, data in updated.items():
         total = sum(len(d.get("artists", [])) for d in data.get("days", []))
-        note = data.get("extraction_note", "")
-        status = f"{total} artists" if total > 0 else f"MANUAL EDIT NEEDED ({note})"
-        print(f"  {name}: {status}")
-
-    if any(
-        data.get("extraction_note") for data in updated.values()
-    ):
-        print("\nTIP: For festivals that need manual editing, update festival_lineups.json")
-        print("with the lineup data from the festival's website.")
+        has_poster = bool(data.get("image_url"))
+        parts = []
+        if has_poster:
+            parts.append("poster")
+        if total > 0:
+            parts.append(f"{total} artists")
+        print(f"  {name}: {', '.join(parts) if parts else 'no data'}")
 
 
 if __name__ == "__main__":
