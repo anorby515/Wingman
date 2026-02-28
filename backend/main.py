@@ -182,6 +182,24 @@ class FestivalPatch(BaseModel):
     url: Optional[str] = None
 
 
+class FestivalLineupArtist(BaseModel):
+    name: str
+    headliner: bool = False
+
+
+class FestivalLineupDay(BaseModel):
+    label: str
+    date: Optional[str] = None
+    artists: list[FestivalLineupArtist] = []
+
+
+class FestivalLineupPut(BaseModel):
+    image_url: Optional[str] = None
+    venue: Optional[str] = None
+    city: Optional[str] = None
+    days: list[FestivalLineupDay] = []
+
+
 class SettingsPatch(BaseModel):
     center_city: Optional[str] = None
     github_pages_url: Optional[str] = None
@@ -453,6 +471,44 @@ def get_festival_lineups() -> Any:
                 info["lon"] = result[1]
 
     return lineups
+
+
+@app.put("/api/festival-lineups/{name}")
+def put_festival_lineup(name: str, body: FestivalLineupPut) -> Any:
+    """Save manually-edited lineup data for a festival."""
+    # Verify festival exists in config
+    cfg = _read_config()
+    if name not in cfg.get("festivals", {}):
+        raise HTTPException(status_code=404, detail=f"Festival '{name}' not found")
+
+    # Load existing lineups
+    lineups: dict = {}
+    if LINEUPS_FILE.exists():
+        try:
+            lineups = json.loads(LINEUPS_FILE.read_text())
+        except Exception:
+            pass
+
+    # Merge: preserve existing fields not in the PUT body
+    existing = lineups.get(name, {})
+    updated = {
+        "lineup_url": existing.get("lineup_url", cfg["festivals"][name].get("url", "")),
+        "image_url": body.image_url if body.image_url is not None else existing.get("image_url"),
+        "last_updated": existing.get("last_updated", ""),
+        "days": [d.model_dump() for d in body.days],
+    }
+    if body.venue is not None:
+        updated["venue"] = body.venue
+    elif existing.get("venue"):
+        updated["venue"] = existing["venue"]
+    if body.city is not None:
+        updated["city"] = body.city
+    elif existing.get("city"):
+        updated["city"] = existing["city"]
+
+    lineups[name] = updated
+    LINEUPS_FILE.write_text(json.dumps(lineups, indent=2) + "\n")
+    return updated
 
 
 @app.post("/api/festival-lineups/refresh")
