@@ -5,24 +5,6 @@
     "last_updated": "2026-02-27",
     "days": [
       {
-        "label": "Full Lineup",
-        "artists": [
-          {
-            "name": "Hinterland",
-            "headliner": true
-          }
-        ]
-      },
-      {
-        "label": "July 30 - Aug. 2, 2026",
-        "artists": [
-          {
-            "name": "2026 Lineup",
-            "headliner": true
-          }
-        ]
-      },
-      {
         "label": "Sunday",
         "artists": [
           {
@@ -43,10 +25,6 @@
           },
           {
             "name": "beabadoobee",
-            "headliner": false
-          },
-          {
-            "name": "Campfire Stage",
             "headliner": false
           },
           {
@@ -328,90 +306,9 @@
     "lineup_url": "https://www.twostepinn.com/lineup",
     "image_url": "https://cdn.prod.website-files.com/66f254e7d742a43aaab72a1a/68cc51425d6108438ec495fc_TSI26_Open.Graph_1200x630%20(1)%201.png",
     "last_updated": "2026-02-27",
-    "days": [
-      {
-        "label": "Full Lineup",
-        "artists": [
-          {
-            "name": "2026 SCHEDULE: See when your favorite artists take the stage! CHECK IT OUT \u00bb",
-            "headliner": true
-          },
-          {
-            "name": "San Gabriel Park",
-            "headliner": true
-          }
-        ]
-      },
-      {
-        "label": "April 18-19, 2026",
-        "artists": [
-          {
-            "name": "2026 Lineup",
-            "headliner": true
-          },
-          {
-            "name": "Aguasol",
-            "headliner": true
-          },
-          {
-            "name": "Athletic Brewing",
-            "headliner": true
-          },
-          {
-            "name": "Bacardi",
-            "headliner": false
-          },
-          {
-            "name": "BeatBox",
-            "headliner": false
-          },
-          {
-            "name": "Busch Country",
-            "headliner": false
-          },
-          {
-            "name": "Chase",
-            "headliner": false
-          },
-          {
-            "name": "Wyndham",
-            "headliner": false
-          },
-          {
-            "name": "Covert Hutto",
-            "headliner": false
-          },
-          {
-            "name": "Dos Equis",
-            "headliner": false
-          },
-          {
-            "name": "Jack Daniel's",
-            "headliner": false
-          },
-          {
-            "name": "Lucky One",
-            "headliner": false
-          },
-          {
-            "name": "Owens",
-            "headliner": false
-          },
-          {
-            "name": "Tito's Handmade Vodka",
-            "headliner": false
-          },
-          {
-            "name": "Twisted Tea",
-            "headliner": false
-          },
-          {
-            "name": "White Claw",
-            "headliner": false
-          }
-        ]
-      }
-    ]
+    "days": [],
+    "venue": "",
+    "city": ""
   },
   "Minnesota Country Club Festival": {
     "lineup_url": "https://www.minnesotacountryclubfest.com/",
@@ -519,22 +416,15 @@
     "image_url": "https://wefest.com/wp-content/uploads/2023/09/WE-Fest-2023-Venue-Sunset-2000-091223.jpg",
     "last_updated": "2026-02-27",
     "days": [],
-    "extraction_note": "No artists extracted automatically. Edit manually."
+    "venue": "",
+    "city": ""
   },
   "Stage Coach Festival": {
     "lineup_url": "https://www.stagecoachfestival.com/",
     "image_url": "https://aegwebprod.blob.core.windows.net/content/seo_images/716/fYEu7uSsOXzi04Wuf25eWYrBubYBKSMyeGU68btx.jpg",
     "last_updated": "2026-02-27",
-    "days": [
-      {
-        "label": "Full Lineup",
-        "artists": [
-          {
-            "name": "Stagecoach Music Festival",
-            "headliner": true
-          }
-        ]
-      }
-    ]
+    "days": [],
+    "venue": "",
+    "city": ""
   }
 }
