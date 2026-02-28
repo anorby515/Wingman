@@ -648,6 +648,10 @@
     "We Fest": {
       "url": "https://wefest.com/",
       "paused": false
+    },
+    "Stage Coach Festival": {
+      "url": "https://www.stagecoachfestival.com/",
+      "paused": false
     }
   }
 }
