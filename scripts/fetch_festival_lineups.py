@@ -114,6 +114,7 @@ NOISE_WORDS = {
     "directions", "volunteer", "about", "news", "shop", "merch",
     "home", "buy tickets", "get tickets", "sold out", "on sale",
     "presented by", "powered by", "sponsored by", "in partnership",
+    "our sponsors", "our partners", "thank you to our sponsors",
     # Navigation / UI
     "menu", "close", "open", "back", "next", "previous",
     "browse faqs", "search help", "help center", "help",
@@ -139,6 +140,18 @@ NOISE_WORDS = {
     "and more", "more artists", "full lineup",
     # Misc page junk
     "no items found.", "our other festivals", "past lineups",
+    # Common sponsor / brand names that appear on festival pages
+    "bacardi", "beatbox", "budweiser", "bud light", "busch", "busch light",
+    "busch country", "chase", "coca-cola", "coors", "coors light",
+    "corona", "dos equis", "jack daniel's", "jack daniels",
+    "jim beam", "johnnie walker", "jose cuervo", "michelob ultra",
+    "miller lite", "modelo", "tito's handmade vodka", "tito's vodka",
+    "tito's", "twisted tea", "white claw", "wyndham", "truly",
+    "red bull", "celsius", "liquid death", "athletic brewing",
+    "fireball", "deep eddy", "smirnoff", "absolut", "grey goose",
+    "hendrick's", "maker's mark", "wild turkey", "bulleit",
+    "patrón", "patron", "casamigos", "don julio", "espolòn", "espolon",
+    "aguasol", "lucky one", "covert hutto", "owens",
 }
 
 # Day header patterns
@@ -172,7 +185,8 @@ def _is_noise(text: str, festival_name: str = "") -> bool:
         return True
     if len(lower) < 2:
         return True
-    if len(lower) > 80:
+    if len(lower) > 60:
+        # Long strings are almost never artist names
         return True
     # Pure numbers, dates, times
     if re.match(r"^\d+$", lower):
@@ -189,8 +203,27 @@ def _is_noise(text: str, festival_name: str = "") -> bool:
     if any(kw in lower for kw in (
         "on sale", "buy now", "sold out", "waitlist", "tickets remain",
         "sign up", "get updates", "limited time", "starting at $",
-        "check it out", "learn more", "view premium",
+        "check it out", "learn more", "view premium", "schedule:",
+        "take the stage", "favorite artists", "get your", "join us",
+        "don't miss", "see you", "stay tuned", "coming soon",
     )):
+        return True
+    # Contains special characters unlikely in artist names: » « ® ™ →
+    if any(c in text for c in "»«®™→►▶"):
+        return True
+    # "YYYY Lineup", "YYYY Schedule", "YYYY Artists" etc.
+    if re.match(r"^20\d{2}\s+\w+", lower):
+        return True
+    # Stage names: "Campfire Stage", "Main Stage", "The Barn Stage", etc.
+    if re.match(r"^.+\b(stage|tent|field)\s*$", lower) and len(lower) < 40:
+        return True
+    # Location/venue names: contains "park", "arena", "stadium", "center",
+    # "amphitheatre", "fairground" etc. (any case, not just all-caps)
+    if re.match(
+        r"^[\w\s.''-]+\b(park|arena|stadium|center|centre|amphitheatre|amphitheater"
+        r"|fairground|fairgrounds|coliseum|pavilion|speedway|raceway)\s*$",
+        lower,
+    ) and len(lower) < 50:
         return True
     # Looks like a US state abbreviation + city (e.g. "Saint Charles, Iowa")
     if re.match(r"^[a-z\s.]+,\s*[a-z\s]+$", lower) and len(lower) < 40:
@@ -202,6 +235,12 @@ def _is_noise(text: str, festival_name: str = "") -> bool:
     if re.match(r"^[a-z]+\.?\s+\d{1,2}\s*[-–]\s*", lower):
         return True
     if re.search(r"\b20\d{2}\b", lower) and re.search(r"(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)", lower):
+        return True
+    # Any text containing a 4-digit year followed by common festival words
+    if re.search(r"\b20\d{2}\b", lower) and any(kw in lower for kw in (
+        "lineup", "schedule", "artists", "headliners", "acts", "performers",
+        "festival", "edition", "tickets", "passes", "season",
+    )):
         return True
     # Festival's own name appearing as an "artist" — uses normalised comparison
     # so "Stagecoach Music Festival" is caught for config name "Stage Coach Festival"
@@ -349,12 +388,20 @@ def scrape_festival(name: str, url: str, existing: dict | None = None) -> dict |
     if og_image:
         print(f"  Poster image: {og_image}")
 
-    return {
+    result = {
         "lineup_url": url,
         "image_url": og_image,
         "last_updated": date.today().isoformat(),
         "days": days_list,
     }
+
+    # Preserve manually-set metadata (venue, city) from existing data
+    if existing:
+        for key in ("venue", "city"):
+            if existing.get(key) and key not in result:
+                result[key] = existing[key]
+
+    return result
 
 
 def main():
