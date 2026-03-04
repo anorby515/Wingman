@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-02-28",
+  "generated_at": "2026-03-02",
   "center": "Des Moines, IA",
   "center_lat": 41.5868,
   "center_lon": -93.625,
@@ -686,19 +686,6 @@
     ],
     "Eric Church": [
       {
-        "date": "Feb 28, 2026",
-        "raw_date": "2026-02-28",
-        "venue": "Moody Center ATX",
-        "city": "Austin, TX",
-        "status": "on_sale",
-        "lat": 30.2711286,
-        "lon": -97.7436995,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/eric-church-free-the-machine-tour-austin-texas-02-28-2026/event/3A006332F94375BC"
-      },
-      {
         "date": "Mar 5, 2026",
         "raw_date": "2026-03-05",
         "venue": "Food City Center",
@@ -1057,8 +1044,8 @@
         "venue": "Snapdragon Stadium",
         "city": "San Diego, CA",
         "status": "on_sale",
-        "lat": 32.7840407,
-        "lon": -117.1224165,
+        "lat": 32.7842418,
+        "lon": -117.1223904,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -1070,8 +1057,8 @@
         "venue": "Snapdragon Stadium",
         "city": "San Diego, CA",
         "status": "on_sale",
-        "lat": 32.7840407,
-        "lon": -117.1224165,
+        "lat": 32.7842418,
+        "lon": -117.1223904,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -1654,32 +1641,6 @@
     ],
     "Jason Isbell": [
       {
-        "date": "Feb 28, 2026",
-        "raw_date": "2026-02-28",
-        "venue": "Boch Center Wang Theatre",
-        "city": "Boston, MA",
-        "status": "on_sale",
-        "lat": 42.3588336,
-        "lon": -71.0578303,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/jason-isbell-and-the-400-unit-boston-massachusetts-02-28-2026/event/01006359E43DF6E8"
-      },
-      {
-        "date": "Mar 1, 2026",
-        "raw_date": "2026-03-01",
-        "venue": "OLG Stage at Fallsview Casino",
-        "city": "Niagara Falls, ON, CA",
-        "status": "on_sale",
-        "lat": 43.1065603,
-        "lon": -79.0639039,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.ca/jason-isbell-and-the-400-unit-niagara-falls-ontario-03-01-2026/event/10006357B12AC49C"
-      },
-      {
         "date": "Mar 4, 2026",
         "raw_date": "2026-03-04",
         "venue": "Hancher Auditorium",
@@ -1971,8 +1932,8 @@
         "venue": "Kentucky Expo Center",
         "city": "Louisville, KY",
         "status": "on_sale",
-        "lat": 38.1919418,
-        "lon": -85.7461096,
+        "lat": 38.1925502,
+        "lon": -85.7495385,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -2661,19 +2622,6 @@
     ],
     "Chris Stapleton": [
       {
-        "date": "Feb 28, 2026",
-        "raw_date": "2026-02-28",
-        "venue": "Mohegan Sun Arena",
-        "city": "Uncasville, CT",
-        "status": "on_sale",
-        "lat": 41.4911078,
-        "lon": -72.0897434,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/an-evening-with-chris-stapleton-uncasville-connecticut-02-28-2026/event/1D006330EE811B97"
-      },
-      {
         "date": "Mar 12, 2026",
         "raw_date": "2026-03-12",
         "venue": "NRG Stadium",
@@ -3173,8 +3121,8 @@
         "venue": "Kentucky Expo Center",
         "city": "Louisville, KY",
         "status": "on_sale",
-        "lat": 38.1919418,
-        "lon": -85.7461096,
+        "lat": 38.1925502,
+        "lon": -85.7495385,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -3234,19 +3182,6 @@
       }
     ],
     "Dierks Bentley": [
-      {
-        "date": "Feb 28, 2026",
-        "raw_date": "2026-02-28",
-        "venue": "Tempe Beach Park",
-        "city": "Tempe, AZ",
-        "status": "on_sale",
-        "lat": 33.4309226,
-        "lon": -111.9418067,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://on.fgtix.com/trk/6xEqb"
-      },
       {
         "date": "Mar 5, 2026",
         "raw_date": "2026-03-05",
@@ -4299,8 +4234,8 @@
         "venue": "Kentucky Expo Center",
         "city": "Louisville, KY",
         "status": "on_sale",
-        "lat": 38.1919418,
-        "lon": -85.7461096,
+        "lat": 38.1925502,
+        "lon": -85.7495385,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -5479,8 +5414,8 @@
         "venue": "Kentucky Expo Center",
         "city": "Louisville, KY",
         "status": "on_sale",
-        "lat": 38.1919418,
-        "lon": -85.7461096,
+        "lat": 38.1925502,
+        "lon": -85.7495385,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -6421,8 +6356,8 @@
         "venue": "Kentucky Expo Center",
         "city": "Louisville, KY",
         "status": "on_sale",
-        "lat": 38.1919418,
-        "lon": -85.7461096,
+        "lat": 38.1925502,
+        "lon": -85.7495385,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -6640,19 +6575,6 @@
       }
     ],
     "The Strokes": [
-      {
-        "date": "Feb 28, 2026",
-        "raw_date": "2026-02-28",
-        "venue": "Gaslamp Long Beach",
-        "city": "Long Beach, CA",
-        "status": "on_sale",
-        "lat": 33.767111,
-        "lon": -118.1163456,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketweb.com/event/the-strokes-interpol-gaslamp-long-beach-tickets/14645493"
-      },
       {
         "date": "Mar 17, 2026",
         "raw_date": "2026-03-17",
@@ -9155,19 +9077,6 @@
     ],
     "Riley Green": [
       {
-        "date": "Mar 1, 2026",
-        "raw_date": "2026-03-01",
-        "venue": "Florida Strawberry Festival",
-        "city": "Plant City, FL",
-        "status": "on_sale",
-        "lat": 28.01633,
-        "lon": -82.1234803,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7Oa8M"
-      },
-      {
         "date": "Mar 2, 2026",
         "raw_date": "2026-03-02",
         "venue": "NRG Stadium",
@@ -9754,19 +9663,6 @@
       }
     ],
     "Stephen Wilson Jr.": [
-      {
-        "date": "Feb 28, 2026",
-        "raw_date": "2026-02-28",
-        "venue": "Moody Center ATX",
-        "city": "Austin, TX",
-        "status": "on_sale",
-        "lat": 30.2711286,
-        "lon": -97.7436995,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/eric-church-free-the-machine-tour-austin-texas-02-28-2026/event/3A006332F94375BC"
-      },
       {
         "date": "Mar 6, 2026",
         "raw_date": "2026-03-06",
@@ -10752,8 +10648,8 @@
         "venue": "Kentucky Expo Center",
         "city": "Louisville, KY",
         "status": "on_sale",
-        "lat": 38.1919418,
-        "lon": -85.7461096,
+        "lat": 38.1925502,
+        "lon": -85.7495385,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -11169,32 +11065,6 @@
     ],
     "Margo Price": [
       {
-        "date": "Feb 28, 2026",
-        "raw_date": "2026-02-28",
-        "venue": "Metro",
-        "city": "Chicago, IL",
-        "status": "on_sale",
-        "lat": 41.949842,
-        "lon": -87.6589453,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7qAkf"
-      },
-      {
-        "date": "Mar 1, 2026",
-        "raw_date": "2026-03-01",
-        "venue": "First Avenue",
-        "city": "Minneapolis, MN",
-        "status": "on_sale",
-        "lat": 44.9782606,
-        "lon": -93.2760295,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7qAkK"
-      },
-      {
         "date": "Mar 4, 2026",
         "raw_date": "2026-03-04",
         "venue": "Gothic Theatre",
@@ -11384,8 +11254,8 @@
         "venue": "McLane Stadium",
         "city": "Waco, TX",
         "status": "on_sale",
-        "lat": 31.558209,
-        "lon": -97.1164472,
+        "lat": 31.5582247,
+        "lon": -97.1156821,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -11397,8 +11267,8 @@
         "venue": "McLane Stadium",
         "city": "Waco, TX",
         "status": "on_sale",
-        "lat": 31.558209,
-        "lon": -97.1164472,
+        "lat": 31.5582247,
+        "lon": -97.1156821,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -12162,32 +12032,6 @@
       }
     ],
     "Daft Punk": [
-      {
-        "date": "Feb 28, 2026",
-        "raw_date": "2026-02-28",
-        "venue": "The 27 Club",
-        "city": "Ottawa, ON, CA",
-        "status": "on_sale",
-        "lat": 45.4279827,
-        "lon": -75.6939729,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketweb.ca/event/daft-punk-night-the-27-club-tickets/14058264"
-      },
-      {
-        "date": "Feb 28, 2026",
-        "raw_date": "2026-02-28",
-        "venue": "The Pearl",
-        "city": "Vancouver, BC, CA",
-        "status": "on_sale",
-        "lat": 49.2807129,
-        "lon": -123.1213979,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketweb.ca/event/daft-punk-night-the-pearl-tickets/14058104"
-      },
       {
         "date": "May 23, 2026",
         "raw_date": "2026-05-23",
@@ -13487,8 +13331,8 @@
         "venue": "Kentucky Expo Center",
         "city": "Louisville, KY",
         "status": "on_sale",
-        "lat": 38.1919418,
-        "lon": -85.7461096,
+        "lat": 38.1925502,
+        "lon": -85.7495385,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -13593,8 +13437,8 @@
         "venue": "Kentucky Expo Center",
         "city": "Louisville, KY",
         "status": "on_sale",
-        "lat": 38.1919418,
-        "lon": -85.7461096,
+        "lat": 38.1925502,
+        "lon": -85.7495385,
         "is_new": false,
         "onsale_datetime": null,
         "onsale_tbd": false,
@@ -13602,19 +13446,6 @@
       }
     ],
     "311": [
-      {
-        "date": "Mar 1, 2026",
-        "raw_date": "2026-03-01",
-        "venue": "Channel 24",
-        "city": "Sacramento, CA",
-        "status": "on_sale",
-        "lat": 38.5662337,
-        "lon": -121.478939,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/311-sacramento-california-03-01-2026/event/1C006428CEF8B1C5"
-      },
       {
         "date": "Mar 3, 2026",
         "raw_date": "2026-03-03",
@@ -13721,19 +13552,6 @@
       }
     ],
     "Nine Inch Nails": [
-      {
-        "date": "Mar 1, 2026",
-        "raw_date": "2026-03-01",
-        "venue": "Moody Center ATX",
-        "city": "Austin, TX",
-        "status": "on_sale",
-        "lat": 30.2711286,
-        "lon": -97.7436995,
-        "is_new": false,
-        "onsale_datetime": null,
-        "onsale_tbd": false,
-        "ticketmaster_url": "https://www.ticketmaster.com/nine-inch-nails-peel-it-back-austin-texas-03-01-2026/event/3A00633E789A14A4"
-      },
       {
         "date": "Mar 3, 2026",
         "raw_date": "2026-03-03",
@@ -14732,6 +14550,19 @@
       }
     ],
     "The Weeknd": [
+      {
+        "date": "Mar 14, 2026",
+        "raw_date": "2026-03-14",
+        "venue": "The Arrow Room",
+        "city": "Rancho Cucamonga, CA",
+        "status": "on_sale",
+        "lat": 34.1033192,
+        "lon": -117.575173,
+        "is_new": true,
+        "onsale_datetime": null,
+        "onsale_tbd": false,
+        "ticketmaster_url": "https://www.ticketweb.com/event/bruno-mars-the-weeknd-dua-the-arrow-room-tickets/14747413"
+      },
       {
         "date": "Mar 14, 2026",
         "raw_date": "2026-03-14",
@@ -16036,6 +15867,21 @@
         "ticketmaster_url": "https://on.fgtix.com/trk/UtcFb"
       }
     ],
+    "Hozier": [
+      {
+        "date": "Mar 5, 2026",
+        "raw_date": "2026-03-05",
+        "venue": "Beacon Theatre",
+        "city": "New York, NY",
+        "status": "on_sale",
+        "lat": 40.7804903,
+        "lon": -73.9811314,
+        "is_new": false,
+        "onsale_datetime": null,
+        "onsale_tbd": false,
+        "ticketmaster_url": "https://veeps.com/loverocksnyc/7408afa4-dc49-4a43-b6e9-7a041f0aee67"
+      }
+    ],
     "Brooks & Dunn": [
       {
         "date": "Mar 23, 2026",
@@ -17041,11 +16887,6 @@
     ],
     "Ryman Auditorium": [
       {
-        "date": "Feb 28, 2026",
-        "artist": "Kenny Wayne Shepherd",
-        "tracked": false
-      },
-      {
         "date": "Mar 3, 2026",
         "artist": "HARDY",
         "tracked": false
@@ -17289,19 +17130,14 @@
         "date": "May 13, 2026",
         "artist": "Herbie Hancock",
         "tracked": false
+      },
+      {
+        "date": "May 13, 2026",
+        "artist": "Herbie Hancock",
+        "tracked": false
       }
     ],
     "The Salt Shed": [
-      {
-        "date": "Feb 28, 2026",
-        "artist": "Rainbow Kitten Surprise",
-        "tracked": false
-      },
-      {
-        "date": "Mar 1, 2026",
-        "artist": "Rainbow Kitten Surprise",
-        "tracked": false
-      },
       {
         "date": "Mar 3, 2026",
         "artist": "Dropkick Murphys",
@@ -18100,11 +17936,6 @@
     ],
     "Austin City Limits Live at The Moody": [
       {
-        "date": "Feb 28, 2026",
-        "artist": "Yacht Rock Revue",
-        "tracked": false
-      },
-      {
         "date": "Mar 7, 2026",
         "artist": "Blood Orange",
         "tracked": false
@@ -18393,16 +18224,6 @@
       }
     ],
     "The Salt Shed Indoors (Shed)": [
-      {
-        "date": "Feb 28, 2026",
-        "artist": "Rainbow Kitten Surprise",
-        "tracked": false
-      },
-      {
-        "date": "Mar 1, 2026",
-        "artist": "Rainbow Kitten Surprise",
-        "tracked": false
-      },
       {
         "date": "Mar 3, 2026",
         "artist": "Dropkick Murphys",
@@ -18776,266 +18597,146 @@
     "Stage Coach Festival"
   ],
   "changes": {
-    "artists": {},
-    "venues": {
-      "Red Rocks": {
-        "added": [
+    "artists": {
+      "Jason Isbell": {
+        "added": [],
+        "removed": [
           {
-            "date": "Mar 27, 2026",
-            "artist": "Crankdat",
-            "tracked": false
-          },
-          {
-            "date": "Mar 28, 2026",
-            "artist": "Ravenscoon",
-            "tracked": false
-          },
-          {
-            "date": "Apr 3, 2026",
-            "artist": "INZO",
-            "tracked": false
-          },
-          {
-            "date": "Apr 4, 2026",
-            "artist": "it's murph",
-            "tracked": false
-          },
-          {
-            "date": "Apr 10, 2026",
-            "artist": "Zingara",
-            "tracked": false
-          },
-          {
-            "date": "Apr 11, 2026",
-            "artist": "Liquid Stranger",
-            "tracked": false
-          },
-          {
-            "date": "Apr 16, 2026",
-            "artist": "bbno$",
-            "tracked": false
-          },
-          {
-            "date": "Apr 17, 2026",
-            "artist": "Sublime",
-            "tracked": false
-          },
-          {
-            "date": "Apr 18, 2026",
-            "artist": "Sublime",
-            "tracked": false
-          },
-          {
-            "date": "Apr 19, 2026",
-            "artist": "Wiz Khalifa",
-            "tracked": false
-          },
-          {
-            "date": "Apr 20, 2026",
-            "artist": "Ice Cube",
-            "tracked": false
-          },
-          {
-            "date": "Apr 21, 2026",
-            "artist": "Ethel Cain",
-            "tracked": false
-          },
-          {
-            "date": "Apr 22, 2026",
-            "artist": "Dustin Lynch",
-            "tracked": false
-          },
-          {
-            "date": "Apr 23, 2026",
-            "artist": "Subtronics",
-            "tracked": false
-          },
-          {
-            "date": "Apr 24, 2026",
-            "artist": "Subtronics",
-            "tracked": false
-          },
-          {
-            "date": "Apr 25, 2026",
-            "artist": "Alesso",
-            "tracked": false
-          },
-          {
-            "date": "Apr 25, 2026",
-            "artist": "Alesso",
-            "tracked": false
-          },
-          {
-            "date": "Apr 26, 2026",
-            "artist": "Bob Moses",
-            "tracked": false
-          },
-          {
-            "date": "Apr 28, 2026",
-            "artist": "Lewis Capaldi",
-            "tracked": false
-          },
-          {
-            "date": "Apr 29, 2026",
-            "artist": "Lewis Capaldi",
-            "tracked": false
-          },
-          {
-            "date": "Apr 30, 2026",
-            "artist": "Electric Callboy",
-            "tracked": false
-          },
-          {
-            "date": "Apr 30, 2026",
-            "artist": "Electric Callboy",
-            "tracked": false
-          },
-          {
-            "date": "May 1, 2026",
-            "artist": "Two Friends",
-            "tracked": false
-          },
-          {
-            "date": "May 1, 2026",
-            "artist": "Two Friends",
-            "tracked": false
-          },
-          {
-            "date": "May 2, 2026",
-            "artist": "Jason Isbell and the 400 Unit",
-            "tracked": false
-          },
-          {
-            "date": "May 3, 2026",
-            "artist": "Puscifer",
-            "tracked": false
-          },
-          {
-            "date": "May 5, 2026",
-            "artist": "David Guetta",
-            "tracked": false
-          },
-          {
-            "date": "May 6, 2026",
-            "artist": "Bright Eyes",
-            "tracked": false
-          },
-          {
-            "date": "May 7, 2026",
-            "artist": "Alejandro Fern\u00e1ndez",
-            "tracked": false
-          },
-          {
-            "date": "May 7, 2026",
-            "artist": "Alejandro Fern\u00e1ndez",
-            "tracked": false
-          },
-          {
-            "date": "May 8, 2026",
-            "artist": "ALLEYCVT",
-            "tracked": false
-          },
-          {
-            "date": "May 9, 2026",
-            "artist": "Cloonee",
-            "tracked": false
-          },
-          {
-            "date": "May 10, 2026",
-            "artist": "Hippie Sabotage",
-            "tracked": false
-          },
-          {
-            "date": "May 10, 2026",
-            "artist": "Hippie Sabotage",
-            "tracked": false
-          },
-          {
-            "date": "May 11, 2026",
-            "artist": "YUNGBLUD",
-            "tracked": false
-          },
-          {
-            "date": "May 11, 2026",
-            "artist": "YUNGBLUD",
-            "tracked": false
-          },
-          {
-            "date": "May 13, 2026",
-            "artist": "Russell Dickerson",
-            "tracked": false
-          },
-          {
-            "date": "May 16, 2026",
-            "artist": "LSDREAM",
-            "tracked": false
-          },
-          {
-            "date": "May 16, 2026",
-            "artist": "LSDREAM",
-            "tracked": false
-          },
-          {
-            "date": "May 17, 2026",
-            "artist": "The Elovaters",
-            "tracked": false
-          },
-          {
-            "date": "May 18, 2026",
-            "artist": "Khalid",
-            "tracked": false
-          },
-          {
-            "date": "May 18, 2026",
-            "artist": "Khalid",
-            "tracked": false
-          },
-          {
-            "date": "May 19, 2026",
-            "artist": "Kevin Gates",
-            "tracked": false
-          },
-          {
-            "date": "May 21, 2026",
-            "artist": "flipturn",
-            "tracked": false
-          },
-          {
-            "date": "May 22, 2026",
-            "artist": "Seven Lions",
-            "tracked": false
-          },
-          {
-            "date": "May 23, 2026",
-            "artist": "Fisher",
-            "tracked": false
-          },
-          {
-            "date": "May 24, 2026",
-            "artist": "Alabama Shakes",
-            "tracked": true
-          },
-          {
-            "date": "May 25, 2026",
-            "artist": "Alabama Shakes",
-            "tracked": true
-          },
-          {
-            "date": "May 27, 2026",
-            "artist": "Santana",
-            "tracked": false
-          },
-          {
-            "date": "May 27, 2026",
-            "artist": "Santana",
-            "tracked": false
+            "date": "Mar 1, 2026",
+            "raw_date": "2026-03-01",
+            "venue": "OLG Stage at Fallsview Casino",
+            "city": "Niagara Falls, ON, CA",
+            "status": "on_sale",
+            "lat": 43.1065603,
+            "lon": -79.0639039,
+            "is_new": false,
+            "onsale_datetime": null,
+            "onsale_tbd": false,
+            "ticketmaster_url": "https://www.ticketmaster.ca/jason-isbell-and-the-400-unit-niagara-falls-ontario-03-01-2026/event/10006357B12AC49C"
           }
         ],
-        "removed": []
+        "newly_sold": []
+      },
+      "Riley Green": {
+        "added": [],
+        "removed": [
+          {
+            "date": "Mar 1, 2026",
+            "raw_date": "2026-03-01",
+            "venue": "Florida Strawberry Festival",
+            "city": "Plant City, FL",
+            "status": "on_sale",
+            "lat": 28.01633,
+            "lon": -82.1234803,
+            "is_new": false,
+            "onsale_datetime": null,
+            "onsale_tbd": false,
+            "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7Oa8M"
+          }
+        ],
+        "newly_sold": []
+      },
+      "Margo Price": {
+        "added": [],
+        "removed": [
+          {
+            "date": "Mar 1, 2026",
+            "raw_date": "2026-03-01",
+            "venue": "First Avenue",
+            "city": "Minneapolis, MN",
+            "status": "on_sale",
+            "lat": 44.9782606,
+            "lon": -93.2760295,
+            "is_new": false,
+            "onsale_datetime": null,
+            "onsale_tbd": false,
+            "ticketmaster_url": "https://www.ticketmaster.com/event/Z7r9jZ1A7qAkK"
+          }
+        ],
+        "newly_sold": []
+      },
+      "311": {
+        "added": [],
+        "removed": [
+          {
+            "date": "Mar 1, 2026",
+            "raw_date": "2026-03-01",
+            "venue": "Channel 24",
+            "city": "Sacramento, CA",
+            "status": "on_sale",
+            "lat": 38.5662337,
+            "lon": -121.478939,
+            "is_new": false,
+            "onsale_datetime": null,
+            "onsale_tbd": false,
+            "ticketmaster_url": "https://www.ticketmaster.com/311-sacramento-california-03-01-2026/event/1C006428CEF8B1C5"
+          }
+        ],
+        "newly_sold": []
+      },
+      "Nine Inch Nails": {
+        "added": [],
+        "removed": [
+          {
+            "date": "Mar 1, 2026",
+            "raw_date": "2026-03-01",
+            "venue": "Moody Center ATX",
+            "city": "Austin, TX",
+            "status": "on_sale",
+            "lat": 30.2711286,
+            "lon": -97.7436995,
+            "is_new": false,
+            "onsale_datetime": null,
+            "onsale_tbd": false,
+            "ticketmaster_url": "https://www.ticketmaster.com/nine-inch-nails-peel-it-back-austin-texas-03-01-2026/event/3A00633E789A14A4"
+          }
+        ],
+        "newly_sold": []
+      },
+      "The Weeknd": {
+        "added": [
+          {
+            "date": "Mar 14, 2026",
+            "raw_date": "2026-03-14",
+            "venue": "The Arrow Room",
+            "city": "Rancho Cucamonga, CA",
+            "status": "on_sale",
+            "lat": 34.1033192,
+            "lon": -117.575173,
+            "is_new": true,
+            "onsale_datetime": null,
+            "onsale_tbd": false,
+            "ticketmaster_url": "https://www.ticketweb.com/event/bruno-mars-the-weeknd-dua-the-arrow-room-tickets/14747413"
+          }
+        ],
+        "removed": [],
+        "newly_sold": []
       }
     },
-    "total_added": 0,
-    "total_removed": 0,
+    "venues": {
+      "The Salt Shed": {
+        "added": [],
+        "removed": [
+          {
+            "date": "Mar 1, 2026",
+            "artist": "Rainbow Kitten Surprise",
+            "tracked": false
+          }
+        ]
+      },
+      "The Salt Shed Indoors (Shed)": {
+        "added": [],
+        "removed": [
+          {
+            "date": "Mar 1, 2026",
+            "artist": "Rainbow Kitten Surprise",
+            "tracked": false
+          }
+        ]
+      }
+    },
+    "total_added": 1,
+    "total_removed": 5,
     "total_sold_out": 0
   },
   "coming_soon": [
@@ -19187,5 +18888,5 @@
     }
   ],
   "festival_coming_soon": [],
-  "coming_soon_fetched": "2026-02-28T11:14:06.579786+00:00"
+  "coming_soon_fetched": "2026-03-02T12:10:25.005768+00:00"
 }
