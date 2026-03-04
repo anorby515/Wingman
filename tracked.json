@@ -626,6 +626,12 @@
       "city": "Sante Fe, NM",
       "is_local": false,
       "paused": false
+    },
+    "Sphere": {
+      "url": "https://www.thesphere.com/shows",
+      "city": "Las Vegas, NV",
+      "is_local": false,
+      "paused": false
     }
   },
   "festivals": {
