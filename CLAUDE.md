@@ -382,6 +382,50 @@ This applies whether creating a new PR or pushing additional commits to an exist
 
 ---
 
+## Engineering Practices
+
+These are non-negotiable standards for how Claude Code operates on this codebase. They exist because guess-and-check development wastes time and compounds problems.
+
+### 1. Data-Driven Troubleshooting
+Before writing any fix, observe the problem. Add targeted `console.log` / debug statements to surface actual runtime state. Read error messages in full. Confirm the exact failure point before touching any code. Never propose a fix based on assumptions alone.
+
+### 2. Test-Driven Development (TDD)
+The cycle is: write a failing test that exposes the bug → confirm it fails → write the fix → confirm the test passes. No fix without a test first. This applies to bugs found during development, not just pre-planned features.
+
+### 3. Reproduce Before Fixing
+Before any fix attempt, establish a consistent reproduction. If the issue cannot be reliably reproduced, investigate further — do not guess at a fix.
+
+### 4. One Problem at a Time
+Fix one thing, verify it, commit it, then move on. No "while I'm in here" changes. Bundling unrelated changes introduces regressions that are hard to isolate.
+
+### 5. Read the Full Error, Not Just the First Line
+Stack traces, compiler errors, and test output contain the actual answer most of the time. Read them completely and quote the relevant parts before proposing anything.
+
+### 6. Commit Green Checkpoints
+After each passing test cycle, commit. This creates a safe rollback point and makes it immediately obvious when a subsequent change breaks something.
+
+### 7. Understand Before Modifying
+Read and understand any file before modifying it. No blind edits based on assumptions about what code does.
+
+### 8. Explicit Hypotheses
+When investigating a bug, state the hypothesis clearly: *"I believe X is failing because Y — here's how I'll verify that."* This keeps reasoning transparent and catchable before any code is written.
+
+### 9. No Speculative Fixes
+If a debug run disproves the hypothesis, discard the fix and re-investigate. No "let's try this and see" commits. Every commit must be backed by observed evidence.
+
+### 10. Parallel Agent Peer Review
+Before implementing any non-trivial fix, spawn a second agent to independently review the debug output, proposed hypothesis, and proposed fix. The reviewing agent must confirm or challenge with its own reasoning. If they disagree, resolve the conflict with more data — not by picking one arbitrarily. Only after both agents agree on the diagnosis is code written.
+
+**When to invoke a reviewer:**
+- Any bug that required more than one debug iteration to isolate
+- Any hypothesis involving assumptions about state not directly observed
+- Any fix that touches more than one file or layer of the stack
+- Before declaring a problem "solved" — reviewer confirms the test actually covers the failure mode
+
+**What the reviewer receives:** the original symptom, all debug output collected, the proposed hypothesis, and the proposed fix or test.
+
+---
+
 ## Testing
 
 ### Backend (Python — pytest)
