@@ -490,6 +490,112 @@ class TestFetchFestivalShows:
         assert len(shows["Test Fest"]) == 1  # Deduplicated
 
 
+class TestNameMatches:
+    def test_exact_match(self):
+        assert name_matches("Pearl Jam", ["Pearl Jam"]) is True
+
+    def test_substring_in_attraction(self):
+        assert name_matches("Pearl Jam", ["Pearl Jam Live"]) is True
+
+    def test_case_insensitive(self):
+        assert name_matches("pearl jam", ["Pearl Jam"]) is True
+
+    def test_rejects_tribute(self):
+        assert name_matches("Pearl Jam", ["Pearl Jam Tribute"]) is False
+
+    def test_rejects_tribute_case_insensitive(self):
+        assert name_matches("Pearl Jam", ["pearl jam TRIBUTE band"]) is False
+
+    def test_rejects_cover_band(self):
+        assert name_matches("Foo Fighters", ["Foo Fighters Cover Band"]) is False
+
+    def test_rejects_salute(self):
+        assert name_matches("Led Zeppelin", ["A Salute to Led Zeppelin"]) is False
+
+    def test_does_not_reject_real_artist(self):
+        assert name_matches("Caamp", ["Caamp"]) is True
+
+    def test_no_match_returns_false(self):
+        assert name_matches("Radiohead", ["Pearl Jam"]) is False
+
+
+class TestFetchArtistShowsDedup:
+    def _make_wrigley_event(self, name: str, url: str) -> dict:
+        return {
+            "name": name,
+            "url": url,
+            "dates": {"start": {"localDate": "2026-07-11"}},
+            "sales": {"public": {"startDateTime": "2026-01-01T10:00:00Z"}},
+            "_embedded": {
+                "venues": [{
+                    "name": "Wrigley Field",
+                    "city": {"name": "Chicago"},
+                    "state": {"stateCode": "IL"},
+                    "country": {"countryCode": "US"},
+                }],
+                "attractions": [{"name": "Pearl Jam"}],
+            },
+        }
+
+    def test_deduplicates_same_date_venue(self):
+        """Three TM listings for same Pearl Jam @ Wrigley show deduplicate to one."""
+        artists = {"Pearl Jam": {"paused": False, "genre": "Rock"}}
+        response = {
+            "_embedded": {
+                "events": [
+                    self._make_wrigley_event("Pearl Jam GA Floor", "https://tm.com/1"),
+                    self._make_wrigley_event("Pearl Jam Reserved Seating", "https://tm.com/2"),
+                    self._make_wrigley_event("Pearl Jam VIP Package", "https://tm.com/3"),
+                ],
+            },
+        }
+        with patch("backend.ticketmaster._tm_request", return_value=response):
+            shows, _ = fetch_artist_shows("fake-key", artists)
+        assert "Pearl Jam" in shows
+        assert len(shows["Pearl Jam"]) == 1
+
+    def test_keeps_different_dates(self):
+        """Events on different dates at the same venue should all be kept."""
+        artists = {"Pearl Jam": {"paused": False, "genre": "Rock"}}
+
+        def make_event(date: str) -> dict:
+            e = self._make_wrigley_event(f"Pearl Jam {date}", "https://tm.com/x")
+            e["dates"]["start"]["localDate"] = date
+            return e
+
+        response = {
+            "_embedded": {
+                "events": [
+                    make_event("2026-07-11"),
+                    make_event("2026-07-12"),
+                    make_event("2026-07-13"),
+                ],
+            },
+        }
+        with patch("backend.ticketmaster._tm_request", return_value=response):
+            shows, _ = fetch_artist_shows("fake-key", artists)
+        assert "Pearl Jam" in shows
+        assert len(shows["Pearl Jam"]) == 3
+
+    def test_uses_attraction_id_when_present(self):
+        """When tm_attraction_id is set, API call uses attractionId param."""
+        artists = {"Pearl Jam": {"paused": False, "genre": "Rock", "tm_attraction_id": "K8vZ917Hfn0"}}
+        with patch("backend.ticketmaster._tm_request", return_value={}) as mock_req:
+            fetch_artist_shows("fake-key", artists)
+        url = mock_req.call_args[0][0]
+        assert "attractionId=K8vZ917Hfn0" in url
+        assert "keyword=" not in url
+
+    def test_uses_keyword_when_no_attraction_id(self):
+        """Without tm_attraction_id, API call uses keyword param."""
+        artists = {"Pearl Jam": {"paused": False, "genre": "Rock"}}
+        with patch("backend.ticketmaster._tm_request", return_value={}) as mock_req:
+            fetch_artist_shows("fake-key", artists)
+        url = mock_req.call_args[0][0]
+        assert "keyword=" in url
+        assert "attractionId=" not in url
+
+
 class TestFetchVenueShows:
     def test_skips_paused_venues(self):
         venues = {

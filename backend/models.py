@@ -32,6 +32,10 @@ class ArtistConfig(BaseModel):
     genre: str = Field(default="Other", description="Genre category: Indie, Rock/Alternative, Country/Americana, Hip-Hop, Electronic, Other")
     paused: bool = Field(default=False, description="If true, not scraped")
     favorite: bool = Field(default=False, description="If true, artist is a favorite")
+    tm_attraction_id: Optional[str] = Field(
+        default=None,
+        description="Ticketmaster attraction ID for precise event lookup (eliminates cover bands)",
+    )
 
 
 class VenueConfig(BaseModel):

@@ -21,15 +21,23 @@ from typing import Any, Callable, Optional
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
+# Words that indicate a tribute/cover act rather than the real artist.
+_TRIBUTE_WORDS = frozenset({"tribute", "cover", "salute", "the music of"})
+
+
 def name_matches(entity_name: str, attraction_names: list[str]) -> bool:
     """Return True if entity_name has a reasonable TM attraction name match.
 
     Uses case-insensitive substring matching: either the entity name appears
-    inside the attraction name or vice-versa.
+    inside the attraction name or vice-versa.  Attractions whose names contain
+    tribute/cover keywords are skipped so that cover bands don't surface as
+    real artist shows.
     """
     a = entity_name.lower()
     for n in attraction_names:
         nl = n.lower()
+        if any(word in nl for word in _TRIBUTE_WORDS):
+            continue
         if a in nl or nl in a:
             return True
     return False
@@ -331,13 +339,23 @@ def fetch_artist_shows(
         if artist_info.get("paused", False):
             continue
 
-        params = urllib.parse.urlencode({
-            "apikey": api_key,
-            "keyword": artist_name,
-            "classificationName": "music",
-            "size": "50",
-            "sort": "date,asc",
-        })
+        tm_attraction_id = artist_info.get("tm_attraction_id")
+        if tm_attraction_id:
+            params = urllib.parse.urlencode({
+                "apikey": api_key,
+                "attractionId": tm_attraction_id,
+                "classificationName": "music",
+                "size": "50",
+                "sort": "date,asc",
+            })
+        else:
+            params = urllib.parse.urlencode({
+                "apikey": api_key,
+                "keyword": artist_name,
+                "classificationName": "music",
+                "size": "50",
+                "sort": "date,asc",
+            })
         url = f"https://app.ticketmaster.com/discovery/v2/events.json?{params}"
         data = _tm_request(url)
 
@@ -350,11 +368,14 @@ def fetch_artist_shows(
         events = data.get("_embedded", {}).get("events", [])
         matched_any = False
         shows: list[dict] = []
+        seen_date_venue: set[str] = set()
 
         for event in events:
-            attractions = event.get("_embedded", {}).get("attractions", [])
-            if attractions and not name_matches(artist_name, [a.get("name", "") for a in attractions]):
-                continue
+            # When fetched by attractionId, TM guarantees the attraction matches; skip name filter.
+            if not tm_attraction_id:
+                attractions = event.get("_embedded", {}).get("attractions", [])
+                if attractions and not name_matches(artist_name, [a.get("name", "") for a in attractions]):
+                    continue
 
             # Check NA before counting as matched
             tm_venues = event.get("_embedded", {}).get("venues", [])
@@ -363,6 +384,13 @@ def fetch_artist_shows(
 
             show = build_show(event, now_utc)
             if show:
+                # Deduplicate by date + venue (TM often lists multiple ticket-type
+                # events for the same show — GA, VIP, Reserved, etc.)
+                dedup_key = f"{show['raw_date']}|{show['venue']}"
+                if dedup_key in seen_date_venue:
+                    continue
+                seen_date_venue.add(dedup_key)
+
                 show["genre"] = artist_info.get("genre", "Other")
                 if geocode_fn:
                     coords = geocode_fn(f"{show['venue']}, {show['city']}")
