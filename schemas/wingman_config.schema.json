@@ -52,6 +52,10 @@
         "favorite": {
           "type": "boolean",
           "description": "If true, artist is a favorite (shown with gold star)"
+        },
+        "tm_attraction_id": {
+          "type": ["string", "null"],
+          "description": "Ticketmaster attraction ID for precise event lookup (eliminates cover bands)"
         }
       }
     },
