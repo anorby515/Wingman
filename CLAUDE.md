@@ -386,6 +386,19 @@ This applies whether creating a new PR or pushing additional commits to an exist
 
 These are non-negotiable standards for how Claude Code operates on this codebase. They exist because guess-and-check development wastes time and compounds problems.
 
+### MANDATORY PRE-FLIGHT GATE — Before Writing Any Fix
+
+**This gate must be satisfied before touching any code.** No exceptions.
+
+1. **Quote the exact error.** Copy the relevant error message, stack trace, or log line verbatim. If it isn't available yet, stop and ask for it.
+2. **State the hypothesis.** One sentence: *"I believe X is failing because Y."*
+3. **State the evidence.** What in the logs/output supports this hypothesis? Cite it explicitly.
+4. **If logs have not been provided, ask for them.** Do not proceed. Do not propose a fix. The correct response is: *"Before I can diagnose this, I need the full [build log / stack trace / console output]. Can you share it?"*
+
+Skipping this gate — proposing a fix based on a warning, a guess, or partial output — is a process violation regardless of whether the fix happens to work.
+
+---
+
 ### 1. Data-Driven Troubleshooting
 Before writing any fix, observe the problem. Add targeted `console.log` / debug statements to surface actual runtime state. Read error messages in full. Confirm the exact failure point before touching any code. Never propose a fix based on assumptions alone.
 
