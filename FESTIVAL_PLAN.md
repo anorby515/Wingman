@@ -220,3 +220,23 @@ Tests to add/update:
 - `ConcertMap.jsx` supports green festival pins via new `festivalShows` prop
 - `scripts/notify_changes.py` detects new festival events and includes them in push notifications
 - Tests: 5 new festival tests in `test_fetch_tm_data.py`, all 103 backend + 7 frontend tests passing
+
+### wingman-app Implementation (2026-03-14)
+
+Festival support has been fully implemented in the `wingman-app` mobile app (Supabase + React Native):
+
+- **Edge Functions:** Atomic `fetch-festivals` function with self-chaining batch processing, runs on pg_cron daily
+- **Festival Detail Screen:** `app/festival/[id].tsx` — hero, info card, lineup grouped by day
+- **Shows.Festivals:** Date-sorted festival list (soonest first), favorite toggle, Add Festival modal with TM search
+- **Lineup Extraction:** `linkFestivalLineup()` extracts artists from TM's `_embedded.attractions` array, assigns day numbers from event dates, preserves TM listing order as `sort_order`
+- **Data Quality Fixes:** Headliner badge removed (TM can't reliably detect headliners), festival name filtered from lineup (TM includes it as an attraction)
+
+### TM Festival Data Quality Findings
+
+Real-world testing revealed that TM's festival data has significant limitations:
+
+1. **Headliner detection unreliable** — attraction array order doesn't indicate billing position
+2. **Festival name pollutes lineup** — TM lists the festival itself as an attraction
+3. **Day assignment unreliable** — festival-pass events list all artists on a single date
+
+**Recommendation:** TM is adequate for festival discovery but not for lineup metadata. Bandsintown (free, `lineup` array in event responses) is the recommended supplementary source. See `wingman-app/FESTIVAL_API_RESEARCH.md` for full analysis.
